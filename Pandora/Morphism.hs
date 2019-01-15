@@ -1,4 +1,4 @@
-module Morphism (identity, flip, fix, (.), ($), (&), (!)) where
+module Pandora.Morphism (identity, flip, fix, (.), ($), (&), (!)) where
 
 infixr 9 .
 infixr 0 $
