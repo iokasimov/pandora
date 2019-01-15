@@ -18,7 +18,8 @@ source-repository head
   location: https://github.com/iokasimov/pandora.git
 
 library
-  exposed-modules:
+  build-depends: base
+  exposed-modules: Morphism
   default-extensions:
     DataKinds
     ConstraintKinds
