@@ -23,6 +23,10 @@ library
     Pandora.Functor
     Pandora.Morphism
     Pandora.Object
+  other-modules:
+    Pandora.Functor.Covariant
+    Pandora.Functor.Contravariant
+    Pandora.Functor.Invariant
   default-extensions:
     DataKinds
     ConstraintKinds
