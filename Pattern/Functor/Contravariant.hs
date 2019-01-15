@@ -1,6 +1,6 @@
-module Pandora.Functor.Contravariant (Contravariant (..)) where
+module Pattern.Functor.Contravariant (Contravariant (..)) where
 
-import Pandora.Morphism ((.), (!), flip)
+import Pattern.Morphism ((.), (!), flip)
 
 infixl 4 >$<, $<, >$
 

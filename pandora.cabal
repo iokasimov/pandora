@@ -1,7 +1,7 @@
 name:                pandora
 version:             0.1.0
-synopsis:            ...
-description:         ...
+synopsis:            A box of patterns and paradigms
+description:         Humble attempt to define librariy for problem solving based on math abstractions.
 homepage:            https://github.com/iokasimov/pandora
 license:             MIT
 license-file:        LICENSE
@@ -19,14 +19,14 @@ source-repository head
 
 library
   exposed-modules:
-    Pandora.Data
-    Pandora.Functor
-    Pandora.Morphism
-    Pandora.Object
+    Pattern.Functor
+    Pattern.Morphism
+    Pattern.Object
+    Paradigm.Identity
   other-modules:
-    Pandora.Functor.Covariant
-    Pandora.Functor.Contravariant
-    Pandora.Functor.Invariant
+    Pattern.Functor.Covariant
+    Pattern.Functor.Contravariant
+    Pattern.Functor.Invariant
   default-extensions:
     DataKinds
     ConstraintKinds

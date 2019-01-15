@@ -1,6 +1,6 @@
-module Pandora.Functor.Covariant (Covariant (..)) where
+module Pattern.Functor.Covariant (Covariant (..)) where
 
-import Pandora.Morphism ((.), (!), flip)
+import Pattern.Morphism ((.), (!), flip)
 
 infixl 4 <$>, <$, $>
 

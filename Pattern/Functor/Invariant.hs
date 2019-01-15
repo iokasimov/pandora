@@ -1,6 +1,6 @@
-module Pandora.Functor.Invariant (Invariant (..)) where
+module Pattern.Functor.Invariant (Invariant (..)) where
 
-import Pandora.Morphism (flip)
+import Pattern.Morphism (flip)
 
 infixl 4 >$>
 infixr 4 <$<
