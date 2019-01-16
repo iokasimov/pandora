@@ -23,6 +23,7 @@ library
     Core.Composition
     Pattern.Functor
     Pattern.Object
+    Paradigm.Composition
     Paradigm.Identity
     Paradigm.Conclusion
     Paradigm.Constant
