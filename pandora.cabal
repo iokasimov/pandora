@@ -38,6 +38,8 @@ library
     Pattern.Functor.Extractable
     Pattern.Functor.Traversable
     Pattern.Functor.Distributive
+    Pattern.Functor.Bindable
+    Pattern.Functor.Extendable
     Pattern.Object.Setoid
     Pattern.Object.Chain
   default-extensions:
