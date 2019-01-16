@@ -29,6 +29,10 @@ library
     Paradigm.Maybe
     Paradigm.Product
     Paradigm.Yoneda
+    Paradigm.Fix
+    Paradigm.Free
+    Paradigm.Cofree
+    Paradigm.Kan
   other-modules:
     Pattern.Functor.Covariant
     Pattern.Functor.Contravariant
