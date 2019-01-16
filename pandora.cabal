@@ -24,8 +24,10 @@ library
     Pattern.Functor
     Pattern.Object
     Paradigm.Identity
+    Paradigm.Conclusion
     Paradigm.Constant
     Paradigm.Maybe
+    Paradigm.Product
     Paradigm.Yoneda
   other-modules:
     Pattern.Functor.Covariant
