@@ -40,6 +40,9 @@ library
     Pattern.Functor.Distributive
     Pattern.Functor.Bindable
     Pattern.Functor.Extendable
+    Pattern.Functor.Adjoint
+    Pattern.Functor.Monad
+    Pattern.Functor.Comonad
     Pattern.Object.Setoid
     Pattern.Object.Chain
   default-extensions:

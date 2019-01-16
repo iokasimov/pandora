@@ -1,5 +1,8 @@
 module Pattern.Functor (module Exports) where
 
+import Pattern.Functor.Comonad as Exports
+import Pattern.Functor.Monad as Exports
+import Pattern.Functor.Adjoint as Exports
 import Pattern.Functor.Extendable as Exports
 import Pattern.Functor.Bindable as Exports
 import Pattern.Functor.Distributive as Exports
