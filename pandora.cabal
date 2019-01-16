@@ -30,6 +30,8 @@ library
     Pattern.Functor.Covariant
     Pattern.Functor.Contravariant
     Pattern.Functor.Invariant
+    Pattern.Object.Setoid
+    Pattern.Object.Chain
   default-extensions:
     DataKinds
     ConstraintKinds
