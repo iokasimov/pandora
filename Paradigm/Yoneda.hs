@@ -1,6 +1,6 @@
 module Paradigm.Yoneda (Yoneda (..)) where
 
-import Pattern.Morphism ((.))
+import Core.Morphism ((.))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 
 newtype Yoneda t a = Yoneda

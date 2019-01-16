@@ -1,6 +1,6 @@
 module Pattern.Functor.Invariant (Invariant (..)) where
 
-import Pattern.Morphism (flip)
+import Core.Morphism (flip)
 
 infixl 4 >$>
 infixr 4 <$<

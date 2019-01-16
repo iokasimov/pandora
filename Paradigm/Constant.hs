@@ -1,6 +1,6 @@
 module Paradigm.Constant (Constant (..)) where
 
-import Pattern.Morphism (($))
+import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 
 newtype Constant a b = Constant a

@@ -1,6 +1,6 @@
 module Paradigm.Maybe (Maybe (..)) where
 
-import Pattern.Morphism (($))
+import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 
 data Maybe a = Nothing | Just a

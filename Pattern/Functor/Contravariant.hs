@@ -1,6 +1,6 @@
 module Pattern.Functor.Contravariant (Contravariant (..)) where
 
-import Pattern.Morphism ((.), (!), flip)
+import Core.Morphism ((.), (!), flip)
 
 infixl 4 >$<, $<, >$
 

@@ -1,4 +1,4 @@
-module Pattern.Morphism (identity, flip, fix, (.), ($), (&), (!)) where
+module Core.Morphism (identity, flip, fix, (.), ($), (&), (!)) where
 
 infixr 9 .
 infixr 0 $
@@ -17,9 +17,11 @@ fix :: (a -> a) -> a
 fix f = let x = f x in x
 
 {-# INLINE (.) #-}
+(.) :: (b -> c) -> (a -> b) -> a -> c
 f . g = \x -> f (g x)
 
 {-# INLINE ($) #-}
+($) :: (a -> b) -> a -> b
 f $ x = f x
 
 {-# INLINE (&) #-}

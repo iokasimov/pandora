@@ -1,6 +1,6 @@
 module Paradigm.Identity (Identity (..)) where
 
-import Pattern.Morphism (($))
+import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 
 newtype Identity a = Identity a

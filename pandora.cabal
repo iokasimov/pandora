@@ -19,8 +19,8 @@ source-repository head
 
 library
   exposed-modules:
+    Core.Morphism
     Pattern.Functor
-    Pattern.Morphism
     Pattern.Object
     Paradigm.Identity
     Paradigm.Constant
