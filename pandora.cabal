@@ -30,6 +30,11 @@ library
     Pattern.Functor.Covariant
     Pattern.Functor.Contravariant
     Pattern.Functor.Invariant
+    Pattern.Functor.Alternative
+    Pattern.Functor.Applicative
+    Pattern.Functor.Exclusive
+    Pattern.Functor.Pointable
+    Pattern.Functor.Extractable
     Pattern.Object.Setoid
     Pattern.Object.Chain
   default-extensions:
