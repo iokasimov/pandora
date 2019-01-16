@@ -23,17 +23,7 @@ library
     Core.Composition
     Pattern.Functor
     Pattern.Object
-    Paradigm.Composition
-    Paradigm.Identity
-    Paradigm.Conclusion
-    Paradigm.Constant
-    Paradigm.Maybe
-    Paradigm.Product
-    Paradigm.Yoneda
-    Paradigm.Fix
-    Paradigm.Free
-    Paradigm.Cofree
-    Paradigm.Kan
+    Paradigm.Basis
   other-modules:
     Pattern.Functor.Covariant
     Pattern.Functor.Contravariant
@@ -58,6 +48,17 @@ library
     Pattern.Object.Group
     Pattern.Object.Semilattice
     Pattern.Object.Lattice
+    Paradigm.Basis.Composition
+    Paradigm.Basis.Identity
+    Paradigm.Basis.Conclusion
+    Paradigm.Basis.Constant
+    Paradigm.Basis.Maybe
+    Paradigm.Basis.Product
+    Paradigm.Basis.Yoneda
+    Paradigm.Basis.Fix
+    Paradigm.Basis.Free
+    Paradigm.Basis.Cofree
+    Paradigm.Basis.Kan
   default-extensions:
     DataKinds
     ConstraintKinds

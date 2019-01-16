@@ -1,4 +1,4 @@
-module Paradigm.Maybe (Maybe (..)) where
+module Paradigm.Basis.Maybe (Maybe (..)) where
 
 import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))

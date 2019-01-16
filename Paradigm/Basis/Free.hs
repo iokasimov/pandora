@@ -1,4 +1,4 @@
-module Paradigm.Free (Free (..)) where
+module Paradigm.Basis.Free (Free (..)) where
 
 import Core.Morphism ((.), ($))
 import Pattern.Functor.Covariant (Covariant ((<$>), comap))

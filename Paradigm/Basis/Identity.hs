@@ -1,4 +1,4 @@
-module Paradigm.Identity (Identity (..)) where
+module Paradigm.Basis.Identity (Identity (..)) where
 
 import Core.Morphism ((.), ($))
 import Pattern.Functor.Covariant (Covariant ((<$>), comap))

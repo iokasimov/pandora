@@ -1,4 +1,4 @@
-module Paradigm.Conclusion (Conclusion (..)) where
+module Paradigm.Basis.Conclusion (Conclusion (..)) where
 
 import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))

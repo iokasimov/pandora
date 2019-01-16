@@ -1,4 +1,4 @@
-module Paradigm.Composition (T (..), TT (..), TTT (..)) where
+module Paradigm.Basis.Composition (T (..), TT (..), TTT (..)) where
 
 import Core.Composition ((:.:))
 import Core.Morphism ((.), ($))

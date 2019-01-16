@@ -1,4 +1,4 @@
-module Paradigm.Cofree (Cofree (..), unwrap) where
+module Paradigm.Basis.Cofree (Cofree (..), unwrap) where
 
 import Core.Morphism ((.))
 import Pattern.Functor.Covariant (Covariant ((<$>), comap))

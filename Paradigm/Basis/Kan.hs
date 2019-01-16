@@ -1,4 +1,4 @@
-module Paradigm.Kan (Lan (..), Ran (..)) where
+module Paradigm.Basis.Kan (Lan (..), Ran (..)) where
 
 import Core.Morphism ((.), ($))
 import Pattern.Functor.Contravariant (Contravariant ((>$<)))

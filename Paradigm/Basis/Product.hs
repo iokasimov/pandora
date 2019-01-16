@@ -1,4 +1,4 @@
-module Paradigm.Product (Product (..), type (:&:)) where
+module Paradigm.Basis.Product (Product (..), type (:&:)) where
 
 import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))

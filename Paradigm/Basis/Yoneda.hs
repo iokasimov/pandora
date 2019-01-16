@@ -1,4 +1,4 @@
-module Paradigm.Yoneda (Yoneda (..)) where
+module Paradigm.Basis.Yoneda (Yoneda (..)) where
 
 import Core.Morphism ((.), ($), (!), identity)
 import Pattern.Functor.Covariant (Covariant ((<$>), comap))

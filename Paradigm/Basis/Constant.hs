@@ -1,4 +1,4 @@
-module Paradigm.Constant (Constant (..)) where
+module Paradigm.Basis.Constant (Constant (..)) where
 
 import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
