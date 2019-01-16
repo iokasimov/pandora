@@ -23,6 +23,9 @@ library
     Pattern.Morphism
     Pattern.Object
     Paradigm.Identity
+    Paradigm.Constant
+    Paradigm.Maybe
+    Paradigm.Yoneda
   other-modules:
     Pattern.Functor.Covariant
     Pattern.Functor.Contravariant
