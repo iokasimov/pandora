@@ -47,6 +47,12 @@ library
     Pattern.Functor.Comonad
     Pattern.Object.Setoid
     Pattern.Object.Chain
+    Pattern.Object.Semigroup
+    Pattern.Object.Ringoid
+    Pattern.Object.Monoid
+    Pattern.Object.Group
+    Pattern.Object.Semilattice
+    Pattern.Object.Lattice
   default-extensions:
     DataKinds
     ConstraintKinds
@@ -59,6 +65,7 @@ library
     PackageImports
     PolyKinds
     RankNTypes
+    TypeFamilies
     TypeOperators
   default-language: Haskell2010
   ghc-options: -fno-warn-tabs
