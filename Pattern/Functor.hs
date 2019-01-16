@@ -1,5 +1,7 @@
 module Pattern.Functor (module Exports) where
 
+import Pattern.Functor.Distributive as Exports
+import Pattern.Functor.Traversable as Exports
 import Pattern.Functor.Extractable as Exports
 import Pattern.Functor.Pointable as Exports
 import Pattern.Functor.Exclusive as Exports

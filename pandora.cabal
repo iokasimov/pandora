@@ -20,6 +20,7 @@ source-repository head
 library
   exposed-modules:
     Core.Morphism
+    Core.Composition
     Pattern.Functor
     Pattern.Object
     Paradigm.Identity
@@ -35,6 +36,8 @@ library
     Pattern.Functor.Exclusive
     Pattern.Functor.Pointable
     Pattern.Functor.Extractable
+    Pattern.Functor.Traversable
+    Pattern.Functor.Distributive
     Pattern.Object.Setoid
     Pattern.Object.Chain
   default-extensions:
