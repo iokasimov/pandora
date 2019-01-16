@@ -1,6 +1,6 @@
 module Paradigm.Conclusion (Conclusion (..)) where
 
-import Core.Morphism ((.), ($))
+import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
