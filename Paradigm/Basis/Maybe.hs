@@ -1,6 +1,8 @@
 module Paradigm.Basis.Maybe (Maybe (..)) where
 
 import Core.Morphism (($))
+import Core.Variant (Variant (Co))
+import Paradigm.Basis.Functor.Transformer (UT (UT))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -8,6 +10,7 @@ import Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pattern.Functor.Traversable (Traversable ((->>)))
 import Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pattern.Functor.Monad (Monad)
+import Pattern.Functor.Liftable (Liftable (lift))
 
 data Maybe a = Nothing | Just a
 
@@ -35,3 +38,6 @@ instance Bindable Maybe where
 	Nothing >>= _ = Nothing
 
 instance Monad Maybe where
+
+instance Liftable (UT Co Co Maybe) where
+	lift x = UT $ Just <$> x

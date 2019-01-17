@@ -1,50 +1,50 @@
-module Paradigm.Basis.Composition (T (..), TT (..), TTT (..)) where
+module Paradigm.Basis.Functor.Composition (TU (..), TT (..), TTT (..)) where
 
 import Core.Composition ((:.:))
 import Core.Morphism ((.), ($))
 import Core.Variant (Variant (Co, Contra))
 import Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pattern.Functor.Contravariant (Contravariant ((>$<), contramap))
 import Pattern.Functor.Extractable (Extractable (extract))
 import Pattern.Functor.Exclusive (Exclusive (exclusive))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pattern.Functor.Applicative (Applicative ((<*>), apply))
 import Pattern.Functor.Adjoint (Adjoint (phi, psi))
-import Pattern.Functor.Contravariant (Contravariant ((>$<), contramap))
 
 type Adjunctive t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoint t u)
 
 
-newtype T ct cu t u a = T { t :: (t :.: u) a }
+newtype TU ct cu t u a = TU { tu :: (t :.: u) a }
 
-instance (Covariant t, Covariant u) => Covariant (T Co Co t u) where
-	f <$> T x = T $ (comap . comap) f x
+instance (Covariant t, Covariant u) => Covariant (TU Co Co t u) where
+	f <$> TU x = TU $ (comap . comap) f x
 
-instance (Covariant t, Contravariant u) => Contravariant (T Co Contra t u) where
-	f >$< T x = T $ contramap f <$> x
+instance (Covariant t, Contravariant u) => Contravariant (TU Co Contra t u) where
+	f >$< TU x = TU $ contramap f <$> x
 
-instance (Contravariant t, Covariant u) => Contravariant (T Contra Co t u) where
-	f >$< T x = T $ contramap (comap f) x
+instance (Contravariant t, Covariant u) => Contravariant (TU Contra Co t u) where
+	f >$< TU x = TU $ contramap (comap f) x
 
-instance (Contravariant t, Contravariant u) => Covariant (T Contra Contra t u) where
-	f <$> T x = T $ contramap (contramap f) x
+instance (Contravariant t, Contravariant u) => Covariant (TU Contra Contra t u) where
+	f <$> TU x = TU $ contramap (contramap f) x
 
-instance (Applicative t, Applicative u) => Applicative (T Co Co t u) where
-	T f <*> T x = T $ apply <$> f <*> x
+instance (Applicative t, Applicative u) => Applicative (TU Co Co t u) where
+	TU f <*> TU x = TU $ apply <$> f <*> x
 
-instance (Alternative t, Covariant u) => Alternative (T Co Co t u) where
-	T x <+> T y = T $ x <+> y
+instance (Alternative t, Covariant u) => Alternative (TU Co Co t u) where
+	TU x <+> TU y = TU $ x <+> y
 
-instance (Exclusive t, Covariant u) => Exclusive (T Co Co t u) where
-	exclusive = T exclusive
+instance (Exclusive t, Covariant u) => Exclusive (TU Co Co t u) where
+	exclusive = TU exclusive
 
-instance (Pointable t, Pointable u) => Pointable (T Co Co t u) where
-	point = T . point . point
+instance (Pointable t, Pointable u) => Pointable (TU Co Co t u) where
+	point = TU . point . point
 
-instance (Extractable t, Extractable u) => Extractable (T Co Co t u) where
-	extract = extract . extract . t
+instance (Extractable t, Extractable u) => Extractable (TU Co Co t u) where
+	extract = extract . extract . tu
 
-instance (Adjunctive t u, Adjunctive v w) => Adjoint (T Co Co t v) (T Co Co u w) where
+instance (Adjunctive t u, Adjunctive v w) => Adjoint (TU Co Co t v) (TU Co Co u w) where
 	phi f = point . f . point
 	psi f = extract . extract . comap f
 

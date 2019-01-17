@@ -25,6 +25,7 @@ library
     Pattern.Functor
     Pattern.Object
     Paradigm.Basis
+    Paradigm.Basis.Functor
   other-modules:
     Pattern.Functor.Covariant
     Pattern.Functor.Contravariant
@@ -51,7 +52,8 @@ library
     Pattern.Object.Group
     Pattern.Object.Semilattice
     Pattern.Object.Lattice
-    Paradigm.Basis.Composition
+    Paradigm.Basis.Functor.Composition
+    Paradigm.Basis.Functor.Transformer
     Paradigm.Basis.Identity
     Paradigm.Basis.Conclusion
     Paradigm.Basis.Constant
