@@ -21,11 +21,14 @@ library
   exposed-modules:
     Core.Morphism
     Core.Composition
+    Core.Transformation
+    Core.Variant
     Pattern.Functor
     Pattern.Object
     Paradigm.Basis
     Paradigm.Basis.Functor
     Paradigm.Inventory
+    Paradigm.Structure
   other-modules:
     Pattern.Functor.Covariant
     Pattern.Functor.Contravariant

@@ -1,0 +1,1 @@
+module Paradigm.Structure where
