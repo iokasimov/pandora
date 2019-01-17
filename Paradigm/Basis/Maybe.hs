@@ -3,7 +3,7 @@ module Paradigm.Basis.Maybe (Maybe (..), maybe) where
 import Core.Morphism ((.), ($))
 import Core.Variant (Variant (Co))
 import Paradigm.Basis.Identity (Identity (Identity))
-import Paradigm.Basis.Functor.Transformer (UT (UT, ut), type (:!:))
+import Paradigm.Basis.Functor.Transformer (Transformer (Transformer, transformer), type (:!:))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -45,6 +45,6 @@ instance Bindable Maybe where
 instance Monad Maybe where
 
 instance (Pointable t, Bindable t) => Bindable (Maybe :!: t) where
-	UT x >>= f = UT $ x >>= maybe (point Nothing) (ut . f)
+	Transformer x >>= f = Transformer $ x >>= maybe (point Nothing) (transformer . f)
 
 instance (Pointable t, Bindable t) => Monad (Maybe :!: t) where

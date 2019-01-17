@@ -1,5 +1,6 @@
-module Paradigm.Basis.Functor.Transformer (UT (..), type (:!:)) where
+module Paradigm.Basis.Functor.Transformer (Transformer (..), type (:!:)) where
 
+import Core.Composition ((:.:))
 import Core.Morphism ((.), ($))
 import Core.Variant (Variant (Co, Contra))
 import Pattern.Functor.Covariant (Covariant ((<$>), comap))
@@ -9,19 +10,19 @@ import Pattern.Functor.Bindable (Bindable ((>>=), bind))
 import Pattern.Functor.Liftable (Liftable (lift))
 import Pattern.Functor.Lowerable (Lowerable (lower))
 
-newtype UT t u a = UT { ut :: u (t a) }
+newtype Transformer t u a = Transformer { transformer :: (u :.: t) a }
 
 infixr 0 :!:
-type (:!:) t u = UT t u
+type (:!:) t u = Transformer t u
 
-instance (Covariant t, Covariant u) => Covariant (UT t u) where
-	f <$> UT x = UT $ (comap . comap) f x
+instance (Covariant t, Covariant u) => Covariant (Transformer t u) where
+	f <$> Transformer x = Transformer $ (comap . comap) f x
 
-instance (Pointable t, Pointable u) => Pointable (UT t u) where
-	point = UT . point . point
+instance (Pointable t, Pointable u) => Pointable (Transformer t u) where
+	point = Transformer . point . point
 
-instance Pointable t => Liftable (UT t) where
-	lift x = UT $ point <$> x
+instance Pointable t => Liftable (Transformer t) where
+	lift x = Transformer $ point <$> x
 
-instance Extractable t => Lowerable (UT t) where
-	lower (UT x) = extract <$> x
+instance Extractable t => Lowerable (Transformer t) where
+	lower (Transformer x) = extract <$> x
