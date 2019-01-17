@@ -21,6 +21,7 @@ library
   exposed-modules:
     Core.Morphism
     Core.Composition
+    Core.Transformer
     Pattern.Functor
     Pattern.Object
     Paradigm.Basis
@@ -40,6 +41,8 @@ library
     Pattern.Functor.Adjoint
     Pattern.Functor.Monad
     Pattern.Functor.Comonad
+    Pattern.Functor.Liftable
+    Pattern.Functor.Lowerable
     Pattern.Object.Setoid
     Pattern.Object.Chain
     Pattern.Object.Semigroup
