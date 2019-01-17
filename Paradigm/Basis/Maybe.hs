@@ -5,6 +5,7 @@ import Core.Variant (Variant (Co))
 import Paradigm.Basis.Identity (Identity (Identity))
 import Paradigm.Basis.Functor.Transformer (T (T, t), type (:!:))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pattern.Functor.Exclusive (Exclusive (exclusive))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -25,6 +26,9 @@ instance Covariant Maybe where
 
 instance Pointable Maybe where
 	point = Just
+
+instance Exclusive Maybe where
+	exclusive = Nothing
 
 instance Applicative Maybe where
 	Just f <*> x = f <$> x

@@ -1,4 +1,4 @@
-module Paradigm.Basis.Product (Product (..), type (:&:)) where
+module Paradigm.Basis.Product (Product (..), type (:&:), delta) where
 
 import Core.Morphism (($))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -22,3 +22,6 @@ instance Extendable (Product a) where
 	(x :&: y) =>> f = (:&:) x $ f (x :&: y)
 
 instance Comonad (Product a) where
+
+delta :: a -> a :&: a
+delta x = x :&: x
