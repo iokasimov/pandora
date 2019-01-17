@@ -1,6 +1,7 @@
-module Paradigm.Basis.Conclusion (Conclusion (..)) where
+module Paradigm.Basis.Conclusion (Conclusion (..), conclusion) where
 
-import Core.Morphism (($))
+import Core.Morphism ((.), ($), (!))
+import Paradigm.Basis.Functor.Transformer (T (T, t), type (:!:))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -10,6 +11,10 @@ import Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pattern.Functor.Monad (Monad)
 
 data Conclusion e a = Failure e | Success a
+
+conclusion :: (e -> b) -> (a -> b) -> Conclusion e a -> b
+conclusion f _ (Failure x) = f x
+conclusion _ s (Success x) = s x
 
 instance Covariant (Conclusion e) where
 	f <$> Success x = Success $ f x
@@ -35,3 +40,8 @@ instance Bindable (Conclusion e) where
 	Failure y >>= _ = Failure y
 
 instance Monad (Conclusion e) where
+
+instance (Pointable t, Bindable t) => Bindable (Conclusion e :!: t) where
+	T x >>= f = T $ x >>= conclusion (point . Failure) (t . f)
+
+instance (Pointable t, Bindable t) => Monad (Conclusion :!: t) where

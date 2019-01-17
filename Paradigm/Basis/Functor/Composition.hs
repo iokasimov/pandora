@@ -1,4 +1,4 @@
-module Paradigm.Basis.Functor.Composition (T (..), TT (..), TTT (..)) where
+module Paradigm.Basis.Functor.Composition (U (..), UU (..), UUU (..)) where
 
 import Core.Composition ((:.:))
 import Core.Morphism ((.), ($))
@@ -14,151 +14,151 @@ import Pattern.Functor.Adjoint (Adjoint (phi, psi))
 
 type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoint t u)
 
-newtype T ct cu t u a = T { t :: (t :.: u) a }
+newtype U ct cu t u a = U { u :: (t :.: u) a }
 
-instance (Covariant t, Covariant u) => Covariant (T Co Co t u) where
-	f <$> T x = T $ (comap . comap) f x
+instance (Covariant t, Covariant u) => Covariant (U Co Co t u) where
+	f <$> U x = U $ (comap . comap) f x
 
-instance (Covariant t, Contravariant u) => Contravariant (T Co Contra t u) where
-	f >$< T x = T $ contramap f <$> x
+instance (Covariant t, Contravariant u) => Contravariant (U Co Contra t u) where
+	f >$< U x = U $ contramap f <$> x
 
-instance (Contravariant t, Covariant u) => Contravariant (T Contra Co t u) where
-	f >$< T x = T $ contramap (comap f) x
+instance (Contravariant t, Covariant u) => Contravariant (U Contra Co t u) where
+	f >$< U x = U $ contramap (comap f) x
 
-instance (Contravariant t, Contravariant u) => Covariant (T Contra Contra t u) where
-	f <$> T x = T $ contramap (contramap f) x
+instance (Contravariant t, Contravariant u) => Covariant (U Contra Contra t u) where
+	f <$> U x = U $ contramap (contramap f) x
 
-instance (Applicative t, Applicative u) => Applicative (T Co Co t u) where
-	T f <*> T x = T $ apply <$> f <*> x
+instance (Applicative t, Applicative u) => Applicative (U Co Co t u) where
+	U f <*> U x = U $ apply <$> f <*> x
 
-instance (Alternative t, Covariant u) => Alternative (T Co Co t u) where
-	T x <+> T y = T $ x <+> y
+instance (Alternative t, Covariant u) => Alternative (U Co Co t u) where
+	U x <+> U y = U $ x <+> y
 
-instance (Exclusive t, Covariant u) => Exclusive (T Co Co t u) where
-	exclusive = T exclusive
+instance (Exclusive t, Covariant u) => Exclusive (U Co Co t u) where
+	exclusive = U exclusive
 
-instance (Pointable t, Pointable u) => Pointable (T Co Co t u) where
-	point = T . point . point
+instance (Pointable t, Pointable u) => Pointable (U Co Co t u) where
+	point = U . point . point
 
-instance (Extractable t, Extractable u) => Extractable (T Co Co t u) where
-	extract = extract . extract . t
+instance (Extractable t, Extractable u) => Extractable (U Co Co t u) where
+	extract = extract . extract . u
 
-instance (t :-|: u, v :-|: w) => Adjoint (T Co Co t v) (T Co Co u w) where
+instance (t :-|: u, v :-|: w) => Adjoint (U Co Co t v) (U Co Co u w) where
 	phi f = point . f . point
 	psi f = extract . extract . comap f
 
 
-newtype TT ct cu cv t u v a = TT { tt :: (t :.: u :.: v) a }
+newtype UU ct cu cv t u v a = UU { uu :: (t :.: u :.: v) a }
 
-instance (Covariant t, Covariant u, Covariant v) => Covariant (TT Co Co Co t u v) where
-	f <$> TT x = TT $ (comap . comap . comap) f x
+instance (Covariant t, Covariant u, Covariant v) => Covariant (UU Co Co Co t u v) where
+	f <$> UU x = UU $ (comap . comap . comap) f x
 
-instance (Covariant t, Covariant u, Contravariant v) => Contravariant (TT Co Co Contra t u v) where
-	f >$< TT x = TT $ (comap . comap) (contramap f) x
+instance (Covariant t, Covariant u, Contravariant v) => Contravariant (UU Co Co Contra t u v) where
+	f >$< UU x = UU $ (comap . comap) (contramap f) x
 
-instance (Covariant t, Contravariant u, Covariant v) => Contravariant (TT Co Contra Co t u v) where
-	f >$< TT x = TT $ contramap (comap f) <$> x
+instance (Covariant t, Contravariant u, Covariant v) => Contravariant (UU Co Contra Co t u v) where
+	f >$< UU x = UU $ contramap (comap f) <$> x
 
-instance (Contravariant t, Covariant u, Covariant v) => Contravariant (TT Contra Co Co t u v) where
-	f >$< TT x = TT $ comap (comap f) >$< x
+instance (Contravariant t, Covariant u, Covariant v) => Contravariant (UU Contra Co Co t u v) where
+	f >$< UU x = UU $ comap (comap f) >$< x
 
-instance (Contravariant t, Contravariant u, Covariant v) => Covariant (TT Contra Contra Co t u v) where
-	f <$> TT x = TT $ contramap (comap f) >$< x
+instance (Contravariant t, Contravariant u, Covariant v) => Covariant (UU Contra Contra Co t u v) where
+	f <$> UU x = UU $ contramap (comap f) >$< x
 
-instance (Covariant t, Contravariant u, Contravariant v) => Covariant (TT Co Contra Contra t u v) where
-	f <$> TT x = TT $ contramap (contramap f) <$> x
+instance (Covariant t, Contravariant u, Contravariant v) => Covariant (UU Co Contra Contra t u v) where
+	f <$> UU x = UU $ contramap (contramap f) <$> x
 
-instance (Contravariant t, Covariant u, Contravariant v) => Covariant (TT Contra Co Contra t u v) where
-	f <$> TT x = TT $ comap (contramap f) >$< x
+instance (Contravariant t, Covariant u, Contravariant v) => Covariant (UU Contra Co Contra t u v) where
+	f <$> UU x = UU $ comap (contramap f) >$< x
 
-instance (Contravariant t, Contravariant u, Contravariant v) => Contravariant (TT Contra Contra Contra t u v) where
-	f >$< TT x = TT $ (contramap . contramap . contramap) f x
+instance (Contravariant t, Contravariant u, Contravariant v) => Contravariant (UU Contra Contra Contra t u v) where
+	f >$< UU x = UU $ (contramap . contramap . contramap) f x
 
-instance (Applicative t, Applicative u, Applicative v) => Applicative (TT Co Co Co t u v) where
-	TT f <*> TT x = TT $ (comap apply . (comap . comap) apply $ f) <*> x
+instance (Applicative t, Applicative u, Applicative v) => Applicative (UU Co Co Co t u v) where
+	UU f <*> UU x = UU $ (comap apply . (comap . comap) apply $ f) <*> x
 
-instance (Alternative t, Covariant u, Covariant v) => Alternative (TT Co Co Co t u v) where
-	TT x <+> TT y = TT $ x <+> y
+instance (Alternative t, Covariant u, Covariant v) => Alternative (UU Co Co Co t u v) where
+	UU x <+> UU y = UU $ x <+> y
 
-instance (Exclusive t, Covariant u, Covariant v) => Exclusive (TT Co Co Co t u v) where
-	exclusive = TT exclusive
+instance (Exclusive t, Covariant u, Covariant v) => Exclusive (UU Co Co Co t u v) where
+	exclusive = UU exclusive
 
-instance (Pointable t, Pointable u, Pointable v) => Pointable (TT Co Co Co t u v) where
-	point = TT . point . point . point
+instance (Pointable t, Pointable u, Pointable v) => Pointable (UU Co Co Co t u v) where
+	point = UU . point . point . point
 
-instance (Extractable t, Extractable u, Extractable v) => Extractable (TT Co Co Co t u v) where
-	extract = extract . extract . extract . tt
+instance (Extractable t, Extractable u, Extractable v) => Extractable (UU Co Co Co t u v) where
+	extract = extract . extract . extract . uu
 
-instance (t :-|: w, v :-|: x, u :-|: y) => Adjoint (TT Co Co Co t v u) (TT Co Co Co w x y) where
+instance (t :-|: w, v :-|: x, u :-|: y) => Adjoint (UU Co Co Co t v u) (UU Co Co Co w x y) where
 	phi f = point . f . point
 	psi f = extract . extract . comap f
 
 
-newtype TTT ct cu cv cw t u v w a = TTT { ttt :: (t :.: u :.: v :.: w) a }
+newtype UUU ct cu cv cw t u v w a = UUU { uuu :: (t :.: u :.: v :.: w) a }
 
-instance (Covariant t, Covariant u, Covariant v, Covariant w) => Covariant (TTT Co Co Co Co t u v w) where
-	f <$> TTT x = TTT $ (comap . comap . comap . comap) f x
+instance (Covariant t, Covariant u, Covariant v, Covariant w) => Covariant (UUU Co Co Co Co t u v w) where
+	f <$> UUU x = UUU $ (comap . comap . comap . comap) f x
 
-instance (Covariant t, Covariant u, Covariant v, Contravariant w) => Contravariant (TTT Co Co Co Contra t u v w) where
-	f >$< TTT x = TTT $ (comap . comap . comap) (contramap f) x
+instance (Covariant t, Covariant u, Covariant v, Contravariant w) => Contravariant (UUU Co Co Co Contra t u v w) where
+	f >$< UUU x = UUU $ (comap . comap . comap) (contramap f) x
 
-instance (Covariant t, Covariant u, Contravariant v, Covariant w) => Contravariant (TTT Co Co Contra Co t u v w) where
-	f >$< TTT x = TTT $ (comap . comap) (contramap (comap f)) x
+instance (Covariant t, Covariant u, Contravariant v, Covariant w) => Contravariant (UUU Co Co Contra Co t u v w) where
+	f >$< UUU x = UUU $ (comap . comap) (contramap (comap f)) x
 
-instance (Covariant t, Contravariant u, Covariant v, Covariant w) => Contravariant (TTT Co Contra Co Co t u v w) where
-	f >$< TTT x = TTT $ (contramap (comap (comap f))) <$> x
+instance (Covariant t, Contravariant u, Covariant v, Covariant w) => Contravariant (UUU Co Contra Co Co t u v w) where
+	f >$< UUU x = UUU $ (contramap (comap (comap f))) <$> x
 
-instance (Contravariant t, Covariant u, Covariant v, Covariant w) => Contravariant (TTT Contra Co Co Co t u v w) where
-	f >$< TTT x = TTT $ comap (comap (comap f)) >$< x
+instance (Contravariant t, Covariant u, Covariant v, Covariant w) => Contravariant (UUU Contra Co Co Co t u v w) where
+	f >$< UUU x = UUU $ comap (comap (comap f)) >$< x
 
-instance (Contravariant t, Contravariant u, Covariant v, Covariant w) => Covariant (TTT Contra Contra Co Co t u v w) where
-	f <$> TTT x = TTT $ (contramap . contramap . comap . comap $ f) x
+instance (Contravariant t, Contravariant u, Covariant v, Covariant w) => Covariant (UUU Contra Contra Co Co t u v w) where
+	f <$> UUU x = UUU $ (contramap . contramap . comap . comap $ f) x
 
-instance (Covariant t, Contravariant u, Contravariant v, Covariant w) => Covariant (TTT Co Contra Contra Co t u v w) where
-	f <$> TTT x = TTT $ (comap . contramap . contramap . comap $ f) x
+instance (Covariant t, Contravariant u, Contravariant v, Covariant w) => Covariant (UUU Co Contra Contra Co t u v w) where
+	f <$> UUU x = UUU $ (comap . contramap . contramap . comap $ f) x
 
-instance (Covariant t, Covariant u, Contravariant v, Contravariant w) => Covariant (TTT Co Co Contra Contra t u v w) where
-	f <$> TTT x = TTT $ (comap . comap) (contramap . contramap $ f) x
+instance (Covariant t, Covariant u, Contravariant v, Contravariant w) => Covariant (UUU Co Co Contra Contra t u v w) where
+	f <$> UUU x = UUU $ (comap . comap) (contramap . contramap $ f) x
 
-instance (Covariant t, Contravariant u, Covariant v, Contravariant w) => Covariant (TTT Co Contra Co Contra t u v w) where
-	f <$> TTT x = TTT $ (comap . contramap . comap . contramap $ f) x
+instance (Covariant t, Contravariant u, Covariant v, Contravariant w) => Covariant (UUU Co Contra Co Contra t u v w) where
+	f <$> UUU x = UUU $ (comap . contramap . comap . contramap $ f) x
 
-instance (Contravariant t, Covariant u, Contravariant v, Covariant w) => Covariant (TTT Contra Co Contra Co t u v w) where
-	f <$> TTT x = TTT $ (contramap . comap . contramap . comap $ f) x
+instance (Contravariant t, Covariant u, Contravariant v, Covariant w) => Covariant (UUU Contra Co Contra Co t u v w) where
+	f <$> UUU x = UUU $ (contramap . comap . contramap . comap $ f) x
 
-instance (Contravariant t, Covariant u, Covariant v, Contravariant w) => Covariant (TTT Contra Co Co Contra t u v w) where
-	f <$> TTT x = TTT $ (contramap . comap . comap . contramap $ f) x
+instance (Contravariant t, Covariant u, Covariant v, Contravariant w) => Covariant (UUU Contra Co Co Contra t u v w) where
+	f <$> UUU x = UUU $ (contramap . comap . comap . contramap $ f) x
 
-instance (Contravariant t, Contravariant u, Contravariant v, Covariant w) => Contravariant (TTT Contra Contra Contra Co t u v w) where
-	f >$< TTT x = TTT $ (contramap . contramap . contramap . comap) f x
+instance (Contravariant t, Contravariant u, Contravariant v, Covariant w) => Contravariant (UUU Contra Contra Contra Co t u v w) where
+	f >$< UUU x = UUU $ (contramap . contramap . contramap . comap) f x
 
-instance (Covariant t, Contravariant u, Contravariant v, Contravariant w) => Contravariant (TTT Co Contra Contra Contra t u v w) where
-	f >$< TTT x = TTT $ (comap . contramap . contramap . contramap) f x
+instance (Covariant t, Contravariant u, Contravariant v, Contravariant w) => Contravariant (UUU Co Contra Contra Contra t u v w) where
+	f >$< UUU x = UUU $ (comap . contramap . contramap . contramap) f x
 
-instance (Contravariant t, Covariant u, Contravariant v, Contravariant w) => Contravariant (TTT Contra Co Contra Contra t u v w) where
-	f >$< TTT x = TTT $ (contramap . comap . contramap . contramap) f x
+instance (Contravariant t, Covariant u, Contravariant v, Contravariant w) => Contravariant (UUU Contra Co Contra Contra t u v w) where
+	f >$< UUU x = UUU $ (contramap . comap . contramap . contramap) f x
 
-instance (Contravariant t, Contravariant u, Covariant v, Contravariant w) => Contravariant (TTT Contra Contra Co Contra t u v w) where
-	f >$< TTT x = TTT $ (contramap . contramap . comap . contramap) f x
+instance (Contravariant t, Contravariant u, Covariant v, Contravariant w) => Contravariant (UUU Contra Contra Co Contra t u v w) where
+	f >$< UUU x = UUU $ (contramap . contramap . comap . contramap) f x
 
-instance (Contravariant t, Contravariant u, Contravariant v, Contravariant w) => Covariant (TTT Contra Contra Contra Contra t u v w) where
-	f <$> TTT x = TTT $ (contramap . contramap . contramap . contramap) f x
+instance (Contravariant t, Contravariant u, Contravariant v, Contravariant w) => Covariant (UUU Contra Contra Contra Contra t u v w) where
+	f <$> UUU x = UUU $ (contramap . contramap . contramap . contramap) f x
 
-instance (Applicative t, Applicative u, Applicative v, Applicative w) => Applicative (TTT Co Co Co Co t u v w) where
-	TTT f <*> TTT x = TTT $ (comap apply . (comap . comap) apply . (comap . comap . comap) apply $ f) <*> x
+instance (Applicative t, Applicative u, Applicative v, Applicative w) => Applicative (UUU Co Co Co Co t u v w) where
+	UUU f <*> UUU x = UUU $ (comap apply . (comap . comap) apply . (comap . comap . comap) apply $ f) <*> x
 
-instance (Alternative t, Covariant u, Covariant v, Covariant w) => Alternative (TTT Co Co Co Co t u v w) where
-	TTT x <+> TTT y = TTT $ x <+> y
+instance (Alternative t, Covariant u, Covariant v, Covariant w) => Alternative (UUU Co Co Co Co t u v w) where
+	UUU x <+> UUU y = UUU $ x <+> y
 
-instance (Exclusive t, Covariant u, Covariant v, Covariant w) => Exclusive (TTT Co Co Co Co t u v w) where
-	exclusive = TTT exclusive
+instance (Exclusive t, Covariant u, Covariant v, Covariant w) => Exclusive (UUU Co Co Co Co t u v w) where
+	exclusive = UUU exclusive
 
-instance (Pointable t, Pointable u, Pointable v, Pointable w) => Pointable (TTT Co Co Co Co t u v w) where
-	point = TTT . point . point . point . point
+instance (Pointable t, Pointable u, Pointable v, Pointable w) => Pointable (UUU Co Co Co Co t u v w) where
+	point = UUU . point . point . point . point
 
-instance (Extractable t, Extractable u, Extractable v, Extractable w) => Extractable (TTT Co Co Co Co t u v w) where
-	extract = extract . extract . extract . extract . ttt
+instance (Extractable t, Extractable u, Extractable v, Extractable w) => Extractable (UUU Co Co Co Co t u v w) where
+	extract = extract . extract . extract . extract . uuu
 
-instance (t :-|: u, v :-|: w, q :-|: q, r :-|: s) => Adjoint (TTT Co Co Co Co t v q r) (TTT Co Co Co Co u w q s) where
+instance (t :-|: u, v :-|: w, q :-|: q, r :-|: s) => Adjoint (UUU Co Co Co Co t v q r) (UUU Co Co Co Co u w q s) where
 	phi f = point . f . point
 	psi f = extract . extract . comap f
