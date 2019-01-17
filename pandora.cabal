@@ -21,7 +21,6 @@ library
   exposed-modules:
     Core.Morphism
     Core.Composition
-    Core.Transformer
     Pattern.Functor
     Pattern.Object
     Paradigm.Basis

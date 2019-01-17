@@ -1,8 +1,9 @@
-module Paradigm.Basis.Maybe (Maybe (..)) where
+module Paradigm.Basis.Maybe (Maybe (..), maybe) where
 
-import Core.Morphism (($))
+import Core.Morphism ((.), ($))
 import Core.Variant (Variant (Co))
-import Paradigm.Basis.Functor.Transformer (UT (UT))
+import Paradigm.Basis.Identity (Identity (Identity))
+import Paradigm.Basis.Functor.Transformer (UT (UT, ut), type (:!:))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -13,6 +14,10 @@ import Pattern.Functor.Monad (Monad)
 import Pattern.Functor.Liftable (Liftable (lift))
 
 data Maybe a = Nothing | Just a
+
+maybe :: b -> (a -> b) -> Maybe a -> b
+maybe x _ Nothing = x
+maybe _ f (Just y) = f y
 
 instance Covariant Maybe where
 	f <$> Just x = Just $ f x
@@ -39,5 +44,7 @@ instance Bindable Maybe where
 
 instance Monad Maybe where
 
-instance Liftable (UT Co Co Maybe) where
-	lift x = UT $ Just <$> x
+instance (Pointable t, Bindable t) => Bindable (Maybe :!: t) where
+	UT x >>= f = UT $ x >>= maybe (point Nothing) (ut . f)
+
+instance (Pointable t, Bindable t) => Monad (Maybe :!: t) where
