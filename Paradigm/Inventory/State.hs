@@ -18,7 +18,7 @@ type State s = Stateful s Identity
 instance Covariant t => Covariant (Stateful s t) where
 	f <$> Stateful x = Stateful $ \old -> (comap . comap) f $ x old
 
-instance Monad t => Applicative (Stateful s t) where
+instance Bindable t => Applicative (Stateful s t) where
 	Stateful f <*> Stateful x = Stateful $ \old ->
 		f old >>= \(new :&: g) -> comap g <$> x new
 

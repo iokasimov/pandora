@@ -1,8 +1,7 @@
-module Paradigm.Basis.Functor.Transformer (T (..), type (:!:)) where
+module Paradigm.Basis.Functor.Transformer (T (..), type (:!:), up) where
 
 import Core.Composition ((:.:))
 import Core.Morphism ((.), ($))
-import Core.Variant (Variant (Co, Contra))
 import Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pattern.Functor.Extractable (Extractable (extract))
 import Pattern.Functor.Pointable (Pointable (point))
@@ -26,3 +25,6 @@ instance Pointable t => Liftable (T t) where
 
 instance Extractable t => Lowerable (T t) where
 	lower (T x) = extract <$> x
+
+up :: Pointable u => t a -> T t u a
+up = T . point
