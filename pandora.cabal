@@ -68,6 +68,8 @@ library
     Paradigm.Basis.Cofree
     Paradigm.Basis.Kan
     Paradigm.Inventory.State
+    Paradigm.Structure.Nonempty
+    Paradigm.Structure.Stack
   default-extensions:
     DataKinds
     ConstraintKinds
