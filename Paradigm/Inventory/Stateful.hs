@@ -1,4 +1,4 @@
-module Paradigm.Inventory.State (Stateful (..), State, get, modify, put) where
+module Paradigm.Inventory.Stateful (Stateful (..), State, get, modify, put) where
 
 import Core.Composition ((:.:))
 import Core.Morphism ((.), ($))

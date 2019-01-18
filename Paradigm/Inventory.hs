@@ -1,3 +1,4 @@
 module Paradigm.Inventory (module Exports) where
 
-import Paradigm.Inventory.State as Exports
+import Paradigm.Inventory.Storage as Exports
+import Paradigm.Inventory.Stateful as Exports

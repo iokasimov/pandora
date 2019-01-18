@@ -67,7 +67,8 @@ library
     Paradigm.Basis.Free
     Paradigm.Basis.Cofree
     Paradigm.Basis.Kan
-    Paradigm.Inventory.State
+    Paradigm.Inventory.Stateful
+    Paradigm.Inventory.Storage
     Paradigm.Structure.Nonempty
     Paradigm.Structure.Stack
   default-extensions:
