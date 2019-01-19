@@ -1,4 +1,4 @@
-module Paradigm.Basis.Functor.Composition (U (..), UU (..), UUU (..)) where
+module Paradigm.Basis.Junction.Composition (U (..), UU (..), UUU (..)) where
 
 import Core.Composition ((:.:))
 import Core.Morphism ((.), ($))

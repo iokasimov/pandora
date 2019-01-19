@@ -26,7 +26,6 @@ library
     Pattern.Functor
     Pattern.Object
     Paradigm.Basis
-    Paradigm.Basis.Functor
     Paradigm.Inventory
     Paradigm.Structure
   other-modules:
@@ -55,8 +54,8 @@ library
     Pattern.Object.Group
     Pattern.Object.Semilattice
     Pattern.Object.Lattice
-    Paradigm.Basis.Functor.Composition
-    Paradigm.Basis.Functor.Transformer
+    Paradigm.Basis.Junction.Composition
+    Paradigm.Basis.Junction.Transformer
     Paradigm.Basis.Identity
     Paradigm.Basis.Conclusion
     Paradigm.Basis.Constant

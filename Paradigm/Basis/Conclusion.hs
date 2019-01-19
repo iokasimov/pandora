@@ -1,7 +1,7 @@
 module Paradigm.Basis.Conclusion (Conclusion (..), conclusion) where
 
 import Core.Morphism ((.), ($), (!))
-import Paradigm.Basis.Functor.Transformer (T (T, t), type (:!:))
+import Paradigm.Basis.Junction.Transformer (T (T, t), type (:!:))
 import Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))

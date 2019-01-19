@@ -1,4 +1,4 @@
-module Paradigm.Basis.Functor.Transformer (T (..), type (:!:), up) where
+module Paradigm.Basis.Junction.Transformer (T (..), type (:!:), up) where
 
 import Core.Composition ((:.:))
 import Core.Morphism ((.), ($))
