@@ -8,6 +8,8 @@ import Pattern.Functor.Extractable (Extractable (extract))
 import Pattern.Functor.Exclusive (Exclusive (exclusive))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pattern.Functor.Applicative (Applicative ((<*>), apply))
+import Pattern.Functor.Traversable (Traversable ((->>), traverse))
+import Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pattern.Functor.Bindable (Bindable ((>>=), bind))
 import Pattern.Functor.Liftable (Liftable (lift))
 import Pattern.Functor.Lowerable (Lowerable (lower))
@@ -40,6 +42,12 @@ instance Pointable t => Liftable (T t) where
 
 instance Extractable t => Lowerable (T t) where
 	lower (T x) = extract <$> x
+
+instance (Traversable t, Traversable u) => Traversable (T t u) where
+	T x ->> f = T <$> (traverse . traverse) f x
+
+instance (Distributive t, Distributive u) => Distributive (T t u) where
+	x >>- f = T . comap distribute . distribute $ t . f <$> x
 
 up :: Pointable u => t a -> T t u a
 up = T . point
