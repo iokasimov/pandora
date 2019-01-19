@@ -10,6 +10,8 @@ import Pattern.Functor.Exclusive (Exclusive (exclusive))
 import Pattern.Functor.Pointable (Pointable (point))
 import Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pattern.Functor.Applicative (Applicative ((<*>), apply))
+import Pattern.Functor.Traversable (Traversable ((->>), traverse))
+import Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pattern.Functor.Adjoint (Adjoint (phi, psi))
 
 type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoint t u)
@@ -28,20 +30,26 @@ instance (Contravariant t, Covariant u) => Contravariant (U Contra Co t u) where
 instance (Contravariant t, Contravariant u) => Covariant (U Contra Contra t u) where
 	f <$> U x = U $ contramap (contramap f) x
 
+instance (Pointable t, Pointable u) => Pointable (U Co Co t u) where
+	point = U . point . point
+
+instance (Extractable t, Extractable u) => Extractable (U Co Co t u) where
+	extract = extract . extract . u
+
+instance (Exclusive t, Covariant u) => Exclusive (U Co Co t u) where
+	exclusive = U exclusive
+
 instance (Applicative t, Applicative u) => Applicative (U Co Co t u) where
 	U f <*> U x = U $ apply <$> f <*> x
 
 instance (Alternative t, Covariant u) => Alternative (U Co Co t u) where
 	U x <+> U y = U $ x <+> y
 
-instance (Exclusive t, Covariant u) => Exclusive (U Co Co t u) where
-	exclusive = U exclusive
+instance (Traversable t, Traversable u) => Traversable (U Co Co t u) where
+	U x ->> f = U <$> (traverse . traverse) f x
 
-instance (Pointable t, Pointable u) => Pointable (U Co Co t u) where
-	point = U . point . point
-
-instance (Extractable t, Extractable u) => Extractable (U Co Co t u) where
-	extract = extract . extract . u
+instance (Distributive t, Distributive u) => Distributive (U Co Co t u) where
+	x >>- f = U . comap distribute . distribute $ u . f <$> x
 
 instance (t :-|: u, v :-|: w) => Adjoint (U Co Co t v) (U Co Co u w) where
 	phi f = point . f . point
@@ -74,20 +82,26 @@ instance (Contravariant t, Covariant u, Contravariant v) => Covariant (UU Contra
 instance (Contravariant t, Contravariant u, Contravariant v) => Contravariant (UU Contra Contra Contra t u v) where
 	f >$< UU x = UU $ (contramap . contramap . contramap) f x
 
+instance (Pointable t, Pointable u, Pointable v) => Pointable (UU Co Co Co t u v) where
+	point = UU . point . point . point
+
+instance (Extractable t, Extractable u, Extractable v) => Extractable (UU Co Co Co t u v) where
+	extract = extract . extract . extract . uu
+
+instance (Exclusive t, Covariant u, Covariant v) => Exclusive (UU Co Co Co t u v) where
+	exclusive = UU exclusive
+
 instance (Applicative t, Applicative u, Applicative v) => Applicative (UU Co Co Co t u v) where
 	UU f <*> UU x = UU $ (comap apply . (comap . comap) apply $ f) <*> x
 
 instance (Alternative t, Covariant u, Covariant v) => Alternative (UU Co Co Co t u v) where
 	UU x <+> UU y = UU $ x <+> y
 
-instance (Exclusive t, Covariant u, Covariant v) => Exclusive (UU Co Co Co t u v) where
-	exclusive = UU exclusive
+instance (Traversable t, Traversable u, Traversable v) => Traversable (UU Co Co Co t u v) where
+	UU x ->> f = UU <$> (traverse . traverse . traverse) f x
 
-instance (Pointable t, Pointable u, Pointable v) => Pointable (UU Co Co Co t u v) where
-	point = UU . point . point . point
-
-instance (Extractable t, Extractable u, Extractable v) => Extractable (UU Co Co Co t u v) where
-	extract = extract . extract . extract . uu
+instance (Distributive t, Distributive u, Distributive v) => Distributive (UU Co Co Co t u v) where
+	x >>- f = UU . (comap . comap) distribute . comap distribute . distribute $ uu . f <$> x
 
 instance (t :-|: w, v :-|: x, u :-|: y) => Adjoint (UU Co Co Co t v u) (UU Co Co Co w x y) where
 	phi f = point . f . point
@@ -144,20 +158,26 @@ instance (Contravariant t, Contravariant u, Covariant v, Contravariant w) => Con
 instance (Contravariant t, Contravariant u, Contravariant v, Contravariant w) => Covariant (UUU Contra Contra Contra Contra t u v w) where
 	f <$> UUU x = UUU $ (contramap . contramap . contramap . contramap) f x
 
+instance (Pointable t, Pointable u, Pointable v, Pointable w) => Pointable (UUU Co Co Co Co t u v w) where
+	point = UUU . point . point . point . point
+
+instance (Extractable t, Extractable u, Extractable v, Extractable w) => Extractable (UUU Co Co Co Co t u v w) where
+	extract = extract . extract . extract . extract . uuu
+
+instance (Exclusive t, Covariant u, Covariant v, Covariant w) => Exclusive (UUU Co Co Co Co t u v w) where
+	exclusive = UUU exclusive
+
 instance (Applicative t, Applicative u, Applicative v, Applicative w) => Applicative (UUU Co Co Co Co t u v w) where
 	UUU f <*> UUU x = UUU $ (comap apply . (comap . comap) apply . (comap . comap . comap) apply $ f) <*> x
 
 instance (Alternative t, Covariant u, Covariant v, Covariant w) => Alternative (UUU Co Co Co Co t u v w) where
 	UUU x <+> UUU y = UUU $ x <+> y
 
-instance (Exclusive t, Covariant u, Covariant v, Covariant w) => Exclusive (UUU Co Co Co Co t u v w) where
-	exclusive = UUU exclusive
+instance (Traversable t, Traversable u, Traversable v, Traversable w) => Traversable (UUU Co Co Co Co t u v w) where
+	UUU x ->> f = UUU <$> (traverse . traverse . traverse . traverse) f x
 
-instance (Pointable t, Pointable u, Pointable v, Pointable w) => Pointable (UUU Co Co Co Co t u v w) where
-	point = UUU . point . point . point . point
-
-instance (Extractable t, Extractable u, Extractable v, Extractable w) => Extractable (UUU Co Co Co Co t u v w) where
-	extract = extract . extract . extract . extract . uuu
+instance (Distributive t, Distributive u, Distributive v, Distributive w) => Distributive (UUU Co Co Co Co t u v w) where
+	x >>- f = UUU . (comap . comap . comap) distribute . (comap . comap) distribute . comap distribute . distribute $ uuu . f <$> x
 
 instance (t :-|: u, v :-|: w, q :-|: q, r :-|: s) => Adjoint (UUU Co Co Co Co t v q r) (UUU Co Co Co Co u w q s) where
 	phi f = point . f . point
