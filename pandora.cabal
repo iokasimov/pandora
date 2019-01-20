@@ -67,6 +67,7 @@ library
     Pandora.Paradigm.Basis.Free
     Pandora.Paradigm.Basis.Cofree
     Pandora.Paradigm.Basis.Kan
+    Pandora.Paradigm.Basis.Transformations
     Pandora.Paradigm.Inventory.Stateful
     Pandora.Paradigm.Inventory.Storage
     Pandora.Paradigm.Structure.Nonempty
@@ -75,6 +76,7 @@ library
     DataKinds
     ConstraintKinds
     ExistentialQuantification
+    FlexibleContexts
     FlexibleInstances
     KindSignatures
     LiberalTypeSynonyms

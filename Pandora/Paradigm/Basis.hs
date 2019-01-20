@@ -1,5 +1,7 @@
 module Pandora.Paradigm.Basis (module Exports) where
 
+import Pandora.Paradigm.Basis.Transformations as Exports
+
 import Pandora.Paradigm.Basis.Kan as Exports
 import Pandora.Paradigm.Basis.Cofree as Exports
 import Pandora.Paradigm.Basis.Free as Exports
