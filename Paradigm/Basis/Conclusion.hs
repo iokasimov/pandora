@@ -12,10 +12,6 @@ import Pattern.Functor.Monad (Monad)
 
 data Conclusion e a = Failure e | Success a
 
-conclusion :: (e -> b) -> (a -> b) -> Conclusion e a -> b
-conclusion f _ (Failure x) = f x
-conclusion _ s (Success x) = s x
-
 instance Covariant (Conclusion e) where
 	f <$> Success x = Success $ f x
 	_ <$> Failure y = Failure y
@@ -45,3 +41,7 @@ instance (Pointable t, Bindable t) => Bindable (Conclusion e :!: t) where
 	T x >>= f = T $ x >>= conclusion (point . Failure) (t . f)
 
 instance (Pointable t, Bindable t) => Monad (Conclusion e :!: t) where
+
+conclusion :: (e -> b) -> (a -> b) -> Conclusion e a -> b
+conclusion f _ (Failure x) = f x
+conclusion _ s (Success x) = s x

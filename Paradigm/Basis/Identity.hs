@@ -10,6 +10,14 @@ import Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pattern.Functor.Adjoint (Adjoint (phi, psi))
+import Pattern.Object.Setoid (Setoid ((==)))
+import Pattern.Object.Chain (Chain ((<=)))
+import Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pattern.Object.Monoid (Monoid (unit))
+import Pattern.Object.Ringoid (Ringoid ((><)))
+import Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
+import Pattern.Object.Lattice (Lattice)
+import Pattern.Object.Group (Group (inverse))
 
 newtype Identity a = Identity a
 
@@ -40,3 +48,29 @@ instance Extendable Identity where
 instance Adjoint Identity Identity where
 	phi f = Identity . f . Identity
 	psi f = extract . extract . comap f
+
+instance Setoid a => Setoid (Identity a) where
+	Identity x == Identity y = x == y
+
+instance Chain a => Chain (Identity a) where
+	Identity x <= Identity y = x <= y
+
+instance Semigroup a => Semigroup (Identity a) where
+	Identity x <> Identity y = Identity $ x <> y
+
+instance Monoid a => Monoid (Identity a) where
+	 unit = Identity unit
+
+instance Ringoid a => Ringoid (Identity a) where
+	Identity x >< Identity y = Identity $ x >< y
+
+instance Infimum a => Infimum (Identity a) where
+	Identity x /\ Identity y = Identity $ x /\ y
+
+instance Supremum a => Supremum (Identity a) where
+	Identity x \/ Identity y = Identity $ x \/ y
+
+instance Lattice a => Lattice (Identity a) where
+
+instance Group a => Group (Identity a) where
+	inverse (Identity x) = Identity $ inverse x
