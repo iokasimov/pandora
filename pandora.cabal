@@ -73,6 +73,7 @@ library
     Pandora.Paradigm.Inventory.Storage
     Pandora.Paradigm.Structure.Nonempty
     Pandora.Paradigm.Structure.Stack
+    Pandora.Paradigm.Structure.Graph
   default-extensions:
     DataKinds
     ConstraintKinds
