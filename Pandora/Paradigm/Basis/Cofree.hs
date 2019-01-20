@@ -1,6 +1,8 @@
-module Pandora.Paradigm.Basis.Cofree (Cofree (..), unwrap) where
+module Pandora.Paradigm.Basis.Cofree (Cofree (..), unwrap, coiterate, section) where
 
+import Pandora.Core.Composition ((:.:))
 import Pandora.Core.Morphism ((.))
+import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -13,7 +15,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), extend))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 
-data Cofree t a = a :< (t (Cofree t a))
+data Cofree t a = a :< (t :.: Cofree t) a
 
 instance Covariant t => Covariant (Cofree t) where
 	f <$> (x :< xs) = f x :< ((comap . comap) f xs)
@@ -41,5 +43,11 @@ instance (Exclusive t, Alternative t) => Monad (Cofree t) where
 
 instance Covariant t => Comonad (Cofree t) where
 
-unwrap :: Cofree t a -> t (Cofree t a)
+unwrap :: Cofree t a -> (t :.: Cofree t) a
 unwrap (_ :< xs) = xs
+
+coiterate :: Covariant t => (a -> t a) -> a -> Cofree t a
+coiterate coalgebra x = x :< (coiterate coalgebra <$> coalgebra x)
+
+section :: Comonad t => t ~> Cofree t
+section as = extract as :< extend section as

@@ -71,7 +71,6 @@ library
     Pandora.Paradigm.Inventory.Environmental
     Pandora.Paradigm.Inventory.Stateful
     Pandora.Paradigm.Inventory.Storage
-    Pandora.Paradigm.Structure.Nonempty
     Pandora.Paradigm.Structure.Stack
     Pandora.Paradigm.Structure.Graph
   default-extensions:
