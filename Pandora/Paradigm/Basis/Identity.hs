@@ -24,14 +24,14 @@ newtype Identity a = Identity a
 instance Covariant Identity where
 	f <$> Identity x = Identity $ f x
 
-instance Applicative Identity where
-	Identity f <*> Identity x = Identity $ f x
-
 instance Pointable Identity where
 	point = Identity
 
 instance Extractable Identity where
 	extract (Identity x) = x
+
+instance Applicative Identity where
+	Identity f <*> Identity x = Identity $ f x
 
 instance Traversable Identity where
 	Identity x ->> f = Identity <$> f x

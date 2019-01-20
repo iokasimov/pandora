@@ -68,6 +68,7 @@ library
     Pandora.Paradigm.Basis.Cofree
     Pandora.Paradigm.Basis.Kan
     Pandora.Paradigm.Basis.Transformations
+    Pandora.Paradigm.Inventory.Environment
     Pandora.Paradigm.Inventory.Stateful
     Pandora.Paradigm.Inventory.Storage
     Pandora.Paradigm.Structure.Nonempty
