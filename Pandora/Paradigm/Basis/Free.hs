@@ -9,32 +9,32 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 
-data Free t a = Point a | Free (t (Free t a))
+data Free t a = Pure a | Impure (t (Free t a))
 
 instance Covariant t => Covariant (Free t) where
-	f <$> Point x = Point $ f x
-	f <$> Free xs = Free $ (comap . comap) f xs
+	f <$> Pure x = Pure $ f x
+	f <$> Impure xs = Impure $ (comap . comap) f xs
 
 instance Covariant t => Pointable (Free t) where
-	point = Point
+	point = Pure
 
 instance Alternative t => Alternative (Free t) where
-	Point x <+> _ = Point x
-	_ <+> Point y = Point y
-	Free xs <+> Free ys = Free $ xs <+> ys
+	Pure x <+> _ = Pure x
+	_ <+> Pure y = Pure y
+	Impure xs <+> Impure ys = Impure $ xs <+> ys
 
 instance Exclusive t => Exclusive (Free t) where
-	exclusive = Free exclusive
+	exclusive = Impure exclusive
 
 instance Covariant t => Applicative (Free t) where
-	Point f <*> Point y = Point $ f y
-	Point f <*> Free y = Free $ comap f <$> y
-	Free f <*> y = Free $ (<*> y) <$> f
+	Pure f <*> Pure y = Pure $ f y
+	Pure f <*> Impure y = Impure $ comap f <$> y
+	Impure f <*> y = Impure $ (<*> y) <$> f
 
 instance Covariant t => Bindable (Free t) where
-	Point x >>= f = f x
-	Free xs >>= f = Free $ (>>= f) <$> xs
+	Pure x >>= f = f x
+	Impure xs >>= f = Impure $ (>>= f) <$> xs
 
 instance Traversable t => Traversable (Free t) where
-	Point x ->> f = Point <$> f x
-	Free xs ->> f = Free <$> (traverse . traverse) f xs
+	Pure x ->> f = Pure <$> f x
+	Impure xs ->> f = Impure <$> (traverse . traverse) f xs
