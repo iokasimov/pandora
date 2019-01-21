@@ -62,6 +62,8 @@ library
     Pandora.Paradigm.Basis.Constant
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Product
+    Pandora.Paradigm.Basis.Edges
+    Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Yoneda
     Pandora.Paradigm.Basis.Fix
     Pandora.Paradigm.Basis.Free
