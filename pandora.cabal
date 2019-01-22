@@ -55,12 +55,14 @@ library
     Pandora.Paradigm.Basis.Junction.Composition
     Pandora.Paradigm.Basis.Junction.Transformer
     Pandora.Paradigm.Basis.Identity
+    Pandora.Paradigm.Basis.Jack
     Pandora.Paradigm.Basis.Conclusion
     Pandora.Paradigm.Basis.Constant
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Product
     Pandora.Paradigm.Basis.Edges
     Pandora.Paradigm.Basis.Predicate
+    Pandora.Paradigm.Basis.Continuation
     Pandora.Paradigm.Basis.Yoneda
     Pandora.Paradigm.Basis.Fix
     Pandora.Paradigm.Basis.Free

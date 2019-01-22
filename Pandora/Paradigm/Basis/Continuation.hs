@@ -29,4 +29,4 @@ oblige x = Continuation (x >>=)
 
 -- | Call with current continuation
 cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
-cwcc f = Continuation $ \g -> flip continue g . f $ \x -> Continuation $ (!) (g x)
+cwcc f = Continuation $ \g -> flip continue g . f $ Continuation . (!) . g

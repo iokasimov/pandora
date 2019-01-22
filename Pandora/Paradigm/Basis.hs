@@ -12,6 +12,7 @@ import Pandora.Paradigm.Basis.Predicate as Exports
 import Pandora.Paradigm.Basis.Edges as Exports
 import Pandora.Paradigm.Basis.Conclusion as Exports
 import Pandora.Paradigm.Basis.Maybe as Exports
+import Pandora.Paradigm.Basis.Jack as Exports
 import Pandora.Paradigm.Basis.Product as Exports
 import Pandora.Paradigm.Basis.Constant as Exports
 import Pandora.Paradigm.Basis.Identity as Exports
