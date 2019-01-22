@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Inventory.Storage (Storage (..), Store) where
 
-import Pandora.Core.Composition ((:.:))
+import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($), flip)
 import Pandora.Paradigm.Basis.Identity (Identity)
 import Pandora.Paradigm.Basis.Product (Product ((:&:)), type (:&:))

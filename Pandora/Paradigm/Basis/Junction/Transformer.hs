@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Junction.Transformer (T (..), type (:!:), up) where
 
-import Pandora.Core.Composition ((:.:))
+import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

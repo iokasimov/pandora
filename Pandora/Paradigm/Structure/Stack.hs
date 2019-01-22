@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop) where
 
-import Pandora.Core.Composition ((:.:))
+import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Basis.Cofree (Cofree ((:<)), unwrap)
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just))

@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Inventory.Environmental (Environmental (..), Environ, ask, local) where
 
-import Pandora.Core.Composition ((:.:))
+import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($), (!), flip)
 import Pandora.Paradigm.Basis.Identity (Identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))

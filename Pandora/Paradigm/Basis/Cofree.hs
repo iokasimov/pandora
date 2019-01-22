@@ -1,8 +1,7 @@
 module Pandora.Paradigm.Basis.Cofree (Cofree (..), unwrap, coiterate, section) where
 
-import Pandora.Core.Composition ((:.:))
+import Pandora.Core.Functor (type (:.:), type (~>))
 import Pandora.Core.Morphism ((.))
-import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

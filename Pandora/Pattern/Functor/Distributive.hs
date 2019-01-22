@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Distributive (Distributive (..)) where
 
+import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism (identity)
-import Pandora.Core.Composition ((:.:))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |

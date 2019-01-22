@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Extendable (Extendable (..)) where
 
-import Pandora.Core.Composition ((:.:))
+import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), flip, identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 

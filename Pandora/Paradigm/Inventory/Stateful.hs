@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Inventory.Stateful (Stateful (..), State, get, modify, put) where
 
-import Pandora.Core.Composition ((:.:))
+import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Basis.Identity (Identity)
 import Pandora.Paradigm.Basis.Product (Product ((:&:)), type (:&:), delta)

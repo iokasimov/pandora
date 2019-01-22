@@ -1,8 +1,7 @@
 module Pandora.Paradigm.Basis.Junction.Composition (U (..), UU (..), UUU (..)) where
 
-import Pandora.Core.Composition ((:.:))
+import Pandora.Core.Functor (Variant (Co, Contra), type (:.:))
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Core.Variant (Variant (Co, Contra))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<), contramap))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
