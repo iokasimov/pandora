@@ -62,6 +62,7 @@ library
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Product
     Pandora.Paradigm.Basis.Edges
+    Pandora.Paradigm.Basis.Wye
     Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Continuation
     Pandora.Paradigm.Basis.Yoneda
@@ -76,6 +77,7 @@ library
     Pandora.Paradigm.Inventory.Storage
     Pandora.Paradigm.Structure.Stack
     Pandora.Paradigm.Structure.Graph
+    Pandora.Paradigm.Structure.Binary
   default-extensions:
     DataKinds
     ConstraintKinds
