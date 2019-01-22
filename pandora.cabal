@@ -24,6 +24,7 @@ library
     Pandora.Pattern.Functor
     Pandora.Pattern.Object
     Pandora.Paradigm.Basis
+    Pandora.Paradigm.Controlflow
     Pandora.Paradigm.Inventory
     Pandora.Paradigm.Structure
   other-modules:
@@ -69,6 +70,7 @@ library
     Pandora.Paradigm.Basis.Cofree
     Pandora.Paradigm.Basis.Kan
     Pandora.Paradigm.Basis.Transformations
+    Pandora.Paradigm.Controlflow.Observable
     Pandora.Paradigm.Inventory.Environmental
     Pandora.Paradigm.Inventory.Stateful
     Pandora.Paradigm.Inventory.Storage
