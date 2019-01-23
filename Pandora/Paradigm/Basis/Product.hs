@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Product (Product (..), type (:&:), delta, swap) where
+module Pandora.Paradigm.Basis.Product (Product (..), type (:&:), delta, swap, curry, uncurry) where
 
 import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -28,3 +28,9 @@ delta x = x :&: x
 
 swap :: a :&: b -> b :&: a
 swap (x :&: y) = y :&: x
+
+curry :: ((a :&: b) -> c) -> a -> b -> c
+curry f x y = f $ x :&: y
+
+uncurry :: (a -> b -> c) -> ((a :&: b) -> c)
+uncurry f (x :&: y) = f x y

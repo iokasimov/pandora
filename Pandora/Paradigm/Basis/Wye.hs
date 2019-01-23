@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Wye (Wye (..)) where
+module Pandora.Paradigm.Basis.Wye (Wye (..), wye) where
 
 import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -19,3 +19,9 @@ instance Traversable Wye where
 	Left x ->> f = Left <$> f x
 	Right y ->> f = Right <$> f y
 	Both x y ->> f = Both <$> f x <*> f y
+
+wye :: r -> (a -> r) -> (a -> r) -> (a -> a -> r) -> Wye a -> r
+wye r _ _ _ End = r
+wye _ f _ _ (Left x) = f x
+wye _ _ g _ (Right y) = g y
+wye _ _ _ h (Both x y) = h x y
