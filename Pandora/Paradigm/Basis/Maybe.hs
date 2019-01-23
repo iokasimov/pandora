@@ -47,7 +47,7 @@ instance Monad Maybe where
 instance (Pointable t, Bindable t) => Bindable (Maybe :!: t) where
 	T x >>= f = T $ x >>= maybe (point Nothing) (t . f)
 
-instance (Pointable t, Bindable t) => Monad (Maybe :!: t) where
+instance Monad t => Monad (Maybe :!: t) where
 
 maybe :: b -> (a -> b) -> Maybe a -> b
 maybe x _ Nothing = x
