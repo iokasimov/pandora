@@ -75,6 +75,7 @@ library
     Pandora.Paradigm.Inventory.Environmental
     Pandora.Paradigm.Inventory.Stateful
     Pandora.Paradigm.Inventory.Storage
+    Pandora.Paradigm.Inventory.Optics
     Pandora.Paradigm.Structure.Stack
     Pandora.Paradigm.Structure.Graph
     Pandora.Paradigm.Structure.Binary
