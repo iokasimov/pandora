@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Product (Product (..), type (:&:), delta, swap, curry, uncurry) where
+module Pandora.Paradigm.Basis.Product (Product (..), type (:*), delta, swap, curry, uncurry) where
 
 import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -6,31 +6,31 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 
-infixr 1 :&:
+infixr 1 :*
 
-data Product a b = a :&: b
+data Product a b = a :* b
 
-type (:&:) = Product
+type (:*) = Product
 
 instance Covariant (Product a) where
-	f <$> (x :&: y) = x :&: f y
+	f <$> (x :* y) = x :* f y
 
 instance Extractable (Product a) where
-	extract (x :&: y) = y
+	extract (x :* y) = y
 
 instance Extendable (Product a) where
-	(x :&: y) =>> f = (:&:) x $ f (x :&: y)
+	(x :* y) =>> f = (:*) x $ f (x :* y)
 
 instance Comonad (Product a) where
 
-delta :: a -> a :&: a
-delta x = x :&: x
+delta :: a -> a :* a
+delta x = x :* x
 
-swap :: a :&: b -> b :&: a
-swap (x :&: y) = y :&: x
+swap :: a :* b -> b :* a
+swap (x :* y) = y :* x
 
-curry :: ((a :&: b) -> c) -> a -> b -> c
-curry f x y = f $ x :&: y
+curry :: (a :* b -> c) -> a -> b -> c
+curry f x y = f $ x :* y
 
-uncurry :: (a -> b -> c) -> ((a :&: b) -> c)
-uncurry f (x :&: y) = f x y
+uncurry :: (a -> b -> c) -> a :* b -> c
+uncurry f (x :* y) = f x y
