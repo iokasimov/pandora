@@ -40,8 +40,8 @@ instance Monad (Conclusion e) where
 instance (Pointable t, Bindable t) => Bindable (Conclusion e :!: t) where
 	T x >>= f = T $ x >>= conclusion (point . Failure) (t . f)
 
-instance (Pointable t, Bindable t) => Monad (Conclusion e :!: t) where
+instance Monad t => Monad (Conclusion e :!: t) where
 
-conclusion :: (e -> b) -> (a -> b) -> Conclusion e a -> b
+conclusion :: (e -> r) -> (a -> r) -> Conclusion e a -> r
 conclusion f _ (Failure x) = f x
 conclusion _ s (Success x) = s x

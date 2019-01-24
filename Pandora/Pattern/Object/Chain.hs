@@ -18,12 +18,14 @@ order _ _ z Greater = z
 -}
 
 class Setoid a => Chain a where
-	{-# MINIMAL (<=) #-}
-	(<=) :: a -> a -> Ordering
+	{-# MINIMAL (<=>) #-}
+	(<=>) :: a -> a -> Ordering
 
-	(>=) :: a -> a -> Ordering
-	(>=) = flip (<=)
 	(<) :: a -> a -> Boolean
-	x < y = order True False False $ x <= y
+	x < y = order True False False $ x <=> y
+	(<=) :: a -> a -> Boolean
+	x <= y = order True True False $ x <=> y
 	(>) :: a -> a -> Boolean
-	x > y = order False False True $ x >= y
+	x > y = order False False True $ x <=> y
+	(>=) :: a -> a -> Boolean
+	x >= y = order False True True $ x <=> y
