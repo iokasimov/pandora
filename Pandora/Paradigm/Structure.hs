@@ -4,8 +4,8 @@ import Pandora.Paradigm.Structure.Binary as Exports
 import Pandora.Paradigm.Structure.Graph as Exports
 import Pandora.Paradigm.Structure.Stack as Exports
 
-import Pandora.Core.Functor (type (:.:))
 import Pandora.Paradigm.Basis.Cofree (Cofree)
+import Pandora.Paradigm.Basis.Junction.Transformer (type (:!:))
 
 type family Nonempty structure :: * where
-	Nonempty ((t :.: Cofree t) a) = Cofree t a
+	Nonempty ((Cofree t :!: t) a) = Cofree t a
