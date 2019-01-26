@@ -40,7 +40,6 @@ library
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Product
-    Pandora.Paradigm.Basis.Transformations
     Pandora.Paradigm.Basis.Wye
     Pandora.Paradigm.Basis.Yoneda
 

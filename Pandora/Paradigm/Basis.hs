@@ -1,6 +1,4 @@
-module Pandora.Paradigm.Basis (module Exports) where
-
-import Pandora.Paradigm.Basis.Transformations as Exports
+module Pandora.Paradigm.Basis (module Exports, note, hush) where
 
 import Pandora.Paradigm.Basis.Cofree as Exports
 import Pandora.Paradigm.Basis.Free as Exports
@@ -19,3 +17,12 @@ import Pandora.Paradigm.Basis.Identity as Exports
 import Pandora.Paradigm.Basis.Junction.Kan as Exports
 import Pandora.Paradigm.Basis.Junction.Transformer as Exports
 import Pandora.Paradigm.Basis.Junction.Composition as Exports
+
+import Pandora.Core.Functor (type (~>))
+import Pandora.Core.Morphism ((.), (!))
+
+note :: e -> Maybe ~> Conclusion e
+note x = maybe (Failure x) Success
+
+hush :: Conclusion e ~> Maybe
+hush = conclusion (Nothing !) Just
