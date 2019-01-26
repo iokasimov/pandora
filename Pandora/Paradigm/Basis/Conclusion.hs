@@ -9,6 +9,9 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (False))
+import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Greater))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
 
 data Conclusion e a = Failure e | Success a
 
@@ -41,6 +44,23 @@ instance (Pointable t, Bindable t) => Bindable (Conclusion e :!: t) where
 	T x >>= f = T $ x >>= conclusion (point . Failure) (t . f)
 
 instance Monad t => Monad (Conclusion e :!: t) where
+
+instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where
+	Success x == Success y = x == y
+	Failure x == Failure y = x == y
+	_ == _ = False
+
+instance (Chain e, Chain a) => Chain (Conclusion e a) where
+	Success x <=> Success y = x <=> y
+	Failure x <=> Failure y = x <=> y
+	Failure _ <=> Success _ = Less
+	Success _ <=> Failure _ = Greater
+
+instance (Semigroup e, Semigroup a) => Semigroup (Conclusion e a) where
+	Success x <> Success y = Success $ x <> y
+	Failure x <> Failure y = Failure $ x <> y
+	Failure x <> Success y = Success y
+	Success x <> Failure y = Success x
 
 conclusion :: (e -> r) -> (a -> r) -> Conclusion e a -> r
 conclusion f _ (Failure x) = f x
