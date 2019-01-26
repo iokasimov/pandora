@@ -36,7 +36,7 @@ library
     Pandora.Paradigm.Basis.Jack
     Pandora.Paradigm.Basis.Junction.Composition
     Pandora.Paradigm.Basis.Junction.Transformer
-    Pandora.Paradigm.Basis.Kan
+    Pandora.Paradigm.Basis.Junction.Kan
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Product

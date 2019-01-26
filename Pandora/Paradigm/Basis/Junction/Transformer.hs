@@ -55,7 +55,7 @@ up :: Pointable u => t a -> T t u a
 up = T . point
 
 
--- TODO: Liftable, Lowerable instances
+-- TODO: Liftable, Lowerable instances (QualifiedConstraints)
 
 newtype Y t u a = Y { y :: (u :.: t u) a }
 
