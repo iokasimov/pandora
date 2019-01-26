@@ -15,6 +15,7 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
 
 type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoint t u)
 
+
 newtype U ct cu t u a = U { u :: (t :.: u) a }
 
 instance (Covariant t, Covariant u) => Covariant (U Co Co t u) where
