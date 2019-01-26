@@ -13,6 +13,12 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Liftable (Liftable (lift))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (True, False))
+import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Equal, Greater))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Monoid (Monoid (unit))
+import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
+import Pandora.Pattern.Object.Lattice (Lattice)
 
 data Maybe a = Nothing | Just a
 
@@ -48,6 +54,37 @@ instance (Pointable t, Bindable t) => Bindable (Maybe :!: t) where
 	T x >>= f = T $ x >>= maybe (point Nothing) (t . f)
 
 instance Monad t => Monad (Maybe :!: t) where
+
+instance Setoid a => Setoid (Maybe a) where
+	Just x == Just y = x == y
+	Nothing == Nothing = True
+	_ == _ = False
+
+instance Chain a => Chain (Maybe a) where
+	Just x <=> Just y = x <=> y
+	Nothing <=> Nothing = Equal
+	Nothing <=> Just x = Less
+	Just x <=> Nothing = Greater
+
+instance Semigroup a => Semigroup (Maybe a) where
+	Just x <> Just y = Just $ x <> y
+	Nothing <> x = x
+	x <> Nothing = x
+
+instance Semigroup a => Monoid (Maybe a) where
+	unit = Nothing
+
+instance Infimum a => Infimum (Maybe a) where
+	Just x /\ Just y = Just $ x /\ y
+	_ /\ Nothing = Nothing
+	Nothing /\ _ = Nothing
+
+instance Supremum a => Supremum (Maybe a) where
+	Just x \/ Just y = Just $ x \/ y
+	x \/ Nothing = x
+	Nothing \/ x = x
+
+instance Lattice a => Lattice (Maybe a) where
 
 maybe :: b -> (a -> b) -> Maybe a -> b
 maybe x _ Nothing = x

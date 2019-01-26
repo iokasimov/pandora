@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Pattern.Object.Chain (Chain ((<=)))
+import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((><)))
@@ -53,7 +53,7 @@ instance Setoid a => Setoid (Identity a) where
 	Identity x == Identity y = x == y
 
 instance Chain a => Chain (Identity a) where
-	Identity x <= Identity y = x <= y
+	Identity x <=> Identity y = x <=> y
 
 instance Semigroup a => Semigroup (Identity a) where
 	Identity x <> Identity y = Identity $ x <> y
