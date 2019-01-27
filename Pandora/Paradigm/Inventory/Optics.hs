@@ -4,7 +4,9 @@ import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Inventory.Storage (Storage, position, access, retrofit)
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 
-type Lens t a p = a -> Storage p t a
+infixr 9 .~, ^., %~
+
+type Lens t source target = source -> Storage target t source
 
 -- | Get the target of a lens
 view :: Lens t a p -> a -> p

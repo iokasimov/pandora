@@ -7,19 +7,24 @@ import Pandora.Paradigm.Basis.Product (Product ((:*)), type (:*))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 
 newtype Storage p t a = Storage { stored :: ((:*) p :.: t :.: (->) p) a }
 
-instance Covariant g => Covariant (Storage p g) where
+instance Covariant t => Covariant (Storage p t) where
 	f <$> Storage (p :* x) = Storage . (:*) p $ (f .) <$> x
 
-instance Extractable g => Extractable (Storage p g) where
+instance Extractable t => Extractable (Storage p t) where
 	extract (Storage (p :* x)) = extract x p
 
-instance Extendable g => Extendable (Storage p g) where
+instance Extendable t => Extendable (Storage p t) where
 	Storage (old :* x) =>> f = Storage . (:*) old . (=>>) x $
 		\y -> \new -> f . Storage $ new :* y
+
+instance Applicative t => Applicative (Storage p t) where
+	Storage (p :* x) <*> Storage (q :* y) = Storage . (:*) q $
+		(\f g x -> f x (g x)) <$> x <*> y
 
 instance Comonad g => Comonad (Storage p g) where
 

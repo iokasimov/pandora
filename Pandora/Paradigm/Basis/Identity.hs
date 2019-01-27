@@ -9,6 +9,8 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -42,8 +44,12 @@ instance Distributive Identity where
 instance Bindable Identity where
 	Identity x >>= f = f x
 
+instance Monad Identity
+
 instance Extendable Identity where
 	x =>> f = Identity . f $ x
+
+instance Comonad Identity
 
 instance Adjoint Identity Identity where
 	phi f = Identity . f . Identity
