@@ -27,3 +27,6 @@ class Covariant (t :: * -> *) where
 	-- | Discards the result of evaluation
 	void :: t a -> t ()
 	void x = () <$ x
+
+instance Covariant ((->) a) where
+	(<$>) = (.)
