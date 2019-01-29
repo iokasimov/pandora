@@ -4,9 +4,11 @@ import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Basis.Identity (Identity)
 import Pandora.Paradigm.Basis.Product (Product ((:*)), type (:*), delta)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), comap))
+import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Liftable (Liftable (lift))
@@ -42,3 +44,7 @@ modify f = Stateful $ \s -> point $ f s :* ()
 
 put :: Pointable t => s -> Stateful s t ()
 put s = Stateful $ \_ -> point $ s :* ()
+
+fold :: Traversable t => s -> (a -> s -> s) -> t a -> s
+fold start op struct = extract . extract @Identity $
+	statefully (struct ->> (modify . op) $> () *> get) start
