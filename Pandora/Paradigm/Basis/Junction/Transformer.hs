@@ -55,8 +55,6 @@ up :: Pointable u => t a -> T t u a
 up = T . point
 
 
--- TODO: Liftable, Lowerable instances (QualifiedConstraints)
-
 newtype Y t u a = Y { y :: (u :.: t u) a }
 
 instance (Covariant (t u), Covariant u) => Covariant (Y t u) where
@@ -82,3 +80,9 @@ instance (Traversable (t u), Traversable u) => Traversable (Y t u) where
 
 instance (Distributive (t u), Distributive u) => Distributive (Y t u) where
 	x >>- f = Y . comap distribute . distribute $ y . f <$> x
+
+instance (forall u . Pointable u, Liftable t) => Liftable (Y t) where
+	lift = Y . point . lift
+
+instance (forall u . Extractable u, Lowerable t) => Lowerable (Y t) where
+	lower = lower . extract . y

@@ -22,7 +22,7 @@ library
     -- Axioms set
     Pandora.Core.Functor
     Pandora.Core.Morphism
-    -- Basic datatypes
+    -- Basic constructions
     Pandora.Paradigm.Basis
     Pandora.Paradigm.Basis.Cofree
     Pandora.Paradigm.Basis.Conclusion
@@ -85,7 +85,7 @@ library
     Pandora.Pattern.Object.Semilattice
     Pandora.Pattern.Object.Setoid
   default-extensions:
-    DataKinds, ConstraintKinds, ExistentialQuantification,
+    DataKinds, ConstraintKinds, ExistentialQuantification, QuantifiedConstraints
     FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms
     MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes
     TypeApplications, TypeFamilies, TypeOperators
