@@ -5,7 +5,7 @@ description:         Humble attempt to define a library for problem solving base
 homepage:            https://github.com/iokasimov/pandora
 license:             MIT
 license-file:        LICENSE
-extra-source-files:  CHANGELOG.md
+extra-source-files:  CHANGELOG.md, README.md
 author:              Murat Kasimov
 maintainer:          Murat Kasimov <iokasimov.m@gmail.com>
 copyright:           Copyright (c) 2019 Murat Kasimov
@@ -18,12 +18,11 @@ source-repository head
   location: https://github.com/iokasimov/pandora.git
 
 library
-
   exposed-modules:
-
+    -- Axioms set
     Pandora.Core.Functor
     Pandora.Core.Morphism
-
+    -- Basic datatypes
     Pandora.Paradigm.Basis
     Pandora.Paradigm.Basis.Cofree
     Pandora.Paradigm.Basis.Conclusion
@@ -42,21 +41,21 @@ library
     Pandora.Paradigm.Basis.Product
     Pandora.Paradigm.Basis.Wye
     Pandora.Paradigm.Basis.Yoneda
-
+    -- Control flow primitives
     Pandora.Paradigm.Controlflow
     Pandora.Paradigm.Controlflow.Observable
-
+    -- Tools for datastructures
     Pandora.Paradigm.Inventory
     Pandora.Paradigm.Inventory.Environmental
     Pandora.Paradigm.Inventory.Optics
     Pandora.Paradigm.Inventory.Stateful
     Pandora.Paradigm.Inventory.Storage
-
+    -- Tree-based datastructures
     Pandora.Paradigm.Structure
     Pandora.Paradigm.Structure.Binary
     Pandora.Paradigm.Structure.Graph
     Pandora.Paradigm.Structure.Stack
-
+    -- Functor typeclassess
     Pandora.Pattern.Functor
     Pandora.Pattern.Functor.Adjoint
     Pandora.Pattern.Functor.Alternative
@@ -75,7 +74,7 @@ library
     Pandora.Pattern.Functor.Monad
     Pandora.Pattern.Functor.Pointable
     Pandora.Pattern.Functor.Traversable
-
+    -- Typeclassess about object internals
     Pandora.Pattern.Object
     Pandora.Pattern.Object.Chain
     Pandora.Pattern.Object.Group
@@ -85,25 +84,10 @@ library
     Pandora.Pattern.Object.Semigroup
     Pandora.Pattern.Object.Semilattice
     Pandora.Pattern.Object.Setoid
-
   default-extensions:
-
-    DataKinds
-    ConstraintKinds
-    ExistentialQuantification
-    FlexibleContexts
-    FlexibleInstances
-    KindSignatures
-    LiberalTypeSynonyms
-    MultiParamTypeClasses
-    NoImplicitPrelude
-    PackageImports
-    PolyKinds
-    RankNTypes
-    TypeApplications
-    TypeFamilies
-    TypeOperators
-
+    DataKinds, ConstraintKinds, ExistentialQuantification,
+    FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms
+    MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes
+    TypeApplications, TypeFamilies, TypeOperators
   default-language: Haskell2010
-
   ghc-options: -fno-warn-tabs
