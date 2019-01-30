@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Product (Product (..), type (:*), delta, swap) where
+module Pandora.Paradigm.Basis.Product (Product (..), type (:*), delta, swap, attached) where
 
 import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -33,3 +33,6 @@ delta x = x :* x
 
 swap :: a :* b -> b :* a
 swap (x :* y) = y :* x
+
+attached :: a :* b -> a
+attached (x :* y) = x
