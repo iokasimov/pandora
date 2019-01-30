@@ -23,5 +23,5 @@ pop :: Stack a -> Stack a
 pop (Y struct) = Y $ struct >>= unwrap
 
 empty :: r -> (Cofree Maybe a -> r) -> Stack a -> r
-emtpy result f (Y Nothing) = result
+emtpy result _ (Y Nothing) = result
 empty _ f (Y (Just struct)) = f struct

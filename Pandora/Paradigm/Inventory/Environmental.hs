@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Inventory.Environmental (Environmental (..), Environ, ask, local) where
 
 import Pandora.Core.Functor (type (:.:))
-import Pandora.Core.Morphism ((.), ($), (!), flip)
+import Pandora.Core.Morphism ((.), ($), (!), (?))
 import Pandora.Paradigm.Basis.Identity (Identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -28,7 +28,7 @@ instance Alternative t => Alternative (Environmental e t) where
 	x <+> y = Environmental $ \e -> environmentally x e <+> environmentally y e
 
 instance Bindable t => Bindable (Environmental e t) where
-	Environmental x >>= f = Environmental $ \e -> x e >>= flip environmentally e . f
+	Environmental x >>= f = Environmental $ \e -> x e >>= environmentally ? e . f
 
 instance Monad t => Monad (Environmental e t) where
 

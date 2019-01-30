@@ -1,17 +1,14 @@
-module Pandora.Core.Morphism (identity, flip, fix, (.), ($), (&), (!)) where
+module Pandora.Core.Morphism (identity, fix, (.), ($), (&), (!), (?)) where
 
-infixr 9 .
+infixr 8 .
 infixr 0 $
 infixl 1 &
 infixr 2 !
+infixr 9 ?
 
 {-# INLINE identity #-}
 identity :: a -> a
 identity x = x
-
-{-# INLINE flip #-}
-flip :: (a -> b -> c) -> b -> a -> c
-flip f x y = f y x
 
 fix :: (a -> a) -> a
 fix f = let x = f x in x
@@ -31,3 +28,7 @@ x & f = f x
 {-# INLINE (!) #-}
 (!) :: a -> b -> a
 x ! y = x
+
+{-# INLINE (?) #-}
+(?) :: (a -> b -> c) -> b -> a -> c
+(?) f x y = f y x

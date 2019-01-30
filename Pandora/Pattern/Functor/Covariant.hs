@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Covariant (Covariant (..)) where
 
-import Pandora.Core.Morphism ((.), (!), flip)
+import Pandora.Core.Morphism ((.), (!), (?))
 
 infixl 4 <$>, <$, $>
 
@@ -23,7 +23,7 @@ class Covariant (t :: * -> *) where
 	(<$) = comap . (!)
 	-- | Flipped version of '<$'
 	($>) :: t a -> b -> t b
-	($>) = flip (<$)
+	($>) = (?) (<$)
 	-- | Discards the result of evaluation
 	void :: t a -> t ()
 	void x = () <$ x

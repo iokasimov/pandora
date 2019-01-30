@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Invariant (Invariant (..)) where
 
-import Pandora.Core.Morphism (flip)
+import Pandora.Core.Morphism ((?))
 
 infixl 4 >$>
 infixr 4 <$<
@@ -21,4 +21,4 @@ class Invariant (t :: * -> *) where
 	invmap f x = f <$< x
 	-- | Flipped version of '<$<'
 	(>$>) :: (b -> a) -> (a -> b) -> t a -> t b
-	(>$>) = flip (<$<)
+	(>$>) = (?) (<$<)

@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Continuation (Continuation (..), oblige, cwcc) where
 
-import Pandora.Core.Morphism ((.), ($), (!), flip)
+import Pandora.Core.Morphism ((.), ($), (!), (?))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -29,4 +29,4 @@ oblige x = Continuation (x >>=)
 
 -- | Call with current continuation
 cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
-cwcc f = Continuation $ \g -> flip continue g . f $ Continuation . (!) . g
+cwcc f = Continuation $ \g -> continue ? g . f $ Continuation . (!) . g
