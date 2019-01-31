@@ -1,10 +1,5 @@
 module Pandora.Pattern.Functor.Invariant (Invariant (..)) where
 
-import Pandora.Core.Morphism ((?))
-
-infixl 4 >$>
-infixr 4 <$<
-
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
 > Identity morphisms: invmap identity identity = identity
@@ -12,13 +7,5 @@ infixr 4 <$<
 -}
 
 class Invariant (t :: * -> *) where
-	{-# MINIMAL (<$<) #-}
-	-- | Infix version of 'invmap'
-	(<$<) :: (a -> b) -> (b -> a) -> t a -> t b
-
-	-- | Prefix version of '<$<'
+	{-# MINIMAL invmap #-}
 	invmap :: (a -> b) -> (b -> a) -> t a -> t b
-	invmap f x = f <$< x
-	-- | Flipped version of '<$<'
-	(>$>) :: (b -> a) -> (a -> b) -> t a -> t b
-	(>$>) = (?) (<$<)
