@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 
-type Stack a = (Cofree :>: Maybe) a
+type Stack = (Cofree :>: Maybe)
 
 push :: a -> Stack a -> Stack a
 push x (Y struct) = (Y $ (:<) x . Just <$> struct) <+> point x
