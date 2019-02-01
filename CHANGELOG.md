@@ -5,4 +5,5 @@
 * Remove type parameter from `Stack` type synonymous
 * Split `structure` and `value` in `Nonempty` type family
 * Define `Invariant` instance for `Constant` datatype
+* Remove all `Invariant` methods except `invmap`
 * Extract `Junction` module from `Basis`
