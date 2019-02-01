@@ -28,7 +28,6 @@ library
     Pandora.Paradigm.Basis.Conclusion
     Pandora.Paradigm.Basis.Constant
     Pandora.Paradigm.Basis.Continuation
-    Pandora.Paradigm.Basis.Capture
     Pandora.Paradigm.Basis.Edges
     Pandora.Paradigm.Basis.Fix
     Pandora.Paradigm.Basis.Free
