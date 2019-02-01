@@ -5,4 +5,4 @@
 * Remove type parameter from `Stack` type synonymous
 * Split `structure` and `value` in `Nonempty` type family
 * Define `Invariant` instance for `Constant` datatype
-* Extract `Capture` from `Observable` into separated module
+* Extract `Junction` module from `Basis`

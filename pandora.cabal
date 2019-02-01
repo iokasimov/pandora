@@ -33,14 +33,16 @@ library
     Pandora.Paradigm.Basis.Free
     Pandora.Paradigm.Basis.Identity
     Pandora.Paradigm.Basis.Jack
-    Pandora.Paradigm.Basis.Junction.Composition
-    Pandora.Paradigm.Basis.Junction.Transformer
-    Pandora.Paradigm.Basis.Junction.Kan
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Product
     Pandora.Paradigm.Basis.Wye
     Pandora.Paradigm.Basis.Yoneda
+    -- Universal functors constructions
+    Pandora.Paradigm.Junction
+    Pandora.Paradigm.Junction.Composition
+    Pandora.Paradigm.Junction.Transformer
+    Pandora.Paradigm.Junction.Kan
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     Pandora.Paradigm.Controlflow.Observable

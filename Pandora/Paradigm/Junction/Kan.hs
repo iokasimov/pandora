@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Junction.Kan (Lan (..), Ran (..)) where
+module Pandora.Paradigm.Junction.Kan (Lan (..), Ran (..)) where
 
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))

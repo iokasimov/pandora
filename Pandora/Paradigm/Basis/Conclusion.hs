@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion) where
 
 import Pandora.Core.Morphism ((.), ($), (!))
-import Pandora.Paradigm.Basis.Junction.Transformer (T (T, t), type (:!:))
+import Pandora.Paradigm.Junction.Transformer (T (T, t), type (:!:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))

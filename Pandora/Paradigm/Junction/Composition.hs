@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Junction.Composition (U (..), UU (..), UUU (..)) where
+module Pandora.Paradigm.Junction.Composition (U (..), UU (..), UUU (..)) where
 
 import Pandora.Core.Functor (Variant (Co, Contra), type (:.:))
 import Pandora.Core.Morphism ((.), ($))

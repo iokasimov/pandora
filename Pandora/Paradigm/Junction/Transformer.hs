@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Junction.Transformer (T (..), type (:!:), up, Y (..), type (:>:)) where
+module Pandora.Paradigm.Junction.Transformer (T (..), type (:!:), up, Y (..), type (:>:)) where
 
 import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($))

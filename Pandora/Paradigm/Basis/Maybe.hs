@@ -3,7 +3,7 @@ module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Basis.Identity (Identity (Identity))
-import Pandora.Paradigm.Basis.Junction.Transformer (T (T, t), type (:!:))
+import Pandora.Paradigm.Junction.Transformer (T (T, t), type (:!:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
