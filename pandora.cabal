@@ -46,6 +46,7 @@ library
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     Pandora.Paradigm.Controlflow.Observable
+    Pandora.Paradigm.Controlflow.Pipeline
     -- Tools for datastructures
     Pandora.Paradigm.Inventory
     Pandora.Paradigm.Inventory.Environmental
