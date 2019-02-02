@@ -1,10 +1,11 @@
-module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish) where
+module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, impact) where
 
 import Pandora.Core.Morphism (($))
 import Pandora.Paradigm.Basis.Continuation (Continuation (Continuation, continue))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 
 newtype Producer i t r = Producer { produce :: Consumer i t r -> t r }
 
@@ -34,3 +35,6 @@ yield v = Continuation $ \next -> Pipe $ \i o -> consume o v (pause next i)
 
 finish :: Pointable t => Pipeline i o t () ()
 finish = Continuation $ \_ -> Pipe $ \_ _ -> point ()
+
+impact :: Bindable t => t a -> Pipeline i o t a a
+impact action = Continuation $ \next -> Pipe $ \i o -> action >>= \x -> pipe (next x) i o
