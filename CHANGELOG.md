@@ -7,3 +7,6 @@
 * Define `Invariant` instance for `Constant` datatype
 * Remove all `Invariant` methods except `invmap`
 * Extract `Junction` module from `Basis`
+
+# 0.1.2
+* Define `Pipeline` control flow paradigm
