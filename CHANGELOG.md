@@ -10,3 +10,5 @@
 
 # 0.1.2
 * Define `Pipeline` control flow paradigm
+* Split `Strucure` modules on `Property` and `Concrete`
+* Define `Hollow` type class for handling empty structures

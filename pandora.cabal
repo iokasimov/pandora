@@ -55,7 +55,11 @@ library
     Pandora.Paradigm.Inventory.Storage
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
-    Pandora.Paradigm.Structure.Stack
+    Pandora.Paradigm.Structure.Concrete
+    Pandora.Paradigm.Structure.Property
+    Pandora.Paradigm.Structure.Concrete.Stack
+    Pandora.Paradigm.Structure.Property.Hollow
+    Pandora.Paradigm.Structure.Property.Nonempty
     -- Functor typeclassess
     Pandora.Pattern.Functor
     Pandora.Pattern.Functor.Adjoint
