@@ -58,6 +58,7 @@ library
     Pandora.Paradigm.Structure.Concrete
     Pandora.Paradigm.Structure.Property
     Pandora.Paradigm.Structure.Concrete.Stack
+    Pandora.Paradigm.Structure.Concrete.Graph
     Pandora.Paradigm.Structure.Property.Hollow
     Pandora.Paradigm.Structure.Property.Nonempty
     -- Functor typeclassess
