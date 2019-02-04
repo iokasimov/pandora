@@ -13,6 +13,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 
+-- | Linear data structure that serves as a collection of elements
 type Stack = (Cofree :>: Maybe)
 
 instance Hollow Maybe where
@@ -28,5 +29,6 @@ top (Y struct) = extract <$> struct
 pop :: Stack a -> Stack a
 pop (Y struct) = Y $ struct >>= unwrap
 
+-- | Transform any traversable structure into a stack
 linearize :: Traversable t => t a -> Stack a
-linearize struct = Y $ fold Nothing (\x -> Just . (:<) x) struct
+linearize = Y . fold Nothing (\x -> Just . (:<) x)
