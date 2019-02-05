@@ -38,3 +38,18 @@ finish = Continuation $ \_ -> Pipe $ \_ _ -> point ()
 
 impact :: Bindable t => t a -> Pipeline i o t a a
 impact action = Continuation $ \next -> Pipe $ \i o -> action >>= \x -> pipe (next x) i o
+
+(=*=) :: forall i e a o t . Pointable t => Pipeline i e t () () -> Pipeline e o t () () -> Pipeline i o t a ()
+p =*= q = Continuation $ \_ -> Pipe $ \i o -> pipe (continue q end) (pause (\() -> continue p end) i) o where
+
+	end :: b -> Pipe c d () t ()
+	end _ = Pipe $ \_ _ -> point ()
+
+pipeline :: Pointable t => Pipeline i o t r r -> t r
+pipeline p = pipe (continue p (\r -> Pipe $ \_ _ -> point r)) i o where
+
+	i :: Producer i t r
+	i = Producer $ \o -> produce i o
+
+	o :: Consumer o t r
+	o = Consumer $ \v i -> consume o v i
