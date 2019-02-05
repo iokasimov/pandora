@@ -12,4 +12,6 @@
 * Define `Pipeline` control flow paradigm
 * Split `Structure` modules on `Property` and `Concrete`
 * Define `Hollow` type class for handling empty structures
+* Extract `Nonempty` into a separated module
 * Define `Graph` concrete structure
+* Define infix `:-.` type operator for Lens
