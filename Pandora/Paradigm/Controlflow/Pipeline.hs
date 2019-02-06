@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, impact) where
+module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, impact, (=*=), pipeline) where
 
 import Pandora.Core.Morphism (($))
 import Pandora.Paradigm.Basis.Continuation (Continuation (Continuation, continue))

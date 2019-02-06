@@ -15,3 +15,4 @@
 * Extract `Nonempty` into a separated module
 * Define `Graph` concrete structure
 * Define infix `:-.` type operator for Lens
+* Define `Object` instances for `Product` datatype
