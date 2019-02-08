@@ -19,3 +19,4 @@
 
 # 0.1.2
 * Define `Semigroup` and `Monoid` instances for `Cofree` datatype
+* Define all `Object` pattern instances for `Constant` datatype
