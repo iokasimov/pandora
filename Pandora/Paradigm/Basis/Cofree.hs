@@ -13,6 +13,8 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), extend))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Monoid (Monoid (unit))
 
 data Cofree t a = a :< (t :.: Cofree t) a
 
@@ -41,6 +43,12 @@ instance Covariant t => Extendable (Cofree t) where
 instance (Exclusive t, Alternative t) => Monad (Cofree t) where
 
 instance Covariant t => Comonad (Cofree t) where
+
+instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (Cofree t a) where
+	(x :< xs) <> (y :< ys) = (x <> y) :< (xs <> ys)
+
+instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Cofree t a) where
+	unit = unit :< unit
 
 unwrap :: Cofree t a -> (t :.: Cofree t) a
 unwrap (_ :< xs) = xs
