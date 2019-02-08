@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Continuation (Continuation (..), oblige, cwcc) where
+module Pandora.Paradigm.Basis.Continuation (Continuation (..), oblige, cwcc, reset, shift) where
 
 import Pandora.Core.Morphism ((.), ($), (!), (?))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -30,3 +30,11 @@ oblige x = Continuation (x >>=)
 -- | Call with current continuation
 cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
 cwcc f = Continuation $ \g -> continue ? g . f $ Continuation . (!) . g
+
+-- | Delimit the continuation of any 'shift'
+reset :: (Bindable t, Pointable t) => Continuation r t r -> Continuation s t r
+reset = oblige . continue ? point
+
+-- | Capture the continuation up to the nearest enclosing 'reset' and pass it
+shift :: Pointable t => ((a -> t r) -> Continuation r t r) -> Continuation r t a
+shift f = Continuation $ continue ? point . f

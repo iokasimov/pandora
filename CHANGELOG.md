@@ -17,6 +17,7 @@
 * Define infix `:-.` type operator for Lens
 * Define `Object` instances for `Product` datatype
 
-# 0.1.2
+# 0.1.3
 * Define `Semigroup` and `Monoid` instances for `Cofree` datatype
 * Define all `Object` pattern instances for `Constant` datatype
+* Define `reset` and `shift` methods for `Continuation` datatype
