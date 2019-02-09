@@ -10,6 +10,7 @@ import Pandora.Paradigm.Basis.Wye as Exports
 import Pandora.Paradigm.Basis.Edges as Exports
 import Pandora.Paradigm.Basis.Conclusion as Exports
 import Pandora.Paradigm.Basis.Maybe as Exports
+import Pandora.Paradigm.Basis.Endo as Exports
 import Pandora.Paradigm.Basis.Jack as Exports
 import Pandora.Paradigm.Basis.Product as Exports
 import Pandora.Paradigm.Basis.Constant as Exports

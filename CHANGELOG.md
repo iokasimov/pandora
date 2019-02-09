@@ -21,3 +21,4 @@
 * Define `Semigroup` and `Monoid` instances for `Cofree` datatype
 * Define all `Object` pattern instances for `Constant` datatype
 * Define `reset` and `shift` methods for `Continuation` datatype
+* Define `Endo` datatype in `Basis` module
