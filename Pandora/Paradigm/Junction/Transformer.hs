@@ -13,6 +13,10 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), bind))
 import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Lowerable (Lowerable (lower))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Pattern.Object.Chain (Chain ((<=>)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Monoid (Monoid (unit))
 
 infixr 0 :!:, :>:
 type (:!:) t u = T t u
@@ -51,6 +55,18 @@ instance (Traversable t, Traversable u) => Traversable (T t u) where
 instance (Distributive t, Distributive u) => Distributive (T t u) where
 	x >>- f = T . comap distribute . distribute $ t . f <$> x
 
+instance Setoid ((u :.: t) a) => Setoid (T t u a) where
+	T x == T y = x == y
+
+instance Chain ((u :.: t) a) => Chain (T t u a) where
+	T x <=> T y = x <=> y
+
+instance Semigroup ((u :.: t) a) => Semigroup (T t u a) where
+	T x <> T y = T $ x <> y
+
+instance Monoid ((u :.: t) a) => Monoid (T t u a) where
+	unit = T unit
+
 up :: Pointable u => t a -> T t u a
 up = T . point
 
@@ -86,3 +102,15 @@ instance (forall u . Pointable u, Liftable t) => Liftable (Y t) where
 
 instance (forall u . Extractable u, Lowerable t) => Lowerable (Y t) where
 	lower = lower . extract . y
+
+instance (forall u . Setoid ((u :.: t u) a)) => Setoid (Y t u a) where
+	Y x == Y y = x == y
+
+instance (forall u . Chain ((u :.: t u) a)) => Chain (Y t u a) where
+	Y x <=> Y y = x <=> y
+
+instance (forall u . Semigroup ((u :.: t u) a)) => Semigroup (Y t u a) where
+	Y x <> Y y = Y $ x <> y
+
+instance (forall u . Monoid ((u :.: t u) a)) => Monoid (Y t u a) where
+	unit = Y unit
