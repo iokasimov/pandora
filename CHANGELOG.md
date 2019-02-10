@@ -23,3 +23,4 @@
 * Define `reset` and `shift` methods for `Continuation` datatype
 * Define `Endo` datatype in `Basis` module
 * Define `Object` instances for transformer schemes
+* Define `Binary` tree concrete structure
