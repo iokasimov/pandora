@@ -10,6 +10,8 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Liftable (Liftable (lift))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (False))
+import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Greater))
 
 data Jack t a = It a | Other (t a)
 
@@ -28,6 +30,10 @@ instance Alternative t => Alternative (Jack t) where
 instance Exclusive t => Exclusive (Jack t) where
 	exclusive = Other exclusive
 
+instance Extractable t => Extractable (Jack t) where
+	extract (It x) = x
+	extract (Other y) = extract y
+
 instance Applicative t => Applicative (Jack t) where
 	It f <*> It x = It $ f x
 	It f <*> Other y = Other $ f <$> y
@@ -43,6 +49,17 @@ instance Distributive t => Distributive (Jack t) where
 
 instance Liftable Jack where
 	lift = Other
+
+instance (Setoid a, Setoid (t a)) => Setoid (Jack t a) where
+	It x == It y = x == y
+	Other x == Other y = x == y
+	_ == _ = False
+
+instance (Chain a, Chain (t a)) => Chain (Jack t a) where
+	It _ <=> Other _ = Less
+	Other _ <=> It _ = Greater
+	It x <=> It y = x <=> y
+	Other x <=> Other y = x <=> y
 
 jack :: (a -> r) -> (t a -> r) -> Jack t a -> r
 jack f _ (It x) = f x
