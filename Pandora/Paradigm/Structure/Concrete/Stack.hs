@@ -5,7 +5,6 @@ import Pandora.Paradigm.Basis.Cofree (Cofree ((:<)), unwrap)
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Junction.Transformer (Y (Y, y), type (:>:))
 import Pandora.Paradigm.Inventory.Stateful (fold)
-import Pandora.Paradigm.Structure.Property.Hollow (Hollow (hollow))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -15,10 +14,6 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = (Cofree :>: Maybe)
-
-instance Hollow Maybe where
-	hollow result _ (Y Nothing) = result
-	hollow _ f (Y (Just struct)) = f struct
 
 push :: a -> Stack a -> Stack a
 push x (Y struct) = (Y $ (:<) x . Just <$> struct) <+> point x

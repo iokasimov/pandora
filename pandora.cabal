@@ -61,7 +61,6 @@ library
     Pandora.Paradigm.Structure.Concrete.Stack
     Pandora.Paradigm.Structure.Concrete.Graph
     Pandora.Paradigm.Structure.Concrete.Binary
-    Pandora.Paradigm.Structure.Property.Hollow
     Pandora.Paradigm.Structure.Property.Nonempty
     -- Functor typeclassess
     Pandora.Pattern.Functor

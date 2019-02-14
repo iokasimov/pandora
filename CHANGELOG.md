@@ -25,3 +25,4 @@
 * Define `Object` instances for transformer schemes
 * Define `Binary` tree concrete structure
 * Define some `Object` instances for `Jack` datatype
+* Remove `Hollow` ad-hoc typeclass
