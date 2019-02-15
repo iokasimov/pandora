@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Concrete.Graph (Graph, loose) where
+module Pandora.Paradigm.Structure.Graph (Graph, loose) where
 
 import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Basis.Edges (Edges (Empty, Connect, Overlay))

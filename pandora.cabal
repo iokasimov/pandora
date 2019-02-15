@@ -1,5 +1,5 @@
 name:                pandora
-version:             0.1.2
+version:             0.1.3
 synopsis:            A box of patterns and paradigms
 description:         Humble attempt to define a library for problem solving based on math abstractions.
 homepage:            https://github.com/iokasimov/pandora
@@ -56,12 +56,9 @@ library
     Pandora.Paradigm.Inventory.Storage
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
-    Pandora.Paradigm.Structure.Concrete
-    Pandora.Paradigm.Structure.Property
-    Pandora.Paradigm.Structure.Concrete.Stack
-    Pandora.Paradigm.Structure.Concrete.Graph
-    Pandora.Paradigm.Structure.Concrete.Binary
-    Pandora.Paradigm.Structure.Property.Nonempty
+    Pandora.Paradigm.Structure.Stack
+    Pandora.Paradigm.Structure.Graph
+    Pandora.Paradigm.Structure.Binary
     -- Functor typeclassess
     Pandora.Pattern.Functor
     Pandora.Pattern.Functor.Adjoint

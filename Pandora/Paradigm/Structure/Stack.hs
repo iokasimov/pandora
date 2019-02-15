@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Concrete.Stack (Stack, push, top, pop, linearize) where
+module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, linearize) where
 
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Basis.Cofree (Cofree ((:<)), unwrap)
