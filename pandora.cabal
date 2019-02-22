@@ -34,6 +34,7 @@ library
     Pandora.Paradigm.Basis.Free
     Pandora.Paradigm.Basis.Identity
     Pandora.Paradigm.Basis.Jack
+    Pandora.Paradigm.Basis.Jet
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Product
