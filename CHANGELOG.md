@@ -27,3 +27,6 @@
 * Define some `Object` instances for `Jack` datatype
 * Remove `Hollow` ad-hoc typeclass
 * Merge `Property` and `Concrete` modules back
+
+# 0.1.4
+* Define `Jet` datatype in `Basis` module
