@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion) where
+module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) where
 
 import Pandora.Core.Morphism ((.), ($), (!))
 import Pandora.Paradigm.Junction.Transformer (T (T, t), type (:!:))
@@ -65,3 +65,7 @@ instance (Semigroup e, Semigroup a) => Semigroup (Conclusion e a) where
 conclusion :: (e -> r) -> (a -> r) -> Conclusion e a -> r
 conclusion f _ (Failure x) = f x
 conclusion _ s (Success x) = s x
+
+fail :: (e -> r) -> Conclusion e a -> Conclusion r a
+fail f (Failure x) = Failure $ f x
+fail f (Success y) = Success y
