@@ -1,17 +1,21 @@
-module Pandora.Paradigm.Inventory.Stateful (Stateful (..), State, get, modify, put, fold) where
+module Pandora.Paradigm.Inventory.Stateful (Stateful (..), State, get, modify, put, fold, find) where
 
 import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Basis.Identity (Identity)
+import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*)), type (:*), delta)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), comap))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Liftable (Liftable (lift))
+import Pandora.Pattern.Object.Setoid (bool)
 
 newtype Stateful s t a = Stateful { statefully :: ((->) s :.: t :.: (:*) s) a }
 
@@ -48,3 +52,6 @@ put s = Stateful $ \_ -> point $ s :* ()
 fold :: Traversable t => s -> (a -> s -> s) -> t a -> s
 fold start op struct = extract . extract @Identity $
 	statefully (struct ->> (modify . op) $> () *> get) start
+
+find :: (Pointable u, Exclusive u, Alternative u, Traversable t) => Predicate a -> t a -> u a
+find p struct = fold exclusive (\x s -> (<+>) s . bool exclusive (point x) . predicate p $ x) struct

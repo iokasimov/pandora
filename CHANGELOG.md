@@ -31,3 +31,4 @@
 # 0.1.4
 * Define `Jet` datatype in `Basis` module
 * Add `fail` method for `Conclusion` datatype
+* Define `find` method in terms of stateful traversing
