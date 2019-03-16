@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Covariant (Covariant (..)) where
 
-import Pandora.Core.Morphism ((.), (!), (?))
+import Pandora.Core.Morphism (fix, (.), ($), (!), (?))
 
 infixl 4 <$>, <$, $>
 
@@ -27,6 +27,9 @@ class Covariant (t :: * -> *) where
 	-- | Discards the result of evaluation
 	void :: t a -> t ()
 	void x = () <$ x
+	-- | Computing a value from a structure of values
+	loeb :: t (t a -> a) -> t a
+	loeb tt = fix $ \f -> ($ f) <$> tt
 
 instance Covariant ((->) a) where
 	(<$>) = (.)

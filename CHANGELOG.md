@@ -14,7 +14,7 @@
 * Define `Hollow` type class for handling empty structures
 * Extract `Nonempty` into a separated module
 * Define `Graph` concrete structure
-* Define infix `:-.` type operator for Lens
+* Define infix `:-.` type operator for `Lens`
 * Define `Object` instances for `Product` datatype
 
 # 0.1.3
@@ -33,3 +33,4 @@
 * Add `fail` method for `Conclusion` datatype
 * Define `find` method in terms of stateful traversing
 * Define `filter` method for `Stack` datastructure
+* Define `loeb` method for `Covariant` type class
