@@ -34,3 +34,4 @@
 * Define `find` method in terms of stateful traversing
 * Define `filter` method for `Stack` datastructure
 * Define `loeb` method for `Covariant` type class
+* Define `Variation` datatype in `Basis` module

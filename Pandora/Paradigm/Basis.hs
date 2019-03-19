@@ -6,6 +6,7 @@ import Pandora.Paradigm.Basis.Fix as Exports
 import Pandora.Paradigm.Basis.Yoneda as Exports
 import Pandora.Paradigm.Basis.Continuation as Exports
 import Pandora.Paradigm.Basis.Predicate as Exports
+import Pandora.Paradigm.Basis.Variation as Exports
 import Pandora.Paradigm.Basis.Wye as Exports
 import Pandora.Paradigm.Basis.Edges as Exports
 import Pandora.Paradigm.Basis.Conclusion as Exports
