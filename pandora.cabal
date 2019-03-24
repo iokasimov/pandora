@@ -80,6 +80,8 @@ library
     Pandora.Pattern.Functor.Monad
     Pandora.Pattern.Functor.Pointable
     Pandora.Pattern.Functor.Traversable
+    Pandora.Pattern.Functor.Final.Covariant
+    Pandora.Pattern.Functor.Final.Contravariant
     -- Typeclassess about object internals
     Pandora.Pattern.Object
     Pandora.Pattern.Object.Chain

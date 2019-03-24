@@ -37,3 +37,4 @@
 * Define `Variation` datatype in `Basis` module
 * Define infix versions of `comap` with various nesting levels
 * Define infix versions of `contramap` with various nesting levels
+* Define `Cofinal` and `Contrafinal` typeclasses
