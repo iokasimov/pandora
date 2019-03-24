@@ -27,3 +27,6 @@ class Contravariant (t :: * -> *) where
 	-- | Fill the input of evaluation
 	full :: t () -> t a
 	full x = () >$ x
+	-- | Infix versions of `contramap` with various nesting levels
+	(>$$$<) :: (Contravariant u, Contravariant v) => (a -> b) -> t (u (v b)) -> t (u (v a))
+	(>$$$<) = (>$<) . (>$<) . (>$<)

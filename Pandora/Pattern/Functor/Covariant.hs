@@ -30,6 +30,13 @@ class Covariant (t :: * -> *) where
 	-- | Computing a value from a structure of values
 	loeb :: t (t a -> a) -> t a
 	loeb tt = fix $ \f -> ($ f) <$> tt
+	-- | Infix versions of `comap` with various nesting levels
+	(<$$>) :: Covariant u => (a -> b) -> t (u a) -> t (u b)
+	(<$$>) = (<$>) . (<$>)
+	(<$$$>) :: (Covariant u, Covariant v) => (a -> b) -> t (u (v a)) -> t (u (v b))
+	(<$$$>) = (<$>) . (<$>) . (<$>)
+	(<$$$$>) :: (Covariant u, Covariant v, Covariant w) => (a -> b) -> t (u (v ( w a))) -> t (u (v (w b)))
+	(<$$$$>) = (<$>) . (<$>) . (<$>) . (<$>)
 
 instance Covariant ((->) a) where
 	(<$>) = (.)
