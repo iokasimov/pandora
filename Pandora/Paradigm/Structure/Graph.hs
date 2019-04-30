@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Structure.Graph (Graph, loose) where
 
 import Pandora.Core.Morphism ((.))
-import Pandora.Paradigm.Basis.Edges (Edges (Empty, Connect, Overlay))
+import Pandora.Paradigm.Basis.Edges (Edges (Empty, Overlay))
 import Pandora.Paradigm.Basis.Cofree (Cofree ((:<)))
 import Pandora.Paradigm.Junction.Transformer (Y (Y), type (:>:))
 import Pandora.Paradigm.Inventory.Stateful (fold)
