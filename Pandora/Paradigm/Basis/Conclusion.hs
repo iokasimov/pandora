@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) where
 
-import Pandora.Core.Morphism ((.), ($), (!))
+import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Junction.Transformer (T (T, t), type (:!:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -24,11 +24,11 @@ instance Pointable (Conclusion e) where
 
 instance Applicative (Conclusion e) where
 	Success f <*> x = f <$> x
-	Failure y <*> x = Failure y
+	Failure y <*> _ = Failure y
 
 instance Alternative (Conclusion e) where
-	Failure y <+> x = x
-	Success x <+> y = Success x
+	Failure _ <+> x = x
+	Success x <+> _ = Success x
 
 instance Traversable (Conclusion e) where
 	Failure y ->> _ = point $ Failure y
@@ -59,8 +59,8 @@ instance (Chain e, Chain a) => Chain (Conclusion e a) where
 instance (Semigroup e, Semigroup a) => Semigroup (Conclusion e a) where
 	Success x <> Success y = Success $ x <> y
 	Failure x <> Failure y = Failure $ x <> y
-	Failure x <> Success y = Success y
-	Success x <> Failure y = Success x
+	Failure _ <> Success y = Success y
+	Success x <> Failure _ = Success x
 
 conclusion :: (e -> r) -> (a -> r) -> Conclusion e a -> r
 conclusion f _ (Failure x) = f x
@@ -68,4 +68,4 @@ conclusion _ s (Success x) = s x
 
 fail :: (e -> r) -> Conclusion e a -> Conclusion r a
 fail f (Failure x) = Failure $ f x
-fail f (Success y) = Success y
+fail _ (Success y) = Success y

@@ -9,7 +9,7 @@ data Variation e a = This a | That e | These e a
 
 instance Covariant (Variation e) where
 	f <$> This x = This $ f x
-	f <$> That y = That y
+	_ <$> That y = That y
 	f <$> These y x = These y (f x)
 
 instance Pointable (Variation e) where

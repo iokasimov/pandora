@@ -1,8 +1,6 @@
 module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 
-import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Basis.Identity (Identity (Identity))
 import Pandora.Paradigm.Junction.Transformer (T (T, t), type (:!:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
@@ -12,7 +10,6 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (True, False))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Equal, Greater))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
@@ -24,7 +21,7 @@ data Maybe a = Nothing | Just a
 
 instance Covariant Maybe where
 	f <$> Just x = Just $ f x
-	f <$> Nothing = Nothing
+	_ <$> Nothing = Nothing
 
 instance Pointable Maybe where
 	point = Just
@@ -34,11 +31,11 @@ instance Exclusive Maybe where
 
 instance Applicative Maybe where
 	Just f <*> x = f <$> x
-	Nothing <*> x = Nothing
+	Nothing <*> _ = Nothing
 
 instance Alternative Maybe where
 	Nothing <+> y = y
-	Just x <+> y = Just x
+	Just x <+> _ = Just x
 
 instance Traversable Maybe where
 	Nothing ->> _ = point Nothing
@@ -63,8 +60,8 @@ instance Setoid a => Setoid (Maybe a) where
 instance Chain a => Chain (Maybe a) where
 	Just x <=> Just y = x <=> y
 	Nothing <=> Nothing = Equal
-	Nothing <=> Just x = Less
-	Just x <=> Nothing = Greater
+	Nothing <=> Just _ = Less
+	Just _ <=> Nothing = Greater
 
 instance Semigroup a => Semigroup (Maybe a) where
 	Just x <> Just y = Just $ x <> y

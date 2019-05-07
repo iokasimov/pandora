@@ -1,4 +1,4 @@
-module Pandora.Pattern.Object.Lattice (Lattice (..)) where
+module Pandora.Pattern.Object.Lattice (Lattice) where
 
 import Pandora.Pattern.Object.Semilattice (Infimum, Supremum)
 
