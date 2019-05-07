@@ -1,4 +1,5 @@
-module Pandora.Paradigm.Basis.Product (Product (..), type (:*:), delta, swap, attached) where
+module Pandora.Paradigm.Basis.Product
+	(Product (..), type (:*:), Has, Injective, delta, swap, attached) where
 
 import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -24,7 +25,7 @@ instance Covariant (Product a) where
 	f <$> (x :*: y) = x :*: f y
 
 instance Extractable (Product a) where
-	extract (x :*: y) = y
+	extract (_ :*: y) = y
 
 instance Extendable (Product a) where
 	(x :*: y) =>> f = (:*:) x $ f (x :*: y)
@@ -65,4 +66,17 @@ swap :: a :*: b -> b :*: a
 swap (x :*: y) = y :*: x
 
 attached :: a :*: b -> a
-attached (x :*: y) = x
+attached (x :*: _) = x
+
+-- Constraint on the content of some type
+type family Has x xs where
+	Has x (x :*: xs) = ()
+	Has x (y :*: xs) = Has x xs
+	Has x x = ()
+
+-- All elements of the left product are in the right product
+type family Injective xs ys where
+	Injective (x :*: xs) ys = (Has x ys, Injective xs ys)
+	Injective x (x :*: ys) = ()
+	Injective x (y :*: ys) = Has x ys
+	Injective x x = ()

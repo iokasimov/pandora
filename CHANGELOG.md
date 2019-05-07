@@ -38,3 +38,4 @@
 * Define infix versions of `comap` with various nesting levels
 * Define infix versions of `contramap` with various nesting levels
 * Rename `Product` constructor from `:*` to `:*:`
+* Define `Has` and `Injective` type families for `Product` proofs
