@@ -39,3 +39,6 @@
 * Define infix versions of `contramap` with various nesting levels
 * Rename `Product` constructor from `:*` to `:*:`
 * Define `Has` and `Injective` type families for `Product` proofs
+
+# 0.1.5
+* Add `<&>` and `>&<` methods for `Covariant` and `Contravariant` functors accordingly

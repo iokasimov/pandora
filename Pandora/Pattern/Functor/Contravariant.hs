@@ -30,3 +30,6 @@ class Contravariant (t :: * -> *) where
 	-- | Infix versions of `contramap` with various nesting levels
 	(>$$$<) :: (Contravariant u, Contravariant v) => (a -> b) -> t (u (v b)) -> t (u (v a))
 	(>$$$<) = (>$<) . (>$<) . (>$<)
+	-- | Flipped infix version of 'contramap'
+	(>&<) :: t b -> (a -> b) -> t a
+	x >&< f = f >$< x

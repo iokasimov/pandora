@@ -37,6 +37,9 @@ class Covariant (t :: * -> *) where
 	(<$$$>) = (<$>) . (<$>) . (<$>)
 	(<$$$$>) :: (Covariant u, Covariant v, Covariant w) => (a -> b) -> t (u (v ( w a))) -> t (u (v (w b)))
 	(<$$$$>) = (<$>) . (<$>) . (<$>) . (<$>)
+	-- | Flipped infix version of 'comap'
+	(<&>) :: t a -> (a -> b) -> t b
+	x <&> f = f <$> x
 
 instance Covariant ((->) a) where
 	(<$>) = (.)
