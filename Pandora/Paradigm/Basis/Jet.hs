@@ -2,7 +2,7 @@ module Pandora.Paradigm.Basis.Jet (Jet (..)) where
 
 import Pandora.Core.Morphism ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), comap)
-import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -18,8 +18,8 @@ instance Covariant t => Covariant (Jet t) where
 instance Traversable t => Traversable (Jet t) where
 	(a :- as) ->> f = (:-) <$> f a <*> (traverse . traverse) f as
 
-instance (forall t' . Exclusive t') => Pointable (Jet t) where
-	point x = x :- exclusive
+instance (forall t' . Avoidable t') => Pointable (Jet t) where
+	point x = x :- idle
 
 instance Covariant t => Extractable (Jet t) where
 	extract (x :- _) = x

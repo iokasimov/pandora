@@ -5,7 +5,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), comap)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
@@ -27,8 +27,8 @@ instance Alternative t => Alternative (Jack t) where
 	Other _ <+> It y = It y
 	Other x <+> Other y = Other (x <+> y)
 
-instance Exclusive t => Exclusive (Jack t) where
-	exclusive = Other exclusive
+instance Avoidable t => Avoidable (Jack t) where
+	idle = Other idle
 
 instance Extractable t => Extractable (Jack t) where
 	extract (It x) = x

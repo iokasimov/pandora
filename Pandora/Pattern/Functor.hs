@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Distributive as Exports
 import Pandora.Pattern.Functor.Traversable as Exports
 import Pandora.Pattern.Functor.Extractable as Exports
 import Pandora.Pattern.Functor.Pointable as Exports
-import Pandora.Pattern.Functor.Exclusive as Exports
+import Pandora.Pattern.Functor.Avoidable as Exports
 import Pandora.Pattern.Functor.Applicative as Exports
 import Pandora.Pattern.Functor.Alternative as Exports
 import Pandora.Pattern.Functor.Invariant as Exports

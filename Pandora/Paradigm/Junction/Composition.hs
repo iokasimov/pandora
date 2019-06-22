@@ -5,7 +5,7 @@ import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<), contramap))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
@@ -36,8 +36,8 @@ instance (Pointable t, Pointable u) => Pointable (U Co Co t u) where
 instance (Extractable t, Extractable u) => Extractable (U Co Co t u) where
 	extract = extract . extract . u
 
-instance (Exclusive t, Covariant u) => Exclusive (U Co Co t u) where
-	exclusive = U exclusive
+instance (Avoidable t, Covariant u) => Avoidable (U Co Co t u) where
+	idle = U idle
 
 instance (Applicative t, Applicative u) => Applicative (U Co Co t u) where
 	U f <*> U x = U $ apply <$> f <*> x
@@ -88,8 +88,8 @@ instance (Pointable t, Pointable u, Pointable v) => Pointable (UU Co Co Co t u v
 instance (Extractable t, Extractable u, Extractable v) => Extractable (UU Co Co Co t u v) where
 	extract = extract . extract . extract . uu
 
-instance (Exclusive t, Covariant u, Covariant v) => Exclusive (UU Co Co Co t u v) where
-	exclusive = UU exclusive
+instance (Avoidable t, Covariant u, Covariant v) => Avoidable (UU Co Co Co t u v) where
+	idle = UU idle
 
 instance (Applicative t, Applicative u, Applicative v) => Applicative (UU Co Co Co t u v) where
 	UU f <*> UU x = UU $ (comap apply . (comap . comap) apply $ f) <*> x
@@ -164,8 +164,8 @@ instance (Pointable t, Pointable u, Pointable v, Pointable w) => Pointable (UUU 
 instance (Extractable t, Extractable u, Extractable v, Extractable w) => Extractable (UUU Co Co Co Co t u v w) where
 	extract = extract . extract . extract . extract . uuu
 
-instance (Exclusive t, Covariant u, Covariant v, Covariant w) => Exclusive (UUU Co Co Co Co t u v w) where
-	exclusive = UUU exclusive
+instance (Avoidable t, Covariant u, Covariant v, Covariant w) => Avoidable (UUU Co Co Co Co t u v w) where
+	idle = UUU idle
 
 instance (Applicative t, Applicative u, Applicative v, Applicative w) => Applicative (UUU Co Co Co Co t u v w) where
 	UUU f <*> UUU x = UUU $ (comap apply . (comap . comap) apply . (comap . comap . comap) apply $ f) <*> x

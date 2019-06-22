@@ -3,7 +3,7 @@ module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Junction.Transformer (T (T, t), type (:!:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -26,8 +26,8 @@ instance Covariant Maybe where
 instance Pointable Maybe where
 	point = Just
 
-instance Exclusive Maybe where
-	exclusive = Nothing
+instance Avoidable Maybe where
+	idle = Nothing
 
 instance Applicative Maybe where
 	Just f <*> x = f <$> x

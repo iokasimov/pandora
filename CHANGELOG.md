@@ -45,3 +45,4 @@
 * Define `Traversable` instance for `Product` datatype
 * Rename `Cofree` to `Twister` datatype (we will use the first name later)
 * Define fixity for `Jet`'s and `Twister`'s constructors
+* Rename `Exclusive` to `Avoidable` typeclass and `exclusive` to `idle` method

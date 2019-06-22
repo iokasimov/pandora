@@ -5,7 +5,7 @@ import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Exclusive (Exclusive (exclusive))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
@@ -33,8 +33,8 @@ instance (Pointable t, Pointable u) => Pointable (T t u) where
 instance (Extractable t, Extractable u) => Extractable (T t u) where
 	extract = extract . extract . t
 
-instance (Covariant t, Exclusive u) => Exclusive (T t u) where
-	exclusive = T exclusive
+instance (Covariant t, Avoidable u) => Avoidable (T t u) where
+	idle = T idle
 
 instance (Covariant t, Alternative u) => Alternative (T t u) where
 	T x <+> T y = T $ x <+> y
@@ -81,8 +81,8 @@ instance (Pointable (t u), Pointable u) => Pointable (Y t u) where
 instance (Extractable (t u), Extractable u) => Extractable (Y t u) where
 	extract = extract . extract . y
 
-instance (Covariant (t u), Exclusive u) => Exclusive (Y t u) where
-	exclusive = Y exclusive
+instance (Covariant (t u), Avoidable u) => Avoidable (Y t u) where
+	idle = Y idle
 
 instance (Covariant (t u), Alternative u) => Alternative (Y t u) where
 	Y x <+> Y y = Y $ x <+> y
