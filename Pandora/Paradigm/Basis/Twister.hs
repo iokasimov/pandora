@@ -17,6 +17,8 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)), (&&))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
 
+infixr 5 :<
+
 data Twister t a = a :< (t :.: Twister t) a
 
 instance Covariant t => Covariant (Twister t) where
