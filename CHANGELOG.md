@@ -42,3 +42,4 @@
 
 # 0.1.5
 * Add `<&>` and `>&<` methods for `Covariant` and `Contravariant` functors accordingly
+* Define `Traversable` instance for `Product` datatype

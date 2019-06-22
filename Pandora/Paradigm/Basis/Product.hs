@@ -4,6 +4,7 @@ module Pandora.Paradigm.Basis.Product
 import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
@@ -26,6 +27,9 @@ instance Covariant (Product a) where
 
 instance Extractable (Product a) where
 	extract (_ :*: y) = y
+
+instance Traversable (Product a) where
+	(x :*: y) ->> f = (:*:) x <$> f y
 
 instance Extendable (Product a) where
 	(x :*: y) =>> f = (:*:) x $ f (x :*: y)
