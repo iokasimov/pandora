@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, filter, linearize) where
 
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Basis.Cofree (Cofree ((:<)), unwrap)
+import Pandora.Paradigm.Basis.Twister (Twister ((:<)), unwrap)
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Junction.Transformer (Y (Y), type (:>:))
@@ -15,7 +15,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Object.Setoid (bool)
 
 -- | Linear data structure that serves as a collection of elements
-type Stack = (Cofree :>: Maybe)
+type Stack = (Twister :>: Maybe)
 
 push :: a -> Stack a -> Stack a
 push x (Y struct) = (Y $ (:<) x . Just <$> struct) <+> point x

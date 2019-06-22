@@ -2,10 +2,10 @@ module Pandora.Paradigm.Structure.Binary (Binary, insert) where
 
 import Pandora.Core.Morphism ((&))
 import Pandora.Paradigm.Basis.Wye (Wye (End, Left, Right, Both))
-import Pandora.Paradigm.Basis.Cofree (Cofree ((:<)))
+import Pandora.Paradigm.Basis.Twister (Twister ((:<)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), order)
 
-type Binary = Cofree Wye
+type Binary = Twister Wye
 
 insert :: Chain a => a -> Binary a -> Binary a
 insert x (y :< End) = x <=> y & order (y :< Right (x :< End)) (y :< Right (x :< End)) (y :< Left (x :< End))

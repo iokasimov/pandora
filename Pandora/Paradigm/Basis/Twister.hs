@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Cofree (Cofree (..), unwrap, coiterate, section) where
+module Pandora.Paradigm.Basis.Twister (Twister (..), unwrap, coiterate, section) where
 
 import Pandora.Core.Functor (type (:.:), type (~>))
 import Pandora.Core.Morphism ((.))
@@ -17,48 +17,48 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)), (&&))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
 
-data Cofree t a = a :< (t :.: Cofree t) a
+data Twister t a = a :< (t :.: Twister t) a
 
-instance Covariant t => Covariant (Cofree t) where
+instance Covariant t => Covariant (Twister t) where
 	f <$> (x :< xs) = f x :< ((comap . comap) f xs)
 
-instance Exclusive t => Pointable (Cofree t) where
+instance Exclusive t => Pointable (Twister t) where
 	point x = x :< exclusive
 
-instance Covariant t => Extractable (Cofree t) where
+instance Covariant t => Extractable (Twister t) where
 	extract (x :< _) = x
 
-instance Applicative t => Applicative (Cofree t) where
+instance Applicative t => Applicative (Twister t) where
 	(f :< fs) <*> (x :< xs) = f x :< ((<*>) <$> fs <*> xs)
 
-instance Traversable t => Traversable (Cofree t) where
+instance Traversable t => Traversable (Twister t) where
 	(x :< xs) ->> f = (:<) <$> f x <*> (traverse . traverse) f xs
 
-instance Alternative t => Bindable (Cofree t) where
+instance Alternative t => Bindable (Twister t) where
 	(x :< xs) >>= f = case f x of
 		y :< ys -> y :< (ys <+> comap (>>= f) xs)
 
-instance Covariant t => Extendable (Cofree t) where
+instance Covariant t => Extendable (Twister t) where
 	x =>> f = f x :< comap (extend f) (unwrap x)
 
-instance (Exclusive t, Alternative t) => Monad (Cofree t) where
+instance (Exclusive t, Alternative t) => Monad (Twister t) where
 
-instance Covariant t => Comonad (Cofree t) where
+instance Covariant t => Comonad (Twister t) where
 
-instance (Setoid a, forall b . Setoid b => Setoid (t b)) => Setoid (Cofree t a) where
+instance (Setoid a, forall b . Setoid b => Setoid (t b)) => Setoid (Twister t a) where
 	(x :< xs) == (y :< ys) = x == y && xs == ys
 
-instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (Cofree t a) where
+instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (Twister t a) where
 	(x :< xs) <> (y :< ys) = (x <> y) :< (xs <> ys)
 
-instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Cofree t a) where
+instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Twister t a) where
 	unit = unit :< unit
 
-unwrap :: Cofree t a -> (t :.: Cofree t) a
+unwrap :: Twister t a -> (t :.: Twister t) a
 unwrap (_ :< xs) = xs
 
-coiterate :: Covariant t => (a -> t a) -> a -> Cofree t a
+coiterate :: Covariant t => (a -> t a) -> a -> Twister t a
 coiterate coalgebra x = x :< (coiterate coalgebra <$> coalgebra x)
 
-section :: Comonad t => t ~> Cofree t
+section :: Comonad t => t ~> Twister t
 section as = extract as :< extend section as

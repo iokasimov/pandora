@@ -43,3 +43,4 @@
 # 0.1.5
 * Add `<&>` and `>&<` methods for `Covariant` and `Contravariant` functors accordingly
 * Define `Traversable` instance for `Product` datatype
+* Rename `Cofree` to `Twister` datatype (we will use the first name later)

@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis (module Exports, note, hush) where
 
-import Pandora.Paradigm.Basis.Cofree as Exports
+import Pandora.Paradigm.Basis.Twister as Exports
 import Pandora.Paradigm.Basis.Free as Exports
 import Pandora.Paradigm.Basis.Fix as Exports
 import Pandora.Paradigm.Basis.Yoneda as Exports
