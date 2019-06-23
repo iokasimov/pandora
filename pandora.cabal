@@ -40,6 +40,7 @@ library
     Pandora.Paradigm.Basis.Proxy
     Pandora.Paradigm.Basis.Tagged
     Pandora.Paradigm.Basis.Twister
+    Pandora.Paradigm.Basis.Validation
     Pandora.Paradigm.Basis.Variation
     Pandora.Paradigm.Basis.Wye
     Pandora.Paradigm.Basis.Yoneda

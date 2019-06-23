@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Tagged where
+module Pandora.Paradigm.Basis.Tagged (Tagged (..), untag, retag, tagself) where
 
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))

@@ -48,3 +48,4 @@
 * Rename `Exclusive` to `Avoidable` typeclass and `exclusive` to `idle` method
 * Define `Tagged` datatype for attaching type information to the value
 * Define `Proxy` datatype for holding no data, but having a phantom parameter
+* Define `Validation` datatype (similar to `Conclusion`, but can collect errors)
