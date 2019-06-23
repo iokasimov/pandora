@@ -37,6 +37,7 @@ library
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Product
+    Pandora.Paradigm.Basis.Proxy
     Pandora.Paradigm.Basis.Tagged
     Pandora.Paradigm.Basis.Twister
     Pandora.Paradigm.Basis.Variation

@@ -47,3 +47,4 @@
 * Define fixity for `Jet`'s and `Twister`'s constructors
 * Rename `Exclusive` to `Avoidable` typeclass and `exclusive` to `idle` method
 * Define `Tagged` datatype for attaching type information to the value
+* Define `Proxy` datatype for holding no data, but having a phantom parameter
