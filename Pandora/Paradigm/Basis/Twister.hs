@@ -2,7 +2,7 @@ module Pandora.Paradigm.Basis.Twister (Twister (..), unwrap, coiterate, section)
 
 import Pandora.Core.Functor (type (:.:), type (~>))
 import Pandora.Core.Morphism ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -22,7 +22,7 @@ infixr 5 :<
 data Twister t a = a :< (t :.: Twister t) a
 
 instance Covariant t => Covariant (Twister t) where
-	f <$> (x :< xs) = f x :< ((comap . comap) f xs)
+	f <$> (x :< xs) = f x :< (f <$$> xs)
 
 instance Avoidable t => Pointable (Twister t) where
 	point x = x :< idle
@@ -41,7 +41,7 @@ instance Alternative t => Bindable (Twister t) where
 		y :< ys -> y :< (ys <+> comap (>>= f) xs)
 
 instance Covariant t => Extendable (Twister t) where
-	x =>> f = f x :< comap (extend f) (unwrap x)
+	x =>> f = f x :< (extend f <$> unwrap x)
 
 instance (Avoidable t, Alternative t) => Monad (Twister t) where
 

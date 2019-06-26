@@ -2,7 +2,7 @@ module Pandora.Paradigm.Junction.Transformer (T (..), type (:!:), up, Y (..), ty
 
 import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
@@ -25,7 +25,7 @@ type (:>:) t u = Y t u
 newtype T t u a = T { t :: (u :.: t) a }
 
 instance (Covariant t, Covariant u) => Covariant (T t u) where
-	f <$> T x = T $ (comap . comap) f x
+	f <$> T x = T $ f <$$> x
 
 instance (Pointable t, Pointable u) => Pointable (T t u) where
 	point = T . point . point
@@ -73,7 +73,7 @@ up = T . point
 newtype Y t u a = Y { y :: (u :.: t u) a }
 
 instance (Covariant (t u), Covariant u) => Covariant (Y t u) where
-	f <$> Y x = Y $ (comap . comap) f x
+	f <$> Y x = Y $ f <$$> x
 
 instance (Pointable (t u), Pointable u) => Pointable (Y t u) where
 	point = Y . point . point

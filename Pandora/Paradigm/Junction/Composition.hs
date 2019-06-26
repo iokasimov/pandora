@@ -2,8 +2,8 @@ module Pandora.Paradigm.Junction.Composition (U (..), UU (..), UUU (..)) where
 
 import Pandora.Core.Functor (Variant (Co, Contra), type (:.:))
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
-import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<), contramap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>), comap))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<), (>$$$<), contramap))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -19,7 +19,7 @@ type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoi
 newtype U ct cu t u a = U { u :: (t :.: u) a }
 
 instance (Covariant t, Covariant u) => Covariant (U Co Co t u) where
-	f <$> U x = U $ (comap . comap) f x
+	f <$> U x = U $ f <$$> x
 
 instance (Covariant t, Contravariant u) => Contravariant (U Co Contra t u) where
 	f >$< U x = U $ contramap f <$> x
@@ -59,10 +59,10 @@ instance (t :-|: u, v :-|: w) => Adjoint (U Co Co t v) (U Co Co u w) where
 newtype UU ct cu cv t u v a = UU { uu :: (t :.: u :.: v) a }
 
 instance (Covariant t, Covariant u, Covariant v) => Covariant (UU Co Co Co t u v) where
-	f <$> UU x = UU $ (comap . comap . comap) f x
+	f <$> UU x = UU $ f <$$$> x
 
 instance (Covariant t, Covariant u, Contravariant v) => Contravariant (UU Co Co Contra t u v) where
-	f >$< UU x = UU $ (comap . comap) (contramap f) x
+	f >$< UU x = UU $ (f >$<) <$$> x
 
 instance (Covariant t, Contravariant u, Covariant v) => Contravariant (UU Co Contra Co t u v) where
 	f >$< UU x = UU $ contramap (comap f) <$> x
@@ -80,7 +80,7 @@ instance (Contravariant t, Covariant u, Contravariant v) => Covariant (UU Contra
 	f <$> UU x = UU $ comap (contramap f) >$< x
 
 instance (Contravariant t, Contravariant u, Contravariant v) => Contravariant (UU Contra Contra Contra t u v) where
-	f >$< UU x = UU $ (contramap . contramap . contramap) f x
+	f >$< UU x = UU $ f >$$$< x
 
 instance (Pointable t, Pointable u, Pointable v) => Pointable (UU Co Co Co t u v) where
 	point = UU . point . point . point
@@ -111,19 +111,19 @@ instance (t :-|: w, v :-|: x, u :-|: y) => Adjoint (UU Co Co Co t v u) (UU Co Co
 newtype UUU ct cu cv cw t u v w a = UUU { uuu :: (t :.: u :.: v :.: w) a }
 
 instance (Covariant t, Covariant u, Covariant v, Covariant w) => Covariant (UUU Co Co Co Co t u v w) where
-	f <$> UUU x = UUU $ (comap . comap . comap . comap) f x
+	f <$> UUU x = UUU $ f <$$$$> x
 
 instance (Covariant t, Covariant u, Covariant v, Contravariant w) => Contravariant (UUU Co Co Co Contra t u v w) where
-	f >$< UUU x = UUU $ (comap . comap . comap) (contramap f) x
+	f >$< UUU x = UUU $ (f >$<) <$$$> x
 
 instance (Covariant t, Covariant u, Contravariant v, Covariant w) => Contravariant (UUU Co Co Contra Co t u v w) where
-	f >$< UUU x = UUU $ (comap . comap) (contramap (comap f)) x
+	f >$< UUU x = UUU $ (contramap (comap f)) <$$> x
 
 instance (Covariant t, Contravariant u, Covariant v, Covariant w) => Contravariant (UUU Co Contra Co Co t u v w) where
 	f >$< UUU x = UUU $ (contramap (comap (comap f))) <$> x
 
 instance (Contravariant t, Covariant u, Covariant v, Covariant w) => Contravariant (UUU Contra Co Co Co t u v w) where
-	f >$< UUU x = UUU $ comap (comap (comap f)) >$< x
+	f >$< UUU x = UUU $ (f <$$$>) >$< x
 
 instance (Contravariant t, Contravariant u, Covariant v, Covariant w) => Covariant (UUU Contra Contra Co Co t u v w) where
 	f <$> UUU x = UUU $ (contramap . contramap . comap . comap $ f) x
@@ -132,7 +132,7 @@ instance (Covariant t, Contravariant u, Contravariant v, Covariant w) => Covaria
 	f <$> UUU x = UUU $ (comap . contramap . contramap . comap $ f) x
 
 instance (Covariant t, Covariant u, Contravariant v, Contravariant w) => Covariant (UUU Co Co Contra Contra t u v w) where
-	f <$> UUU x = UUU $ (comap . comap) (contramap . contramap $ f) x
+	f <$> UUU x = UUU $ (contramap . contramap $ f) <$$> x
 
 instance (Covariant t, Contravariant u, Covariant v, Contravariant w) => Covariant (UUU Co Contra Co Contra t u v w) where
 	f <$> UUU x = UUU $ (comap . contramap . comap . contramap $ f) x
@@ -144,10 +144,10 @@ instance (Contravariant t, Covariant u, Covariant v, Contravariant w) => Covaria
 	f <$> UUU x = UUU $ (contramap . comap . comap . contramap $ f) x
 
 instance (Contravariant t, Contravariant u, Contravariant v, Covariant w) => Contravariant (UUU Contra Contra Contra Co t u v w) where
-	f >$< UUU x = UUU $ (contramap . contramap . contramap . comap) f x
+	f >$< UUU x = UUU $ (f <$>) >$$$< x
 
 instance (Covariant t, Contravariant u, Contravariant v, Contravariant w) => Contravariant (UUU Co Contra Contra Contra t u v w) where
-	f >$< UUU x = UUU $ (comap . contramap . contramap . contramap) f x
+	f >$< UUU x = UUU $ (f >$$$<) <$> x
 
 instance (Contravariant t, Covariant u, Contravariant v, Contravariant w) => Contravariant (UUU Contra Co Contra Contra t u v w) where
 	f >$< UUU x = UUU $ (contramap . comap . contramap . contramap) f x
@@ -177,7 +177,7 @@ instance (Traversable t, Traversable u, Traversable v, Traversable w) => Travers
 	UUU x ->> f = UUU <$> (traverse . traverse . traverse . traverse) f x
 
 instance (Distributive t, Distributive u, Distributive v, Distributive w) => Distributive (UUU Co Co Co Co t u v w) where
-	x >>- f = UUU . (comap . comap . comap) distribute . (comap . comap) distribute . comap distribute . distribute $ uuu . f <$> x
+	x >>- f = UUU . (distribute <$$$>) . (comap . comap) distribute . comap distribute . distribute $ uuu . f <$> x
 
 instance (t :-|: u, v :-|: w, q :-|: q, r :-|: s) => Adjoint (UUU Co Co Co Co t v q r) (UUU Co Co Co Co u w q s) where
 	phi f = point . f . point
