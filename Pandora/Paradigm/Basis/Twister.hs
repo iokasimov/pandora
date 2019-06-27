@@ -34,7 +34,7 @@ instance Applicative t => Applicative (Twister t) where
 	(f :< fs) <*> (x :< xs) = f x :< ((<*>) <$> fs <*> xs)
 
 instance Traversable t => Traversable (Twister t) where
-	(x :< xs) ->> f = (:<) <$> f x <*> f ->>> xs
+	(x :< xs) ->> f = (:<) <$> f x <*> xs ->>> f
 
 instance Alternative t => Bindable (Twister t) where
 	(x :< xs) >>= f = case f x of

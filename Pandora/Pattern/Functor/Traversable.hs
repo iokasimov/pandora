@@ -30,12 +30,14 @@ class Covariant t => Traversable t where
 	-- | The dual of 'distribute'
 	sequence :: (Pointable u, Applicative u) => (t :.: u) a -> (u :.: t) a
 	sequence t = t ->> identity
+
+	-- | Infix versions of `traverse` with various nesting levels
 	(->>>) :: (Pointable u, Applicative u, Traversable v)
-		=> (a -> u b) -> (v :.: t) a -> (u :.: v :.: t) b
-	(->>>) = traverse . traverse
+		=> (v :.: t) a -> (a -> u b) -> (u :.: v :.: t) b
+	x ->>> f = (traverse . traverse) f x
 	(->>>>) :: (Pointable u, Applicative u, Traversable v, Traversable w)
-		=> (a -> u b) -> (w :.: v :.: t) a -> (u :.: w :.: v :.: t) b
-	(->>>>) = traverse . traverse . traverse
+		=> (w :.: v :.: t) a -> (a -> u b) -> (u :.: w :.: v :.: t) b
+	x ->>>> f = (traverse . traverse . traverse) f x
 	(->>>>>) :: (Pointable u, Applicative u, Traversable v, Traversable w, Traversable j)
-		=> (a -> u b) -> (j :.: w :.: v :.: t) a -> (u :.: j :.: w :.: v :.: t) b
-	(->>>>>) = traverse . traverse . traverse . traverse
+		=> (j :.: w :.: v :.: t) a -> (a -> u b) -> (u :.: j :.: w :.: v :.: t) b
+	x ->>>>> f = (traverse . traverse . traverse . traverse) f x

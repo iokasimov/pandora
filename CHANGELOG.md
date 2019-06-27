@@ -54,3 +54,4 @@
 * Define `->>>`, `->>>>`, `->>>>>` methods for `Traversable` to compact expressions
 * Move `Natural` transformation from `Functor` to `Transformation` module
 * Define infix and infix flipped versions of methods of `Functor` typeclasses
+* Define `>>>-`, `>>>>-`, `>>>>>-` methods for `Distributive` to compact expressions

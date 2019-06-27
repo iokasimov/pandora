@@ -15,7 +15,7 @@ instance Covariant t => Covariant (Jet t) where
 	f <$> a :- as = f a :- (f <$$> as)
 
 instance Traversable t => Traversable (Jet t) where
-	(a :- as) ->> f = (:-) <$> f a <*> f ->>> as
+	(a :- as) ->> f = (:-) <$> f a <*> as ->>> f
 
 instance (forall t' . Avoidable t') => Pointable (Jet t) where
 	point x = x :- idle

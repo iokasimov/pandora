@@ -38,4 +38,4 @@ instance Covariant t => Bindable (Free t) where
 
 instance Traversable t => Traversable (Free t) where
 	Pure x ->> f = Pure <$> f x
-	Impure xs ->> f = Impure <$> f ->>> xs
+	Impure xs ->> f = Impure <$> xs ->>> f

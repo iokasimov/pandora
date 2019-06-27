@@ -49,7 +49,7 @@ instance Extractable t => Lowerable (T t) where
 	lower (T x) = extract <$> x
 
 instance (Traversable t, Traversable u) => Traversable (T t u) where
-	T x ->> f = T <$> f ->>> x
+	T x ->> f = T <$> x ->>> f
 
 instance (Distributive t, Distributive u) => Distributive (T t u) where
 	x >>- f = T . comap distribute . distribute $ t . f <$> x
@@ -91,7 +91,7 @@ instance (Applicative (t u), Applicative u) => Applicative (Y t u) where
 	Y f <*> Y x = Y $ apply <$> f <*> x
 
 instance (Traversable (t u), Traversable u) => Traversable (Y t u) where
-	Y x ->> f = Y <$> f ->>> x
+	Y x ->> f = Y <$> x ->>> f
 
 instance (Distributive (t u), Distributive u) => Distributive (Y t u) where
 	x >>- f = Y . comap distribute . distribute $ y . f <$> x

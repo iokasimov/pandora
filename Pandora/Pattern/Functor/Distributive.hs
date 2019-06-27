@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Distributive (Distributive (..)) where
 
 import Pandora.Core.Functor (type (:.:))
-import Pandora.Core.Morphism (identity)
+import Pandora.Core.Morphism (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |
@@ -11,6 +11,8 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 > * Identity morphism: distribute . distribute ≡ identity
 > * Interchange collection: collect f ≡ distribute . comap f
 -}
+
+infixl 5 >>-, >>>-, >>>>-, >>>>>-
 
 class Covariant u => Distributive u where
 	{-# MINIMAL (>>-) #-}
@@ -23,3 +25,14 @@ class Covariant u => Distributive u where
 	-- | The dual of 'sequence'
 	distribute :: Covariant t => (t :.: u) a -> (u :.: t) a
 	distribute t = t >>- identity
+
+	-- | Infix versions of `collect` with various nesting levels
+	(>>>-) :: (Covariant t, Covariant v)
+		=> (t :.: v) a -> (a -> u b) -> (u :.: t :.: v) b
+	x >>>- f = (collect . collect) f x
+	(>>>>-) :: (Covariant t, Covariant v, Covariant w)
+		=> (t :.: v :.: w) a -> (a -> u b) -> (u :.: t :.: v :.: w) b
+	x >>>>- f = (collect . collect . collect) f x
+	(>>>>>-) :: (Covariant t, Covariant v, Covariant w, Covariant j)
+		=> (t :.: v :.: w :.: j) a -> (a -> u b) -> (u :.: t :.: v :.: w :.: j) b
+	x >>>>>- f = (collect . collect . collect . collect) f x

@@ -46,7 +46,7 @@ instance (Alternative t, Covariant u) => Alternative (U 'Co 'Co t u) where
 	U x <+> U y = U $ x <+> y
 
 instance (Traversable t, Traversable u) => Traversable (U 'Co 'Co t u) where
-	U x ->> f = U <$> f ->>> x
+	U x ->> f = U <$> x ->>> f
 
 instance (Distributive t, Distributive u) => Distributive (U 'Co 'Co t u) where
 	x >>- f = U . comap distribute . distribute $ u . f <$> x
@@ -112,7 +112,7 @@ instance (Alternative t, Covariant u, Covariant v)
 
 instance (Traversable t, Traversable u, Traversable v)
 	=> Traversable (UU 'Co 'Co 'Co t u v) where
-	UU x ->> f = UU <$> f ->>>> x
+	UU x ->> f = UU <$> x ->>>> f
 
 instance (Distributive t, Distributive u, Distributive v)
 	=> Distributive (UU 'Co 'Co 'Co t u v) where
@@ -212,7 +212,7 @@ instance (Alternative t, Covariant u, Covariant v, Covariant w)
 
 instance (Traversable t, Traversable u, Traversable v, Traversable w)
 	=> Traversable (UUU 'Co 'Co 'Co 'Co t u v w) where
-	UUU x ->> f = UUU <$> f ->>>>> x
+	UUU x ->> f = UUU <$> x ->>>>> f
 
 instance (Distributive t, Distributive u, Distributive v, Distributive w)
 	=> Distributive (UUU 'Co 'Co 'Co 'Co t u v w) where
