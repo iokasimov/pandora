@@ -14,10 +14,10 @@ newtype Consumer o t r = Consumer { consume :: o -> Producer o t r -> t r }
 newtype Pipe i o r t a = Pipe { pipe :: Producer i t r -> Consumer o t r -> t r }
 
 instance Covariant (Pipe i o r t) where
-	f <$> Pipe p = Pipe p
+	_ <$> Pipe p = Pipe p
 
 instance Contravariant (Pipe i o r t) where
-	f >$< Pipe p = Pipe p
+	_ >$< Pipe p = Pipe p
 
 type Pipeline i o t a r = Continuation r (Pipe i o r t) a
 
@@ -55,7 +55,7 @@ pipeline :: Pointable t => Pipeline i o t r r -> t r
 pipeline p = pipe (continue p (\r -> Pipe $ \_ _ -> point r)) i o where
 
 	i :: Producer i t r
-	i = Producer $ \o -> produce i o
+	i = Producer $ \o' -> produce i o'
 
 	o :: Consumer o t r
-	o = Consumer $ \v i -> consume o v i
+	o = Consumer $ \v i' -> consume o v i'

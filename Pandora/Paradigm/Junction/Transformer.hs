@@ -96,20 +96,20 @@ instance (Traversable (t u), Traversable u) => Traversable (Y t u) where
 instance (Distributive (t u), Distributive u) => Distributive (Y t u) where
 	x >>- f = Y . comap distribute . distribute $ y . f <$> x
 
-instance (forall u . Pointable u, Liftable t) => Liftable (Y t) where
+instance (forall u' . Pointable u', Liftable t) => Liftable (Y t) where
 	lift = Y . point . lift
 
-instance (forall u . Extractable u, Lowerable t) => Lowerable (Y t) where
+instance (forall u' . Extractable u', Lowerable t) => Lowerable (Y t) where
 	lower = lower . extract . y
 
-instance (forall u . Setoid ((u :.: t u) a)) => Setoid (Y t u a) where
+instance (forall u' . Setoid ((u' :.: t u') a)) => Setoid (Y t u a) where
 	Y x == Y y = x == y
 
-instance (forall u . Chain ((u :.: t u) a)) => Chain (Y t u a) where
+instance (forall u' . Chain ((u' :.: t u') a)) => Chain (Y t u a) where
 	Y x <=> Y y = x <=> y
 
-instance (forall u . Semigroup ((u :.: t u) a)) => Semigroup (Y t u a) where
+instance (forall u' . Semigroup ((u' :.: t u') a)) => Semigroup (Y t u a) where
 	Y x <> Y y = Y $ x <> y
 
-instance (forall u . Monoid ((u :.: t u) a)) => Monoid (Y t u a) where
+instance (forall u' . Monoid ((u' :.: t u') a)) => Monoid (Y t u a) where
 	unit = Y unit

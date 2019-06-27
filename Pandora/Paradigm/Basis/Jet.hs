@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Basis.Jet (Jet (..)) where
 
-import Pandora.Core.Morphism ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
