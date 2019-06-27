@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Lowerable (Lowerable (lower))
@@ -49,7 +49,7 @@ instance Extractable t => Lowerable (T t) where
 	lower (T x) = extract <$> x
 
 instance (Traversable t, Traversable u) => Traversable (T t u) where
-	T x ->> f = T <$> (traverse . traverse) f x
+	T x ->> f = T <$> f ->>> x
 
 instance (Distributive t, Distributive u) => Distributive (T t u) where
 	x >>- f = T . comap distribute . distribute $ t . f <$> x
@@ -91,7 +91,7 @@ instance (Applicative (t u), Applicative u) => Applicative (Y t u) where
 	Y f <*> Y x = Y $ apply <$> f <*> x
 
 instance (Traversable (t u), Traversable u) => Traversable (Y t u) where
-	Y x ->> f = Y <$> (traverse . traverse) f x
+	Y x ->> f = Y <$> f ->>> x
 
 instance (Distributive (t u), Distributive u) => Distributive (Y t u) where
 	x >>- f = Y . comap distribute . distribute $ y . f <$> x

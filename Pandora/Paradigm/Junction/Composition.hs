@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>), (->>>>), (->>>>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
 
@@ -46,7 +46,7 @@ instance (Alternative t, Covariant u) => Alternative (U Co Co t u) where
 	U x <+> U y = U $ x <+> y
 
 instance (Traversable t, Traversable u) => Traversable (U Co Co t u) where
-	U x ->> f = U <$> (traverse . traverse) f x
+	U x ->> f = U <$> f ->>> x
 
 instance (Distributive t, Distributive u) => Distributive (U Co Co t u) where
 	x >>- f = U . comap distribute . distribute $ u . f <$> x
@@ -98,7 +98,7 @@ instance (Alternative t, Covariant u, Covariant v) => Alternative (UU Co Co Co t
 	UU x <+> UU y = UU $ x <+> y
 
 instance (Traversable t, Traversable u, Traversable v) => Traversable (UU Co Co Co t u v) where
-	UU x ->> f = UU <$> (traverse . traverse . traverse) f x
+	UU x ->> f = UU <$> f ->>>> x
 
 instance (Distributive t, Distributive u, Distributive v) => Distributive (UU Co Co Co t u v) where
 	x >>- f = UU . (comap . comap) distribute . comap distribute . distribute $ uu . f <$> x
@@ -174,7 +174,7 @@ instance (Alternative t, Covariant u, Covariant v, Covariant w) => Alternative (
 	UUU x <+> UUU y = UUU $ x <+> y
 
 instance (Traversable t, Traversable u, Traversable v, Traversable w) => Traversable (UUU Co Co Co Co t u v w) where
-	UUU x ->> f = UUU <$> (traverse . traverse . traverse . traverse) f x
+	UUU x ->> f = UUU <$> f ->>>>> x
 
 instance (Distributive t, Distributive u, Distributive v, Distributive w) => Distributive (UUU Co Co Co Co t u v w) where
 	x >>- f = UUU . (distribute <$$$>) . (comap . comap) distribute . comap distribute . distribute $ uuu . f <$> x

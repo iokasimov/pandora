@@ -1,13 +1,13 @@
 module Pandora.Paradigm.Basis.Free (Free (..)) where
 
 import Pandora.Core.Functor (type (:.:))
-import Pandora.Core.Morphism ((.), ($))
+import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 
 data Free t a = Pure a | Impure ((t :.: Free t) a)
@@ -38,4 +38,4 @@ instance Covariant t => Bindable (Free t) where
 
 instance Traversable t => Traversable (Free t) where
 	Pure x ->> f = Pure <$> f x
-	Impure xs ->> f = Impure <$> (traverse . traverse) f xs
+	Impure xs ->> f = Impure <$> f ->>> xs

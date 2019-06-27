@@ -1,14 +1,13 @@
 module Pandora.Paradigm.Basis.Twister (Twister (..), unwrap, coiterate, section) where
 
 import Pandora.Core.Functor (type (:.:), type (~>))
-import Pandora.Core.Morphism ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), extend))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -34,7 +33,7 @@ instance Applicative t => Applicative (Twister t) where
 	(f :< fs) <*> (x :< xs) = f x :< ((<*>) <$> fs <*> xs)
 
 instance Traversable t => Traversable (Twister t) where
-	(x :< xs) ->> f = (:<) <$> f x <*> (traverse . traverse) f xs
+	(x :< xs) ->> f = (:<) <$> f x <*> f ->>> xs
 
 instance Alternative t => Bindable (Twister t) where
 	(x :< xs) >>= f = case f x of
