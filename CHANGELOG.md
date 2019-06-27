@@ -52,3 +52,4 @@
 
 # 0.1.6
 * Define `->>>`, `->>>>`, `->>>>>` methods for `Traversable` to compact expressions
+* Move `Natural` transformation from `Functor` to `Transformation` module

@@ -27,7 +27,7 @@ x & f = f x
 
 {-# INLINE (!) #-}
 (!) :: a -> b -> a
-x ! y = x
+x ! _ = x
 
 {-# INLINE (?) #-}
 (?) :: (a -> b -> c) -> b -> a -> c

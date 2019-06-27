@@ -1,10 +1,4 @@
-module Pandora.Core.Functor (Variant (..), Natural, type (~>), type (:.:)) where
-
-import Pandora.Pattern.Functor.Covariant (Covariant)
-
-type Natural t u = forall a . (Covariant t, Covariant u) => t a -> u a
-
-type (~>) t u = Natural t u
+module Pandora.Core.Functor (Variant (..), type (:.:)) where
 
 data Variant = Co | Contra
 

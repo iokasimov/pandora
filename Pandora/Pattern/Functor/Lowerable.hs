@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Lowerable (Lowerable (..)) where
 
-import Pandora.Core.Functor (type (~>))
+import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
 class Lowerable t where

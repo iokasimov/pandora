@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Basis.Twister (Twister (..), unwrap, coiterate, section) where
 
-import Pandora.Core.Functor (type (:.:), type (~>))
+import Pandora.Core.Functor (type (:.:))
+import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
