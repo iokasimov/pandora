@@ -31,21 +31,28 @@ class Covariant (t :: * -> *) where
 	-- | Computing a value from a structure of values
 	loeb :: t (t a -> a) -> t a
 	loeb tt = fix $ \f -> ($ f) <$> tt
-	-- | Infix versions of `comap` with various nesting levels
-	(<$$>) :: Covariant u => (a -> b) -> (t :.: u) a -> (t :.: u) b
-	(<$$>) = (<$>) . (<$>)
-	(<$$$>) :: (Covariant u, Covariant v) => (a -> b) -> (t :.: u :.: v) a -> (t :.: u :.: v) b
-	(<$$$>) = (<$>) . (<$>) . (<$>)
-	(<$$$$>) :: (Covariant u, Covariant v, Covariant w) => (a -> b) -> (t :.: u :.: v :.: w) a -> (t :.: u :.: v :.: w) b
-	(<$$$$>) = (<$>) . (<$>) . (<$>) . (<$>)
 	-- | Flipped infix version of 'comap'
 	(<&>) :: t a -> (a -> b) -> t b
 	x <&> f = f <$> x
+
+	-- | Infix versions of `comap` with various nesting levels
+	(<$$>) :: Covariant u => (a -> b) -> (t :.: u) a -> (t :.: u) b
+	(<$$>) = (<$>) . (<$>)
+	(<$$$>) :: (Covariant u, Covariant v)
+		=> (a -> b) -> (t :.: u :.: v) a -> (t :.: u :.: v) b
+	(<$$$>) = (<$>) . (<$>) . (<$>)
+	(<$$$$>) :: (Covariant u, Covariant v, Covariant w)
+		=> (a -> b) -> (t :.: u :.: v :.: w) a -> (t :.: u :.: v :.: w) b
+	(<$$$$>) = (<$>) . (<$>) . (<$>) . (<$>)
+
+	-- | Infix flipped versions of `comap` with various nesting levels
 	(<&&>) :: Covariant u => (t :.: u) a -> (a -> b) -> (t :.: u) b
 	x <&&> f = f <$$> x
-	(<&&&>) :: (Covariant u, Covariant v) => (t :.: u :.: v) a -> (a -> b) -> (t :.: u :.: v) b
+	(<&&&>) :: (Covariant u, Covariant v)
+		=> (t :.: u :.: v) a -> (a -> b) -> (t :.: u :.: v) b
 	x <&&&> f = f <$$$> x
-	(<&&&&>) :: (Covariant u, Covariant v, Covariant w) => (t :.: u :.: v :.: w) a -> (a -> b) -> (t :.: u :.: v :.: w) b
+	(<&&&&>) :: (Covariant u, Covariant v, Covariant w)
+		=> (t :.: u :.: v :.: w) a -> (a -> b) -> (t :.: u :.: v :.: w) b
 	x <&&&&> f = f <$$$$> x
 
 instance Covariant ((->) a) where

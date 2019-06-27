@@ -1,5 +1,6 @@
 module Pandora.Pattern.Functor.Contravariant (Contravariant (..)) where
 
+import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), (!), (?))
 
 infixl 4 >$<, $<, >$
@@ -27,9 +28,26 @@ class Contravariant (t :: * -> *) where
 	-- | Fill the input of evaluation
 	full :: t () -> t a
 	full x = () >$ x
-	-- | Infix versions of `contramap` with various nesting levels
-	(>$$$<) :: (Contravariant u, Contravariant v) => (a -> b) -> t (u (v b)) -> t (u (v a))
-	(>$$$<) = (>$<) . (>$<) . (>$<)
 	-- | Flipped infix version of 'contramap'
 	(>&<) :: t b -> (a -> b) -> t a
 	x >&< f = f >$< x
+
+	-- | Infix versions of `contramap` with various nesting levels
+	(>$$<) :: Contravariant u => (a -> b) -> (t :.: u) a -> (t :.: u) b
+	(>$$<) = (>$<) . (>$<)
+	(>$$$<) :: (Contravariant u, Contravariant v)
+		=> (a -> b) -> (t :.: u :.: v) b -> (t :.: u :.: v) a
+	(>$$$<) = (>$<) . (>$<) . (>$<)
+	(>$$$$<) :: (Contravariant u, Contravariant v, Contravariant w)
+		=> (a -> b) -> (t :.: u :.: v :.: w) a -> (t :.: u :.: v :.: w) b
+	(>$$$$<) = (>$<) . (>$<) . (>$<) . (>$<)
+
+	-- | Infix flipped versions of `contramap` with various nesting levels
+	(>&&<) :: Contravariant u => (t :.: u) a -> (a -> b) -> (t :.: u) b
+	x >&&< f = f >$$< x
+	(>&&&<) :: (Contravariant u, Contravariant v)
+		=> (t :.: u :.: v) b -> (a -> b) -> (t :.: u :.: v) a
+	x >&&&< f = f >$$$< x
+	(>&&&&<) :: (Contravariant u, Contravariant v, Contravariant w)
+		=> (t :.: u :.: v :.: w) a -> (a -> b) -> (t :.: u :.: v :.: w) b
+	x >&&&&< f = f >$$$$< x
