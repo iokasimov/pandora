@@ -10,7 +10,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
-import Pandora.Pattern.Object.Ringoid (Ringoid ((><)))
+import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (inverse))
@@ -42,7 +42,7 @@ instance Monoid a => Monoid (Constant a b) where
 	 unit = Constant unit
 
 instance Ringoid a => Ringoid (Constant a b) where
-	Constant x >< Constant y = Constant $ x >< y
+	Constant x * Constant y = Constant $ x * y
 
 instance Infimum a => Infimum (Constant a b) where
 	Constant x /\ Constant y = Constant $ x /\ y

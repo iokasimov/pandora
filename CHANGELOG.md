@@ -56,3 +56,4 @@
 * Define infix and infix flipped versions of methods of `Functor` typeclasses
 * Define `>>>-`, `>>>>-`, `>>>>>-` methods for `Distributive` to compact expressions
 * Rename `<>` method of `Semigroup` typeclass to `+`
+* Rename `><` method of `Ringoid` typeclass to `*`
