@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (False))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Greater))
-import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 
 data Conclusion e a = Failure e | Success a
 
@@ -57,10 +57,10 @@ instance (Chain e, Chain a) => Chain (Conclusion e a) where
 	Success _ <=> Failure _ = Greater
 
 instance (Semigroup e, Semigroup a) => Semigroup (Conclusion e a) where
-	Success x <> Success y = Success $ x <> y
-	Failure x <> Failure y = Failure $ x <> y
-	Failure _ <> Success y = Success y
-	Success x <> Failure _ = Success x
+	Success x + Success y = Success $ x + y
+	Failure x + Failure y = Failure $ x + y
+	Failure _ + Success y = Success y
+	Success x + Failure _ = Success x
 
 conclusion :: (e -> r) -> (a -> r) -> Conclusion e a -> r
 conclusion f _ (Failure x) = f x

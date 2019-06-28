@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), extend))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), (&&))
-import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
 
 infixr 5 :<
@@ -51,7 +51,7 @@ instance (Setoid a, forall b . Setoid b => Setoid (t b)) => Setoid (Twister t a)
 	(x :< xs) == (y :< ys) = x == y && xs == ys
 
 instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (Twister t a) where
-	(x :< xs) <> (y :< ys) = (x <> y) :< (xs <> ys)
+	(x :< xs) + (y :< ys) = (x + y) :< (xs + ys)
 
 instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Twister t a) where
 	unit = unit :< unit

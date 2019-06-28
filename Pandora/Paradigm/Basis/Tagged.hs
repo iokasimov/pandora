@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
-import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((><)))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
@@ -57,7 +57,7 @@ instance Chain a => Chain (Tagged tag a) where
 	Tagged x <=> Tagged y = x <=> y
 
 instance Semigroup a => Semigroup (Tagged tag a) where
-	Tagged x <> Tagged y = Tagged $ x <> y
+	Tagged x + Tagged y = Tagged $ x + y
 
 instance Monoid a => Monoid (Tagged tag a) where
 	 unit = Tagged unit

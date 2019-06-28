@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (True, False))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Equal, Greater))
-import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
@@ -64,9 +64,9 @@ instance Chain a => Chain (Maybe a) where
 	Just _ <=> Nothing = Greater
 
 instance Semigroup a => Semigroup (Maybe a) where
-	Just x <> Just y = Just $ x <> y
-	Nothing <> x = x
-	x <> Nothing = x
+	Just x + Just y = Just $ x + y
+	Nothing + x = x
+	x + Nothing = x
 
 instance Semigroup a => Monoid (Maybe a) where
 	unit = Nothing

@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 
 data Validation e a = Flaws e | Validated a
 
@@ -18,7 +18,7 @@ instance Pointable (Validation e) where
 	point = Validated
 
 instance Semigroup e => Applicative (Validation e) where
-	Flaws e <*> Flaws e' = Flaws $ e <> e'
+	Flaws e <*> Flaws e' = Flaws $ e + e'
 	Flaws e <*> Validated _ = Flaws e
 	Validated _ <*> Flaws e2 = Flaws e2
 	Validated f <*> Validated x = Validated $ f x

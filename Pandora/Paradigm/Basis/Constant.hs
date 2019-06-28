@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
-import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((><)))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
@@ -36,7 +36,7 @@ instance Chain a => Chain (Constant a b) where
 	Constant x <=> Constant y = x <=> y
 
 instance Semigroup a => Semigroup (Constant a b) where
-	Constant x <> Constant y = Constant $ x <> y
+	Constant x + Constant y = Constant $ x + y
 
 instance Monoid a => Monoid (Constant a b) where
 	 unit = Constant unit

@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
-import Pandora.Pattern.Object.Semigroup (Semigroup ((<>)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (unit))
 
 infixr 0 :!:, :>:
@@ -61,7 +61,7 @@ instance Chain ((u :.: t) a) => Chain (T t u a) where
 	T x <=> T y = x <=> y
 
 instance Semigroup ((u :.: t) a) => Semigroup (T t u a) where
-	T x <> T y = T $ x <> y
+	T x + T y = T $ x + y
 
 instance Monoid ((u :.: t) a) => Monoid (T t u a) where
 	unit = T unit
@@ -109,7 +109,7 @@ instance (forall u' . Chain ((u' :.: t u') a)) => Chain (Y t u a) where
 	Y x <=> Y y = x <=> y
 
 instance (forall u' . Semigroup ((u' :.: t u') a)) => Semigroup (Y t u a) where
-	Y x <> Y y = Y $ x <> y
+	Y x + Y y = Y $ x + y
 
 instance (forall u' . Monoid ((u' :.: t u') a)) => Monoid (Y t u a) where
 	unit = Y unit
