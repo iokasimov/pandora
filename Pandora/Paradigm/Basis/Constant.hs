@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-import Pandora.Pattern.Object.Monoid (Monoid (unit))
+import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
@@ -39,7 +39,7 @@ instance Semigroup a => Semigroup (Constant a b) where
 	Constant x + Constant y = Constant $ x + y
 
 instance Monoid a => Monoid (Constant a b) where
-	 unit = Constant unit
+	 zero = Constant zero
 
 instance Ringoid a => Ringoid (Constant a b) where
 	Constant x * Constant y = Constant $ x * y

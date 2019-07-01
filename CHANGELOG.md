@@ -57,3 +57,5 @@
 * Define `>>>-`, `>>>>-`, `>>>>>-` methods for `Distributive` to compact expressions
 * Rename `<>` method of `Semigroup` typeclass to `+`
 * Rename `><` method of `Ringoid` typeclass to `*`
+* Rename `unit` to `zero` method of `Monoid` typeclass
+* Define `Quasiring` typeclass

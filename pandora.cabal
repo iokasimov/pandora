@@ -90,6 +90,7 @@ library
     Pandora.Pattern.Object.Group
     Pandora.Pattern.Object.Lattice
     Pandora.Pattern.Object.Monoid
+    Pandora.Pattern.Object.Quasiring
     Pandora.Pattern.Object.Ringoid
     Pandora.Pattern.Object.Semigroup
     Pandora.Pattern.Object.Semilattice

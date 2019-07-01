@@ -15,7 +15,7 @@ import Pandora.Pattern.Functor.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-import Pandora.Pattern.Object.Monoid (Monoid (unit))
+import Pandora.Pattern.Object.Monoid (Monoid (zero))
 
 infixr 0 :!:, :>:
 type (:!:) t u = T t u
@@ -64,7 +64,7 @@ instance Semigroup ((u :.: t) a) => Semigroup (T t u a) where
 	T x + T y = T $ x + y
 
 instance Monoid ((u :.: t) a) => Monoid (T t u a) where
-	unit = T unit
+	zero = T zero
 
 up :: Pointable u => t a -> T t u a
 up = T . point
@@ -112,4 +112,4 @@ instance (forall u' . Semigroup ((u' :.: t u') a)) => Semigroup (Y t u a) where
 	Y x + Y y = Y $ x + y
 
 instance (forall u' . Monoid ((u' :.: t u') a)) => Monoid (Y t u a) where
-	unit = Y unit
+	zero = Y zero

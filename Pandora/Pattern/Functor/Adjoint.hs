@@ -6,8 +6,8 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |
 > When providing a new instance, you should ensure it satisfies the four laws:
-> * Left adjunction identity: phi counit ≡ identity
-> * Right adjunction identity: psi unit ≡ identity
+> * Left adjunction identity: phi cozero ≡ identity
+> * Right adjunction identity: psi zero ≡ identity
 > * Left adjunction interchange: phi f ≡ comap f . eta
 > * Right adjunction interchange: psi f ≡ epsilon . comap f
 -}

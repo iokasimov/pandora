@@ -7,5 +7,4 @@ module Pandora.Pattern.Object.Semigroup (Semigroup (..)) where
 
 class Semigroup a where
 	{-# MINIMAL (+) #-}
-	-- | Infix version of 'append'
 	(+) :: a -> a -> a

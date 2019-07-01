@@ -15,7 +15,7 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), (&&))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-import Pandora.Pattern.Object.Monoid (Monoid (unit))
+import Pandora.Pattern.Object.Monoid (Monoid (zero))
 
 infixr 5 :<
 
@@ -54,7 +54,7 @@ instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (
 	(x :< xs) + (y :< ys) = (x + y) :< (xs + ys)
 
 instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Twister t a) where
-	unit = unit :< unit
+	zero = zero :< zero
 
 unwrap :: Twister t a -> (t :.: Twister t) a
 unwrap (_ :< xs) = xs

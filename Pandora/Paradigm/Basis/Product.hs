@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), (&&))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-import Pandora.Pattern.Object.Monoid (Monoid (unit))
+import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
@@ -47,7 +47,7 @@ instance (Semigroup a, Semigroup b) => Semigroup (Product a b) where
 	(x :*: y) + (x' :*: y') = x + x' :*: y + y'
 
 instance (Monoid a, Monoid b) => Monoid (Product a b) where
-	unit = unit :*: unit
+	zero = zero :*: zero
 
 instance (Ringoid a, Ringoid b) => Ringoid (Product a b) where
 	(x :*: y) * (x' :*: y') = x * x' :*: y * y'
