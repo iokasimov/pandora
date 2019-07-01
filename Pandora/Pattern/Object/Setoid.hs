@@ -1,4 +1,4 @@
-module Pandora.Pattern.Object.Setoid (Boolean (..), (&&), (||), not, bool, Setoid (..)) where
+module Pandora.Pattern.Object.Setoid (Boolean (..), (&&), (||), not, bool, ifelse, Setoid (..)) where
 
 import Pandora.Core.Morphism (($))
 
@@ -24,6 +24,10 @@ not False = True
 bool :: a -> a -> Boolean -> a
 bool x _ False = x
 bool _ y True = y
+
+ifelse :: a -> a -> Boolean -> a
+ifelse x _ True = x
+ifelse _ y False = y
 
 {- |
 > When providing a new instance, you should ensure it satisfies the four laws:

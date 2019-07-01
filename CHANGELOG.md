@@ -59,3 +59,6 @@
 * Rename `><` method of `Ringoid` typeclass to `*`
 * Rename `unit` to `zero` method of `Monoid` typeclass
 * Define `Quasiring` typeclass
+
+# 0.1.7
+* Define `ifelse` function for `Boolean` values
