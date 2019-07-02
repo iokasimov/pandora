@@ -63,3 +63,4 @@
 # 0.1.7
 * Define `ifelse` function for `Boolean` values
 * Change `Stack` and `Nonempty` definitions, temporarily remove `filter` and `linearize`
+* Define `<**>`, `<***>`, `<****>` methods for `Applicative` to compact expressions
