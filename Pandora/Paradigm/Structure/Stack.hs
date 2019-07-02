@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop) where -- , filter, linearize
+module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, linearize) where
 
 import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($))
@@ -26,3 +26,7 @@ top stack = extract <$> stack
 
 pop :: Stack a -> Stack a
 pop stack = stack >>= unwrap
+
+-- | Transform any traversable structure into a stack
+linearize :: Traversable t => t a -> Stack a
+linearize = fold Nothing (\x -> Just . (:<) x)
