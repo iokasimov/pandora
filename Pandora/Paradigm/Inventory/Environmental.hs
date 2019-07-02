@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Inventory.Environmental (Environmental (..), Environ, ask, local) where
+module Pandora.Paradigm.Inventory.Environmental (Environmental (..), Environ, env, local) where
 
 import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism ((.), ($), (!), (?))
@@ -19,7 +19,7 @@ instance Covariant t => Covariant (Environmental e t) where
 	f <$> Environmental x = Environmental $ comap f . x
 
 instance Pointable t => Pointable (Environmental e t) where
-	point x = Environmental $ (!) (point x)
+	point x = Environmental $ (point x !)
 
 instance Applicative t => Applicative (Environmental e t) where
 	f <*> x = Environmental $ \e -> environmentally f e <*> environmentally x e
@@ -35,8 +35,8 @@ instance Monad t => Monad (Environmental e t) where
 instance Liftable (Environmental e) where
 	lift = Environmental . (!)
 
-ask :: Pointable t => Environmental e t e
-ask = Environmental point
+env :: Pointable t => Environmental e t e
+env = Environmental point
 
 local :: (e -> e) -> Environmental e t a -> Environmental e t a
 local f (Environmental x) = Environmental $ x . f
