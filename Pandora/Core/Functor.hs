@@ -1,6 +1,9 @@
-module Pandora.Core.Functor (Variant (..), type (:.:)) where
+module Pandora.Core.Functor (Variant (..), type (:.:), type (><)) where
 
 data Variant = Co | Contra
 
-infixr 0 :.:
+infixr 1 :.:
 type (:.:) t u a = t (u a)
+
+infixr 0 ><
+type (><) t a = t a
