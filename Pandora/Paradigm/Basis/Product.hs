@@ -1,5 +1,5 @@
-module Pandora.Paradigm.Basis.Product
-	(Product (..), type (:*:), Has, Injective, delta, swap, attached) where
+module Pandora.Paradigm.Basis.Product (Product (..), type (:*:), Has, Injective
+	, delta, swap, attached, curry, uncurry) where
 
 import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -71,6 +71,12 @@ swap (x :*: y) = y :*: x
 
 attached :: a :*: b -> a
 attached (x :*: _) = x
+
+curry :: (a :*: b -> c) -> a -> b -> c
+curry f x y = f $ x :*: y
+
+uncurry :: (a -> b -> c) -> (a :*: b -> c)
+uncurry f (x :*: y) = f x y
 
 -- Constraint on the content of some type
 type family Has x xs where
