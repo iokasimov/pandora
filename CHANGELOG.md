@@ -67,3 +67,4 @@
 * Change `Graph` definition
 * Rename `ask` to `env` method of `Environmental` datatype
 * Introduce `><` type operator to separate functors from its arguments
+* Define `Determinable` typeclass and define its instance for `Predicate`

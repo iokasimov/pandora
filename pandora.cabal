@@ -74,6 +74,7 @@ library
     Pandora.Pattern.Functor.Comonad
     Pandora.Pattern.Functor.Contravariant
     Pandora.Pattern.Functor.Covariant
+    Pandora.Pattern.Functor.Determinable
     Pandora.Pattern.Functor.Distributive
     Pandora.Pattern.Functor.Avoidable
     Pandora.Pattern.Functor.Extendable
