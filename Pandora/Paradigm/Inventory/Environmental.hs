@@ -1,42 +1,33 @@
-module Pandora.Paradigm.Inventory.Environmental (Environmental (..), Environ, env, local) where
+module Pandora.Paradigm.Inventory.Environmental (Environmental (..), env, local) where
 
-import Pandora.Core.Functor (type (:.:))
-import Pandora.Core.Morphism ((.), ($), (!), (?))
-import Pandora.Paradigm.Basis.Identity (Identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Core.Morphism (identity, (.), ($), (!))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 
-newtype Environmental e t a = Environmental { environmentally :: ((->) e :.: t) a }
+newtype Environmental e a = Environmental (e -> a)
 
-type Environ e = Environmental e Identity
+environmentally :: e -> Environmental e a -> a
+environmentally e (Environmental f) = f e
 
-instance Covariant t => Covariant (Environmental e t) where
-	f <$> Environmental x = Environmental $ comap f . x
+instance Covariant (Environmental e) where
+	f <$> Environmental x = Environmental $ f . x
 
-instance Pointable t => Pointable (Environmental e t) where
-	point x = Environmental $ (point x !)
+instance Pointable (Environmental e) where
+	point x = Environmental $ (x !)
 
-instance Applicative t => Applicative (Environmental e t) where
-	f <*> x = Environmental $ \e -> environmentally f e <*> environmentally x e
+instance Applicative (Environmental e) where
+	f <*> x = Environmental $ \e -> environmentally e f $ environmentally e x
 
-instance Alternative t => Alternative (Environmental e t) where
-	x <+> y = Environmental $ \e -> environmentally x e <+> environmentally y e
+instance Bindable (Environmental e) where
+	Environmental x >>= f = Environmental $ \e -> environmentally e . f . x $ e
 
-instance Bindable t => Bindable (Environmental e t) where
-	Environmental x >>= f = Environmental $ \e -> x e >>= environmentally ? e . f
+instance Monad (Environmental e) where
 
-instance Monad t => Monad (Environmental e t) where
+env :: Environmental e e
+env = Environmental identity
 
-instance Liftable (Environmental e) where
-	lift = Environmental . (!)
-
-env :: Pointable t => Environmental e t e
-env = Environmental point
-
-local :: (e -> e) -> Environmental e t a -> Environmental e t a
+local :: (e -> e) -> Environmental e a -> Environmental e a
 local f (Environmental x) = Environmental $ x . f
