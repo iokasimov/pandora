@@ -97,7 +97,7 @@ library
     Pandora.Pattern.Object.Semilattice
     Pandora.Pattern.Object.Setoid
   default-extensions:
-    DataKinds, ConstraintKinds, ExistentialQuantification, QuantifiedConstraints
+    DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints
     FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms
     MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes
     ScopedTypeVariables, TypeApplications, TypeFamilies, TypeFamilyDependencies, TypeOperators
