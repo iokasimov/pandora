@@ -51,6 +51,7 @@ library
     Pandora.Paradigm.Junction.Transformer
     Pandora.Paradigm.Junction.Kan
     Pandora.Paradigm.Junction.Schemes.UT
+    Pandora.Paradigm.Junction.Schemes.UTU
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     Pandora.Paradigm.Controlflow.Observable

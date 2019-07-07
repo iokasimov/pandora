@@ -74,3 +74,4 @@
 
 # 0.1.8
 * Rename `T` junction scheme to `UT` and move it to `Schemes` submodule and remove `up` method
+* Rename `Y` junction scheme to `UTU` and move it to `Schemes` submodule
