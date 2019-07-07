@@ -1,7 +1,7 @@
-module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, (^.), (.~), (%~)) where
+module Pandora.Paradigm.Inventory.Optics
+	(Lens, type (:-.), (|>), view, set, over, (^.), (.~), (%~)) where
 
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Basis.Identity (Identity)
 import Pandora.Paradigm.Inventory.Storage (Storage, access, position, retrofit)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))

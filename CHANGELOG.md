@@ -70,4 +70,4 @@
 * Define `Determinable` typeclass and define its instance for `Predicate`
 * Define `curry` and `uncurry` for `Product` datatype
 * Flip arguments of `statefully` method of `Stateful` datatype
-* Exclude inner effects from `Environmental` and `Storage` datatype
+* Exclude inner effects from `Environmental`, `Storage` and `Stateful` datatypes
