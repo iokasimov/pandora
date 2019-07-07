@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 infixr 0 :-.
 type (:-.) src tgt = Lens src tgt
 
-type Lens src tgt = src -> Storage tgt Identity src
+type Lens src tgt = src -> Storage tgt src
 
 -- | Lens composition infix operator
 (|>) :: Lens src btw -> Lens btw tgt -> Lens src tgt
