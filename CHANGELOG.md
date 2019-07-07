@@ -71,3 +71,6 @@
 * Define `curry` and `uncurry` for `Product` datatype
 * Flip arguments of `statefully` method of `Stateful` datatype
 * Exclude inner effects from `Environmental`, `Storage` and `Stateful` datatypes
+
+# 0.1.8
+* Rename `T` junction scheme to `UT`

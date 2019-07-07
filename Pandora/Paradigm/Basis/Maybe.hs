@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Transformer (T (T, t), type (:!:))
+import Pandora.Paradigm.Junction.Transformer (UT (UT, ut), type (:!:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -48,7 +48,7 @@ instance Bindable Maybe where
 instance Monad Maybe where
 
 instance (Pointable t, Bindable t) => Bindable (Maybe :!: t) where
-	T x >>= f = T $ x >>= maybe (point Nothing) (t . f)
+	UT x >>= f = UT $ x >>= maybe (point Nothing) (ut . f)
 
 instance Monad t => Monad (Maybe :!: t) where
 

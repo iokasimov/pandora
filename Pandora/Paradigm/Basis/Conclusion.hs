@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) where
 
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Transformer (T (T, t), type (:!:))
+import Pandora.Paradigm.Junction.Transformer (UT (UT, ut), type (:!:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -41,7 +41,7 @@ instance Bindable (Conclusion e) where
 instance Monad (Conclusion e) where
 
 instance (Pointable t, Bindable t) => Bindable (Conclusion e :!: t) where
-	T x >>= f = T $ x >>= conclusion (point . Failure) (t . f)
+	UT x >>= f = UT $ x >>= conclusion (point . Failure) (ut . f)
 
 instance Monad t => Monad (Conclusion e :!: t) where
 
