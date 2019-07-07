@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Junction.Schemes.UTU (UTU (..)) where
 
-import Pandora.Core.Functor (type (:.:), type (><))
+import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -17,46 +17,46 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 
-newtype UTU t u a = UTU { utu :: u :.: t u >< a }
+newtype UTU ct cu t u a = UTU { utu :: u :.: t u >< a }
 
-instance (Covariant (t u), Covariant u) => Covariant (UTU t u) where
+instance (Covariant (t u), Covariant u) => Covariant (UTU 'Co 'Co t u) where
 	f <$> UTU x = UTU $ f <$$> x
 
-instance (Pointable (t u), Pointable u) => Pointable (UTU t u) where
+instance (Pointable (t u), Pointable u) => Pointable (UTU 'Co 'Co t u) where
 	point = UTU . point . point
 
-instance (Extractable (t u), Extractable u) => Extractable (UTU t u) where
+instance (Extractable (t u), Extractable u) => Extractable (UTU 'Co 'Co t u) where
 	extract = extract . extract . utu
 
-instance (Covariant (t u), Avoidable u) => Avoidable (UTU t u) where
+instance (Covariant (t u), Avoidable u) => Avoidable (UTU 'Co 'Co t u) where
 	idle = UTU idle
 
-instance (Covariant (t u), Alternative u) => Alternative (UTU t u) where
-	UTU x <+> UTU utu = UTU $ x <+> utu
+instance (Covariant (t u), Alternative u) => Alternative (UTU 'Co 'Co t u) where
+	UTU x <+> UTU y = UTU $ x <+> y
 
-instance (Applicative (t u), Applicative u) => Applicative (UTU t u) where
+instance (Applicative (t u), Applicative u) => Applicative (UTU 'Co 'Co t u) where
 	UTU f <*> UTU x = UTU $ apply <$> f <*> x
 
-instance (Traversable (t u), Traversable u) => Traversable (UTU t u) where
+instance (Traversable (t u), Traversable u) => Traversable (UTU 'Co 'Co t u) where
 	UTU x ->> f = UTU <$> x ->>> f
 
-instance (Distributive (t u), Distributive u) => Distributive (UTU t u) where
+instance (Distributive (t u), Distributive u) => Distributive (UTU 'Co 'Co t u) where
 	x >>- f = UTU . comap distribute . distribute $ utu . f <$> x
 
-instance (forall u' . Pointable u', Liftable t) => Liftable (UTU t) where
+instance (forall u' . Pointable u', Liftable t) => Liftable (UTU 'Co 'Co t) where
 	lift = UTU . point . lift
 
-instance (forall u' . Extractable u', Lowerable t) => Lowerable (UTU t) where
+instance (forall u' . Extractable u', Lowerable t) => Lowerable (UTU 'Co 'Co t) where
 	lower = lower . extract . utu
 
-instance (forall u' . Setoid (u' :.: t u' >< a)) => Setoid (UTU t u a) where
-	UTU x == UTU utu = x == utu
+instance (forall u' . Setoid (u' :.: t u' >< a)) => Setoid (UTU 'Co 'Co t u a) where
+	UTU x == UTU y = x == y
 
-instance (forall u' . Chain (u' :.: t u' >< a)) => Chain (UTU t u a) where
-	UTU x <=> UTU utu = x <=> utu
+instance (forall u' . Chain (u' :.: t u' >< a)) => Chain (UTU 'Co 'Co t u a) where
+	UTU x <=> UTU y = x <=> y
 
-instance (forall u' . Semigroup (u' :.: t u' >< a)) => Semigroup (UTU t u a) where
-	UTU x + UTU utu = UTU $ x + utu
+instance (forall u' . Semigroup (u' :.: t u' >< a)) => Semigroup (UTU 'Co 'Co t u a) where
+	UTU x + UTU y = UTU $ x + y
 
-instance (forall u' . Monoid (u' :.: t u' >< a)) => Monoid (UTU t u a) where
+instance (forall u' . Monoid (u' :.: t u' >< a)) => Monoid (UTU 'Co 'Co t u a) where
 	zero = UTU zero

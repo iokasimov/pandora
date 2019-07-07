@@ -3,10 +3,9 @@ module Pandora.Paradigm.Inventory.Stateful
 
 import Pandora.Core.Functor (type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Basis.Identity (Identity)
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

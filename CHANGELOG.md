@@ -76,3 +76,4 @@
 * Rename `T` junction scheme to `UT` and move it to `Schemes` submodule and remove `up` method
 * Rename `Y` junction scheme to `UTU` and move it to `Schemes` submodule and remove `:>:` type operator
 * Define `TUT` junction scheme
+* Add variance type arguments to `UT`, `UTU` and `TUT` schemes
