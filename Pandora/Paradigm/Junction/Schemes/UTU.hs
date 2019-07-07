@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Junction.Schemes.UTU (UTU (..), type (:>:)) where
+module Pandora.Paradigm.Junction.Schemes.UTU (UTU (..)) where
 
 import Pandora.Core.Functor (type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
@@ -16,9 +16,6 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-
-infixr 0 :>:
-type (:>:) t u = UTU t u
 
 newtype UTU t u a = UTU { utu :: u :.: t u >< a }
 
