@@ -73,4 +73,4 @@
 * Exclude inner effects from `Environmental`, `Storage` and `Stateful` datatypes
 
 # 0.1.8
-* Rename `T` junction scheme to `UT`
+* Rename `T` junction scheme to `UT` and move it to `Schemes` submodule and remove `up` method

@@ -15,7 +15,6 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 import Pandora.Pattern.Object.Setoid (bool)
 
 newtype Stateful s a = Stateful ((->) s :.: (:*:) s >< a)
