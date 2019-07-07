@@ -50,7 +50,7 @@ class Covariant (t :: * -> *) where
 	x <&&> f = f <$$> x
 	(<&&&>) :: (Covariant u, Covariant v)
 		=> t :.: u :.: v >< a -> (a -> b) -> t :.: u :.: v >< b
-
+	x <&&&> f = f <$$$> x
 	(<&&&&>) :: (Covariant u, Covariant v, Covariant w)
 		=> t :.: u :.: v :.: w >< a -> (a -> b) -> t :.: u :.: v :.: w >< b
 	x <&&&&> f = f <$$$$> x
