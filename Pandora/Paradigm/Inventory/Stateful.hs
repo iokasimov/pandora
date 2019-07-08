@@ -1,8 +1,11 @@
 module Pandora.Paradigm.Inventory.Stateful
 	(Stateful (..), get, modify, put, fold, find) where
 
-import Pandora.Core.Functor (type (:.:), type (><))
+import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
+import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
+import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, transformer))
+import Pandora.Paradigm.Junction.Schemes.TUV (TUV (TUV))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>)))
@@ -18,8 +21,16 @@ import Pandora.Pattern.Object.Setoid (bool)
 
 newtype Stateful s a = Stateful ((->) s :.: (:*:) s >< a)
 
-statefully :: s -> Stateful s a -> (s :*: a)
+statefully :: s -> Stateful s a -> s :*: a
 statefully initial (Stateful state) = state initial
+
+instance Composition (Stateful s) where
+	type Outline (Stateful s) a = (->) s :.: (:*:) s >< a
+	composition (Stateful x) = x
+
+instance Transformer (Stateful s) where
+	type Layout (Stateful s) i a = TUV 'Co 'Co 'Co ((->) s) i ((:*:) s) a
+	transformer x = TUV $ \s -> (s :*:) <$> x
 
 instance Covariant (Stateful s) where
 	f <$> Stateful x = Stateful $ \old -> f <$> x old
