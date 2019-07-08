@@ -78,3 +78,4 @@
 * Define `TUT` junction scheme
 * Add variance type arguments to `UT`, `UTU` and `TUT` schemes
 * Rename `U` to `TU`, `UU` to `TUV`, `UUU` to `TUVW` and put them into `Schemes` module
+* Define `Composition` typeclass and define its instances for `TU`, `TUV`, `TUVW`, `UT` and `UTU`

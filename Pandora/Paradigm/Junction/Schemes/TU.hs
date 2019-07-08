@@ -1,7 +1,8 @@
 module Pandora.Paradigm.Junction.Schemes.TU (TU (..)) where
 
-import Pandora.Core.Functor (Variant (Co, Contra), type (:.:))
+import Pandora.Core.Functor (Variant (Co, Contra), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
+import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<), (>$$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -13,7 +14,11 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
 
-newtype TU ct cu t u a = TU { tu :: (t :.: u) a }
+newtype TU ct cu t u a = TU (t :.: u >< a)
+
+instance Composition (TU ct cu t u) where
+	type Outline (TU ct cu t u) a = t :.: u >< a
+	composition (TU x) = x
 
 instance (Covariant t, Covariant u) => Covariant (TU 'Co 'Co t u) where
 	f <$> TU x = TU $ f <$$> x
@@ -31,7 +36,7 @@ instance (Pointable t, Pointable u) => Pointable (TU 'Co 'Co t u) where
 	point = TU . point . point
 
 instance (Extractable t, Extractable u) => Extractable (TU 'Co 'Co t u) where
-	extract = extract . extract . tu
+	extract = extract . extract . composition
 
 instance (Avoidable t, Covariant u) => Avoidable (TU 'Co 'Co t u) where
 	idle = TU idle
@@ -46,7 +51,7 @@ instance (Traversable t, Traversable u) => Traversable (TU 'Co 'Co t u) where
 	TU x ->> f = TU <$> x ->>> f
 
 instance (Distributive t, Distributive u) => Distributive (TU 'Co 'Co t u) where
-	x >>- f = TU . comap distribute . distribute $ tu . f <$> x
+	x >>- f = TU . comap distribute . distribute $ composition . f <$> x
 
 type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoint t u)
 

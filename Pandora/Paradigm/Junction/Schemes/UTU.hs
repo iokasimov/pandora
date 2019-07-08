@@ -2,6 +2,7 @@ module Pandora.Paradigm.Junction.Schemes.UTU (UTU (..)) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
+import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -17,7 +18,11 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 
-newtype UTU ct cu t u a = UTU { utu :: u :.: t u >< a }
+newtype UTU ct cu t u a = UTU (u :.: t u >< a)
+
+instance Composition (UTU ct cu t u) where
+	type Outline (UTU ct cu t u) a = u :.: t u >< a
+	composition (UTU x) = x
 
 instance (Covariant (t u), Covariant u) => Covariant (UTU 'Co 'Co t u) where
 	f <$> UTU x = UTU $ f <$$> x
@@ -26,7 +31,7 @@ instance (Pointable (t u), Pointable u) => Pointable (UTU 'Co 'Co t u) where
 	point = UTU . point . point
 
 instance (Extractable (t u), Extractable u) => Extractable (UTU 'Co 'Co t u) where
-	extract = extract . extract . utu
+	extract = extract . extract . composition
 
 instance (Covariant (t u), Avoidable u) => Avoidable (UTU 'Co 'Co t u) where
 	idle = UTU idle
@@ -41,13 +46,13 @@ instance (Traversable (t u), Traversable u) => Traversable (UTU 'Co 'Co t u) whe
 	UTU x ->> f = UTU <$> x ->>> f
 
 instance (Distributive (t u), Distributive u) => Distributive (UTU 'Co 'Co t u) where
-	x >>- f = UTU . comap distribute . distribute $ utu . f <$> x
+	x >>- f = UTU . comap distribute . distribute $ composition . f <$> x
 
 instance (forall u' . Pointable u', Liftable t) => Liftable (UTU 'Co 'Co t) where
 	lift = UTU . point . lift
 
 instance (forall u' . Extractable u', Lowerable t) => Lowerable (UTU 'Co 'Co t) where
-	lower = lower . extract . utu
+	lower = lower . extract . composition
 
 instance (forall u' . Setoid (u' :.: t u' >< a)) => Setoid (UTU 'Co 'Co t u a) where
 	UTU x == UTU y = x == y
