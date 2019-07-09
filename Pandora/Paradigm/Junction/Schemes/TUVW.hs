@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Junction.Schemes.TUVW (TUVW (..)) where
 
-import Pandora.Core.Functor (Variant (Co, Contra), type (:.:))
+import Pandora.Core.Functor (Variant (Co, Contra), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>), comap))
@@ -10,11 +10,11 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>>), (->>>>>)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
 
-newtype TUVW ct cu cv cw t u v w a = TUVW { composition :: (t :.: u :.: v :.: w) a }
+newtype TUVW ct cu cv cw t u v w a = TUVW (t :.: u :.: v :.: w >< a)
 
 instance Composition (TUVW ct cu cv cw t u v w) where
 	type Outline (TUVW ct cu cv cw t u v w) a = t :.: u :.: v :.: w >< a
