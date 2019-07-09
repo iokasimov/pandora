@@ -80,4 +80,4 @@
 * Define `Composition` typeclass and define its instances for `TU`, `TUV`, `TUVW`, `UT` and `UTU`
 * Define `Transformer` typeclass and define its instance for `Stateful` datatype
 * Replace `transform` on `lay` and add `equip` method in `Transformer` typeclass
-* Define `Covariant` instance for `Stateful` transformer
+* Define `Covariant`, `Applicative`, `Pointable`, `Bindable` and `Monad` instances for `Stateful` transformer

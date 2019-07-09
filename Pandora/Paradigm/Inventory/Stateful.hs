@@ -68,3 +68,14 @@ instance Transformer (Stateful s) where
 
 instance Covariant u => Covariant (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
 	f <$> TUV x = TUV $ \old -> f <$$> x old
+
+instance Bindable u => Applicative (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+	TUV f <*> TUV x = TUV $ \old -> f old >>= \(new :*: g) -> g <$$> x new
+
+instance Pointable u => Pointable (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+	point x = TUV $ \s -> point $ s :*: x
+
+instance Bindable u => Bindable (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . composition . f $ y
+
+instance Monad u => Monad (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
