@@ -75,9 +75,9 @@
 # 0.1.8
 * Rename `T` junction scheme to `UT` and move it to `Schemes` submodule and remove `up` method
 * Rename `Y` junction scheme to `UTU` and move it to `Schemes` submodule and remove `:>:` type operator
-* Define `TUT` junction scheme
 * Add variance type arguments to `UT`, `UTU` and `TUT` schemes
 * Rename `U` to `TU`, `UU` to `TUV`, `UUU` to `TUVW` and put them into `Schemes` module
 * Define `Composition` typeclass and define its instances for `TU`, `TUV`, `TUVW`, `UT` and `UTU`
 * Define `Transformer` typeclass and define its instance for `Stateful` datatype
 * Replace `transform` on `lay` and add `equip` method in `Transformer` typeclass
+* Define `Covariant` instance for `Stateful` transformer

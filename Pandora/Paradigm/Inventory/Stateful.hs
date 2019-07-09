@@ -1,14 +1,14 @@
 module Pandora.Paradigm.Inventory.Stateful
 	(Stateful (..), get, modify, put, fold, find) where
 
-import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
+import Pandora.Core.Functor (type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
 import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
-import Pandora.Paradigm.Junction.Schemes.TUT (TUT (TUT))
+import Pandora.Paradigm.Junction.Schemes.TUV (TUV (TUV))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -23,15 +23,6 @@ newtype Stateful s a = Stateful ((->) s :.: (:*:) s >< a)
 
 statefully :: s -> Stateful s a -> s :*: a
 statefully initial (Stateful state) = state initial
-
-instance Composition (Stateful s) where
-	type Outline (Stateful s) a = (->) s :.: (:*:) s >< a
-	composition (Stateful x) = x
-
-instance Transformer (Stateful s) where
-	type Layout (Stateful s) u a = TUT 'Co 'Co (Stateful s) u a
-	lay x = TUT $ \s -> (s :*:) <$> x
-	equip x = TUT $ point <$> composition x
 
 instance Covariant (Stateful s) where
 	f <$> Stateful x = Stateful $ \old -> f <$> x old
@@ -65,3 +56,15 @@ fold start op struct = extract . statefully start $
 
 find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
 find p struct = fold idle (\x s -> (<+>) s . bool idle (point x) . predicate p $ x) struct
+
+instance Composition (Stateful s) where
+	type Outline (Stateful s) a = (->) s :.: (:*:) s >< a
+	composition (Stateful x) = x
+
+instance Transformer (Stateful s) where
+	type Layout (Stateful s) u a = TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s) a
+	lay x = TUV $ \s -> (s :*:) <$> x
+	equip x = TUV $ point <$> composition x
+
+instance Covariant u => Covariant (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+	f <$> TUV x = TUV $ \old -> f <$$> x old
