@@ -4,8 +4,8 @@ module Pandora.Paradigm.Inventory.Stateful
 import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
-import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, transformer))
-import Pandora.Paradigm.Junction.Schemes.TUV (TUV (TUV))
+import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
+import Pandora.Paradigm.Junction.Schemes.TUT (TUT (TUT))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>)))
@@ -29,8 +29,9 @@ instance Composition (Stateful s) where
 	composition (Stateful x) = x
 
 instance Transformer (Stateful s) where
-	type Layout (Stateful s) i a = TUV 'Co 'Co 'Co ((->) s) i ((:*:) s) a
-	transformer x = TUV $ \s -> (s :*:) <$> x
+	type Layout (Stateful s) u a = TUT 'Co 'Co (Stateful s) u a
+	lay x = TUT $ \s -> (s :*:) <$> x
+	equip x = TUT $ point <$> composition x
 
 instance Covariant (Stateful s) where
 	f <$> Stateful x = Stateful $ \old -> f <$> x old
