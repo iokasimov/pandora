@@ -4,11 +4,11 @@ import Pandora.Core.Morphism ((.), ($))
 import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
 import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
 import Pandora.Paradigm.Junction.Schemes.UT (UT (UT))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -57,6 +57,20 @@ instance Transformer Maybe where
 	type Layout Maybe u a = UT Maybe () Maybe u a
 	lay x = UT $ Just <$> x
 	equip x = UT . point $ x
+
+instance Covariant u => Covariant (UT Maybe () Maybe u) where
+	f <$> UT x = UT $ f <$$> x
+
+instance Applicative u => Applicative (UT Maybe () Maybe u) where
+	UT f <*> UT x = UT $ apply <$> f <*> x
+
+instance Pointable u => Pointable (UT Maybe () Maybe u) where
+	point = UT . point . point
+
+instance (Pointable u, Bindable u) => Bindable (UT Maybe () Maybe u) where
+	UT x >>= f = UT $ x >>= maybe (point Nothing) (composition . f)
+
+instance Monad u => Monad (UT Maybe () Maybe u) where
 
 instance Setoid a => Setoid (Maybe a) where
 	Just x == Just y = x == y
