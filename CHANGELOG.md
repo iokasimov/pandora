@@ -81,3 +81,4 @@
 * Define `Transformer` typeclass and define its instance for `Stateful` datatype
 * Replace `transform` on `lay` and add `equip` method in `Transformer` typeclass
 * Define `Covariant`, `Applicative`, `Pointable`, `Bindable` and `Monad` instances for `Stateful` transformer
+* Remove `:!:` type operator

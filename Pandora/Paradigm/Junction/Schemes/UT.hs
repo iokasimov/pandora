@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Junction.Schemes.UT (UT (..), type (:!:)) where
+module Pandora.Paradigm.Junction.Schemes.UT (UT (..)) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
@@ -17,9 +17,6 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-
-infixr 0 :!:
-type (:!:) t u = UT 'Co 'Co t u
 
 newtype UT ct cu t u a = UT (u :.: t >< a)
 

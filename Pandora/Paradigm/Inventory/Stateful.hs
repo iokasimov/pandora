@@ -62,20 +62,20 @@ instance Composition (Stateful s) where
 	composition (Stateful x) = x
 
 instance Transformer (Stateful s) where
-	type Layout (Stateful s) u a = TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s) a
+	type Layout (Stateful s) u a = TUV Stateful () Stateful ((->) s) u ((:*:) s) a
 	lay x = TUV $ \s -> (s :*:) <$> x
 	equip x = TUV $ point <$> composition x
 
-instance Covariant u => Covariant (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+instance Covariant u => Covariant (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
 	f <$> TUV x = TUV $ \old -> f <$$> x old
 
-instance Bindable u => Applicative (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+instance Bindable u => Applicative (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
 	TUV f <*> TUV x = TUV $ \old -> f old >>= \(new :*: g) -> g <$$> x new
 
-instance Pointable u => Pointable (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+instance Pointable u => Pointable (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
 	point x = TUV $ \s -> point $ s :*: x
 
-instance Bindable u => Bindable (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+instance Bindable u => Bindable (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
 	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . composition . f $ y
 
-instance Monad u => Monad (TUV 'Stateful '() 'Stateful ((->) s) u ((:*:) s)) where
+instance Monad u => Monad (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
