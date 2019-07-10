@@ -1,7 +1,9 @@
 module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Composition (composition)
+import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
+import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
+import Pandora.Paradigm.Junction.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -46,6 +48,15 @@ instance Bindable Maybe where
 	Nothing >>= _ = Nothing
 
 instance Monad Maybe where
+
+instance Composition Maybe where
+	type Outline Maybe a = Maybe a
+	composition x = x
+
+instance Transformer Maybe where
+	type Layout Maybe u a = UT Maybe () Maybe u a
+	lay x = UT $ Just <$> x
+	equip x = UT . point $ x
 
 instance Setoid a => Setoid (Maybe a) where
 	Just x == Just y = x == y

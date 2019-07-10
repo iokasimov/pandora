@@ -1,7 +1,9 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) where
 
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Composition (composition)
+import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
+import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
+import Pandora.Paradigm.Junction.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -39,6 +41,15 @@ instance Bindable (Conclusion e) where
 	Failure y >>= _ = Failure y
 
 instance Monad (Conclusion e) where
+
+instance Composition (Conclusion e) where
+	type Outline (Conclusion e) a = Conclusion e a
+	composition x = x
+
+instance Transformer (Conclusion e) where
+	type Layout (Conclusion e) u a = UT (Conclusion e) () (Conclusion e) u a
+	lay x = UT $ Success <$> x
+	equip x = UT . point $ x
 
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where
 	Success x == Success y = x == y

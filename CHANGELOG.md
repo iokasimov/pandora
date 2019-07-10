@@ -82,3 +82,4 @@
 * Replace `transform` on `lay` and add `equip` method in `Transformer` typeclass
 * Define `Covariant`, `Applicative`, `Pointable`, `Bindable` and `Monad` instances for `Stateful` transformer
 * Remove `:!:` type operator
+* Define `Composition` and `Transformer` instances for `Maybe` and `Conclusion`
