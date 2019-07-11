@@ -83,4 +83,4 @@
 * Define `Covariant`, `Applicative`, `Pointable`, `Bindable` and `Monad` instances for `Stateful` transformer
 * Remove `:!:` type operator
 * Define `Composition` and `Transformer` instances for `Maybe` and `Conclusion`
-* Create `Core` umbrella module
+* Define `Core`, `Paradigm` and `Pattern` umbrella modules

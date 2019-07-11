@@ -24,6 +24,8 @@ library
     Pandora.Core.Functor
     Pandora.Core.Morphism
     Pandora.Core.Transformation
+
+    Pandora.Paradigm
     -- Basic constructions
     Pandora.Paradigm.Basis
     Pandora.Paradigm.Basis.Conclusion
@@ -72,6 +74,8 @@ library
     Pandora.Paradigm.Structure.Stack
     Pandora.Paradigm.Structure.Graph
     Pandora.Paradigm.Structure.Binary
+
+    Pandora.Pattern
     -- Functor typeclassess
     Pandora.Pattern.Functor
     Pandora.Pattern.Functor.Adjoint
