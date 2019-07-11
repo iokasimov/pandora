@@ -20,6 +20,7 @@ source-repository head
 library
   exposed-modules:
     -- Axioms set
+    Pandora.Core
     Pandora.Core.Functor
     Pandora.Core.Morphism
     Pandora.Core.Transformation
