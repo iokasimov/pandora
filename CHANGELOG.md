@@ -87,3 +87,4 @@
 
 # 0.1.9
 * Change `Stack` definition: from type synonymous to newtype, change operations accordingly
+* Define `.:.` composition: the same thing but with reverse order
