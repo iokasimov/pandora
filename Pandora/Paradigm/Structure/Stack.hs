@@ -1,7 +1,8 @@
-module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, linearize) where
+module Pandora.Paradigm.Structure.Stack where -- (Stack, push, top, pop, linearize) where
 
 import Pandora.Core.Functor (type (:.:), type (><))
-import Pandora.Core.Morphism ((.))
+import Pandora.Core.Morphism ((.), ($))
+import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Basis.Twister (Twister ((:<)), unwrap)
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Inventory.Stateful (fold)
@@ -13,17 +14,17 @@ import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 
 -- | Linear data structure that serves as a collection of elements
-type Stack a = Maybe :.: Twister Maybe >< a
+newtype Stack a = Stack (Maybe :.: Twister Maybe >< a)
 
 push :: a -> Stack a -> Stack a
-push x stack = ((:<) x . Just <$> stack) <+> (point . point) x
+push x (Stack stack) = Stack $ ((:<) x . Just <$> stack) <+> (point . point) x
 
-top :: Stack a -> Maybe a
-top stack = extract <$> stack
+top :: Stack ~> Maybe
+top (Stack stack) = extract <$> stack
 
-pop :: Stack a -> Stack a
-pop stack = stack >>= unwrap
+pop :: Stack ~> Stack
+pop (Stack stack) = Stack $ stack >>= unwrap
 
 -- | Transform any traversable structure into a stack
-linearize :: Traversable t => t a -> Stack a
-linearize = fold Nothing (\x -> Just . (:<) x)
+linearize :: Traversable t => t ~> Stack
+linearize = Stack . fold Nothing (\x -> Just . (:<) x)

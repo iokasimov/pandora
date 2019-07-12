@@ -84,3 +84,6 @@
 * Remove `:!:` type operator
 * Define `Composition` and `Transformer` instances for `Maybe` and `Conclusion`
 * Define `Core`, `Paradigm` and `Pattern` umbrella modules
+
+# 0.1.9
+* Change `Stack` definition: from type synonymous to newtype, change operations accordingly
