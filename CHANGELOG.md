@@ -89,3 +89,4 @@
 * Change `Stack` definition: from type synonymous to newtype, change operations accordingly
 * Define `.:.` composition: the same thing but with reverse order
 * Change `Nonempty` type family, family instances should be defined for each data structure
+* Define `:>` type operator for transformers

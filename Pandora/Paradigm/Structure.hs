@@ -4,7 +4,6 @@ import Pandora.Paradigm.Structure.Binary as Exports
 import Pandora.Paradigm.Structure.Graph as Exports
 import Pandora.Paradigm.Structure.Stack as Exports
 
-import Pandora.Core.Functor (type (:.:))
 import Pandora.Paradigm.Basis.Maybe (Maybe)
 import Pandora.Paradigm.Basis.Twister (Twister)
 
