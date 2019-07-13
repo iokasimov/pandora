@@ -10,7 +10,7 @@ import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -55,7 +55,7 @@ fold start op struct = extract . statefully start $
 	struct ->> modify . op $> () *> get
 
 find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
-find p struct = fold idle (\x s -> (<+>) s . bool idle (point x) . predicate p $ x) struct
+find p struct = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p $ x) struct
 
 instance Composition (Stateful s) where
 	type Outline (Stateful s) a = (->) s :.: (:*:) s >< a

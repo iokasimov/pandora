@@ -91,3 +91,4 @@
 * Change `Nonempty` type family, family instances should be defined for each data structure
 * Define `:>` type operator for transformers
 * Define `Distributive` instance for `->` datatype
+* Rename `idle` method of `Avoidable` typeclass to `empty`

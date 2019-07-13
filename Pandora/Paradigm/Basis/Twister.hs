@@ -3,7 +3,7 @@ module Pandora.Paradigm.Basis.Twister (Twister (..), unwrap, coiterate, section)
 import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -25,7 +25,7 @@ instance Covariant t => Covariant (Twister t) where
 	f <$> (x :< xs) = f x :< (f <$$> xs)
 
 instance Avoidable t => Pointable (Twister t) where
-	point x = x :< idle
+	point x = x :< empty
 
 instance Covariant t => Extractable (Twister t) where
 	extract (x :< _) = x

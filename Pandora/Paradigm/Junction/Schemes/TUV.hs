@@ -6,7 +6,7 @@ import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), comap))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<), (>$$<), (>$$$<)), contramap)
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
@@ -62,7 +62,7 @@ instance (Extractable t, Extractable u, Extractable v)
 
 instance (Avoidable t, Covariant u, Covariant v)
 	=> Avoidable (TUV 'Co 'Co 'Co t u v) where
-	idle = TUV idle
+	empty = TUV empty
 
 instance (Applicative t, Applicative u, Applicative v)
 	=> Applicative (TUV 'Co 'Co 'Co t u v) where

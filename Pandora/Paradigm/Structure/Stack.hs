@@ -9,7 +9,7 @@ import Pandora.Paradigm.Inventory.Stateful (fold)
 import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -29,7 +29,7 @@ instance Alternative Stack where
 	Stack stack <+> Stack stack' = Stack $ stack <+> stack'
 
 instance Avoidable Stack where
-	idle = Stack Nothing
+	empty = Stack Nothing
 
 instance Applicative Stack where
 	Stack f <*> Stack x = Stack $ f <**> x

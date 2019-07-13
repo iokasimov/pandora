@@ -5,7 +5,7 @@ import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition)
 import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
 import Pandora.Paradigm.Junction.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
@@ -29,7 +29,7 @@ instance Pointable Maybe where
 	point = Just
 
 instance Avoidable Maybe where
-	idle = Nothing
+	empty = Nothing
 
 instance Applicative Maybe where
 	Just f <*> x = f <$> x

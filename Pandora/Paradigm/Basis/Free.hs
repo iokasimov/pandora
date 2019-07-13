@@ -3,7 +3,7 @@ module Pandora.Paradigm.Basis.Free (Free (..)) where
 import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (idle))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -25,7 +25,7 @@ instance Alternative t => Alternative (Free t) where
 	Impure xs <+> Impure ys = Impure $ xs <+> ys
 
 instance Avoidable t => Avoidable (Free t) where
-	idle = Impure idle
+	empty = Impure empty
 
 instance Covariant t => Applicative (Free t) where
 	Pure f <*> Pure y = Pure $ f y
