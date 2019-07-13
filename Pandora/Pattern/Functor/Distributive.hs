@@ -1,8 +1,8 @@
 module Pandora.Pattern.Functor.Distributive (Distributive (..)) where
 
 import Pandora.Core.Functor (type (:.:))
-import Pandora.Core.Morphism (identity, (.))
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Core.Morphism (identity, (.), (?))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 
 {- |
 > Let f :: Distributive g => (a -> g b)
@@ -36,3 +36,6 @@ class Covariant u => Distributive u where
 	(>>>>>-) :: (Covariant t, Covariant v, Covariant w, Covariant j)
 		=> (t :.: v :.: w :.: j) a -> (a -> u b) -> (u :.: t :.: v :.: w :.: j) b
 	x >>>>>- f = (collect . collect . collect . collect) f x
+
+instance Distributive ((->) e) where
+	g >>- f = \e -> (f ? e) <$> g
