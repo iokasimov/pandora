@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Twister (Twister (..), unwrap, coiterate, section) where
+module Pandora.Paradigm.Basis.Twister (Twister (..), untwist, coiterate, section) where
 
 import Pandora.Core.Functor (type (:.:))
 import Pandora.Core.Transformation (type (~>))
@@ -41,7 +41,7 @@ instance Alternative t => Bindable (Twister t) where
 		y :< ys -> y :< (ys <+> comap (>>= f) xs)
 
 instance Covariant t => Extendable (Twister t) where
-	x =>> f = f x :< (extend f <$> unwrap x)
+	x =>> f = f x :< (extend f <$> untwist x)
 
 instance (Avoidable t, Alternative t) => Monad (Twister t) where
 
@@ -56,8 +56,8 @@ instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (
 instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Twister t a) where
 	zero = zero :< zero
 
-unwrap :: Twister t a -> (t :.: Twister t) a
-unwrap (_ :< xs) = xs
+untwist :: Twister t a -> (t :.: Twister t) a
+untwist (_ :< xs) = xs
 
 coiterate :: Covariant t => (a -> t a) -> a -> Twister t a
 coiterate coalgebra x = x :< (coiterate coalgebra <$> coalgebra x)

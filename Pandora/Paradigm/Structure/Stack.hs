@@ -5,7 +5,7 @@ import Pandora.Core.Morphism ((.), ($))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Basis.Twister (Twister ((:<)), unwrap)
+import Pandora.Paradigm.Basis.Twister (Twister ((:<)), untwist)
 import Pandora.Paradigm.Inventory.Stateful (fold)
 import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
@@ -50,7 +50,7 @@ top :: Stack ~> Maybe
 top (Stack stack) = extract <$> stack
 
 pop :: Stack ~> Stack
-pop (Stack stack) = Stack $ stack >>= unwrap
+pop (Stack stack) = Stack $ stack >>= untwist
 
 filter :: Predicate a -> Stack a -> Stack a
 filter (Predicate p) = Stack . fold empty
