@@ -62,7 +62,7 @@ instance Composition (Stateful s) where
 	composition (Stateful x) = x
 
 instance Transformer (Stateful s) where
-	type Layout (Stateful s) u a = TUV Stateful () Stateful ((->) s) u ((:*:) s) a
+	type Layout (Stateful s) u = TUV Stateful () Stateful ((->) s) u ((:*:) s)
 	lay x = TUV $ \s -> (s :*:) <$> x
 	equip x = TUV $ point <$> composition x
 

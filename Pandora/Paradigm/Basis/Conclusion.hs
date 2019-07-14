@@ -47,7 +47,7 @@ instance Composition (Conclusion e) where
 	composition x = x
 
 instance Transformer (Conclusion e) where
-	type Layout (Conclusion e) u a = UT (Conclusion e) () (Conclusion e) u a
+	type Layout (Conclusion e) u = UT (Conclusion e) () (Conclusion e) u
 	lay x = UT $ Success <$> x
 	equip x = UT . point $ x
 

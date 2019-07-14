@@ -54,7 +54,7 @@ instance Composition Maybe where
 	composition x = x
 
 instance Transformer Maybe where
-	type Layout Maybe u a = UT Maybe () Maybe u a
+	type Layout Maybe u = UT Maybe () Maybe u
 	lay x = UT $ Just <$> x
 	equip x = UT . point $ x
 
