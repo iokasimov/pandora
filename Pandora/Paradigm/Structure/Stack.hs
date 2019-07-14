@@ -1,10 +1,11 @@
-module Pandora.Paradigm.Structure.Stack where -- (Stack, push, top, pop, linearize) where
+module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, filter, linearize) where
 
 import Pandora.Core.Functor (type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Core.Transformation (type (~>))
-import Pandora.Paradigm.Basis.Twister (Twister ((:<)), unwrap)
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
+import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
+import Pandora.Paradigm.Basis.Twister (Twister ((:<)), unwrap)
 import Pandora.Paradigm.Inventory.Stateful (fold)
 import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
@@ -15,6 +16,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Object.Setoid (bool)
 
 -- | Linear data structure that serves as a collection of elements
 newtype Stack a = Stack (Maybe :.: Twister Maybe >< a)
@@ -49,6 +51,10 @@ top (Stack stack) = extract <$> stack
 
 pop :: Stack ~> Stack
 pop (Stack stack) = Stack $ stack >>= unwrap
+
+filter :: Predicate a -> Stack a -> Stack a
+filter (Predicate p) = Stack . fold empty
+	(\now new -> bool new (Just $ now :< new) $ p now)
 
 -- | Transform any traversable structure into a stack
 linearize :: Traversable t => t ~> Stack

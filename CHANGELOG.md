@@ -93,3 +93,4 @@
 * Define `Distributive` instance for `->` datatype
 * Rename `idle` method of `Avoidable` typeclass to `empty`
 * Remove `a` parameter from `Layout` to be able to use natural transformations in methods
+* Return `filter` method to `Stack` data structure
