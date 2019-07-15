@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Junction.Schemes.TUV (TUV (..)) where
+module Pandora.Pattern.Junction.Schemes.TUV (TUV (..)) where
 
 import Pandora.Core.Functor (Variant (Co, Contra), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))

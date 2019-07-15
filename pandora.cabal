@@ -49,14 +49,6 @@ library
     Pandora.Paradigm.Basis.Variation
     Pandora.Paradigm.Basis.Wye
     Pandora.Paradigm.Basis.Yoneda
-    -- Universal functors constructions
-    Pandora.Paradigm.Junction
-    Pandora.Paradigm.Junction.Schemes
-    Pandora.Paradigm.Junction.Schemes.TU
-    Pandora.Paradigm.Junction.Schemes.TUV
-    Pandora.Paradigm.Junction.Schemes.TUVW
-    Pandora.Paradigm.Junction.Schemes.UT
-    Pandora.Paradigm.Junction.Schemes.UTU
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     Pandora.Paradigm.Controlflow.Observable
@@ -95,8 +87,14 @@ library
     Pandora.Pattern.Functor.Pointable
     Pandora.Pattern.Functor.Traversable
     -- Typeclassess about functor junctions
+    Pandora.Pattern.Junction
     Pandora.Pattern.Junction.Composition
     Pandora.Pattern.Junction.Transformer
+    Pandora.Pattern.Junction.Schemes.TU
+    Pandora.Pattern.Junction.Schemes.TUV
+    Pandora.Pattern.Junction.Schemes.TUVW
+    Pandora.Pattern.Junction.Schemes.UT
+    Pandora.Pattern.Junction.Schemes.UTU
     -- Typeclassess about object internals
     Pandora.Pattern.Object
     Pandora.Pattern.Object.Chain

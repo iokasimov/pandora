@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Junction.Schemes.UT (UT (..)) where
+module Pandora.Pattern.Junction.Schemes.UT (UT (..)) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
