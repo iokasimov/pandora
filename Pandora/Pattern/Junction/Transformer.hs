@@ -1,7 +1,7 @@
-module Pandora.Paradigm.Junction.Transformer (Transformer (..), type (:>)) where
+module Pandora.Pattern.Junction.Transformer (Transformer (..), type (:>)) where
 
 import Pandora.Core.Transformation (type (~>))
-import Pandora.Paradigm.Junction.Composition (Composition)
+import Pandora.Pattern.Junction.Composition (Composition)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 

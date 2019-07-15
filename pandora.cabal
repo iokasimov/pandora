@@ -50,8 +50,6 @@ library
     Pandora.Paradigm.Basis.Yoneda
     -- Universal functors constructions
     Pandora.Paradigm.Junction
-    Pandora.Paradigm.Junction.Composition
-    Pandora.Paradigm.Junction.Transformer
     Pandora.Paradigm.Junction.Kan
     Pandora.Paradigm.Junction.Schemes
     Pandora.Paradigm.Junction.Schemes.TU
@@ -96,6 +94,9 @@ library
     Pandora.Pattern.Functor.Monad
     Pandora.Pattern.Functor.Pointable
     Pandora.Pattern.Functor.Traversable
+    -- Typeclassess about functor junctions
+    Pandora.Pattern.Junction.Composition
+    Pandora.Pattern.Junction.Transformer
     -- Typeclassess about object internals
     Pandora.Pattern.Object
     Pandora.Pattern.Object.Chain

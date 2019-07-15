@@ -2,7 +2,7 @@ module Pandora.Paradigm.Junction.Schemes.TUVW (TUVW (..)) where
 
 import Pandora.Core.Functor (Variant (Co, Contra), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Composition (Composition (Primary, unwrap))
+import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>), comap))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<), (>$$<), (>$$$<), (>$$$$<), contramap))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))

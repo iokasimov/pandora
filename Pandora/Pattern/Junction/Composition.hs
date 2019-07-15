@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Junction.Composition (Composition (..)) where
+module Pandora.Pattern.Junction.Composition (Composition (..)) where
 
 class Composition t where
 	{-# MINIMAL unwrap #-}
