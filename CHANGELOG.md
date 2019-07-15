@@ -99,3 +99,4 @@
 * Rename `equip` to `wrap` and `Layout` to `Schema` in `Transformer` typeclass
 * Make `Composition` a superclass for `Transformer` typeclass
 * Move `Composition` and `Transformer` typeclasses to `Pattern` submodule
+* Move `Kan` module to `Basis` submodule

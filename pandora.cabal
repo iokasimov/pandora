@@ -38,6 +38,7 @@ library
     Pandora.Paradigm.Basis.Identity
     Pandora.Paradigm.Basis.Jack
     Pandora.Paradigm.Basis.Jet
+    Pandora.Paradigm.Basis.Kan
     Pandora.Paradigm.Basis.Maybe
     Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Product
@@ -50,7 +51,6 @@ library
     Pandora.Paradigm.Basis.Yoneda
     -- Universal functors constructions
     Pandora.Paradigm.Junction
-    Pandora.Paradigm.Junction.Kan
     Pandora.Paradigm.Junction.Schemes
     Pandora.Paradigm.Junction.Schemes.TU
     Pandora.Paradigm.Junction.Schemes.TUV
