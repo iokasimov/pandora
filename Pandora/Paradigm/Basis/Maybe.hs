@@ -1,8 +1,8 @@
 module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
-import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
+import Pandora.Paradigm.Junction.Composition (Composition (Primary, unwrap))
+import Pandora.Paradigm.Junction.Transformer (Transformer (Schema, lay, wrap))
 import Pandora.Paradigm.Junction.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -50,13 +50,13 @@ instance Bindable Maybe where
 instance Monad Maybe where
 
 instance Composition Maybe where
-	type Outline Maybe a = Maybe a
-	composition x = x
+	type Primary Maybe a = Maybe a
+	unwrap x = x
 
 instance Transformer Maybe where
-	type Layout Maybe u = UT Maybe () Maybe u
+	type Schema Maybe u = UT Maybe () Maybe u
 	lay x = UT $ Just <$> x
-	equip x = UT . point $ x
+	wrap x = UT . point $ x
 
 instance Covariant u => Covariant (UT Maybe () Maybe u) where
 	f <$> UT x = UT $ f <$$> x
@@ -68,7 +68,7 @@ instance Pointable u => Pointable (UT Maybe () Maybe u) where
 	point = UT . point . point
 
 instance (Pointable u, Bindable u) => Bindable (UT Maybe () Maybe u) where
-	UT x >>= f = UT $ x >>= maybe (point Nothing) (composition . f)
+	UT x >>= f = UT $ x >>= maybe (point Nothing) (unwrap . f)
 
 instance Monad u => Monad (UT Maybe () Maybe u) where
 

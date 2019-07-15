@@ -2,7 +2,7 @@ module Pandora.Paradigm.Junction.Schemes.TUVW (TUVW (..)) where
 
 import Pandora.Core.Functor (Variant (Co, Contra), type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
+import Pandora.Paradigm.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>), comap))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<), (>$$<), (>$$$<), (>$$$$<), contramap))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -17,8 +17,8 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
 newtype TUVW ct cu cv cw t u v w a = TUVW (t :.: u :.: v :.: w >< a)
 
 instance Composition (TUVW ct cu cv cw t u v w) where
-	type Outline (TUVW ct cu cv cw t u v w) a = t :.: u :.: v :.: w >< a
-	composition (TUVW x) = x
+	type Primary (TUVW ct cu cv cw t u v w) a = t :.: u :.: v :.: w >< a
+	unwrap (TUVW x) = x
 
 instance (Covariant t, Covariant u, Covariant v, Covariant w)
 	=> Covariant (TUVW 'Co 'Co 'Co 'Co t u v w) where
@@ -90,7 +90,7 @@ instance (Pointable t, Pointable u, Pointable v, Pointable w)
 
 instance (Extractable t, Extractable u, Extractable v, Extractable w)
 	=> Extractable (TUVW 'Co 'Co 'Co 'Co t u v w) where
-	extract = extract . extract . extract . extract . composition
+	extract = extract . extract . extract . extract . unwrap
 
 instance (Avoidable t, Covariant u, Covariant v, Covariant w)
 	=> Avoidable (TUVW 'Co 'Co 'Co 'Co t u v w) where
@@ -110,7 +110,7 @@ instance (Traversable t, Traversable u, Traversable v, Traversable w)
 
 instance (Distributive t, Distributive u, Distributive v, Distributive w)
 	=> Distributive (TUVW 'Co 'Co 'Co 'Co t u v w) where
-	x >>- f = TUVW . (distribute <$$$>) . (distribute <$$>) . (distribute <$>) . distribute $ composition . f <$> x
+	x >>- f = TUVW . (distribute <$$$>) . (distribute <$$>) . (distribute <$>) . distribute $ unwrap . f <$> x
 
 type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoint t u)
 

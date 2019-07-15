@@ -95,3 +95,5 @@
 * Remove `a` parameter from `Layout` to be able to use natural transformations in methods
 * Return `filter` method to `Stack` data structure
 * Rename `unwrap` to `untwist` method in `Twister` module
+* Rename `composition` to `unwrap` and `Outline` to `Primary` in Transformer typeclass
+* Rename `equip` to `wrap` and `Layout` to `Schema` in Transformer typeclass

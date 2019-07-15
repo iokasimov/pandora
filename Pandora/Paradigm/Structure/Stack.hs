@@ -7,7 +7,7 @@ import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Basis.Twister (Twister ((:<)), untwist)
 import Pandora.Paradigm.Inventory.Stateful (fold)
-import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
+import Pandora.Paradigm.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -40,8 +40,8 @@ instance Traversable Stack where
 	Stack stack ->> f = Stack <$> stack ->>> f
 
 instance Composition Stack where
-	type Outline Stack a = Maybe :.: Twister Maybe >< a
-	composition (Stack stack) = stack
+	type Primary Stack a = Maybe :.: Twister Maybe >< a
+	unwrap (Stack stack) = stack
 
 push :: a -> Stack a -> Stack a
 push x (Stack stack) = Stack $ ((:<) x . Just <$> stack) <+> (point . point) x

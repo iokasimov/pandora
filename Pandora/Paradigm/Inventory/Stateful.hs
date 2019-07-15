@@ -3,8 +3,8 @@ module Pandora.Paradigm.Inventory.Stateful
 
 import Pandora.Core.Functor (type (:.:), type (><))
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
-import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
+import Pandora.Paradigm.Junction.Composition (Composition (Primary, unwrap))
+import Pandora.Paradigm.Junction.Transformer (Transformer (Schema, lay, wrap))
 import Pandora.Paradigm.Junction.Schemes.TUV (TUV (TUV))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
@@ -58,13 +58,13 @@ find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a 
 find p struct = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p $ x) struct
 
 instance Composition (Stateful s) where
-	type Outline (Stateful s) a = (->) s :.: (:*:) s >< a
-	composition (Stateful x) = x
+	type Primary (Stateful s) a = (->) s :.: (:*:) s >< a
+	unwrap (Stateful x) = x
 
 instance Transformer (Stateful s) where
-	type Layout (Stateful s) u = TUV Stateful () Stateful ((->) s) u ((:*:) s)
+	type Schema (Stateful s) u = TUV Stateful () Stateful ((->) s) u ((:*:) s)
 	lay x = TUV $ \s -> (s :*:) <$> x
-	equip x = TUV $ point <$> composition x
+	wrap x = TUV $ point <$> unwrap x
 
 instance Covariant u => Covariant (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
 	f <$> TUV x = TUV $ \old -> f <$$> x old
@@ -76,6 +76,6 @@ instance Pointable u => Pointable (TUV Stateful () Stateful ((->) s) u ((:*:) s)
 	point x = TUV $ \s -> point $ s :*: x
 
 instance Bindable u => Bindable (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
-	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . composition . f $ y
+	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . unwrap . f $ y
 
 instance Monad u => Monad (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where

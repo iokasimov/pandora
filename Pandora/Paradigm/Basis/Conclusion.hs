@@ -1,8 +1,8 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) where
 
 import Pandora.Core.Morphism ((.), ($))
-import Pandora.Paradigm.Junction.Composition (Composition (Outline, composition))
-import Pandora.Paradigm.Junction.Transformer (Transformer (Layout, lay, equip))
+import Pandora.Paradigm.Junction.Composition (Composition (Primary, unwrap))
+import Pandora.Paradigm.Junction.Transformer (Transformer (Schema, lay, wrap))
 import Pandora.Paradigm.Junction.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -43,13 +43,13 @@ instance Bindable (Conclusion e) where
 instance Monad (Conclusion e) where
 
 instance Composition (Conclusion e) where
-	type Outline (Conclusion e) a = Conclusion e a
-	composition x = x
+	type Primary (Conclusion e) a = Conclusion e a
+	unwrap x = x
 
 instance Transformer (Conclusion e) where
-	type Layout (Conclusion e) u = UT (Conclusion e) () (Conclusion e) u
+	type Schema (Conclusion e) u = UT (Conclusion e) () (Conclusion e) u
 	lay x = UT $ Success <$> x
-	equip x = UT . point $ x
+	wrap x = UT . point $ x
 
 instance Covariant u => Covariant (UT (Conclusion e) () (Conclusion e) u) where
 	f <$> UT x = UT $ f <$$> x
@@ -61,7 +61,7 @@ instance Pointable u => Pointable (UT (Conclusion e) () (Conclusion e) u) where
 	point = UT . point . point
 
 instance (Pointable u, Bindable u) => Bindable (UT (Conclusion e) () (Conclusion e) u) where
-	UT x >>= f = UT $ x >>= conclusion (point . Failure) (composition . f)
+	UT x >>= f = UT $ x >>= conclusion (point . Failure) (unwrap . f)
 
 instance Monad u => Monad (UT (Conclusion e) () (Conclusion e) u) where
 
