@@ -1,10 +1,11 @@
 module Pandora.Paradigm.Junction.Transformer (Transformer (..), type (:>)) where
 
 import Pandora.Core.Transformation (type (~>))
+import Pandora.Paradigm.Junction.Composition (Composition)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
-class Transformer t where
+class Composition t => Transformer t where
 	{-# MINIMAL lay, wrap #-}
 	type Schema (t :: * -> *) (u :: * -> *) = (r :: * -> *) | r -> t u
 	lay :: Covariant u => u ~> Schema t u
