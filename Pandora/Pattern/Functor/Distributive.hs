@@ -16,7 +16,7 @@ infixl 5 >>-, >>>-, >>>>-, >>>>>-
 
 class Covariant u => Distributive u where
 	{-# MINIMAL (>>-) #-}
-	-- | Infix version of 'collect'
+	-- | Infix and flipped version of 'collect'
 	(>>-) :: Covariant t => t a -> (a -> u b) -> u :.: t >< b
 
 	-- | Prefix version of '>>-'

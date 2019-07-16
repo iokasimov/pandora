@@ -85,6 +85,7 @@ library
     Pandora.Pattern.Functor.Lowerable
     Pandora.Pattern.Functor.Monad
     Pandora.Pattern.Functor.Pointable
+    Pandora.Pattern.Functor.Representable
     Pandora.Pattern.Functor.Traversable
     -- Typeclassess about functor junctions
     Pandora.Pattern.Junction

@@ -99,3 +99,6 @@
 * Rename `equip` to `wrap` and `Layout` to `Schema` in `Transformer` typeclass
 * Make `Composition` a superclass for `Transformer` typeclass
 * Move all `Junction` modules to `Pattern` submodule except `Kan`
+
+# 0.2.0
+* Define `Representable` functor typeclass
