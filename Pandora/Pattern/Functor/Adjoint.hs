@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Adjoint (Adjoint (..), type (-|)) where
 
-import Pandora.Core.Functor (type (:.:))
+import Pandora.Core.Functor (type (:.:), type (><))
 import Pandora.Core.Morphism (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
@@ -19,9 +19,9 @@ class (Covariant t, Covariant u) => Adjoint t u where
 	-- | Right adjunction
 	psi :: (a -> u b) -> t a -> b
 
-	eta :: a -> (u :.: t) a
+	eta :: a -> u :.: t >< a
 	eta = phi identity
-	epsilon :: (t :.: u) a -> a
+	epsilon :: t :.: u >< a -> a
 	epsilon = psi identity
 
 type (-|) = Adjoint

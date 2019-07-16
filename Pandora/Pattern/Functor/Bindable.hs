@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Bindable (Bindable (..)) where
 
-import Pandora.Core.Functor (type (:.:))
+import Pandora.Core.Functor (type (:.:), type (><))
 import Pandora.Core.Morphism ((?), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
@@ -24,7 +24,7 @@ class Covariant t => Bindable t where
 	bind :: (a -> t b) -> t a -> t b
 	bind f t = t >>= f
 	-- | Merge effects/contexts, the dual of 'duplicate'
-	join :: (t :.: t) a -> t a
+	join :: t :.: t >< a -> t a
 	join t = t >>= identity
 	-- | Left-to-right Kleisli composition
 	(>=>) :: (a -> t b) -> (b -> t c) -> (a -> t c)
