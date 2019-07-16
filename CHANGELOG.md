@@ -102,3 +102,4 @@
 
 # 0.2.0
 * Define `Representable` functor typeclass
+* Define `Pointable`, `Applicative`, `Bindable` and `Representable` instances for `->`

@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Applicative (Applicative (..)) where
 
 import Pandora.Core.Functor (type (:.:), type (><))
-import Pandora.Core.Morphism (identity)
+import Pandora.Core.Morphism (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 
 infixl 4 <*>, <*, *>
@@ -42,3 +42,6 @@ class Covariant t => Applicative t where
 		-> t :.: u :.: v :.: w >< a
 		-> t :.: u :.: v :.: w >< b
 	f <****> x = (<***>) <$> f <*> x
+
+instance Applicative ((->) e) where
+	(<*>) f g x = f x $ g x

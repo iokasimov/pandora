@@ -1,5 +1,6 @@
 module Pandora.Pattern.Functor.Representable (Representable (..)) where
 
+import Pandora.Core.Morphism (identity, (?))
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |
@@ -17,5 +18,11 @@ class Pointable t => Representable t where
 	(<#>) :: Representation t -> t a -> a
 	-- Build with a function which describes value
 	tabulate :: (Representation t -> a) -> t a
-	-- | Prefix version of '<#>'
+	-- | Prefix and flipped version of '<#>'
 	index :: t a -> Representation t -> a
+	index x f = f <#> x
+
+instance Representable ((->) e) where
+	type Representation ((->) e) = e
+	(<#>) = (identity ?)
+	tabulate = identity

@@ -32,3 +32,6 @@ class Covariant t => Bindable t where
 	-- | Right-to-left Kleisli composition
 	(<=<) :: (b -> t c) -> (a -> t b) -> (a -> t c)
 	(<=<) = (?) (>=>)
+
+instance Bindable ((->) e) where
+	f >>= g = \x -> g (f x) x
