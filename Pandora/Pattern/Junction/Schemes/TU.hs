@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
-import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
 newtype TU ct cu t u a = TU (t :.: u >< a)
 
@@ -56,5 +56,5 @@ instance (Distributive t, Distributive u) => Distributive (TU 'Co 'Co t u) where
 type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoint t u)
 
 instance (t :-|: u, v :-|: w) => Adjoint (TU 'Co 'Co t v) (TU 'Co 'Co u w) where
-	phi f = point . f . point
-	psi f = extract . extract . comap f
+	x -| f = point . f . point $ x
+	x |- g = extract . extract . comap g $ x

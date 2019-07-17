@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
-import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
 newtype TUV ct cu cv t u v a = TUV (t :.: u :.: v >< a)
 
@@ -84,5 +84,5 @@ type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoi
 
 instance (t :-|: w, v :-|: x, u :-|: y)
 	=> Adjoint (TUV 'Co 'Co 'Co t v u) (TUV 'Co 'Co 'Co w x y) where
-	phi f = point . f . point
-	psi f = extract . extract . comap f
+	x -| f = point . f . point $ x
+	x |- g = extract . extract . comap g $ x

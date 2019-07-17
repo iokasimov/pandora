@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -52,8 +52,8 @@ instance Extendable Identity where
 instance Comonad Identity
 
 instance Adjoint Identity Identity where
-	phi f = Identity . f . Identity
-	psi f = extract . extract . comap f
+	x -| f = Identity . f . Identity $ x
+	x |- g = extract . extract . comap g $ x
 
 instance Setoid a => Setoid (Identity a) where
 	Identity x == Identity y = x == y

@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), (&&))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -37,8 +37,8 @@ instance Extendable (Product a) where
 instance Comonad (Product a) where
 
 instance Adjoint (Product a) ((->) a) where
-	phi f x y = f $ y :*: x
-	psi f (y :*: x) = f x y
+	x -| f  = \y -> f $ y :*: x
+	(y :*: x) |- f = f x y
 
 instance (Setoid a, Setoid b) => Setoid (Product a b) where
 	(x :*: y) == (x' :*: y') = x == x' && y == y'

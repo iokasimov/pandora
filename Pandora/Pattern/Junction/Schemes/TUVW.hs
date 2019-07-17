@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
-import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
 newtype TUVW ct cu cv cw t u v w a = TUVW (t :.: u :.: v :.: w >< a)
 
@@ -116,5 +116,5 @@ type (:-|:) t u = (Extractable t, Pointable t, Extractable u, Pointable u, Adjoi
 
 instance (t :-|: u, v :-|: w, q :-|: q, r :-|: s)
 	=> Adjoint (TUVW 'Co 'Co 'Co 'Co t v q r) (TUVW 'Co 'Co 'Co 'Co u w q s) where
-	phi f = point . f . point
-	psi f = extract . extract . comap f
+	x -| f = point . f . point $ x
+	x |- g = extract . extract . comap g $ x
