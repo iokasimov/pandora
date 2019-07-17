@@ -91,6 +91,7 @@ library
     Pandora.Pattern.Junction
     Pandora.Pattern.Junction.Composition
     Pandora.Pattern.Junction.Transformer
+    Pandora.Pattern.Junction.Schemes
     Pandora.Pattern.Junction.Schemes.TU
     Pandora.Pattern.Junction.Schemes.TUV
     Pandora.Pattern.Junction.Schemes.TUVW
