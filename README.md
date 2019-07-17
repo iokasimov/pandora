@@ -14,9 +14,3 @@ Used materials:
 * Library: http://hackage.haskell.org/package/semigroupoids
 * Library: http://hackage.haskell.org/package/transformers
 * Library: http://hackage.haskell.org/package/invariant
-
-## Diagram of functor patterns:
-![Functors diagram](/Diagrams/Functors.png)
-
-## Diagram of object patterns:
-![Objects diagram](/Diagrams/Objects.png)
