@@ -14,7 +14,7 @@ instance Covariant (Storage p) where
 	g <$> Storage (p :*: f) = Storage . (:*:) p $ (g .) f
 
 instance Extractable (Storage p) where
-	extract (Storage (p :*: x)) = x p
+	extract (Storage (p :*: f)) = f p
 
 instance Extendable (Storage p) where
 	Storage (old :*: f) =>> g = Storage . (:*:) old

@@ -37,7 +37,7 @@ instance Extendable (Product a) where
 instance Comonad (Product a) where
 
 instance Adjoint (Product a) ((->) a) where
-	x -| f  = \y -> f $ y :*: x
+	x -| f = \y -> f $ y :*: x
 	(y :*: x) |- f = f x y
 
 instance (Setoid a, Setoid b) => Setoid (Product a b) where
