@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Applicative (Applicative (..)) where
 
-import Pandora.Core.Functor (type (:.:), type (>))
+import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Core.Morphism (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 
@@ -32,15 +32,15 @@ class Covariant t => Applicative t where
 	forever x = x *> forever x
 
 	-- | Infix versions of `apply` with various nesting levels
-	(<**>) :: Applicative u => t :.: u > (a -> b) -> t :.: u > a -> t :.: u > b
+	(<**>) :: Applicative u => t :. u > (a -> b) -> t :. u > a -> t :. u > b
 	f <**> x = (<*>) <$> f <*> x
-	(<***>) :: (Applicative u, Applicative v) => t :.: u :.: v > (a -> b)
-		-> t :.: u :.: v > a -> t :.: u :.: v > b
+	(<***>) :: (Applicative u, Applicative v) => t :. u :. v > (a -> b)
+		-> t :. u :. v > a -> t :. u :. v > b
 	f <***> x = (<**>) <$> f <*> x
 	(<****>) :: (Applicative u, Applicative v, Applicative w)
-		=> t :.: u :.: v :.: w > (a -> b)
-		-> t :.: u :.: v :.: w > a
-		-> t :.: u :.: v :.: w > b
+		=> t :. u :. v :. w > (a -> b)
+		-> t :. u :. v :. w > a
+		-> t :. u :. v :. w > b
 	f <****> x = (<***>) <$> f <*> x
 
 instance Applicative ((->) e) where

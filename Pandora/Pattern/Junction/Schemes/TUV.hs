@@ -1,6 +1,6 @@
 module Pandora.Pattern.Junction.Schemes.TUV (TUV (..)) where
 
-import Pandora.Core.Functor (Variant (Co, Contra), type (:.:), type (>))
+import Pandora.Core.Functor (Variant (Co, Contra), type (:.), type (>))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), comap))
@@ -14,10 +14,10 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
-newtype TUV ct cu cv t u v a = TUV (t :.: u :.: v > a)
+newtype TUV ct cu cv t u v a = TUV (t :. u :. v > a)
 
 instance Composition (TUV ct cu cv t u v) where
-	type Primary (TUV ct cu cv t u v) a = t :.: u :.: v > a
+	type Primary (TUV ct cu cv t u v) a = t :. u :. v > a
 	unwrap (TUV x) = x
 
 instance (Covariant t, Covariant u, Covariant v)

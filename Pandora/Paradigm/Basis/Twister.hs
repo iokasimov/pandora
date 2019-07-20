@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Twister (Twister (..), untwist, coiterate, section) where
 
-import Pandora.Core.Functor (type (:.:), type (>))
+import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -19,7 +19,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 
 infixr 5 :<
 
-data Twister t a = a :< (t :.: Twister t > a)
+data Twister t a = a :< (t :. Twister t > a)
 
 instance Covariant t => Covariant (Twister t) where
 	f <$> (x :< xs) = f x :< (f <$$> xs)
@@ -56,7 +56,7 @@ instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (
 instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Twister t a) where
 	zero = zero :< zero
 
-untwist :: Twister t a -> (t :.: Twister t) a
+untwist :: Twister t a -> (t :. Twister t) a
 untwist (_ :< xs) = xs
 
 coiterate :: Covariant t => (a -> t a) -> a -> Twister t a
