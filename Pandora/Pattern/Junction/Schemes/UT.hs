@@ -1,6 +1,6 @@
 module Pandora.Pattern.Junction.Schemes.UT (UT (..)) where
 
-import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
+import Pandora.Core.Functor (Variant (Co), type (:.:), type (>))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
@@ -18,10 +18,10 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 
-newtype UT ct cu t u a = UT (u :.: t >< a)
+newtype UT ct cu t u a = UT (u :.: t > a)
 
 instance Composition (UT ct cu t u) where
-	type Primary (UT ct cu t u) a = u :.: t >< a
+	type Primary (UT ct cu t u) a = u :.: t > a
 	unwrap (UT x) = x
 
 instance (Covariant t, Covariant u) => Covariant (UT 'Co 'Co t u) where
@@ -54,14 +54,14 @@ instance (Traversable t, Traversable u) => Traversable (UT 'Co 'Co t u) where
 instance (Distributive t, Distributive u) => Distributive (UT 'Co 'Co t u) where
 	x >>- f = UT . comap distribute . distribute $ unwrap . f <$> x
 
-instance Setoid (u :.: t >< a) => Setoid (UT 'Co 'Co t u a) where
+instance Setoid (u :.: t > a) => Setoid (UT 'Co 'Co t u a) where
 	UT x == UT y = x == y
 
-instance Chain (u :.: t >< a) => Chain (UT 'Co 'Co t u a) where
+instance Chain (u :.: t > a) => Chain (UT 'Co 'Co t u a) where
 	UT x <=> UT y = x <=> y
 
-instance Semigroup (u :.: t >< a) => Semigroup (UT 'Co 'Co t u a) where
+instance Semigroup (u :.: t > a) => Semigroup (UT 'Co 'Co t u a) where
 	UT x + UT y = UT $ x + y
 
-instance Monoid (u :.: t >< a) => Monoid (UT 'Co 'Co t u a) where
+instance Monoid (u :.: t > a) => Monoid (UT 'Co 'Co t u a) where
 	zero = UT zero

@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Inventory.Stateful
 	(Stateful (..), statefully, get, modify, put, fold, find) where
 
-import Pandora.Core.Functor (type (:.:), type (><))
+import Pandora.Core.Functor (type (:.:), type (>))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
@@ -19,7 +19,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Setoid (bool)
 
-newtype Stateful s a = Stateful ((->) s :.: (:*:) s >< a)
+newtype Stateful s a = Stateful ((->) s :.: (:*:) s > a)
 
 statefully :: s -> Stateful s a -> s :*: a
 statefully initial (Stateful state) = state initial
@@ -58,7 +58,7 @@ find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a 
 find p struct = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p $ x) struct
 
 instance Composition (Stateful s) where
-	type Primary (Stateful s) a = (->) s :.: (:*:) s >< a
+	type Primary (Stateful s) a = (->) s :.: (:*:) s > a
 	unwrap (Stateful x) = x
 
 instance Transformer (Stateful s) where

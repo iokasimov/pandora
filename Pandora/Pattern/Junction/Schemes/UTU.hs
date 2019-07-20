@@ -1,6 +1,6 @@
 module Pandora.Pattern.Junction.Schemes.UTU (UTU (..)) where
 
-import Pandora.Core.Functor (Variant (Co), type (:.:), type (><))
+import Pandora.Core.Functor (Variant (Co), type (:.:), type (>))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), comap))
@@ -18,10 +18,10 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 
-newtype UTU ct cu t u a = UTU (u :.: t u >< a)
+newtype UTU ct cu t u a = UTU (u :.: t u > a)
 
 instance Composition (UTU ct cu t u) where
-	type Primary (UTU ct cu t u) a = u :.: t u >< a
+	type Primary (UTU ct cu t u) a = u :.: t u > a
 	unwrap (UTU x) = x
 
 instance (Covariant (t u), Covariant u) => Covariant (UTU 'Co 'Co t u) where
@@ -54,14 +54,14 @@ instance (forall u' . Pointable u', Liftable t) => Liftable (UTU 'Co 'Co t) wher
 instance (forall u' . Extractable u', Lowerable t) => Lowerable (UTU 'Co 'Co t) where
 	lower = lower . extract . unwrap
 
-instance (forall u' . Setoid (u' :.: t u' >< a)) => Setoid (UTU 'Co 'Co t u a) where
+instance (forall u' . Setoid (u' :.: t u' > a)) => Setoid (UTU 'Co 'Co t u a) where
 	UTU x == UTU y = x == y
 
-instance (forall u' . Chain (u' :.: t u' >< a)) => Chain (UTU 'Co 'Co t u a) where
+instance (forall u' . Chain (u' :.: t u' > a)) => Chain (UTU 'Co 'Co t u a) where
 	UTU x <=> UTU y = x <=> y
 
-instance (forall u' . Semigroup (u' :.: t u' >< a)) => Semigroup (UTU 'Co 'Co t u a) where
+instance (forall u' . Semigroup (u' :.: t u' > a)) => Semigroup (UTU 'Co 'Co t u a) where
 	UTU x + UTU y = UTU $ x + y
 
-instance (forall u' . Monoid (u' :.: t u' >< a)) => Monoid (UTU 'Co 'Co t u a) where
+instance (forall u' . Monoid (u' :.: t u' > a)) => Monoid (UTU 'Co 'Co t u a) where
 	zero = UTU zero
