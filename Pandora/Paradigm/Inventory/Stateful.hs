@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Inventory.Stateful
 	(Stateful (..), statefully, get, modify, put, fold, find) where
 
-import Pandora.Core.Functor (type (:.), type (>))
+import Pandora.Core.Functor (Variant (Co), type (:.), type (>))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
@@ -62,20 +62,20 @@ instance Composition (Stateful s) where
 	unwrap (Stateful x) = x
 
 instance Transformer (Stateful s) where
-	type Schema (Stateful s) u = TUV Stateful () Stateful ((->) s) u ((:*:) s)
+	type Schema (Stateful s) u = TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)
 	lay x = TUV $ \s -> (s :*:) <$> x
 	wrap x = TUV $ point <$> unwrap x
 
-instance Covariant u => Covariant (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
+instance Covariant u => Covariant (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
 	f <$> TUV x = TUV $ \old -> f <$$> x old
 
-instance Bindable u => Applicative (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
+instance Bindable u => Applicative (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
 	TUV f <*> TUV x = TUV $ \old -> f old >>= \(new :*: g) -> g <$$> x new
 
-instance Pointable u => Pointable (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
+instance Pointable u => Pointable (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
 	point x = TUV $ \s -> point $ s :*: x
 
-instance Bindable u => Bindable (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
+instance Bindable u => Bindable (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
 	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . unwrap . f $ y
 
-instance Monad u => Monad (TUV Stateful () Stateful ((->) s) u ((:*:) s)) where
+instance Monad u => Monad (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where

@@ -52,7 +52,7 @@ class Covariant (t :: * -> *) where
 		=> t :. u :. v > a -> (a -> b) -> t :. u :. v > b
 	x <&&&> f = f <$$$> x
 	(<&&&&>) :: (Covariant u, Covariant v, Covariant w)
-		=> t :. u :. v :. w > a -> (a -> b) -> t :. u :. v :. w :: b
+		=> t :. u :. v :. w > a -> (a -> b) -> t :. u :. v :. w > b
 	x <&&&&> f = f <$$$$> x
 
 instance Covariant ((->) a) where

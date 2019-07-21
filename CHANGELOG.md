@@ -107,3 +107,4 @@
 * Define `Adjoint` instance for `Stateful` and `Storage` datatypes
 * Change `Graph` definition: from type synonymous to newtype
 * Rename `><` to `>`, `:.:` to `.:`, `.:.` to `:.`
+* Remove all instances for `Junction` schemes

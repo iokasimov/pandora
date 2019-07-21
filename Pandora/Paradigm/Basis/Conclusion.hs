@@ -1,5 +1,6 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) where
 
+import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.), ($))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
@@ -47,23 +48,23 @@ instance Composition (Conclusion e) where
 	unwrap x = x
 
 instance Transformer (Conclusion e) where
-	type Schema (Conclusion e) u = UT (Conclusion e) () (Conclusion e) u
+	type Schema (Conclusion e) u = UT 'Co 'Co (Conclusion e) u
 	lay x = UT $ Success <$> x
 	wrap x = UT . point $ x
 
-instance Covariant u => Covariant (UT (Conclusion e) () (Conclusion e) u) where
+instance Covariant u => Covariant (UT 'Co 'Co (Conclusion e) u) where
 	f <$> UT x = UT $ f <$$> x
 
-instance Applicative u => Applicative (UT (Conclusion e) () (Conclusion e) u) where
+instance Applicative u => Applicative (UT 'Co 'Co (Conclusion e) u) where
 	UT f <*> UT x = UT $ apply <$> f <*> x
 
-instance Pointable u => Pointable (UT (Conclusion e) () (Conclusion e) u) where
+instance Pointable u => Pointable (UT 'Co 'Co (Conclusion e) u) where
 	point = UT . point . point
 
-instance (Pointable u, Bindable u) => Bindable (UT (Conclusion e) () (Conclusion e) u) where
+instance (Pointable u, Bindable u) => Bindable (UT 'Co 'Co (Conclusion e) u) where
 	UT x >>= f = UT $ x >>= conclusion (point . Failure) (unwrap . f)
 
-instance Monad u => Monad (UT (Conclusion e) () (Conclusion e) u) where
+instance Monad u => Monad (UT 'Co 'Co (Conclusion e) u) where
 
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where
 	Success x == Success y = x == y
