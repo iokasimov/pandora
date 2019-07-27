@@ -110,3 +110,6 @@
 * Remove all instances for `Junction` schemes
 * Define type operators for profunctorish types: `::|:.`, `::|.:` and `::|::`
 * Define `Divariant` (also known as `Profunctor`) `Functor` typeclass
+
+# 0.2.1
+* Generalize `$` up to a method of `Divariant` typeclass

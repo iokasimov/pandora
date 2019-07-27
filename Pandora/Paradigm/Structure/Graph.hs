@@ -1,11 +1,12 @@
 module Pandora.Paradigm.Structure.Graph (Graph, loose) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Core.Morphism ((.), ($))
+import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Basis.Edges (Edges (Empty, Overlay))
 import Pandora.Paradigm.Basis.Twister (Twister ((:<)))
 import Pandora.Paradigm.Inventory.Stateful (fold)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 

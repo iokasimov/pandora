@@ -2,9 +2,10 @@ module Pandora.Pattern.Functor.Divariant (Divariant (..)) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
-import Pandora.Core.Morphism ((.), ($))
+import Pandora.Core.Morphism ((.))
 
 infixl 4 >->
+infixr 0 $
 
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
@@ -19,7 +20,10 @@ class (forall a . Covariant (t a)) => Divariant (t :: * -> * -> *) where
 
 	-- | Prefix version of '>->'
 	dimap :: (a -> b) -> (c -> d) -> t b c -> t a d
-	dimap f g x = f >-> g $ x
+	dimap f g x = (f >-> g) x
+
+	($) :: t a b -> t a b
+	($) f = f
 
 instance Divariant ((->)) where
 	(>->) ab cd bc = cd . bc . ab

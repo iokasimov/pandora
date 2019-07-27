@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, filter, linearize) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Core.Morphism ((.), ($))
+import Pandora.Core.Morphism ((.))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
@@ -16,6 +16,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (bool)
 
 -- | Linear data structure that serves as a collection of elements

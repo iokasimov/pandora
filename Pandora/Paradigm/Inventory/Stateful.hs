@@ -2,7 +2,7 @@ module Pandora.Paradigm.Inventory.Stateful
 	(Stateful (..), statefully, get, modify, put, fold, find) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (>))
-import Pandora.Core.Morphism ((.), ($))
+import Pandora.Core.Morphism ((.))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
 import Pandora.Pattern.Junction.Schemes.TUV (TUV (TUV))
@@ -17,6 +17,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (bool)
 
 newtype Stateful s a = Stateful ((->) s :. (:*:) s > a)

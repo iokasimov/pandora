@@ -1,11 +1,11 @@
 module Pandora.Paradigm.Basis.Constant (Constant (..)) where
 
-import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Invariant (Invariant (invmap))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))

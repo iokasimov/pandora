@@ -1,7 +1,6 @@
 module Pandora.Paradigm.Basis.Product (Product (..), type (:*:), Has, Injective
 	, delta, swap, attached, curry, uncurry) where
 
-import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -15,6 +14,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (inverse))
+import Pandora.Pattern.Functor.Divariant (($))
 
 infixr 1 :*:
 

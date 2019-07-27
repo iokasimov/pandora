@@ -1,11 +1,11 @@
 module Pandora.Paradigm.Basis.Validation (Validation (..)) where
 
-import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 
 data Validation e a = Flaws e | Validated a

@@ -1,7 +1,6 @@
-module Pandora.Core.Morphism (identity, fix, (.), ($), (&), (!), (?)) where
+module Pandora.Core.Morphism (identity, fix, (.), (&), (!), (?)) where
 
 infixr 8 .
-infixr 0 $
 infixl 1 &
 infixr 2 !
 infixr 9 ?
@@ -16,10 +15,6 @@ fix f = let x = f x in x
 {-# INLINE (.) #-}
 (.) :: (b -> c) -> (a -> b) -> a -> c
 f . g = \x -> f (g x)
-
-{-# INLINE ($) #-}
-($) :: (a -> b) -> a -> b
-f $ x = f x
 
 {-# INLINE (&) #-}
 (&) :: a -> (a -> b) -> b

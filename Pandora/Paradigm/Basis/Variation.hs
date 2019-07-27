@@ -1,9 +1,9 @@
 module Pandora.Paradigm.Basis.Variation (Variation (..), variation) where
 
-import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Divariant (($))
 
 data Variation e a = This a | That e | These e a
 

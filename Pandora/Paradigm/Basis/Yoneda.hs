@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Yoneda (Yoneda (..)) where
 
-import Pandora.Core.Morphism ((.), ($), (!), identity)
+import Pandora.Core.Morphism ((.), (!), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -8,6 +8,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
+import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Yoneda t a = Yoneda
 	{ yoneda :: forall b . (a -> b) -> t b }

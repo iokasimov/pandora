@@ -1,13 +1,14 @@
 module Pandora.Paradigm.Inventory.Optics
 	(Lens, type (:-.), (|>), view, set, over, (^.), (.~), (%~)) where
 
-import Pandora.Core.Morphism ((.), ($), (!))
+import Pandora.Core.Morphism ((.), (!))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))
 import Pandora.Paradigm.Inventory.Stateful (Stateful (Stateful), statefully)
 import Pandora.Paradigm.Inventory.Storage (Storage (Storage), access, position, retrofit)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Functor.Divariant (($))
 
 instance Adjoint (Storage s) (Stateful s) where
 	v -| f = Stateful $ \s -> (:*:) s . f . Storage $ s :*: (v !)

@@ -1,11 +1,12 @@
 module Pandora.Paradigm.Inventory.Environmental (Environmental (..), env, local) where
 
-import Pandora.Core.Morphism (identity, (.), ($), (!))
+import Pandora.Core.Morphism (identity, (.), (!))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Environmental e a = Environmental (e -> a)
 
@@ -16,7 +17,7 @@ instance Covariant (Environmental e) where
 	f <$> Environmental x = Environmental $ f . x
 
 instance Pointable (Environmental e) where
-	point x = Environmental $ (x !)
+	point x = Environmental (x !)
 
 instance Applicative (Environmental e) where
 	f <*> x = Environmental $ \e -> environmentally e f $ environmentally e x

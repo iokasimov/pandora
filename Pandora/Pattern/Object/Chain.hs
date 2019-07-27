@@ -1,6 +1,5 @@
 module Pandora.Pattern.Object.Chain (Ordering (..), order, Chain (..)) where
 
-import Pandora.Core.Morphism (($))
 import Pandora.Pattern.Object.Setoid (Boolean (True, False), Setoid)
 
 data Ordering = Less | Equal | Greater
@@ -22,10 +21,10 @@ class Setoid a => Chain a where
 	(<=>) :: a -> a -> Ordering
 
 	(<) :: a -> a -> Boolean
-	x < y = order True False False $ x <=> y
+	x < y = order True False False (x <=> y)
 	(<=) :: a -> a -> Boolean
-	x <= y = order True True False $ x <=> y
+	x <= y = order True True False (x <=> y)
 	(>) :: a -> a -> Boolean
-	x > y = order False False True $ x <=> y
+	x > y = order False False True (x <=> y)
 	(>=) :: a -> a -> Boolean
-	x >= y = order False True True $ x <=> y
+	x >= y = order False True True (x <=> y)

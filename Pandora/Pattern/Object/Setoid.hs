@@ -1,7 +1,5 @@
 module Pandora.Pattern.Object.Setoid (Boolean (..), (&&), (||), not, bool, ifelse, Setoid (..)) where
 
-import Pandora.Core.Morphism (($))
-
 infixr ||
 infixr 3 &&
 infix 4 ==, /=
@@ -42,4 +40,4 @@ class Setoid a where
 	(==) :: a -> a -> Boolean
 
 	(/=) :: a -> a -> Boolean
-	(/=) x y = not $ x == y
+	(/=) x y = not (x == y)

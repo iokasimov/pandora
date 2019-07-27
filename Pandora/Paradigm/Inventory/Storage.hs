@@ -1,12 +1,13 @@
 module Pandora.Paradigm.Inventory.Storage (Storage (..), position, access, retrofit) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Core.Morphism ((.), ($), (?))
+import Pandora.Core.Morphism ((.), (?))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Storage p a = Storage { stored :: (:*:) p :. (->) p > a }
 

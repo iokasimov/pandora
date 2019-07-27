@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 
 import Pandora.Core.Functor (Variant (Co))
-import Pandora.Core.Morphism ((.), ($))
+import Pandora.Core.Morphism ((.))
 import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
 import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
 import Pandora.Pattern.Junction.Schemes.UT (UT (UT))
@@ -13,6 +13,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (True, False))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Equal, Greater))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
