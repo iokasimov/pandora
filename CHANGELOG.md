@@ -109,3 +109,4 @@
 * Rename `><` to `>`, `:.:` to `.:`, `.:.` to `:.`
 * Remove all instances for `Junction` schemes
 * Define type operators for profunctorish types: `::|:.`, `::|.:` and `::|::`
+* Define `Divariant` (also known as `Profunctor`) `Functor` typeclass
