@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Binary (Binary, insert) where
+module Pandora.Paradigm.Structure.Specific.Binary (Binary, insert) where
 
 import Pandora.Core.Morphism ((&))
 import Pandora.Paradigm.Basis.Wye (Wye (End, Left, Right, Both))

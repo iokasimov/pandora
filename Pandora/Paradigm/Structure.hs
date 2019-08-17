@@ -1,8 +1,8 @@
 module Pandora.Paradigm.Structure (module Exports, Nonempty) where
 
-import Pandora.Paradigm.Structure.Binary as Exports
-import Pandora.Paradigm.Structure.Graph as Exports
-import Pandora.Paradigm.Structure.Stack as Exports
+import Pandora.Paradigm.Structure.Specific.Binary as Exports
+import Pandora.Paradigm.Structure.Specific.Graph as Exports
+import Pandora.Paradigm.Structure.Specific.Stack as Exports
 
 import Pandora.Paradigm.Basis.Maybe (Maybe)
 import Pandora.Paradigm.Basis.Twister (Twister)

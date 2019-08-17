@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Graph (Graph, loose) where
+module Pandora.Paradigm.Structure.Specific.Graph (Graph, loose) where
 
 import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Core.Morphism ((.))

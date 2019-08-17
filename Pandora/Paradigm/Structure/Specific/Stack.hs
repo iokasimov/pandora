@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, filter, linearize) where
+module Pandora.Paradigm.Structure.Specific.Stack (Stack, push, top, pop, filter, linearize) where
 
 import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Core.Morphism ((.))

@@ -61,9 +61,9 @@ library
     Pandora.Paradigm.Inventory.Storage
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
-    Pandora.Paradigm.Structure.Stack
-    Pandora.Paradigm.Structure.Graph
-    Pandora.Paradigm.Structure.Binary
+    Pandora.Paradigm.Structure.Specific.Stack
+    Pandora.Paradigm.Structure.Specific.Graph
+    Pandora.Paradigm.Structure.Specific.Binary
 
     Pandora.Pattern
     -- Functor typeclassess
