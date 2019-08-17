@@ -61,6 +61,7 @@ library
     Pandora.Paradigm.Inventory.Storage
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
+    Pandora.Paradigm.Structure.Cartesian
     Pandora.Paradigm.Structure.Nonempty
     Pandora.Paradigm.Structure.Specific
     Pandora.Paradigm.Structure.Specific.Stack
