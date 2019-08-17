@@ -114,3 +114,4 @@
 # 0.2.1
 * Generalize `$` up to a method of `Divariant` typeclass
 * Put concrete data structures to `Specific` submodule
+* Move `Nonempty` type family to separated module
