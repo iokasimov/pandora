@@ -93,7 +93,7 @@ library
     Pandora.Pattern.Functor.Divariant
     -- Typeclassess about functor junctions
     Pandora.Pattern.Junction
-    Pandora.Pattern.Junction.Composition
+    Pandora.Pattern.Junction.Interpreted
     Pandora.Pattern.Junction.Transformer
     Pandora.Pattern.Junction.Schemes
     Pandora.Pattern.Junction.Schemes.TU

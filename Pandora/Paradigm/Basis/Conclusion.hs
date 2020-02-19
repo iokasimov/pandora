@@ -2,7 +2,7 @@ module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) whe
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))
-import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
+import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
 import Pandora.Pattern.Junction.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
@@ -44,7 +44,7 @@ instance Bindable (Conclusion e) where
 
 instance Monad (Conclusion e) where
 
-instance Composition (Conclusion e) where
+instance Interpreted (Conclusion e) where
 	type Primary (Conclusion e) a = Conclusion e a
 	unwrap x = x
 

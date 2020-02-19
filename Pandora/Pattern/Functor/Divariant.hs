@@ -10,7 +10,7 @@ infixr 0 $
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
 > * Identity: dimap identity identity ≡ identity
-> * Composition: dimap (f . g) (h . i) ≡ dimap g h . dimap f i
+> * Interpreted: dimap (f . g) (h . i) ≡ dimap g h . dimap f i
 -}
 
 class (forall a . Covariant (t a)) => Divariant (t :: * -> * -> *) where

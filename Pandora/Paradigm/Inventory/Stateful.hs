@@ -3,7 +3,7 @@ module Pandora.Paradigm.Inventory.Stateful
 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (>))
 import Pandora.Core.Morphism ((.))
-import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
+import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
 import Pandora.Pattern.Junction.Schemes.TUV (TUV (TUV))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
@@ -58,7 +58,7 @@ fold start op struct = extract . statefully start $
 find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
 find p struct = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p $ x) struct
 
-instance Composition (Stateful s) where
+instance Interpreted (Stateful s) where
 	type Primary (Stateful s) a = (->) s :. (:*:) s > a
 	unwrap (Stateful x) = x
 

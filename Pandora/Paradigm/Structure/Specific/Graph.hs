@@ -8,7 +8,7 @@ import Pandora.Paradigm.Inventory.Stateful (fold)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
-import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
+import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
 
 -- | Acyclic graph structure without loops
 newtype Graph a = Graph (Edges :. Twister Edges > a)
@@ -19,7 +19,7 @@ instance Covariant Graph where
 instance Traversable Graph where
 	Graph stack ->> f = Graph <$> stack ->>> f
 
-instance Composition Graph where
+instance Interpreted Graph where
 	type Primary Graph a = Edges :. Twister Edges > a
 	unwrap (Graph stack) = stack
 

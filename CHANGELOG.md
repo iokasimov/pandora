@@ -119,3 +119,4 @@
 * Rename `?` to `%` to use `?` as boolean multi-if
 * Replace `ifelse` method from `Setoid` module
 * Convert `:>` to a newtype
+* Rename `Composition` class to `Interpreted`

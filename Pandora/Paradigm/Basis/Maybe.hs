@@ -2,7 +2,7 @@ module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))
-import Pandora.Pattern.Junction.Composition (Composition (Primary, unwrap))
+import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
 import Pandora.Pattern.Junction.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
@@ -51,7 +51,7 @@ instance Bindable Maybe where
 
 instance Monad Maybe where
 
-instance Composition Maybe where
+instance Interpreted Maybe where
 	type Primary Maybe a = Maybe a
 	unwrap x = x
 

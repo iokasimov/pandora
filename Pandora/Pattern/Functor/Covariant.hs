@@ -8,7 +8,7 @@ infixl 4 <$>, <$, $>
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
 > * Identity morphism: comap identity ≡ identity
-> * Composition of morphisms: comap (f . g) ≡ comap f . comap g
+> * Interpreted of morphisms: comap (f . g) ≡ comap f . comap g
 -}
 
 class Covariant (t :: * -> *) where

@@ -8,7 +8,7 @@ infixl 4 >$<, $<, >$
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
 > * Identity morphism: contramap identity ≡ identity
-> * Composition of morphisms: contramap f . contramap g ≡ contramap (g . f)
+> * Interpreted of morphisms: contramap f . contramap g ≡ contramap (g . f)
 -}
 
 class Contravariant (t :: * -> *) where
