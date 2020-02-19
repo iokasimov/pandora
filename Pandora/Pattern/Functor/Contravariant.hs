@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Contravariant (Contravariant (..)) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Core.Morphism ((.), (!), (?))
+import Pandora.Core.Morphism ((.), (!), (%))
 
 infixl 4 >$<, $<, >$
 
@@ -24,7 +24,7 @@ class Contravariant (t :: * -> *) where
 	(>$) = contramap . (!)
 	-- | Flipped version of '>$'
 	($<) :: t b -> b -> t a
-	($<) = (?) (>$)
+	($<) = (%) (>$)
 	-- | Fill the input of evaluation
 	full :: t () -> t a
 	full x = () >$ x

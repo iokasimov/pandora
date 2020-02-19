@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Extendable (Extendable (..)) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Core.Morphism ((.), (?), identity)
+import Pandora.Core.Morphism ((.), (%), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
 infixl 1 =>>
@@ -20,7 +20,7 @@ class Covariant t => Extendable t where
 
 	-- | Flipped version of '>>=', the dual of '=<<'
 	(<<=) :: (t a -> b) -> t a -> t b
-	(<<=) = (?) (=>>)
+	(<<=) = (%) (=>>)
 	-- | Prefix and flipped version of '=>>', the dual of 'bind'
 	extend :: (t a -> b) -> t a -> t b
 	extend f t = t =>> f

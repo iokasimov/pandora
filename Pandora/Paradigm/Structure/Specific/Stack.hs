@@ -17,7 +17,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Divariant (($))
-import Pandora.Pattern.Object.Setoid (bool)
+import Pandora.Pattern.Object.Setoid ((?))
 
 -- | Linear data structure that serves as a collection of elements
 newtype Stack a = Stack (Maybe :. Twister Maybe > a)
@@ -55,7 +55,7 @@ pop (Stack stack) = Stack $ stack >>= untwist
 
 filter :: Predicate a -> Stack a -> Stack a
 filter (Predicate p) = Stack . fold empty
-	(\now new -> bool new (Just $ now :< new) $ p now)
+	(\now new -> p now ? Just (now :< new) $ new)
 
 -- | Transform any traversable structure into a stack
 linearize :: Traversable t => t ~> Stack

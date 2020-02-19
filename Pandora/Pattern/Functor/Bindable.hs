@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Bindable (Bindable (..)) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Core.Morphism ((?), identity)
+import Pandora.Core.Morphism ((%), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
 infixl 1 >>=
@@ -19,7 +19,7 @@ class Covariant t => Bindable t where
 
 	-- | Flipped version of '>>=', the dual of '<<='
 	(=<<) :: (a -> t b) -> t a -> t b
-	(=<<) = (?) (>>=)
+	(=<<) = (%) (>>=)
 	-- | Prefix and flipped version of '>>=', the dual of 'extend'
 	bind :: (a -> t b) -> t a -> t b
 	bind f t = t >>= f
@@ -31,7 +31,7 @@ class Covariant t => Bindable t where
 	f >=> g = \x -> f x >>= g
 	-- | Right-to-left Kleisli composition
 	(<=<) :: (b -> t c) -> (a -> t b) -> (a -> t c)
-	(<=<) = (?) (>=>)
+	(<=<) = (%) (>=>)
 
 instance Bindable ((->) e) where
 	f >>= g = \x -> g (f x) x

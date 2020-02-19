@@ -116,3 +116,5 @@
 * Put concrete data structures to `Specific` submodule
 * Move `Nonempty` type family to separated module
 * Define `Cartesian` type class
+* Rename `?` to `%` to use `?` as boolean multi-if
+* Replace `ifelse` method from `Setoid` module

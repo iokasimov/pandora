@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Representable (Representable (..)) where
 
-import Pandora.Core.Morphism (identity, (?))
+import Pandora.Core.Morphism (identity, (%))
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |
@@ -24,5 +24,5 @@ class Pointable t => Representable t where
 
 instance Representable ((->) e) where
 	type Representation ((->) e) = e
-	(<#>) = (identity ?)
+	(<#>) = (identity %)
 	tabulate = identity

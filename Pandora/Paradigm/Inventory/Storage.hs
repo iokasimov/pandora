@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Inventory.Storage (Storage (..), position, access, retrofit) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Core.Morphism ((.), (?))
+import Pandora.Core.Morphism ((.), (%))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -27,7 +27,7 @@ position :: Storage p a -> p
 position (Storage (p :*: _)) = p
 
 access :: p -> Storage p a -> a
-access p = extract ? p . stored
+access p = extract % p . stored
 
 retrofit :: (p -> p) -> Storage p a -> Storage p a
 retrofit g (Storage (p :*: f)) = Storage $ g p :*: f
