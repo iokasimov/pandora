@@ -52,15 +52,15 @@ library
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     -- Typeclassess about functor junctions
-    Pandora.Paradigm.Controlflow.Junction
-    Pandora.Paradigm.Controlflow.Junction.Interpreted
-    Pandora.Paradigm.Controlflow.Junction.Transformer
-    Pandora.Paradigm.Controlflow.Junction.Schemes
-    Pandora.Paradigm.Controlflow.Junction.Schemes.TU
-    Pandora.Paradigm.Controlflow.Junction.Schemes.TUV
-    Pandora.Paradigm.Controlflow.Junction.Schemes.TUVW
-    Pandora.Paradigm.Controlflow.Junction.Schemes.UT
-    Pandora.Paradigm.Controlflow.Junction.Schemes.UTU
+    Pandora.Paradigm.Controlflow.Joint
+    Pandora.Paradigm.Controlflow.Joint.Interpreted
+    Pandora.Paradigm.Controlflow.Joint.Transformer
+    Pandora.Paradigm.Controlflow.Joint.Schemes
+    Pandora.Paradigm.Controlflow.Joint.Schemes.TU
+    Pandora.Paradigm.Controlflow.Joint.Schemes.TUV
+    Pandora.Paradigm.Controlflow.Joint.Schemes.TUVW
+    Pandora.Paradigm.Controlflow.Joint.Schemes.UT
+    Pandora.Paradigm.Controlflow.Joint.Schemes.UTU
     Pandora.Paradigm.Controlflow.Observable
     Pandora.Paradigm.Controlflow.Pipeline
     -- Tools for datastructures
