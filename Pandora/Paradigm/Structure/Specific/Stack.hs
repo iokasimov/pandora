@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Structure.Specific.Stack (Stack, push, top, pop, filter, linearize) where
 
-import Pandora.Core.Functor (type (:.), type (>))
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((.))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
@@ -20,7 +20,7 @@ import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid ((?))
 
 -- | Linear data structure that serves as a collection of elements
-newtype Stack a = Stack (Maybe :. Twister Maybe > a)
+newtype Stack a = Stack (Maybe :. Twister Maybe := a)
 
 instance Covariant Stack where
 	f <$> Stack stack = Stack $ f <$$> stack
@@ -41,7 +41,7 @@ instance Traversable Stack where
 	Stack stack ->> f = Stack <$> stack ->>> f
 
 instance Interpreted Stack where
-	type Primary Stack a = Maybe :. Twister Maybe > a
+	type Primary Stack a = Maybe :. Twister Maybe := a
 	unwrap (Stack stack) = stack
 
 push :: a -> Stack a -> Stack a

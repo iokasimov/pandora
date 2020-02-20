@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Free (Free (..)) where
 
-import Pandora.Core.Functor (type (:.), type (>))
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Divariant (($))
 
-data Free t a = Pure a | Impure (t :. Free t > a)
+data Free t a = Pure a | Impure (t :. Free t := a)
 
 instance Covariant t => Covariant (Free t) where
 	f <$> Pure x = Pure $ f x
