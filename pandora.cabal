@@ -51,6 +51,16 @@ library
     Pandora.Paradigm.Basis.Yoneda
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
+    -- Typeclassess about functor junctions
+    Pandora.Paradigm.Controlflow.Junction
+    Pandora.Paradigm.Controlflow.Junction.Interpreted
+    Pandora.Paradigm.Controlflow.Junction.Transformer
+    Pandora.Paradigm.Controlflow.Junction.Schemes
+    Pandora.Paradigm.Controlflow.Junction.Schemes.TU
+    Pandora.Paradigm.Controlflow.Junction.Schemes.TUV
+    Pandora.Paradigm.Controlflow.Junction.Schemes.TUVW
+    Pandora.Paradigm.Controlflow.Junction.Schemes.UT
+    Pandora.Paradigm.Controlflow.Junction.Schemes.UTU
     Pandora.Paradigm.Controlflow.Observable
     Pandora.Paradigm.Controlflow.Pipeline
     -- Tools for datastructures
@@ -91,16 +101,6 @@ library
     Pandora.Pattern.Functor.Representable
     Pandora.Pattern.Functor.Traversable
     Pandora.Pattern.Functor.Divariant
-    -- Typeclassess about functor junctions
-    Pandora.Pattern.Junction
-    Pandora.Pattern.Junction.Interpreted
-    Pandora.Pattern.Junction.Transformer
-    Pandora.Pattern.Junction.Schemes
-    Pandora.Pattern.Junction.Schemes.TU
-    Pandora.Pattern.Junction.Schemes.TUV
-    Pandora.Pattern.Junction.Schemes.TUVW
-    Pandora.Pattern.Junction.Schemes.UT
-    Pandora.Pattern.Junction.Schemes.UTU
     -- Typeclassess about object internals
     Pandora.Pattern.Object
     Pandora.Pattern.Object.Chain

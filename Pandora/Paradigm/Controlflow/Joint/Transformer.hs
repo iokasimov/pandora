@@ -1,7 +1,7 @@
-module Pandora.Pattern.Junction.Transformer (Transformer (..), type (:>)) where
+module Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (..), type (:>)) where
 
 import Pandora.Core.Transformation (type (~>))
-import Pandora.Pattern.Junction.Interpreted (Interpreted)
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 

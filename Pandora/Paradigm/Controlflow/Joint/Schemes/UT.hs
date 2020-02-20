@@ -1,7 +1,7 @@
-module Pandora.Pattern.Junction.Schemes.UT (UT (..)) where
+module Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (..)) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 
 newtype UT ct cu t u a = UT (u :. t > a)
 

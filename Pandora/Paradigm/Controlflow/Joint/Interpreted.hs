@@ -1,4 +1,4 @@
-module Pandora.Pattern.Junction.Interpreted (Interpreted (..)) where
+module Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (..)) where
 
 class Interpreted t where
 	{-# MINIMAL unwrap #-}

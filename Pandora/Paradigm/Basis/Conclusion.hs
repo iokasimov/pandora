@@ -2,9 +2,9 @@ module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) whe
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))
-import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
-import Pandora.Pattern.Junction.Schemes.UT (UT (UT))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))

@@ -1,7 +1,7 @@
-module Pandora.Pattern.Junction.Schemes.TUV (TUV (..)) where
+module Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (..)) where
 
 import Pandora.Core.Functor (type (:.), type (>))
-import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 
 newtype TUV ct cu cv t u v a = TUV (t :. u :. v > a)
 

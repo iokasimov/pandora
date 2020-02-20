@@ -8,7 +8,7 @@ import Pandora.Paradigm.Inventory.Stateful (fold)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
-import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 
 -- | Acyclic graph structure without loops
 newtype Graph a = Graph (Edges :. Twister Edges > a)

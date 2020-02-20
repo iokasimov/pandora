@@ -3,9 +3,9 @@ module Pandora.Paradigm.Inventory.Stateful
 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (>))
 import Pandora.Core.Morphism ((.))
-import Pandora.Pattern.Junction.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Pattern.Junction.Transformer (Transformer (Schema, lay, wrap))
-import Pandora.Pattern.Junction.Schemes.TUV (TUV (TUV))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (TUV))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), (<$$>)))

@@ -120,3 +120,4 @@
 * Replace `ifelse` method from `Setoid` module
 * Convert `:>` to a newtype
 * Rename `Composition` class to `Interpreted`
+* Rename `Junction` machinery to `Joint` and move it to `Controlflow` module
