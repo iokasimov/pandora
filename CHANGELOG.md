@@ -95,7 +95,7 @@
 * Remove `a` parameter from `Layout` to be able to use natural transformations in methods
 * Return `filter` method to `Stack` data structure
 * Rename `unwrap` to `untwist` method in `Twister` module
-* Rename `composition` to `unwrap` and `Outline` to `Primary` in `Composition` typeclass
+* Rename `composition` to `unwrap` and `Outline` to `Primary` in `Composition` type class
 * Rename `equip` to `wrap` and `Layout` to `Schema` in `Transformer` typeclass
 * Make `Composition` a superclass for `Transformer` typeclass
 * Move all `Junction` modules to `Pattern` submodule except `Kan`
@@ -128,3 +128,4 @@
 
 # 0.2.2
 * Change types of `lay` and `wrap` methods of `Transformer` class
+* Define `Adaptable` type class for fitting effects in schemas

@@ -28,7 +28,7 @@ class Covariant t => Traversable t where
 	traverse :: (Pointable u, Applicative u) => (a -> u b) -> t a -> u :. t := b
 	traverse f t = t ->> f
 	-- | The dual of 'distribute'
-	sequence :: (Pointable u, Applicative u) => (t :. u) a -> u :. t := a
+	sequence :: (Pointable u, Applicative u) => t :. u := a -> u :. t := a
 	sequence t = t ->> identity
 
 	-- | Infix versions of `traverse` with various nesting levels
