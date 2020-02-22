@@ -122,3 +122,6 @@
 * Rename `Composition` class to `Interpreted`
 * Rename `Junction` machinery to `Joint` and move it to `Controlflow` module
 * Rename `>` type operator to `:=`
+* Create `:#` type synonymous for `Tagged` datatype
+* Remove `untag` in favor of `extract` method
+* Rename `Tagged` constructor of `Tagged` to `Tag`

@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Tagged (Tagged (..), untag, retag, tagself) where
+module Pandora.Paradigm.Basis.Tagged (Tagged (..), retag, tagself, type (:#)) where
 
 import Pandora.Core.Morphism ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -21,67 +21,67 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (inverse))
 
-newtype Tagged tag a = Tagged a
+newtype Tagged tag a = Tag a
+
+infixr 0 :#
+type (:#) tag = Tagged tag
 
 instance Covariant (Tagged tag) where
-	f <$> Tagged x = Tagged $ f x
+	f <$> Tag x = Tag $ f x
 
 instance Pointable (Tagged tag) where
-	point = Tagged
+	point = Tag
 
 instance Extractable (Tagged tag) where
-	extract (Tagged x) = x
+	extract (Tag x) = x
 
 instance Applicative (Tagged tag) where
-	Tagged f <*> Tagged x = Tagged $ f x
+	Tag f <*> Tag x = Tag $ f x
 
 instance Traversable (Tagged tag) where
-	Tagged x ->> f = Tagged <$> f x
+	Tag x ->> f = Tag <$> f x
 
 instance Distributive (Tagged tag) where
-	x >>- f = Tagged $ extract . f <$> x
+	x >>- f = Tag $ extract . f <$> x
 
 instance Bindable (Tagged tag) where
-	Tagged x >>= f = f x
+	Tag x >>= f = f x
 
 instance Monad (Tagged tag)
 
 instance Extendable (Tagged tag) where
-	x =>> f = Tagged . f $ x
+	x =>> f = Tag . f $ x
 
 instance Comonad (Tagged tag)
 
 instance Setoid a => Setoid (Tagged tag a) where
-	Tagged x == Tagged y = x == y
+	Tag x == Tag y = x == y
 
 instance Chain a => Chain (Tagged tag a) where
-	Tagged x <=> Tagged y = x <=> y
+	Tag x <=> Tag y = x <=> y
 
 instance Semigroup a => Semigroup (Tagged tag a) where
-	Tagged x + Tagged y = Tagged $ x + y
+	Tag x + Tag y = Tag $ x + y
 
 instance Monoid a => Monoid (Tagged tag a) where
-	 zero = Tagged zero
+	 zero = Tag zero
 
 instance Ringoid a => Ringoid (Tagged tag a) where
-	Tagged x * Tagged y = Tagged $ x * y
+	Tag x * Tag y = Tag $ x * y
 
 instance Infimum a => Infimum (Tagged tag a) where
-	Tagged x /\ Tagged y = Tagged $ x /\ y
+	Tag x /\ Tag y = Tag $ x /\ y
 
 instance Supremum a => Supremum (Tagged tag a) where
-	Tagged x \/ Tagged y = Tagged $ x \/ y
+	Tag x \/ Tag y = Tag $ x \/ y
 
 instance Lattice a => Lattice (Tagged tag a) where
 
 instance Group a => Group (Tagged tag a) where
-	inverse (Tagged x) = Tagged $ inverse x
-
-untag :: Tagged tag a -> a
-untag (Tagged x) = x
+	inverse (Tag x) = Tag $ inverse x
 
 retag :: Tagged old a -> Tagged new a
-retag (Tagged x) = Tagged x
+retag (Tag x) = Tag x
 
 tagself :: a -> Tagged a a
-tagself = Tagged
+tagself = Tag
