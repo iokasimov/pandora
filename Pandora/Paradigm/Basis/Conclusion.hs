@@ -3,7 +3,7 @@ module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) whe
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>)(T))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -50,8 +50,8 @@ instance Interpreted (Conclusion e) where
 
 instance Transformer (Conclusion e) where
 	type Schema (Conclusion e) u = UT 'Co 'Co (Conclusion e) u
-	lay x = UT $ Success <$> x
-	wrap x = UT . point $ x
+	lay x = T . UT $ Success <$> x
+	wrap x = T . UT . point $ x
 
 instance Covariant u => Covariant (UT 'Co 'Co (Conclusion e) u) where
 	f <$> UT x = UT $ f <$$> x

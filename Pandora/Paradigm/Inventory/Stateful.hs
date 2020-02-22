@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Stateful
 import Pandora.Core.Functor (Variant (Co), type (:.), type (:=))
 import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>)(T))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (TUV))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
@@ -64,8 +64,8 @@ instance Interpreted (Stateful s) where
 
 instance Transformer (Stateful s) where
 	type Schema (Stateful s) u = TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)
-	lay x = TUV $ \s -> (s :*:) <$> x
-	wrap x = TUV $ point <$> unwrap x
+	lay x = T . TUV $ \s -> (s :*:) <$> x
+	wrap x = T . TUV $ point <$> unwrap x
 
 instance Covariant u => Covariant (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
 	f <$> TUV x = TUV $ \old -> f <$$> x old

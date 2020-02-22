@@ -125,3 +125,6 @@
 * Create `:#` type synonymous for `Tagged` datatype
 * Remove `untag` in favor of `extract` method
 * Rename `Tagged` constructor of `Tagged` to `Tag`
+
+# 0.2.2
+* Change types of `lay` and `wrap` methods of `Transformer` class

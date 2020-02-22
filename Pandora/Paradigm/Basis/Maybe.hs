@@ -3,7 +3,7 @@ module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe) where
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>)(T))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -57,8 +57,8 @@ instance Interpreted Maybe where
 
 instance Transformer Maybe where
 	type Schema Maybe u = UT 'Co 'Co Maybe u
-	lay x = UT $ Just <$> x
-	wrap x = UT . point $ x
+	lay x = T . UT $ Just <$> x
+	wrap x = T. UT . point $ x
 
 instance Covariant u => Covariant (UT 'Co 'Co Maybe u) where
 	f <$> UT x = UT $ f <$$> x
