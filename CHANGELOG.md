@@ -129,3 +129,4 @@
 # 0.2.2
 * Change types of `lay` and `wrap` methods of `Transformer` class
 * Define `Adaptable` type class for fitting effects in schemas
+* Define `Failable` and `failure` for adaptable `Conclusion`

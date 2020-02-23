@@ -1,9 +1,10 @@
-module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail) where
+module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail, Failable, failure) where
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>)(T))
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -48,25 +49,6 @@ instance Interpreted (Conclusion e) where
 	type Primary (Conclusion e) a = Conclusion e a
 	unwrap x = x
 
-instance Transformer (Conclusion e) where
-	type Schema (Conclusion e) u = UT 'Co 'Co (Conclusion e) u
-	lay x = T . UT $ Success <$> x
-	wrap x = T . UT . point $ x
-
-instance Covariant u => Covariant (UT 'Co 'Co (Conclusion e) u) where
-	f <$> UT x = UT $ f <$$> x
-
-instance Applicative u => Applicative (UT 'Co 'Co (Conclusion e) u) where
-	UT f <*> UT x = UT $ apply <$> f <*> x
-
-instance Pointable u => Pointable (UT 'Co 'Co (Conclusion e) u) where
-	point = UT . point . point
-
-instance (Pointable u, Bindable u) => Bindable (UT 'Co 'Co (Conclusion e) u) where
-	UT x >>= f = UT $ x >>= conclusion (point . Failure) (unwrap . f)
-
-instance Monad u => Monad (UT 'Co 'Co (Conclusion e) u) where
-
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where
 	Success x == Success y = x == y
 	Failure x == Failure y = x == y
@@ -91,3 +73,27 @@ conclusion _ s (Success x) = s x
 fail :: (e -> r) -> Conclusion e a -> Conclusion r a
 fail f (Failure x) = Failure $ f x
 fail _ (Success y) = Success y
+
+type Failable e = Adaptable (Conclusion e)
+
+instance Transformer (Conclusion e) where
+	type Schema (Conclusion e) u = UT 'Co 'Co (Conclusion e) u
+	lay x = T . UT $ Success <$> x
+	wrap x = T . UT . point $ x
+
+instance Covariant u => Covariant (UT 'Co 'Co (Conclusion e) u) where
+	f <$> UT x = UT $ f <$$> x
+
+instance Applicative u => Applicative (UT 'Co 'Co (Conclusion e) u) where
+	UT f <*> UT x = UT $ apply <$> f <*> x
+
+instance Pointable u => Pointable (UT 'Co 'Co (Conclusion e) u) where
+	point = UT . point . point
+
+instance (Pointable u, Bindable u) => Bindable (UT 'Co 'Co (Conclusion e) u) where
+	UT x >>= f = UT $ x >>= conclusion (point . Failure) (unwrap . f)
+
+instance Monad u => Monad (UT 'Co 'Co (Conclusion e) u) where
+
+failure :: (Covariant t, Failable e t) => e -> t a
+failure = adapt . Failure
