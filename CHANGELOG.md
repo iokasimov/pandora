@@ -134,3 +134,4 @@
 * Rename `Stateful` to `State`, `get` to `current`, `put` to `replace`
 * Define `Stateful` adaptable constraint and adapt `get`, `modify` and `put`
 * Rename `Environmental` to `Environment`
+* Make `env` adaptable effect and remove `local`
