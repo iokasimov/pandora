@@ -4,6 +4,7 @@ import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>)(T))
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -51,29 +52,6 @@ instance Bindable Maybe where
 
 instance Monad Maybe where
 
-instance Interpreted Maybe where
-	type Primary Maybe a = Maybe a
-	unwrap x = x
-
-instance Transformer Maybe where
-	type Schema Maybe u = UT 'Co 'Co Maybe u
-	lay x = T . UT $ Just <$> x
-	wrap x = T. UT . point $ x
-
-instance Covariant u => Covariant (UT 'Co 'Co Maybe u) where
-	f <$> UT x = UT $ f <$$> x
-
-instance Applicative u => Applicative (UT 'Co 'Co Maybe u) where
-	UT f <*> UT x = UT $ apply <$> f <*> x
-
-instance Pointable u => Pointable (UT 'Co 'Co Maybe u) where
-	point = UT . point . point
-
-instance (Pointable u, Bindable u) => Bindable (UT 'Co 'Co Maybe u) where
-	UT x >>= f = UT $ x >>= maybe (point Nothing) (unwrap . f)
-
-instance Monad u => Monad (UT 'Co 'Co Maybe u) where
-
 instance Setoid a => Setoid (Maybe a) where
 	Just x == Just y = x == y
 	Nothing == Nothing = True
@@ -108,3 +86,31 @@ instance Lattice a => Lattice (Maybe a) where
 maybe :: b -> (a -> b) -> Maybe a -> b
 maybe x _ Nothing = x
 maybe _ f (Just y) = f y
+
+instance Interpreted Maybe where
+	type Primary Maybe a = Maybe a
+	unwrap x = x
+
+instance Transformer Maybe where
+	type Schema Maybe u = UT 'Co 'Co Maybe u
+	lay x = T . UT $ Just <$> x
+	wrap x = T. UT . point $ x
+
+type Optional = Adaptable Maybe
+
+instance Covariant u => Covariant (UT 'Co 'Co Maybe u) where
+	f <$> UT x = UT $ f <$$> x
+
+instance Applicative u => Applicative (UT 'Co 'Co Maybe u) where
+	UT f <*> UT x = UT $ apply <$> f <*> x
+
+instance Pointable u => Pointable (UT 'Co 'Co Maybe u) where
+	point = UT . point . point
+
+instance (Pointable u, Bindable u) => Bindable (UT 'Co 'Co Maybe u) where
+	UT x >>= f = UT $ x >>= maybe (point Nothing) (unwrap . f)
+
+instance Monad u => Monad (UT 'Co 'Co Maybe u) where
+
+nothing :: (Covariant t, Optional t) => t a
+nothing = adapt Nothing

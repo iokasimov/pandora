@@ -45,10 +45,6 @@ instance Bindable (Conclusion e) where
 
 instance Monad (Conclusion e) where
 
-instance Interpreted (Conclusion e) where
-	type Primary (Conclusion e) a = Conclusion e a
-	unwrap x = x
-
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where
 	Success x == Success y = x == y
 	Failure x == Failure y = x == y
@@ -74,12 +70,16 @@ fail :: (e -> r) -> Conclusion e a -> Conclusion r a
 fail f (Failure x) = Failure $ f x
 fail _ (Success y) = Success y
 
-type Failable e = Adaptable (Conclusion e)
+instance Interpreted (Conclusion e) where
+	type Primary (Conclusion e) a = Conclusion e a
+	unwrap x = x
 
 instance Transformer (Conclusion e) where
 	type Schema (Conclusion e) u = UT 'Co 'Co (Conclusion e) u
 	lay x = T . UT $ Success <$> x
 	wrap x = T . UT . point $ x
+
+type Failable e = Adaptable (Conclusion e)
 
 instance Covariant u => Covariant (UT 'Co 'Co (Conclusion e) u) where
 	f <$> UT x = UT $ f <$$> x
