@@ -131,5 +131,6 @@
 * Define `Adaptable` type class for fitting effects in schemas
 * Define `Failable` and `failure` for adaptable `Conclusion`
 * Define `Optional` and `nothing` for adaptable `Maybe`
-* Rename `Stateful` to `State`, `get` to `current`
+* Rename `Stateful` to `State`, `get` to `current`, `put` to `replace`
 * Define `Stateful` adaptable constraint and adapt `get`, `modify` and `put`
+* Rename `Environmental` to `Environment`

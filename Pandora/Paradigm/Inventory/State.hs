@@ -1,5 +1,5 @@
 module Pandora.Paradigm.Inventory.State
-	(State (..), statefully, current, modify, put, fold, find) where
+	(State (..), statefully, current, modify, replace, fold, find) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (:=))
 import Pandora.Core.Morphism ((.))
@@ -49,8 +49,8 @@ current = adapt $ State delta
 modify :: (Covariant t, Stateful s t) => (s -> s) -> t ()
 modify f = adapt $ State $ \s -> f s :*: ()
 
-put :: (Covariant t, Stateful s t) => s -> t ()
-put s = adapt $ State $ \_ -> s :*: ()
+replace :: (Covariant t, Stateful s t) => s -> t ()
+replace s = adapt $ State $ \_ -> s :*: ()
 
 fold :: Traversable t => s -> (a -> s -> s) -> t a -> s
 fold start op struct = extract . statefully start $
