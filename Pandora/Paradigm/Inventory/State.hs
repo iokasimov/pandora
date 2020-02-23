@@ -1,10 +1,11 @@
-module Pandora.Paradigm.Inventory.Stateful
-	(Stateful (..), statefully, get, modify, put, fold, find) where
+module Pandora.Paradigm.Inventory.State
+	(State (..), statefully, current, modify, put, fold, find) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (:=))
 import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>)(T))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (TUV))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
@@ -20,52 +21,54 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (bool)
 
-newtype Stateful s a = Stateful ((->) s :. (:*:) s := a)
+newtype State s a = State ((->) s :. (:*:) s := a)
 
-statefully :: s -> Stateful s a -> s :*: a
-statefully initial (Stateful state) = state initial
+statefully :: s -> State s a -> s :*: a
+statefully initial (State state) = state initial
 
-instance Covariant (Stateful s) where
-	f <$> Stateful x = Stateful $ \old -> f <$> x old
+instance Covariant (State s) where
+	f <$> State x = State $ \old -> f <$> x old
 
-instance Applicative (Stateful s) where
-	Stateful f <*> Stateful x = Stateful $ \old ->
+instance Applicative (State s) where
+	State f <*> State x = State $ \old ->
 		let latest = attached . x $ old in
 			latest :*: (extract (f old) . extract . x $ old)
 
-instance Pointable (Stateful s) where
-	point x = Stateful $ \s -> s :*: x
+instance Pointable (State s) where
+	point x = State $ \s -> s :*: x
 
-instance Bindable (Stateful s) where
-	Stateful x >>= f = Stateful $ \old ->
+instance Bindable (State s) where
+	State x >>= f = State $ \old ->
 		uncurry statefully $ f <$> x old
 
-instance Monad (Stateful s) where
+instance Monad (State s) where
 
-get :: Stateful s s
-get = Stateful delta
+current :: (Covariant t, Stateful s t) => t s
+current = adapt $ State delta
 
-modify :: (s -> s) -> Stateful s ()
-modify f = Stateful $ \s -> f s :*: ()
+modify :: (Covariant t, Stateful s t) => (s -> s) -> t ()
+modify f = adapt $ State $ \s -> f s :*: ()
 
-put :: s -> Stateful s ()
-put s = Stateful $ \_ -> s :*: ()
+put :: (Covariant t, Stateful s t) => s -> t ()
+put s = adapt $ State $ \_ -> s :*: ()
 
 fold :: Traversable t => s -> (a -> s -> s) -> t a -> s
 fold start op struct = extract . statefully start $
-	struct ->> modify . op $> () *> get
+	struct ->> modify . op $> () *> current
 
 find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
 find p struct = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p $ x) struct
 
-instance Interpreted (Stateful s) where
-	type Primary (Stateful s) a = (->) s :. (:*:) s := a
-	unwrap (Stateful x) = x
+instance Interpreted (State s) where
+	type Primary (State s) a = (->) s :. (:*:) s := a
+	unwrap (State x) = x
 
-instance Transformer (Stateful s) where
-	type Schema (Stateful s) u = TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)
+instance Transformer (State s) where
+	type Schema (State s) u = TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)
 	lay x = T . TUV $ \s -> (s :*:) <$> x
 	wrap x = T . TUV $ point <$> unwrap x
+
+type Stateful s = Adaptable (State s)
 
 instance Covariant u => Covariant (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
 	f <$> TUV x = TUV $ \old -> f <$$> x old
