@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
 import Pandora.Core.Functor (Variant (Co))

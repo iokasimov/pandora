@@ -1,13 +1,13 @@
 module Pandora.Paradigm.Basis.Yoneda (Yoneda (..)) where
 
 import Pandora.Core.Morphism ((.), (!), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Adjoint (Adjoint (phi, psi))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Yoneda t a = Yoneda
@@ -32,5 +32,5 @@ instance Extractable t => Extractable (Yoneda t) where
 	extract (Yoneda f) = extract $ f identity
 
 instance (Extractable t, Pointable t, Extractable u, Pointable u) => Adjoint (Yoneda t) (Yoneda u) where
-	phi f = point . f . point
-	psi f = extract . extract . comap f
+	x -| f = point . f . point $ x
+	x |- g = extract . extract $ g <$> x

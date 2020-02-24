@@ -4,7 +4,7 @@ import Pandora.Core.Morphism (identity, (.))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>))
 
 class Adaptable eff schema where
 	{-# MINIMAL adapt #-}

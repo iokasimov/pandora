@@ -1,5 +1,6 @@
-module Pandora.Paradigm.Inventory.Optics
-	(Lens, type (:-.), (|>), view, set, over, (^.), (.~), (%~)) where
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
+module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, (^.), (.~), (%~)) where
 
 import Pandora.Core.Morphism ((.), (!))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))

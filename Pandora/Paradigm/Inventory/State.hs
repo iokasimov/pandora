@@ -1,5 +1,6 @@
-module Pandora.Paradigm.Inventory.State
-	(State (..), Stateful, statefully, current, modify, replace, fold, find) where
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
+module Pandora.Paradigm.Inventory.State (State (..), Stateful, statefully, current, modify, replace, fold, find) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (:=))
 import Pandora.Core.Morphism ((.))
