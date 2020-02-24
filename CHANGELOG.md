@@ -135,3 +135,4 @@
 * Define `Stateful` adaptable constraint and adapt `get`, `modify` and `put`
 * Rename `Environmental` to `Environment`
 * Make `env` adaptable effect and remove `local`
+* Define `Accumulator` effect and it's adaptable `gather` method

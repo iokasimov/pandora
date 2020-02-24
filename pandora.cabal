@@ -66,6 +66,7 @@ library
     Pandora.Paradigm.Controlflow.Pipeline
     -- Tools for datastructures
     Pandora.Paradigm.Inventory
+    Pandora.Paradigm.Inventory.Accumulator
     Pandora.Paradigm.Inventory.Environment
     Pandora.Paradigm.Inventory.Optics
     Pandora.Paradigm.Inventory.State
