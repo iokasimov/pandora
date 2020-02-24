@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), conclusion, fail, Failable, failure) where
+module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), Failable, conclusion, fail, failure) where
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))

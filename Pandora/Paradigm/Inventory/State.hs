@@ -1,5 +1,5 @@
 module Pandora.Paradigm.Inventory.State
-	(State (..), statefully, current, modify, replace, fold, find) where
+	(State (..), Stateful, statefully, current, modify, replace, fold, find) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (:=))
 import Pandora.Core.Morphism ((.))

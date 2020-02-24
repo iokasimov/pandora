@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Maybe (Maybe (..), maybe, nothing) where
+module Pandora.Paradigm.Basis.Maybe (Maybe (..), Optional, maybe, nothing) where
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))

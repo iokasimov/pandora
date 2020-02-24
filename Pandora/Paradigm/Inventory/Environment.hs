@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Inventory.Environment (Environment (..), env) where
+module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism (identity, (.), (!))

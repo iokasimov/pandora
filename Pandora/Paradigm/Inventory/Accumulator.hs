@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), gather) where
+module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, gather) where
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((.))
