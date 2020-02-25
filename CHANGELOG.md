@@ -136,3 +136,4 @@
 * Rename `Environmental` to `Environment`
 * Make `env` adaptable effect and remove `local`
 * Define `Accumulator` effect and it's adaptable `gather` method
+* Define `|->` (Coalgebra) and `<-|` (Algebra) type synonyms
