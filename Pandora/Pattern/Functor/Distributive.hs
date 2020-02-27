@@ -14,27 +14,27 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 
 infixl 5 >>-, >>>-, >>>>-, >>>>>-
 
-class Covariant u => Distributive u where
+class Covariant t => Distributive t where
 	{-# MINIMAL (>>-) #-}
 	-- | Infix and flipped version of 'collect'
-	(>>-) :: Covariant t => t a -> (a -> u b) -> u :. t := b
+	(>>-) :: Covariant u => u a -> (a -> t b) -> t :. u := b
 
 	-- | Prefix version of '>>-'
-	collect :: Covariant t => (a -> u b) -> t a -> u :. t := b
+	collect :: Covariant u => (a -> t b) -> u a -> t :. u := b
 	collect f t = t >>- f
 	-- | The dual of 'sequence'
-	distribute :: Covariant t => t :. u := a -> u :. t := a
+	distribute :: Covariant u => u :. t := a -> t :. u := a
 	distribute t = t >>- identity
 
 	-- | Infix versions of `collect` with various nesting levels
-	(>>>-) :: (Covariant t, Covariant v)
-		=> t :. v := a -> (a -> u b) -> u :. t :. v := b
+	(>>>-) :: (Covariant u, Covariant v)
+		=> u :. v := a -> (a -> t b) -> t :. u :. v := b
 	x >>>- f = (collect . collect) f x
-	(>>>>-) :: (Covariant t, Covariant v, Covariant w)
-		=> t :. v :. w := a -> (a -> u b) -> u :. t :. v :. w := b
+	(>>>>-) :: (Covariant u, Covariant v, Covariant w)
+		=> u :. v :. w := a -> (a -> t b) -> t :. u :. v :. w := b
 	x >>>>- f = (collect . collect . collect) f x
-	(>>>>>-) :: (Covariant t, Covariant v, Covariant w, Covariant j)
-		=> t :. v :. w :. j := a -> (a -> u b) -> u :. t :. v :. w :. j := b
+	(>>>>>-) :: (Covariant u, Covariant v, Covariant w, Covariant j)
+		=> u :. v :. w :. j := a -> (a -> t b) -> t :. u :. v :. w :. j := b
 	x >>>>>- f = (collect . collect . collect . collect) f x
 
 instance Distributive ((->) e) where
