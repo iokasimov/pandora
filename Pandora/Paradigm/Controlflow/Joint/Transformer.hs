@@ -5,11 +5,13 @@ import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Divariant (($))
 
 class Interpreted t => Transformer t where
@@ -27,6 +29,9 @@ instance Covariant (Schema t u) => Covariant (t :> u) where
 instance Pointable (Schema t u) => Pointable (t :> u) where
 	point = T . point
 
+instance Extractable (Schema t u) => Extractable (t :> u) where
+	extract = extract . trans
+
 instance Applicative (Schema t u) => Applicative (t :> u) where
 	T f <*> T x = T $ f <*> x
 
@@ -41,6 +46,9 @@ instance Distributive (Schema t u) => Distributive (t :> u) where
 
 instance Bindable (Schema t u) => Bindable (t :> u) where
 	T x >>= f = T $ x >>= trans . f
+
+instance Extendable (Schema t u) => Extendable (t :> u) where
+	T x =>> f = T $ x =>> f . T
 
 instance (Interpreted (Schema t u), Transformer t) => Interpreted (t :> u) where
 	type Primary (t :> u) a = Primary (Schema t u) a
