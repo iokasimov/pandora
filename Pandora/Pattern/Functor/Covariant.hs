@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Covariant (Covariant (..)) where
 
-import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (:=), type (<-|))
 import Pandora.Core.Morphism (fix, (.), (!), (%))
 
 infixl 4 <$>, <$, $>
@@ -29,7 +29,7 @@ class Covariant (t :: * -> *) where
 	void :: t a -> t ()
 	void x = () <$ x
 	-- | Computing a value from a structure of values
-	loeb :: t (t a -> a) -> t a
+	loeb :: t (a <-| t) -> t a
 	loeb tt = fix (\f -> (\g -> g f) <$> tt)
 	-- | Flipped infix version of 'comap'
 	(<&>) :: t a -> (a -> b) -> t b
