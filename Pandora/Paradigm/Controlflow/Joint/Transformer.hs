@@ -6,6 +6,9 @@ import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unw
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Divariant (($))
 
@@ -26,6 +29,15 @@ instance Pointable (Schema t u) => Pointable (t :> u) where
 
 instance Applicative (Schema t u) => Applicative (t :> u) where
 	T f <*> T x = T $ f <*> x
+
+instance Alternative (Schema t u) => Alternative (t :> u) where
+	T x <+> T y = T $ x <+> y
+
+instance Traversable (Schema t u) => Traversable (t :> u) where
+	T x ->> f = T <$> x ->> f
+
+instance Distributive (Schema t u) => Distributive (t :> u) where
+	x >>- f = T $ x >>- trans . f
 
 instance Bindable (Schema t u) => Bindable (t :> u) where
 	T x >>= f = T $ x >>= trans . f
