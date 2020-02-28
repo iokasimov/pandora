@@ -8,6 +8,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Yoneda t a = Yoneda
@@ -30,6 +31,9 @@ instance Pointable t => Pointable (Yoneda t) where
 
 instance Extractable t => Extractable (Yoneda t) where
 	extract (Yoneda f) = extract $ f identity
+
+instance Liftable Yoneda where
+	lift x = Yoneda (\f -> f <$> x)
 
 instance (Extractable t, Pointable t, Extractable u, Pointable u) => Adjoint (Yoneda t) (Yoneda u) where
 	x -| f = point . f . point $ x

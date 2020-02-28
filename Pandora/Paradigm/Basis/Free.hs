@@ -8,6 +8,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Divariant (($))
 
 data Free t a = Pure a | Impure (t :. Free t := a)
@@ -39,3 +40,6 @@ instance Covariant t => Bindable (Free t) where
 instance Traversable t => Traversable (Free t) where
 	Pure x ->> f = Pure <$> f x
 	Impure xs ->> f = Impure <$> xs ->>> f
+
+instance Liftable Free where
+	lift x = Impure $ Pure <$> x

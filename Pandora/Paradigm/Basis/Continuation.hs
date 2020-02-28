@@ -7,6 +7,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Continuation r t a = Continuation { continue :: (->) ::|:. a :. t := r }
@@ -24,6 +25,9 @@ instance Covariant t => Bindable (Continuation r t) where
 	x >>= f = Continuation $ \g -> continue x $ \y -> continue (f y) g
 
 instance Monad t => Monad (Continuation r t) where
+
+instance (forall u . Bindable u) => Liftable (Continuation r) where
+	lift = Continuation . (>>=)
 
 -- | Make any bindable action continue
 oblige :: Bindable t => t a -> Continuation r t a
