@@ -1,9 +1,9 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory.State (State (..), Stateful, statefully, current, modify, replace, fold, find) where
+module Pandora.Paradigm.Inventory.State (State (..), Stateful, current, modify, replace, fold, find) where
 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (:=))
-import Pandora.Core.Morphism ((.))
+import Pandora.Core.Morphism ((.), (%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
@@ -24,9 +24,6 @@ import Pandora.Pattern.Object.Setoid (bool)
 
 newtype State s a = State ((->) s :. (:*:) s := a)
 
-statefully :: s -> State s a -> s :*: a
-statefully initial (State state) = state initial
-
 instance Covariant (State s) where
 	f <$> State x = State $ \old -> f <$> x old
 
@@ -40,21 +37,12 @@ instance Pointable (State s) where
 
 instance Bindable (State s) where
 	State x >>= f = State $ \old ->
-		uncurry statefully $ f <$> x old
+		uncurry (unwrap %) $ f <$> x old
 
 instance Monad (State s) where
 
-current :: (Covariant t, Stateful s t) => t s
-current = adapt $ State delta
-
-modify :: (Covariant t, Stateful s t) => (s -> s) -> t ()
-modify f = adapt $ State $ \s -> f s :*: ()
-
-replace :: (Covariant t, Stateful s t) => s -> t ()
-replace s = adapt $ State $ \_ -> s :*: ()
-
 fold :: Traversable t => s -> (a -> s -> s) -> t a -> s
-fold start op struct = extract . statefully start $
+fold start op struct = extract . unwrap @(State _) % start $
 	struct ->> modify . op $> () *> current
 
 find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
@@ -84,3 +72,12 @@ instance Bindable u => Bindable (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
 	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . unwrap . f $ y
 
 instance Monad u => Monad (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
+
+current :: (Covariant t, Stateful s t) => t s
+current = adapt $ State delta
+
+modify :: (Covariant t, Stateful s t) => (s -> s) -> t ()
+modify f = adapt $ State $ \s -> f s :*: ()
+
+replace :: (Covariant t, Stateful s t) => s -> t ()
+replace s = adapt $ State $ \_ -> s :*: ()
