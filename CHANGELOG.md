@@ -138,3 +138,4 @@
 * Define `Accumulator` effect and it's adaptable `gather` method
 * Define `|->` (Coalgebra) and `<-|` (Algebra) type synonyms
 * Remove `oblige` in favor of `Liftable` instance of `Continuation`
+* Remove `environmentally` in favor of `Interpreted` instance for `Environment`

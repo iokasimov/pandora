@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
 import Pandora.Core.Functor (Variant (Co))
-import Pandora.Core.Morphism (identity, (.), (!))
+import Pandora.Core.Morphism (identity, (.), (!), (%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
@@ -11,14 +11,12 @@ import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Environment e a = Environment (e -> a)
-
-environmentally :: e -> Environment e a -> a
-environmentally e (Environment f) = f e
 
 instance Covariant (Environment e) where
 	f <$> Environment x = Environment $ f . x
@@ -27,10 +25,13 @@ instance Pointable (Environment e) where
 	point x = Environment (x !)
 
 instance Applicative (Environment e) where
-	f <*> x = Environment $ \e -> environmentally e f $ environmentally e x
+	f <*> x = Environment $ \e -> unwrap f e $ unwrap x e
+
+instance Distributive (Environment e) where
+	g >>- f = Environment $ g >>- (unwrap <$> f)
 
 instance Bindable (Environment e) where
-	Environment x >>= f = Environment $ \e -> environmentally e . f . x $ e
+	Environment x >>= f = Environment $ \e -> unwrap % e . f . x $ e
 
 instance Monad (Environment e) where
 
