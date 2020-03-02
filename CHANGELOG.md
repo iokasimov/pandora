@@ -140,3 +140,5 @@
 * Remove `oblige` in favor of `Liftable` instance of `Continuation`
 * Remove `environmentally` in favor of `Interpreted` instance for `Environment`
 * Remove `statefully` in favor of `Interpreted` instance for `State`
+
+# 0.2.3
