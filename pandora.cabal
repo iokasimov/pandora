@@ -121,6 +121,5 @@ library
     FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms
     MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes
     ScopedTypeVariables, TypeApplications, TypeFamilies, TypeFamilyDependencies, TypeOperators
-    UndecidableInstances
   default-language: Haskell2010
   ghc-options: -Wall -fno-warn-tabs

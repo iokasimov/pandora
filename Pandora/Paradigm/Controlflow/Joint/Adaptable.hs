@@ -1,3 +1,5 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (..)) where
 
 import Pandora.Core.Transformation (type (~>))
