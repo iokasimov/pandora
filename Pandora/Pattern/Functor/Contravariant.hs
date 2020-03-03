@@ -1,7 +1,8 @@
 module Pandora.Pattern.Functor.Contravariant (Contravariant (..)) where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism ((.), (!), (%))
+import Pandora.Core.Morphism ((!), (%))
+import Pandora.Pattern.Category ((.))
 
 infixl 4 >$<, $<, >$
 

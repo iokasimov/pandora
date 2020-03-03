@@ -2,11 +2,12 @@
 
 module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, (^.), (.~), (%~)) where
 
-import Pandora.Core.Morphism ((.), (!), (%))
+import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (unwrap))
 import Pandora.Paradigm.Inventory.State (State (State))
 import Pandora.Paradigm.Inventory.Storage (Storage (Storage), access, position, retrofit)
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))

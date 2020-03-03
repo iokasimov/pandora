@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Basis.Predicate (Predicate (..)) where
 
-import Pandora.Core.Morphism ((.), (!))
+import Pandora.Core.Morphism ((!))
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Determinable (Determinable (determine))
 import Pandora.Pattern.Functor.Divariant (($))

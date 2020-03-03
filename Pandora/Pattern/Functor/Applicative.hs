@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Applicative (Applicative (..)) where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism (identity)
+import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 
 infixl 4 <*>, <*, *>

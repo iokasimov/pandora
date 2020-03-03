@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Identity (Identity (..)) where
 
-import Pandora.Core.Morphism ((.))
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

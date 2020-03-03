@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Basis.Yoneda (Yoneda (..)) where
 
-import Pandora.Core.Morphism ((.), (!), identity)
+import Pandora.Core.Morphism ((!))
+import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))

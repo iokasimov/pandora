@@ -1,8 +1,7 @@
 module Pandora.Pattern.Functor.Divariant (Divariant (..)) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
-
-import Pandora.Core.Morphism ((.))
+import Pandora.Pattern.Category ((.))
 
 infixl 4 >->
 infixr 0 $

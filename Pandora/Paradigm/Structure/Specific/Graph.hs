@@ -2,10 +2,10 @@ module Pandora.Paradigm.Structure.Specific.Graph (Graph, loose) where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Transformation (type (~>))
-import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Basis.Edges (Edges (Empty, Overlay))
 import Pandora.Paradigm.Basis.Twister (Twister ((:<)))
 import Pandora.Paradigm.Inventory.State (fold)
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))

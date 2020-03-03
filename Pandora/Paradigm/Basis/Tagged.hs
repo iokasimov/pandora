@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Tagged (Tagged (..), retag, tagself, type (:#)) where
 
-import Pandora.Core.Morphism ((.))
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

@@ -1,8 +1,8 @@
 module Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (..), (:>) (..)) where
 
-import Pandora.Core.Morphism ((.))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))

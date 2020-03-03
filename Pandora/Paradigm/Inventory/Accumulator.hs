@@ -3,12 +3,12 @@
 module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, gather) where
 
 import Pandora.Core.Functor (Variant (Co))
-import Pandora.Core.Morphism ((.))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))

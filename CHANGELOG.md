@@ -142,3 +142,4 @@
 * Remove `statefully` in favor of `Interpreted` instance for `State`
 
 # 0.2.3
+* Define `Category` type class with `identity` and `.` methods

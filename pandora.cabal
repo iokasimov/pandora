@@ -81,6 +81,8 @@ library
     Pandora.Paradigm.Structure.Specific.Binary
 
     Pandora.Pattern
+    -- Category typeclass
+    Pandora.Pattern.Category
     -- Functor typeclassess
     Pandora.Pattern.Functor
     Pandora.Pattern.Functor.Adjoint

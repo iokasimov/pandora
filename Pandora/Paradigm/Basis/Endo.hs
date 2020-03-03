@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Endo (Endo (..)) where
 
-import Pandora.Core.Morphism ((.), identity)
+import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Invariant (Invariant (invmap))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))

@@ -1,9 +1,9 @@
 module Pandora.Pattern.Functor.Distributive (Distributive (..)) where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism (identity, (.), (%))
+import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-
+import Pandora.Pattern.Category (identity, (.))
 {- |
 > Let f :: Distributive g => (a -> g b)
 

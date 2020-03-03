@@ -1,7 +1,8 @@
 module Pandora.Paradigm.Basis.Continuation (Continuation (..), cwcc, reset, shift) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
-import Pandora.Core.Morphism ((.), (!), (%))
+import Pandora.Core.Morphism ((!), (%))
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))

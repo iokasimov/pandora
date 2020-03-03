@@ -3,11 +3,12 @@
 module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
 import Pandora.Core.Functor (Variant (Co))
-import Pandora.Core.Morphism (identity, (.), (!), (%))
+import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
+import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))

@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), Failable, conclusion, fail, failure) where
 
 import Pandora.Core.Functor (Variant (Co))
-import Pandora.Core.Morphism ((.))
+import Pandora.Pattern.Category ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>)(T))
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))

@@ -1,7 +1,8 @@
 module Pandora.Pattern.Functor.Representable (Representable (..)) where
 
 import Pandora.Core.Functor (type (<-|))
-import Pandora.Core.Morphism (identity, (%))
+import Pandora.Core.Morphism ((%))
+import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |

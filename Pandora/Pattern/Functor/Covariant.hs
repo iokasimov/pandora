@@ -1,7 +1,8 @@
 module Pandora.Pattern.Functor.Covariant (Covariant (..)) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (<-|))
-import Pandora.Core.Morphism (fix, (.), (!), (%))
+import Pandora.Core.Morphism (fix, (!), (%))
+import Pandora.Pattern.Category ((.))
 
 infixl 4 <$>, <$, $>
 

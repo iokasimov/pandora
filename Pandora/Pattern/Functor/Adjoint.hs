@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Adjoint (Adjoint (..), type (-|)) where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism (identity)
+import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
 type (-|) = Adjoint
