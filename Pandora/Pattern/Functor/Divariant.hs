@@ -1,6 +1,5 @@
 module Pandora.Pattern.Functor.Divariant (Divariant (..)) where
 
-import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Category ((.))
 
 infixl 4 >->
@@ -12,16 +11,14 @@ infixr 0 $
 > * Interpreted: dimap (f . g) (h . i) ≡ dimap g h . dimap f i
 -}
 
-class (forall a . Covariant (t a)) => Divariant (t :: * -> * -> *) where
+class Divariant (v :: * -> * -> *) where
 	{-# MINIMAL (>->) #-}
-	-- | Infix version of 'comap'
-	(>->) :: (a -> b) -> (c -> d) -> t b c -> t a d
-
+	(>->) :: v a b -> v c d -> v b c -> v a d
 	-- | Prefix version of '>->'
-	dimap :: (a -> b) -> (c -> d) -> t b c -> t a d
-	dimap f g x = (f >-> g) x
-
-	($) :: t a b -> t a b
+	dimap :: v a b -> v c d -> v b c -> v a d
+	dimap f g x = f >-> g $ x
+	-- Generalized function application
+	($) :: v a b -> v a b
 	($) f = f
 
 instance Divariant ((->)) where
