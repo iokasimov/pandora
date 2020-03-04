@@ -6,7 +6,9 @@ import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>))
+import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 
 class Adaptable eff schema where
 	{-# MINIMAL adapt #-}
@@ -25,126 +27,126 @@ instance Wrappable t u => Adaptable t (t :> u) where
 	adapt = wrap
 
 instance
-	( Layable t (Schema u v)
+	( Layable t (Schematic Monad u v)
 	, Wrappable u v
 	) => Adaptable u (t :> u :> v) where
 	adapt = lay . wrap
 
 instance
-	( Layable t (Schema u v)
+	( Layable t (Schematic Monad u v)
 	, Layable u v
 	) => Adaptable v (t :> u :> v) where
 	adapt = lay . lay
 
 instance
-	( Layable t (Schema u (v :> w))
-	, Layable u (Schema v w)
+	( Layable t (Schematic Monad u (v :> w))
+	, Layable u (Schematic Monad v w)
 	, Wrappable v w
 	) => Adaptable v (t :> u :> v :> w) where
 	adapt = lay . lay . wrap
 
 instance
-	( Layable t (Schema u v)
-	, Layable t (Schema u (v :> w))
-	, Layable u (Schema v w)
+	( Layable t (Schematic Monad u v)
+	, Layable t (Schematic Monad u (v :> w))
+	, Layable u (Schematic Monad v w)
 	, Layable v w
 	) => Adaptable w (t :> u :> v :> w) where
 	adapt = lay . lay . lay
 
-instance (Layable t (Schema u (v :> w :> x))
-	, Layable u (Schema v (w :> x))
-	, Layable v (Schema w x)
+instance (Layable t (Schematic Monad u (v :> w :> x))
+	, Layable u (Schematic Monad v (w :> x))
+	, Layable v (Schematic Monad w x)
 	, Layable w x
 	) => Adaptable x (t :> u :> v :> w :> x) where
 	adapt = lay . lay . lay . lay
 
-instance (Layable t (Schema u (v :> w :> x))
-	, Layable u (Schema v (w :> x))
-	, Layable v (Schema w x)
+instance (Layable t (Schematic Monad u (v :> w :> x))
+	, Layable u (Schematic Monad v (w :> x))
+	, Layable v (Schematic Monad w x)
 	, Wrappable w x
 	) => Adaptable w (t :> u :> v :> w :> x) where
 	adapt = lay . lay . lay . wrap
 
 instance
-	( Layable t (Schema u (v :> w :> x :> y))
-	, Layable u (Schema v (w :> x :> y))
-	, Layable v (Schema w (x :> y))
-	, Layable w (Schema x y)
+	( Layable t (Schematic Monad u (v :> w :> x :> y))
+	, Layable u (Schematic Monad v (w :> x :> y))
+	, Layable v (Schematic Monad w (x :> y))
+	, Layable w (Schematic Monad x y)
 	, Layable x y
 	) => Adaptable y (t :> u :> v :> w :> x :> y) where
 	adapt = lay . lay . lay . lay . lay
 
 instance
-	( Layable t (Schema u (v :> w :> x :> y))
-	, Layable u (Schema v (w :> x :> y))
-	, Layable v (Schema w (x :> y))
-	, Layable w (Schema x y)
+	( Layable t (Schematic Monad u (v :> w :> x :> y))
+	, Layable u (Schematic Monad v (w :> x :> y))
+	, Layable v (Schematic Monad w (x :> y))
+	, Layable w (Schematic Monad x y)
 	, Wrappable x y
 	) => Adaptable x (t :> u :> v :> w :> x :> y) where
 	adapt = lay . lay . lay . lay . wrap
 
 instance
-	( Layable t (Schema u (v :> w :> x :> y :> z))
-	, Layable u (Schema v (w :> x :> y :> z))
-	, Layable v (Schema w (x :> y :> z))
-	, Layable w (Schema x (y :> z))
-	, Layable x (Schema y z)
+	( Layable t (Schematic Monad u (v :> w :> x :> y :> z))
+	, Layable u (Schematic Monad v (w :> x :> y :> z))
+	, Layable v (Schematic Monad w (x :> y :> z))
+	, Layable w (Schematic Monad x (y :> z))
+	, Layable x (Schematic Monad y z)
 	, Layable y z
 	) => Adaptable z (t :> u :> v :> w :> x :> y :> z) where
 	adapt = lay . lay . lay . lay . lay . lay
 
 instance
-	( Layable t (Schema u (v :> w :> x :> y :> z))
-	, Layable u (Schema v (w :> x :> y :> z))
-	, Layable v (Schema w (x :> y :> z))
-	, Layable w (Schema x (y :> z))
-	, Layable x (Schema y z)
+	( Layable t (Schematic Monad u (v :> w :> x :> y :> z))
+	, Layable u (Schematic Monad v (w :> x :> y :> z))
+	, Layable v (Schematic Monad w (x :> y :> z))
+	, Layable w (Schematic Monad x (y :> z))
+	, Layable x (Schematic Monad y z)
 	, Wrappable y z
 	) => Adaptable y (t :> u :> v :> w :> x :> y :> z) where
 	adapt = lay . lay . lay . lay . lay . wrap
 
 instance
-	( Layable t (Schema u (v :> w :> x :> y :> z :> f))
-	, Layable u (Schema v (w :> x :> y :> z :> f))
-	, Layable v (Schema w (x :> y :> z :> f))
-	, Layable w (Schema x (y :> z :> f))
-	, Layable x (Schema y (z :> f))
-	, Layable y (Schema z f)
+	( Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f))
+	, Layable u (Schematic Monad v (w :> x :> y :> z :> f))
+	, Layable v (Schematic Monad w (x :> y :> z :> f))
+	, Layable w (Schematic Monad x (y :> z :> f))
+	, Layable x (Schematic Monad y (z :> f))
+	, Layable y (Schematic Monad z f)
 	, Layable z f
 	) => Adaptable f (t :> u :> v :> w :> x :> y :> z :> f) where
 	adapt = lay . lay . lay . lay . lay . lay . lay
 
 instance
-	( Layable t (Schema u (v :> w :> x :> y :> z :> f))
-	, Layable u (Schema v (w :> x :> y :> z :> f))
-	, Layable v (Schema w (x :> y :> z :> f))
-	, Layable w (Schema x (y :> z :> f))
-	, Layable x (Schema y (z :> f))
-	, Layable y (Schema z f)
+	( Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f))
+	, Layable u (Schematic Monad v (w :> x :> y :> z :> f))
+	, Layable v (Schematic Monad w (x :> y :> z :> f))
+	, Layable w (Schematic Monad x (y :> z :> f))
+	, Layable x (Schematic Monad y (z :> f))
+	, Layable y (Schematic Monad z f)
 	, Wrappable z f
 	) => Adaptable z (t :> u :> v :> w :> x :> y :> z :> f) where
 	adapt = lay . lay . lay . lay . lay . lay . wrap
 
 instance
-	( Layable t (Schema u (v :> w :> x :> y :> z :> f :> h))
-	, Layable u (Schema v (w :> x :> y :> z :> f :> h))
-	, Layable v (Schema w (x :> y :> z :> f :> h))
-	, Layable w (Schema x (y :> z :> f :> h))
-	, Layable x (Schema y (z :> f :> h))
-	, Layable y (Schema z (f :> h))
-	, Layable z (Schema f h)
+	( Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f :> h))
+	, Layable u (Schematic Monad v (w :> x :> y :> z :> f :> h))
+	, Layable v (Schematic Monad w (x :> y :> z :> f :> h))
+	, Layable w (Schematic Monad x (y :> z :> f :> h))
+	, Layable x (Schematic Monad y (z :> f :> h))
+	, Layable y (Schematic Monad z (f :> h))
+	, Layable z (Schematic Monad f h)
 	, Layable f h
 	) => Adaptable h (t :> u :> v :> w :> x :> y :> z :> f :> h) where
 	adapt = lay . lay . lay . lay . lay . lay . lay . lay
 
 instance
-	( Layable t (Schema u (v :> w :> x :> y :> z :> f :> h))
-	, Layable u (Schema v (w :> x :> y :> z :> f :> h))
-	, Layable v (Schema w (x :> y :> z :> f :> h))
-	, Layable w (Schema x (y :> z :> f :> h))
-	, Layable x (Schema y (z :> f :> h))
-	, Layable y (Schema z (f :> h))
-	, Layable z (Schema f h)
+	( Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f :> h))
+	, Layable u (Schematic Monad v (w :> x :> y :> z :> f :> h))
+	, Layable v (Schematic Monad w (x :> y :> z :> f :> h))
+	, Layable w (Schematic Monad x (y :> z :> f :> h))
+	, Layable x (Schematic Monad y (z :> f :> h))
+	, Layable y (Schematic Monad z (f :> h))
+	, Layable z (Schematic Monad f h)
 	, Wrappable f h
 	) => Adaptable f (t :> u :> v :> w :> x :> y :> z :> f :> h) where
 	adapt = lay . lay . lay . lay . lay . lay . lay . wrap

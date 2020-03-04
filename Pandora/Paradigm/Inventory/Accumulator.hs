@@ -5,7 +5,8 @@ module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, ga
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Category ((.))
@@ -14,6 +15,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Divariant (($))
+import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 
@@ -33,12 +35,13 @@ instance Semigroup e => Bindable (Accumulator e) where
 	Accumulator (e :*: x) >>= f = let (e' :*: b) = unwrap $ f x in
 		Accumulator $ e + e':*: b
 
+type instance Schematic Monad (Accumulator e) u = UT 'Co 'Co ((:*:) e) u
+
 instance Interpreted (Accumulator e) where
 	type Primary (Accumulator e) a = e :*: a
 	unwrap (Accumulator x) = x
 
 instance Monoid e => Transformer (Accumulator e) where
-	type Schema (Accumulator e) u = UT 'Co 'Co ((:*:) e) u
 	lay x = T . UT $ (zero :*:) <$> x
 	wrap = T . UT . point . unwrap
 

@@ -144,3 +144,4 @@
 # 0.2.3
 * Define `Category` type class with `identity` and `.` methods
 * Change `>->` signature: `a -> b` to `v a d` and `c -> d` to `v c d`
+* Extract `Schema` from `Transformer` type class as `Schematic` type family

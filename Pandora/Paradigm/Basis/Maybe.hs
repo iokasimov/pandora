@@ -2,7 +2,8 @@ module Pandora.Paradigm.Basis.Maybe (Maybe (..), Optional, maybe, nothing) where
 
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>)(T))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>)(T))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Category ((.))
@@ -87,12 +88,13 @@ maybe :: b -> (a -> b) -> Maybe a -> b
 maybe x _ Nothing = x
 maybe _ f (Just y) = f y
 
+type instance Schematic Monad Maybe u = UT 'Co 'Co Maybe u
+
 instance Interpreted Maybe where
 	type Primary Maybe a = Maybe a
 	unwrap x = x
 
 instance Transformer Maybe where
-	type Schema Maybe u = UT 'Co 'Co Maybe u
 	lay x = T . UT $ Just <$> x
 	wrap x = T. UT . point $ x
 

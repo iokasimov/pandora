@@ -5,7 +5,8 @@ module Pandora.Paradigm.Inventory.State (State (..), Stateful, current, modify, 
 import Pandora.Core.Functor (Variant (Co), type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (TUV))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
@@ -53,8 +54,9 @@ instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
 	unwrap (State x) = x
 
+type instance Schematic Monad (State s) u = TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)
+
 instance Transformer (State s) where
-	type Schema (State s) u = TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)
 	lay x = T . TUV $ \s -> (s :*:) <$> x
 	wrap x = T . TUV $ point <$> unwrap x
 

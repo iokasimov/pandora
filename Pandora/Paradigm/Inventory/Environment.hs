@@ -5,7 +5,8 @@ module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (Schema, lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Pattern.Category (identity, (.))
@@ -36,12 +37,13 @@ instance Bindable (Environment e) where
 
 instance Monad (Environment e) where
 
+type instance Schematic Monad (Environment e) u = TU 'Co 'Co ((->) e) u
+
 instance Interpreted (Environment e) where
 	type Primary (Environment e) a = (->) e a
 	unwrap (Environment x) = x
 
 instance Transformer (Environment e) where
-	type Schema (Environment e) u = TU 'Co 'Co ((->) e) u
 	lay = T . TU . (!)
 	wrap x = T. TU $ point <$> unwrap x
 

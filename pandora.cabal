@@ -55,6 +55,7 @@ library
     Pandora.Paradigm.Controlflow.Joint
     Pandora.Paradigm.Controlflow.Joint.Interpreted
     Pandora.Paradigm.Controlflow.Joint.Transformer
+    Pandora.Paradigm.Controlflow.Joint.Schematic
     Pandora.Paradigm.Controlflow.Joint.Adaptable
     Pandora.Paradigm.Controlflow.Joint.Schemes
     Pandora.Paradigm.Controlflow.Joint.Schemes.TU
