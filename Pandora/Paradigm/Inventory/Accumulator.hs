@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, ga
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
@@ -41,9 +41,9 @@ instance Interpreted (Accumulator e) where
 	type Primary (Accumulator e) a = e :*: a
 	unwrap (Accumulator x) = x
 
-instance Monoid e => Transformer (Accumulator e) where
-	lay x = T . UT $ (zero :*:) <$> x
-	wrap = T . UT . point . unwrap
+instance Monoid e => Monadic (Accumulator e) where
+	lay x = TM . UT $ (zero :*:) <$> x
+	wrap = TM . UT . point . unwrap
 
 type Accumulated e t = Adaptable (Accumulator e) t
 

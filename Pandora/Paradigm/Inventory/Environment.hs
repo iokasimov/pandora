@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>) (T))
+import Pandora.Paradigm.Controlflow.Joint.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
@@ -43,9 +43,9 @@ instance Interpreted (Environment e) where
 	type Primary (Environment e) a = (->) e a
 	unwrap (Environment x) = x
 
-instance Transformer (Environment e) where
-	lay = T . TU . (!)
-	wrap x = T. TU $ point <$> unwrap x
+instance Monadic (Environment e) where
+	lay = TM . TU . (!)
+	wrap x = TM. TU $ point <$> unwrap x
 
 type Configured e = Adaptable (Environment e)
 

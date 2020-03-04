@@ -3,7 +3,7 @@ module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), Failable, conclusion,
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Pattern.Category ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>)(T))
+import Pandora.Paradigm.Controlflow.Joint.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
@@ -77,9 +77,9 @@ instance Interpreted (Conclusion e) where
 
 type instance Schematic Monad (Conclusion e) u = UT 'Co 'Co (Conclusion e) u
 
-instance Transformer (Conclusion e) where
-	lay x = T . UT $ Success <$> x
-	wrap x = T . UT . point $ x
+instance Monadic (Conclusion e) where
+	lay x = TM . UT $ Success <$> x
+	wrap x = TM . UT . point $ x
 
 type Failable e = Adaptable (Conclusion e)
 

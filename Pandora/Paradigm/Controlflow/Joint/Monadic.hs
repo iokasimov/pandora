@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (..), (:>) (..)) where
+module Pandora.Paradigm.Controlflow.Joint.Monadic (Monadic (..), (:>) (..)) where
 
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
@@ -18,44 +18,41 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (($))
 
--- type family Schematic (c :: (* -> *) -> k) (t :: * -> *) (u :: * -> *) = (r :: * -> *) | r -> c t u
-
-class Interpreted t => Transformer t where
+class Interpreted t => Monadic t where
 	{-# MINIMAL lay, wrap #-}
-
 	lay :: Covariant u => u ~> t :> u
 	wrap :: Pointable u => t ~> t :> u
 
 infixr 3 :>
-newtype (:>) t u a = T { trans :: Schematic Monad t u a }
+newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 
 instance Covariant (Schematic Monad t u) => Covariant (t :> u) where
-	f <$> T x = T $ f <$> x
+	f <$> TM x = TM $ f <$> x
 
 instance Pointable (Schematic Monad t u) => Pointable (t :> u) where
-	point = T . point
+	point = TM . point
 
 instance Extractable (Schematic Monad t u) => Extractable (t :> u) where
-	extract = extract . trans
+	extract = extract . tm
 
 instance Applicative (Schematic Monad t u) => Applicative (t :> u) where
-	T f <*> T x = T $ f <*> x
+	TM f <*> TM x = TM $ f <*> x
 
 instance Alternative (Schematic Monad t u) => Alternative (t :> u) where
-	T x <+> T y = T $ x <+> y
+	TM x <+> TM y = TM $ x <+> y
 
 instance Traversable (Schematic Monad t u) => Traversable (t :> u) where
-	T x ->> f = T <$> x ->> f
+	TM x ->> f = TM <$> x ->> f
 
 instance Distributive (Schematic Monad t u) => Distributive (t :> u) where
-	x >>- f = T $ x >>- trans . f
+	x >>- f = TM $ x >>- tm . f
 
 instance Bindable (Schematic Monad t u) => Bindable (t :> u) where
-	T x >>= f = T $ x >>= trans . f
+	TM x >>= f = TM $ x >>= tm . f
 
 instance Extendable (Schematic Monad t u) => Extendable (t :> u) where
-	T x =>> f = T $ x =>> f . T
+	TM x =>> f = TM $ x =>> f . TM
 
-instance (Interpreted (Schematic Monad t u), Transformer t) => Interpreted (t :> u) where
+instance (Interpreted (Schematic Monad t u), Monadic t) => Interpreted (t :> u) where
 	type Primary (t :> u) a = Primary (Schematic Monad t u) a
-	unwrap (T x) = unwrap x
+	unwrap (TM x) = unwrap x

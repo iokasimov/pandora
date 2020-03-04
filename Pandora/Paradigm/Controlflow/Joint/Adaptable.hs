@@ -7,15 +7,15 @@ import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Paradigm.Controlflow.Joint.Transformer (Transformer (lay, wrap), (:>))
+import Pandora.Paradigm.Controlflow.Joint.Monadic (Monadic (lay, wrap), (:>))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 
 class Adaptable eff schema where
 	{-# MINIMAL adapt #-}
 	adapt :: eff ~> schema
 
-type Layable t u = (Transformer t, Covariant u)
-type Wrappable t u = (Transformer t, Pointable u)
+type Layable t u = (Monadic t, Covariant u)
+type Wrappable t u = (Monadic t, Pointable u)
 
 instance Adaptable t t where
 	adapt = identity
