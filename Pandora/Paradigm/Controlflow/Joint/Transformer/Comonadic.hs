@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pandora.Paradigm.Controlflow.Joint.Comonadic (Comonadic (..), (:<) (..),) where
+module Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted)

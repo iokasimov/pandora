@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, ga
 import Pandora.Core.Functor (Variant (Co))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
-import Pandora.Paradigm.Controlflow.Joint.Monadic (Monadic (lay, wrap), (:>) (TM))
+import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))

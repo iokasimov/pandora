@@ -147,3 +147,4 @@
 * Extract `Schema` from `Transformer` type class as `Schematic` type family
 * Rename `Transformer` type class to `Monadic`
 * Define `Comonadic` type class for comonad transformers
+* Define `Transformer` umbrella module and type family

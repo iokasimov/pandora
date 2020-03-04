@@ -7,8 +7,8 @@ import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Paradigm.Controlflow.Joint.Monadic (Monadic (lay, wrap), (:>))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
+import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>))
 
 class Adaptable eff schema where
 	{-# MINIMAL adapt #-}

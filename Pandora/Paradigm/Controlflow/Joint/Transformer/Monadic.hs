@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pandora.Paradigm.Controlflow.Joint.Monadic (Monadic (..), (:>) (..)) where
+module Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (..), (:>) (..)) where
 
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))

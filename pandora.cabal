@@ -54,8 +54,9 @@ library
     -- Typeclassess about functor junctions
     Pandora.Paradigm.Controlflow.Joint
     Pandora.Paradigm.Controlflow.Joint.Interpreted
-    Pandora.Paradigm.Controlflow.Joint.Monadic
-    Pandora.Paradigm.Controlflow.Joint.Comonadic
+    Pandora.Paradigm.Controlflow.Joint.Transformer
+    Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic
+    Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic
     Pandora.Paradigm.Controlflow.Joint.Schematic
     Pandora.Paradigm.Controlflow.Joint.Adaptable
     Pandora.Paradigm.Controlflow.Joint.Schemes
