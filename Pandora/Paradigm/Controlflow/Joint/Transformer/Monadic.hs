@@ -53,6 +53,6 @@ instance Bindable (Schematic Monad t u) => Bindable (t :> u) where
 instance Extendable (Schematic Monad t u) => Extendable (t :> u) where
 	TM x =>> f = TM $ x =>> f . TM
 
-instance (Interpreted (Schematic Monad t u), Monadic t) => Interpreted (t :> u) where
+instance (Interpreted (Schematic Monad t u)) => Interpreted (t :> u) where
 	type Primary (t :> u) a = Primary (Schematic Monad t u) a
 	unwrap (TM x) = unwrap x

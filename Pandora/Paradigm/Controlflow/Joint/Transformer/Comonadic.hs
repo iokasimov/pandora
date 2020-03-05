@@ -3,11 +3,20 @@
 module Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
 import Pandora.Core.Transformation (type (~>))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted)
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Pattern.Functor.Covariant (Covariant)
-import Pandora.Pattern.Functor.Extractable (Extractable)
+import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Divariant (($))
 
 class Interpreted t => Comonadic t where
 	{-# MINIMAL flick, bring #-}
@@ -16,3 +25,34 @@ class Interpreted t => Comonadic t where
 
 infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
+
+instance Covariant (Schematic Comonad t u) => Covariant (t :< u) where
+	f <$> TC x = TC $ f <$> x
+
+instance Pointable (Schematic Comonad t u) => Pointable (t :< u) where
+	point = TC . point
+
+instance Extractable (Schematic Comonad t u) => Extractable (t :< u) where
+	extract = extract . tc
+
+instance Applicative (Schematic Comonad t u) => Applicative (t :< u) where
+	TC f <*> TC x = TC $ f <*> x
+
+instance Alternative (Schematic Comonad t u) => Alternative (t :< u) where
+	TC x <+> TC y = TC $ x <+> y
+
+instance Traversable (Schematic Comonad t u) => Traversable (t :< u) where
+	TC x ->> f = TC <$> x ->> f
+
+instance Distributive (Schematic Comonad t u) => Distributive (t :< u) where
+	x >>- f = TC $ x >>- tc . f
+
+instance Bindable (Schematic Comonad t u) => Bindable (t :< u) where
+	TC x >>= f = TC $ x >>= tc . f
+
+instance Extendable (Schematic Comonad t u) => Extendable (t :< u) where
+	TC x =>> f = TC $ x =>> f . TC
+
+instance (Interpreted (Schematic Comonad t u)) => Interpreted (t :< u) where
+	type Primary (t :< u) a = Primary (Schematic Comonad t u) a
+	unwrap (TC x) = unwrap x
