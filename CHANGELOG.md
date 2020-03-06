@@ -149,3 +149,4 @@
 * Define `Comonadic` type class for comonad transformers
 * Define `Transformer` umbrella module and type family
 * Rename `:<` data constructor to `Twister` to not confuse it with comonad transformer type operator
+* Use `UT` joint scheme for `Stack` data structure
