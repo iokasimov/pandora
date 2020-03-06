@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Basis.Twister (Twister ((:<)), untwist)
+import Pandora.Paradigm.Basis.Twister (Twister (Twister), untwist)
 import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Pattern.Category ((.))
@@ -26,7 +26,7 @@ instance Covariant Stack where
 	f <$> Stack stack = Stack $ f <$$> stack
 
 instance Pointable Stack where
-	point x = Stack . Just $ x :< Nothing
+	point x = Stack . Just $ Twister x Nothing
 
 instance Alternative Stack where
 	Stack stack <+> Stack stack' = Stack $ stack <+> stack'
@@ -45,7 +45,7 @@ instance Interpreted Stack where
 	unwrap (Stack stack) = stack
 
 push :: a -> Stack a -> Stack a
-push x (Stack stack) = Stack $ ((:<) x . Just <$> stack) <+> (point . point) x
+push x (Stack stack) = Stack $ (Twister x . Just <$> stack) <+> (point . point) x
 
 top :: Stack ~> Maybe
 top (Stack stack) = extract <$> stack
@@ -55,8 +55,8 @@ pop (Stack stack) = Stack $ stack >>= untwist
 
 filter :: Predicate a -> Stack a -> Stack a
 filter (Predicate p) = Stack . fold empty
-	(\now new -> p now ? Just (now :< new) $ new)
+	(\now new -> p now ? Just (Twister now new) $ new)
 
 -- | Transform any traversable structure into a stack
 linearize :: Traversable t => t ~> Stack
-linearize = Stack . fold Nothing (\x -> Just . (:<) x)
+linearize = Stack . fold Nothing (\x -> Just . Twister x)

@@ -3,7 +3,7 @@ module Pandora.Paradigm.Structure.Specific.Graph (Graph, loose) where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Basis.Edges (Edges (Empty, Overlay))
-import Pandora.Paradigm.Basis.Twister (Twister ((:<)))
+import Pandora.Paradigm.Basis.Twister (Twister (Twister))
 import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
@@ -26,4 +26,4 @@ instance Interpreted Graph where
 
 -- | Transform any traversable structure into all loose edges graph
 loose :: Traversable t => t ~> Graph
-loose = Graph . fold Empty (\x -> Overlay . (:<) x)
+loose = Graph . fold Empty (\x -> Overlay . Twister x)
