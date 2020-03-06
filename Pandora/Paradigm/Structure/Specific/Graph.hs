@@ -15,14 +15,14 @@ import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unw
 newtype Graph a = Graph (Edges :. Twister Edges := a)
 
 instance Covariant Graph where
-	f <$> Graph stack = Graph $ f <$$> stack
+	f <$> Graph g = Graph $ f <$$> g
 
 instance Traversable Graph where
-	Graph stack ->> f = Graph <$> stack ->>> f
+	Graph g ->> f = Graph <$> g ->>> f
 
 instance Interpreted Graph where
 	type Primary Graph a = Edges :. Twister Edges := a
-	unwrap (Graph stack) = stack
+	unwrap (Graph g) = g
 
 -- | Transform any traversable structure into all loose edges graph
 loose :: Traversable t => t ~> Graph

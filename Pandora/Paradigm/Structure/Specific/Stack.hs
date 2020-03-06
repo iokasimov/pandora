@@ -26,10 +26,10 @@ instance Covariant Stack where
 	f <$> Stack stack = Stack $ f <$$> stack
 
 instance Pointable Stack where
-	point x = Stack . Just $ Twister x Nothing
+	point = Stack . Just . point
 
 instance Alternative Stack where
-	Stack stack <+> Stack stack' = Stack $ stack <+> stack'
+	Stack x <+> Stack y = Stack $ x <+> y
 
 instance Avoidable Stack where
 	empty = Stack Nothing
