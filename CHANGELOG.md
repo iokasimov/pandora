@@ -153,3 +153,4 @@
 * Remove `Variant` type in favor of `Covariant` and `Contravariant` constraints in joint schemes
 * Add `Covariant` constraint on schema parameter in `Adaptable` type class
 * Rename `Storage` type to `Store`
+* Define `Interpreted`, `Schematic` and `Comonadic` instances for `Store` type

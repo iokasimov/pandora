@@ -73,7 +73,7 @@ library
     Pandora.Paradigm.Inventory.Environment
     Pandora.Paradigm.Inventory.Optics
     Pandora.Paradigm.Inventory.State
-    Pandora.Paradigm.Inventory.Storage
+    Pandora.Paradigm.Inventory.Store
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
     Pandora.Paradigm.Structure.Cartesian
