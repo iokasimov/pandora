@@ -4,8 +4,6 @@ infixr 0 :=, <-|, |->
 infixr 1 .:, :.
 infixr 2 ::|:., ::|.:, ::|::
 
-data Variant = Co | Contra
-
 -- | Parameter application
 type (:=) t a = t a
 

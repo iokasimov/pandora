@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Inventory.State (State (..), Stateful, current, modify, replace, fold, find) where
 
-import Pandora.Core.Functor (Variant (Co), type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
@@ -54,7 +54,7 @@ instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
 	unwrap (State x) = x
 
-type instance Schematic Monad (State s) u = TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)
+type instance Schematic Monad (State s) u = TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)
 
 instance Monadic (State s) where
 	lay x = TM . TUV $ \s -> (s :*:) <$> x
@@ -62,19 +62,19 @@ instance Monadic (State s) where
 
 type Stateful s = Adaptable (State s)
 
-instance Covariant u => Covariant (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
+instance Covariant u => Covariant (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
 	f <$> TUV x = TUV $ \old -> f <$$> x old
 
-instance Bindable u => Applicative (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
+instance Bindable u => Applicative (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
 	TUV f <*> TUV x = TUV $ \old -> f old >>= \(new :*: g) -> g <$$> x new
 
-instance Pointable u => Pointable (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
+instance Pointable u => Pointable (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
 	point x = TUV $ \s -> point $ s :*: x
 
-instance Bindable u => Bindable (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
+instance Bindable u => Bindable (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
 	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . unwrap . f $ y
 
-instance Monad u => Monad (TUV 'Co 'Co 'Co ((->) s) u ((:*:) s)) where
+instance Monad u => Monad (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
 
 current :: (Covariant t, Stateful s t) => t s
 current = adapt $ State delta

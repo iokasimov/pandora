@@ -2,7 +2,6 @@
 
 module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
-import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
@@ -37,7 +36,7 @@ instance Bindable (Environment e) where
 
 instance Monad (Environment e) where
 
-type instance Schematic Monad (Environment e) u = TU 'Co 'Co ((->) e) u
+type instance Schematic Monad (Environment e) u = TU Covariant Covariant ((->) e) u
 
 instance Interpreted (Environment e) where
 	type Primary (Environment e) a = (->) e a
@@ -49,16 +48,16 @@ instance Monadic (Environment e) where
 
 type Configured e = Adaptable (Environment e)
 
-instance Covariant u => Covariant (TU 'Co 'Co ((->) e) u) where
+instance Covariant u => Covariant (TU Covariant Covariant ((->) e) u) where
 	f <$> TU x = TU $ \r -> f <$> x r
 
-instance (Covariant u, Pointable u) => Pointable (TU 'Co 'Co ((->) e) u) where
+instance (Covariant u, Pointable u) => Pointable (TU Covariant Covariant ((->) e) u) where
 	point = TU . point . point
 
-instance Applicative u => Applicative (TU 'Co 'Co ((->) e) u) where
+instance Applicative u => Applicative (TU Covariant Covariant ((->) e) u) where
 	TU f <*> TU x = TU $ \r -> f r <*> x r
 
-instance Bindable u => Bindable (TU 'Co 'Co ((->) e) u) where
+instance Bindable u => Bindable (TU Covariant Covariant ((->) e) u) where
 	TU x >>= f = TU $ \e -> x e >>= ($ e) . unwrap . f
 
 env :: (Covariant t, Configured e t) => t e

@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Basis.Maybe (Maybe (..), Optional, maybe, nothing) where
 
-import Pandora.Core.Functor (Variant (Co))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
@@ -88,7 +87,7 @@ maybe :: b -> (a -> b) -> Maybe a -> b
 maybe x _ Nothing = x
 maybe _ f (Just y) = f y
 
-type instance Schematic Monad Maybe u = UT 'Co 'Co Maybe u
+type instance Schematic Monad Maybe u = UT Covariant Covariant Maybe u
 
 instance Interpreted Maybe where
 	type Primary Maybe a = Maybe a
@@ -100,19 +99,19 @@ instance Monadic Maybe where
 
 type Optional = Adaptable Maybe
 
-instance Covariant u => Covariant (UT 'Co 'Co Maybe u) where
+instance Covariant u => Covariant (UT Covariant Covariant Maybe u) where
 	f <$> UT x = UT $ f <$$> x
 
-instance Applicative u => Applicative (UT 'Co 'Co Maybe u) where
+instance Applicative u => Applicative (UT Covariant Covariant Maybe u) where
 	UT f <*> UT x = UT $ apply <$> f <*> x
 
-instance Pointable u => Pointable (UT 'Co 'Co Maybe u) where
+instance Pointable u => Pointable (UT Covariant Covariant Maybe u) where
 	point = UT . point . point
 
-instance (Pointable u, Bindable u) => Bindable (UT 'Co 'Co Maybe u) where
+instance (Pointable u, Bindable u) => Bindable (UT Covariant Covariant Maybe u) where
 	UT x >>= f = UT $ x >>= maybe (point Nothing) (unwrap . f)
 
-instance Monad u => Monad (UT 'Co 'Co Maybe u) where
+instance Monad u => Monad (UT Covariant Covariant Maybe u) where
 
 nothing :: (Covariant t, Optional t) => t a
 nothing = adapt Nothing

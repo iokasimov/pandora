@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), Failable, conclusion, fail, failure) where
 
-import Pandora.Core.Functor (Variant (Co))
 import Pandora.Pattern.Category ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
@@ -75,7 +74,7 @@ instance Interpreted (Conclusion e) where
 	type Primary (Conclusion e) a = Conclusion e a
 	unwrap x = x
 
-type instance Schematic Monad (Conclusion e) u = UT 'Co 'Co (Conclusion e) u
+type instance Schematic Monad (Conclusion e) u = UT Covariant Covariant (Conclusion e) u
 
 instance Monadic (Conclusion e) where
 	lay x = TM . UT $ Success <$> x
@@ -83,19 +82,19 @@ instance Monadic (Conclusion e) where
 
 type Failable e = Adaptable (Conclusion e)
 
-instance Covariant u => Covariant (UT 'Co 'Co (Conclusion e) u) where
+instance Covariant u => Covariant (UT Covariant Covariant (Conclusion e) u) where
 	f <$> UT x = UT $ f <$$> x
 
-instance Applicative u => Applicative (UT 'Co 'Co (Conclusion e) u) where
+instance Applicative u => Applicative (UT Covariant Covariant (Conclusion e) u) where
 	UT f <*> UT x = UT $ apply <$> f <*> x
 
-instance Pointable u => Pointable (UT 'Co 'Co (Conclusion e) u) where
+instance Pointable u => Pointable (UT Covariant Covariant (Conclusion e) u) where
 	point = UT . point . point
 
-instance (Pointable u, Bindable u) => Bindable (UT 'Co 'Co (Conclusion e) u) where
+instance (Pointable u, Bindable u) => Bindable (UT Covariant Covariant (Conclusion e) u) where
 	UT x >>= f = UT $ x >>= conclusion (point . Failure) (unwrap . f)
 
-instance Monad u => Monad (UT 'Co 'Co (Conclusion e) u) where
+instance Monad u => Monad (UT Covariant Covariant (Conclusion e) u) where
 
 failure :: (Covariant t, Failable e t) => e -> t a
 failure = adapt . Failure

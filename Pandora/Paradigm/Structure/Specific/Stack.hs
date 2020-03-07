@@ -2,7 +2,6 @@
 
 module Pandora.Paradigm.Structure.Specific.Stack (Stack, push, top, pop, filter, linearize) where
 
-import Pandora.Core.Functor (Variant (Co))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
@@ -22,24 +21,24 @@ import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid ((?))
 
 -- | Linear data structure that serves as a collection of elements
-type Stack = UT 'Co 'Co (Twister Maybe) Maybe
+type Stack = UT Covariant Covariant (Twister Maybe) Maybe
 
-instance Covariant (UT 'Co 'Co (Twister Maybe) Maybe) where
+instance Covariant (UT Covariant Covariant (Twister Maybe) Maybe) where
 	f <$> UT stack = UT $ f <$$> stack
 
-instance Pointable (UT 'Co 'Co (Twister Maybe) Maybe) where
+instance Pointable (UT Covariant Covariant (Twister Maybe) Maybe) where
 	point = UT . Just . point
 
-instance Alternative (UT 'Co 'Co (Twister Maybe) Maybe) where
+instance Alternative (UT Covariant Covariant (Twister Maybe) Maybe) where
 	UT x <+> UT y = UT $ x <+> y
 
-instance Avoidable (UT 'Co 'Co (Twister Maybe) Maybe) where
+instance Avoidable (UT Covariant Covariant (Twister Maybe) Maybe) where
 	empty = UT Nothing
 
-instance Applicative (UT 'Co 'Co (Twister Maybe) Maybe) where
+instance Applicative (UT Covariant Covariant (Twister Maybe) Maybe) where
 	UT f <*> UT x = UT $ f <**> x
 
-instance Traversable (UT 'Co 'Co (Twister Maybe) Maybe) where
+instance Traversable (UT Covariant Covariant (Twister Maybe) Maybe) where
 	UT stack ->> f = UT <$> stack ->>> f
 
 push :: a -> Stack a -> Stack a
