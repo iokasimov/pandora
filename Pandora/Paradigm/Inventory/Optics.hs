@@ -6,21 +6,21 @@ import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (unwrap))
 import Pandora.Paradigm.Inventory.State (State (State))
-import Pandora.Paradigm.Inventory.Storage (Storage (Storage), access, position, retrofit)
+import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Divariant (($))
 
-instance Adjoint (Storage s) (State s) where
-	v -| f = State $ \s -> (:*:) s . f . Storage $ s :*: (v !)
-	Storage (s :*: f) |- g = extract . unwrap % s . g $ f s
+instance Adjoint (Store s) (State s) where
+	v -| f = State $ \s -> (:*:) s . f . Store $ s :*: (v !)
+	Store (s :*: f) |- g = extract . unwrap % s . g $ f s
 
 infixr 0 :-.
 type (:-.) src tgt = Lens src tgt
 
-type Lens src tgt = src -> Storage tgt src
+type Lens src tgt = src -> Store tgt src
 
 -- | Lens composition infix operator
 (|>) :: Lens src btw -> Lens btw tgt -> Lens src tgt
