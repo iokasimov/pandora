@@ -60,5 +60,5 @@ instance Applicative u => Applicative (TU Covariant Covariant ((->) e) u) where
 instance Bindable u => Bindable (TU Covariant Covariant ((->) e) u) where
 	TU x >>= f = TU $ \e -> x e >>= ($ e) . unwrap . f
 
-env :: (Covariant t, Configured e t) => t e
+env :: Configured e t => t e
 env = adapt $ Environment identity

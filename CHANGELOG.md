@@ -151,3 +151,4 @@
 * Rename `:<` data constructor to `Twister` to not confuse it with comonad transformer type operator
 * Use `UT` joint scheme for `Stack` and `Graph` data structures
 * Remove `Variant` type in favor of `Covariant` and `Contravariant` constraints in joint schemes
+* Add `Covariant` constraint on schema parameter in `Adaptable` type class

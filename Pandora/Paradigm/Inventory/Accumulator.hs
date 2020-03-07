@@ -59,5 +59,5 @@ instance (Pointable u, Monoid e) => Pointable (UT Covariant Covariant ((:*:) e) 
 instance (Semigroup e, Pointable u, Bindable u) => Bindable (UT Covariant Covariant ((:*:) e) u) where
 	UT x >>= f = UT $ x >>= \(acc :*: v) -> (\(acc' :*: y) -> (acc + acc' :*: y)) <$> unwrap (f v)
 
-gather :: (Covariant t, Accumulated e t) => e -> t ()
+gather :: Accumulated e t => e -> t ()
 gather x = adapt . Accumulator $ x :*: ()

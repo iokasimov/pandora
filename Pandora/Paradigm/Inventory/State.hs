@@ -76,11 +76,11 @@ instance Bindable u => Bindable (TUV Covariant Covariant Covariant ((->) s) u ((
 
 instance Monad u => Monad (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
 
-current :: (Covariant t, Stateful s t) => t s
+current :: Stateful s t => t s
 current = adapt $ State delta
 
-modify :: (Covariant t, Stateful s t) => (s -> s) -> t ()
+modify :: Stateful s t => (s -> s) -> t ()
 modify f = adapt $ State $ \s -> f s :*: ()
 
-replace :: (Covariant t, Stateful s t) => s -> t ()
+replace :: Stateful s t => s -> t ()
 replace s = adapt $ State $ \_ -> s :*: ()

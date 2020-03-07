@@ -113,5 +113,5 @@ instance (Pointable u, Bindable u) => Bindable (UT Covariant Covariant Maybe u) 
 
 instance Monad u => Monad (UT Covariant Covariant Maybe u) where
 
-nothing :: (Covariant t, Optional t) => t a
+nothing :: Optional t => t a
 nothing = adapt Nothing

@@ -1,5 +1,6 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), Failable, conclusion, fail, failure) where
 
+import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
@@ -66,7 +67,7 @@ conclusion :: (e -> r) -> (a -> r) -> Conclusion e a -> r
 conclusion f _ (Failure x) = f x
 conclusion _ s (Success x) = s x
 
-fail :: (e -> r) -> Conclusion e a -> Conclusion r a
+fail :: (e -> r) -> Conclusion e ~> Conclusion r
 fail f (Failure x) = Failure $ f x
 fail _ (Success y) = Success y
 
@@ -96,5 +97,5 @@ instance (Pointable u, Bindable u) => Bindable (UT Covariant Covariant (Conclusi
 
 instance Monad u => Monad (UT Covariant Covariant (Conclusion e) u) where
 
-failure :: (Covariant t, Failable e t) => e -> t a
+failure :: Failable e t => e -> t a
 failure = adapt . Failure
