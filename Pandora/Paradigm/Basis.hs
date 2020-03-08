@@ -22,7 +22,7 @@ import Pandora.Paradigm.Basis.Constant as Exports
 import Pandora.Paradigm.Basis.Identity as Exports
 
 import Pandora.Core.Morphism ((!))
-import Pandora.Core.Transformation (type (~>))
+import Pandora.Core.Functor (type (~>))
 
 note :: e -> Maybe ~> Conclusion e
 note x = maybe (Failure x) Success

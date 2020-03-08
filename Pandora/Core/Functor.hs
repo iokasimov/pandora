@@ -1,6 +1,6 @@
 module Pandora.Core.Functor where
 
-infixr 0 :=, <-|, |->
+infixr 0 :=, <-|, |->, ~>
 infixr 1 .:, :.
 infixr 2 ::|:., ::|.:, ::|::
 
@@ -18,6 +18,9 @@ type (|->) a t = a -> t a
 
 -- | Algebra's type operator
 type (<-|) a t = t a -> a
+
+-- | Natural transformation
+type (~>) t u = forall a . t a -> u a
 
 type (::|:.) p a b = p (p a b) b
 type (::|.:) p a b = p a (p a b)

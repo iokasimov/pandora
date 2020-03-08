@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Specific.Graph (Graph, loose) where
 
-import Pandora.Core.Transformation (type (~>))
+import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Divariant (($))
@@ -15,10 +15,10 @@ import Pandora.Paradigm.Inventory.State (fold)
 -- | Directed acyclic graph structure
 type Graph = UT Covariant Covariant (Twister Edges) Edges
 
-instance Covariant (UT Covariant Covariant (Twister Edges) Edges) where
+instance Covariant Graph where
 	f <$> UT g = UT $ f <$$> g
 
-instance Traversable (UT Covariant Covariant (Twister Edges) Edges) where
+instance Traversable Graph where
 	UT g ->> f = UT <$> g ->>> f
 
 -- | Transform any traversable structure into all loose edges graph

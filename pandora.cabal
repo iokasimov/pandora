@@ -23,7 +23,6 @@ library
     Pandora.Core
     Pandora.Core.Functor
     Pandora.Core.Morphism
-    Pandora.Core.Transformation
 
     Pandora.Paradigm
     -- Basic constructions

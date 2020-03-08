@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), Failable, conclusion, fail, failure) where
 
-import Pandora.Core.Transformation (type (~>))
+import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))

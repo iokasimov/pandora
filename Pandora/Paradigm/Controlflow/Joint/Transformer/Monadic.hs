@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (..), (:>) (..)) where
 
-import Pandora.Core.Transformation (type (~>))
+import Pandora.Core.Functor (type (~>))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Pattern.Category ((.))

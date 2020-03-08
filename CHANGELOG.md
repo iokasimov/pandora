@@ -156,3 +156,4 @@
 * Define `Interpreted`, `Schematic` and `Comonadic` instances for `Store` type
 
 # 0.2.4
+* Remove `Pandora.Core.Transformation` module and move `~>` to `Functor` module

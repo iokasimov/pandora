@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (..)) where
 
-import Pandora.Core.Transformation (type (~>))
+import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)

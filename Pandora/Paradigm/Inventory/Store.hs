@@ -2,9 +2,8 @@
 
 module Pandora.Paradigm.Inventory.Store (Store (..), position, access, retrofit) where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (<-|))
+import Pandora.Core.Functor (type (:.), type (:=), type (<-|), type (~>))
 import Pandora.Core.Morphism ((%))
-import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
