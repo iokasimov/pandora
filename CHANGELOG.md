@@ -154,3 +154,5 @@
 * Add `Covariant` constraint on schema parameter in `Adaptable` type class
 * Rename `Storage` type to `Store`
 * Define `Interpreted`, `Schematic` and `Comonadic` instances for `Store` type
+
+# 0.2.4
