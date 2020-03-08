@@ -1,10 +1,12 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Paradigm.Inventory.Store (Store (..), position, access, retrofit) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (<-|))
 import Pandora.Core.Morphism ((%))
 import Pandora.Core.Transformation (type (~>))
 import Pandora.Pattern.Category ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -18,14 +20,14 @@ import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flic
 newtype Store p a = Store ((:*:) p :. (->) p := a)
 
 instance Covariant (Store p) where
-	g <$> Store (p :*: f) = Store . (:*:) p $ (g .) f
+	f <$> Store (p :*: x) = Store . (:*:) p $ f <$> x
 
 instance Extractable (Store p) where
 	extract (Store (p :*: f)) = f p
 
 instance Extendable (Store p) where
-	Store (old :*: f) =>> g = Store . (:*:) old
-		$ \new -> g . Store $ new :*: f
+	Store (old :*: x) =>> f = Store . (:*:) old
+		$ \new -> f <$> Store $ new :*: x
 
 instance Comonad (Store p) where
 
@@ -33,11 +35,21 @@ instance Interpreted (Store p) where
 	type Primary (Store p) a = (:*:) p :. (->) p := a
 	unwrap (Store x) = x
 
-type instance Schematic Comonad (Store p) u = TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)
+type instance Schematic Comonad (Store p) u =
+	TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)
 
 instance Comonadic (Store p) where
 	flick (TC (TUV (p :*: f))) = ($ p) <$> f
 	bring (TC (TUV (p :*: f))) = Store $ p :*: extract f
+
+instance Covariant u => Covariant (TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+	f <$> TUV (p :*: x) = TUV . (:*:) p $ f <$$> x
+
+instance Extractable u => Extractable (TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+	extract (TUV (p :*: x)) = extract x p
+
+instance Extendable u => Extendable (TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+	TUV (old :*: x) =>> f = TUV . (:*:) old $ x =>> (\x' new -> f . TUV . (:*:) new $ x')
 
 position :: Store p a -> p
 position (Store (p :*: _)) = p

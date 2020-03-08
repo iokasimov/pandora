@@ -54,7 +54,8 @@ instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
 	unwrap (State x) = x
 
-type instance Schematic Monad (State s) u = TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)
+type instance Schematic Monad (State s) u =
+	TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)
 
 instance Monadic (State s) where
 	lay x = TM . TUV $ \s -> (s :*:) <$> x
