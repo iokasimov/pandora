@@ -19,6 +19,7 @@ import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Basis.Twister (Twister (Twister), untwist)
 import Pandora.Paradigm.Inventory.State (fold)
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (unwrap)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 
 -- | Linear data structure that serves as a collection of elements
@@ -46,8 +47,9 @@ instance Setoid a => Setoid (Stack a) where
 	UT ls == UT rs = ls == rs
 
 instance Semigroup (Stack a) where
-	UT (Just (Twister x xs)) + UT ys = point x + (UT xs + UT ys)
 	UT Nothing + UT ys = UT ys
+	UT (Just (Twister x xs)) + UT ys = UT . Just . Twister x . unwrap
+		$ UT @Covariant @Covariant xs + UT @Covariant @Covariant ys
 
 push :: a -> Stack a -> Stack a
 push x (UT stack) = UT $ (Twister x . Just <$> stack) <+> (point . point) x
