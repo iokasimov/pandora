@@ -3,11 +3,6 @@
 module Pandora.Paradigm.Structure.Specific.Stack (Stack, push, top, pop, filter, linearize) where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Basis.Twister (Twister (Twister), untwist)
-import Pandora.Paradigm.Inventory.State (fold)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -18,7 +13,14 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Divariant (($))
-import Pandora.Pattern.Object.Setoid ((?))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)), (?))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Pattern.Object.Monoid (Monoid (zero))
+import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
+import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
+import Pandora.Paradigm.Basis.Twister (Twister (Twister), untwist)
+import Pandora.Paradigm.Inventory.State (fold)
+import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = UT Covariant Covariant (Twister Maybe) Maybe
@@ -40,6 +42,15 @@ instance Applicative Stack where
 
 instance Traversable Stack where
 	UT stack ->> f = UT <$> stack ->>> f
+
+instance Setoid a => Setoid (Stack a) where
+	UT ls == UT rs = ls == rs
+
+instance Semigroup (Stack a) where
+	ls + rs = fold ls push rs
+
+instance Monoid (Stack a) where
+	zero = UT Nothing
 
 push :: a -> Stack a -> Stack a
 push x (UT stack) = UT $ (Twister x . Just <$> stack) <+> (point . point) x
