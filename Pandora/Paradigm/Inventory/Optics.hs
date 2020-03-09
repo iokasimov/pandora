@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, (^.), (.~), (%~)) where
 
+import Pandora.Core.Functor (type (|->))
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (unwrap))
@@ -18,9 +19,9 @@ instance Adjoint (Store s) (State s) where
 	Store (s :*: f) |- g = extract . unwrap % s . g $ f s
 
 infixr 0 :-.
-type (:-.) src tgt = Lens src tgt
+type (:-.) s t = Lens s t
 
-type Lens src tgt = src -> Store tgt src
+type Lens s t = s |-> Store t
 
 -- | Lens composition infix operator
 (|>) :: Lens src btw -> Lens btw tgt -> Lens src tgt
