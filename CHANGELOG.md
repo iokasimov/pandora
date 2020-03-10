@@ -157,3 +157,4 @@
 
 # 0.2.4
 * Remove `Pandora.Core.Transformation` module and move `~>` to `Functor` module
+* Define `Adaptable` instances for comonad transformer schemes

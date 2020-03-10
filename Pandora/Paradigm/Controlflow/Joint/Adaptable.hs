@@ -6,16 +6,21 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
+import Pandora.Pattern.Functor.Extractable (Extractable)
+import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>))
+import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<))
 
-class Covariant u => Adaptable t u where
+class Adaptable t u where
 	{-# MINIMAL adapt #-}
 	adapt :: t ~> u
 
 type Layable t u = (Monadic t, Covariant u)
 type Wrappable t u = (Monadic t, Pointable u)
+type Flickable t u = (Comonadic t, Covariant u)
+type Bringable t u = (Comonadic t, Extractable u)
 
 instance Covariant t => Adaptable t t where
 	adapt = identity
@@ -25,6 +30,12 @@ instance (Covariant (t :> u), Layable t u) => Adaptable u (t :> u) where
 
 instance (Covariant (t :> u), Wrappable t u) => Adaptable t (t :> u) where
 	adapt = wrap
+
+instance (Covariant (t :> u), Flickable t u) => Adaptable (t :< u) u where
+	adapt = flick
+
+instance (Covariant (t :< u), Bringable t u) => Adaptable (t :< u) t where
+	adapt = bring
 
 instance
 	( Covariant (t :> u :> v)
@@ -39,6 +50,20 @@ instance
 	, Layable u v
 	) => Adaptable v (t :> u :> v) where
 	adapt = lay . lay
+
+instance
+	( Covariant (t :< u :< v)
+	, Flickable t (Schematic Comonad u v)
+	, Bringable u v
+	) => Adaptable (t :< u :< v) u where
+	adapt = bring . flick
+
+instance
+	( Covariant (t :< u :< v)
+	, Flickable t (Schematic Comonad u v)
+	, Flickable u v
+	) => Adaptable (t :< u :< v) v where
+	adapt = flick . flick
 
 instance
 	( Covariant (t :> u :> v :> w)
@@ -58,6 +83,23 @@ instance
 	adapt = lay . lay . lay
 
 instance
+	( Covariant (t :< u :< v :< w)
+	, Flickable t (Schematic Comonad u (v :< w))
+	, Flickable u (Schematic Comonad v w)
+	, Bringable v w
+	) => Adaptable (t :< u :< v :< w) v where
+	adapt = bring . flick . flick
+
+instance
+	( Covariant (t :< u :< v :< w)
+	, Flickable t (Schematic Comonad u v)
+	, Flickable t (Schematic Comonad u (v :< w))
+	, Flickable u (Schematic Comonad v w)
+	, Flickable v w
+	) => Adaptable (t :< u :< v :< w) w where
+	adapt = flick . flick . flick
+
+instance
 	( Covariant (t :> u :> v :> w :> x)
 	, Layable t (Schematic Monad u (v :> w :> x))
 	, Layable u (Schematic Monad v (w :> x))
@@ -74,6 +116,24 @@ instance
 	, Wrappable w x
 	) => Adaptable w (t :> u :> v :> w :> x) where
 	adapt = lay . lay . lay . wrap
+
+instance
+	( Covariant (t :< u :< v :< w :< x)
+	, Flickable t (Schematic Comonad u (v :< w :< x))
+	, Flickable u (Schematic Comonad v (w :< x))
+	, Flickable v (Schematic Comonad w x)
+	, Flickable w x
+	) => Adaptable (t :< u :< v :< w :< x) x where
+	adapt = flick . flick . flick . flick
+
+instance
+	( Covariant (t :< u :< v :< w :< x)
+	, Flickable t (Schematic Comonad u (v :< w :< x))
+	, Flickable u (Schematic Comonad v (w :< x))
+	, Flickable v (Schematic Comonad w x)
+	, Bringable w x
+	) => Adaptable (t :< u :< v :< w :< x) w where
+	adapt = bring . flick . flick . flick
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y)
@@ -96,6 +156,26 @@ instance
 	adapt = lay . lay . lay . lay . wrap
 
 instance
+	( Covariant (t :< u :< v :< w :< x :< y)
+	, Flickable t (Schematic Comonad u (v :< w :< x :< y))
+	, Flickable u (Schematic Comonad v (w :< x :< y))
+	, Flickable v (Schematic Comonad w (x :< y))
+	, Flickable w (Schematic Comonad x y)
+	, Flickable x y
+	) => Adaptable (t :< u :< v :< w :< x :< y) y where
+	adapt = flick . flick . flick . flick . flick
+
+instance
+	( Covariant (t :< u :< v :< w :< x :< y)
+	, Flickable t (Schematic Comonad u (v :< w :< x :< y))
+	, Flickable u (Schematic Comonad v (w :< x :< y))
+	, Flickable v (Schematic Comonad w (x :< y))
+	, Flickable w (Schematic Comonad x y)
+	, Bringable x y
+	) => Adaptable (t :< u :< v :< w :< x :< y) x where
+	adapt = bring . flick . flick . flick . flick
+
+instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z)
 	, Layable t (Schematic Monad u (v :> w :> x :> y :> z))
 	, Layable u (Schematic Monad v (w :> x :> y :> z))
@@ -116,6 +196,28 @@ instance
 	, Wrappable y z
 	) => Adaptable y (t :> u :> v :> w :> x :> y :> z) where
 	adapt = lay . lay . lay . lay . lay . wrap
+
+instance
+	( Covariant (t :< u :< v :< w :< x :< y :< z)
+	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z))
+	, Flickable u (Schematic Comonad v (w :< x :< y :< z))
+	, Flickable v (Schematic Comonad w (x :< y :< z))
+	, Flickable w (Schematic Comonad x (y :< z))
+	, Flickable x (Schematic Comonad y z)
+	, Flickable y z
+	) => Adaptable (t :< u :< v :< w :< x :< y :< z) z where
+	adapt = flick . flick . flick . flick . flick . flick
+
+instance
+	( Covariant (t :< u :< v :< w :< x :< y :< z)
+	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z))
+	, Flickable u (Schematic Comonad v (w :< x :< y :< z))
+	, Flickable v (Schematic Comonad w (x :< y :< z))
+	, Flickable w (Schematic Comonad x (y :< z))
+	, Flickable x (Schematic Comonad y z)
+	, Bringable y z
+	) => Adaptable (t :< u :< v :< w :< x :< y :< z) y where
+	adapt = bring . flick . flick . flick . flick . flick
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f)
@@ -142,6 +244,30 @@ instance
 	adapt = lay . lay . lay . lay . lay . lay . wrap
 
 instance
+	( Covariant (t :< u :< v :< w :< x :< y :< z :< f)
+	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z :< f))
+	, Flickable u (Schematic Comonad v (w :< x :< y :< z :< f))
+	, Flickable v (Schematic Comonad w (x :< y :< z :< f))
+	, Flickable w (Schematic Comonad x (y :< z :< f))
+	, Flickable x (Schematic Comonad y (z :< f))
+	, Flickable y (Schematic Comonad z f)
+	, Flickable z f
+	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f) f where
+	adapt = flick . flick . flick . flick . flick . flick . flick
+
+instance
+	( Covariant (t :< u :< v :< w :< x :< y :< z :< f)
+	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z :< f))
+	, Flickable u (Schematic Comonad v (w :< x :< y :< z :< f))
+	, Flickable v (Schematic Comonad w (x :< y :< z :< f))
+	, Flickable w (Schematic Comonad x (y :< z :< f))
+	, Flickable x (Schematic Comonad y (z :< f))
+	, Flickable y (Schematic Comonad z f)
+	, Bringable z f
+	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f) z where
+	adapt = bring . flick . flick . flick . flick . flick . flick
+
+instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f :> h)
 	, Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f :> h))
 	, Layable u (Schematic Monad v (w :> x :> y :> z :> f :> h))
@@ -166,3 +292,29 @@ instance
 	, Wrappable f h
 	) => Adaptable f (t :> u :> v :> w :> x :> y :> z :> f :> h) where
 	adapt = lay . lay . lay . lay . lay . lay . lay . wrap
+
+instance
+	( Covariant (t :< u :< v :< w :< x :< y :< z :< f :< h)
+	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z :< f :< h))
+	, Flickable u (Schematic Comonad v (w :< x :< y :< z :< f :< h))
+	, Flickable v (Schematic Comonad w (x :< y :< z :< f :< h))
+	, Flickable w (Schematic Comonad x (y :< z :< f :< h))
+	, Flickable x (Schematic Comonad y (z :< f :< h))
+	, Flickable y (Schematic Comonad z (f :< h))
+	, Flickable z (Schematic Comonad f h)
+	, Flickable f h
+	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f :< h) h where
+	adapt = flick . flick . flick . flick . flick . flick . flick . flick
+
+instance
+	( Covariant (t :< u :< v :< w :< x :< y :< z :< f :< h)
+	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z :< f :< h))
+	, Flickable u (Schematic Comonad v (w :< x :< y :< z :< f :< h))
+	, Flickable v (Schematic Comonad w (x :< y :< z :< f :< h))
+	, Flickable w (Schematic Comonad x (y :< z :< f :< h))
+	, Flickable x (Schematic Comonad y (z :< f :< h))
+	, Flickable y (Schematic Comonad z (f :< h))
+	, Flickable z (Schematic Comonad f h)
+	, Bringable f h
+	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f :< h) f where
+	adapt = bring . flick . flick . flick . flick . flick . flick . flick
