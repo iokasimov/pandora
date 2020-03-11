@@ -44,7 +44,7 @@ instance Interpreted (Environment e) where
 
 instance Monadic (Environment e) where
 	lay = TM . TU . (!)
-	wrap x = TM. TU $ point <$> unwrap x
+	wrap x = TM . TU $ point <$> unwrap x
 
 type Configured e = Adaptable (Environment e)
 

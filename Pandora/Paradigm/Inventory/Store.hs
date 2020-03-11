@@ -10,7 +10,8 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Divariant (($))
-import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:))
+import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (TUV))
@@ -41,6 +42,8 @@ instance Comonadic (Store p) where
 	flick (TC (TUV (p :*: f))) = ($ p) <$> f
 	bring (TC (TUV (p :*: f))) = Store $ p :*: extract f
 
+type Storable s x = Adaptable x (Store s)
+
 instance Covariant u => Covariant (TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
 	f <$> TUV (p :*: x) = TUV . (:*:) p $ f <$$> x
 
@@ -50,11 +53,11 @@ instance Extractable u => Extractable (TUV Covariant Covariant Covariant ((:*:) 
 instance Extendable u => Extendable (TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
 	TUV (old :*: x) =>> f = TUV . (:*:) old $ x =>> (\x' new -> f . TUV . (:*:) new $ x')
 
-position :: Store p a -> p
-position (Store (p :*: _)) = p
+position :: Storable s t => t a -> s
+position = attached . unwrap @(Store _) . adapt
 
-access :: p -> a <-| Store p
-access p = extract % p . unwrap
+access :: Storable s t => s -> a <-| t
+access p = extract % p . unwrap @(Store _) . adapt
 
 retrofit :: (p -> p) -> Store p ~> Store p
 retrofit g (Store (p :*: f)) = Store $ g p :*: f
