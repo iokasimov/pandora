@@ -159,3 +159,4 @@
 * Remove `Pandora.Core.Transformation` module and move `~>` to `Functor` module
 * Define `Adaptable` instances for comonad transformer schemes
 * Make `position` and `access` methods of `Store` adaptable
+* Rename `unwrap` method of `Interpreted` type class to `run`

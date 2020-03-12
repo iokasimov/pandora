@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (..)) where
 
 class Interpreted t where
-	{-# MINIMAL unwrap #-}
+	{-# MINIMAL run #-}
 	type Primary t a :: *
-	unwrap :: t a -> Primary t a
+	run :: t a -> Primary t a

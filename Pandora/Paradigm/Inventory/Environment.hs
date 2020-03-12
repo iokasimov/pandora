@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
 import Pandora.Core.Morphism ((!), (%))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
@@ -26,13 +26,13 @@ instance Pointable (Environment e) where
 	point x = Environment (x !)
 
 instance Applicative (Environment e) where
-	f <*> x = Environment $ \e -> unwrap f e $ unwrap x e
+	f <*> x = Environment $ \e -> run f e $ run x e
 
 instance Distributive (Environment e) where
-	g >>- f = Environment $ g >>- (unwrap <$> f)
+	g >>- f = Environment $ g >>- (run <$> f)
 
 instance Bindable (Environment e) where
-	Environment x >>= f = Environment $ \e -> unwrap % e . f . x $ e
+	Environment x >>= f = Environment $ \e -> run % e . f . x $ e
 
 instance Monad (Environment e) where
 
@@ -40,11 +40,11 @@ type instance Schematic Monad (Environment e) u = TU Covariant Covariant ((->) e
 
 instance Interpreted (Environment e) where
 	type Primary (Environment e) a = (->) e a
-	unwrap (Environment x) = x
+	run (Environment x) = x
 
 instance Monadic (Environment e) where
 	lay = TM . TU . (!)
-	wrap x = TM . TU $ point <$> unwrap x
+	wrap x = TM . TU $ point <$> run x
 
 type Configured e = Adaptable (Environment e)
 
@@ -58,7 +58,7 @@ instance Applicative u => Applicative (TU Covariant Covariant ((->) e) u) where
 	TU f <*> TU x = TU $ \r -> f r <*> x r
 
 instance Bindable u => Bindable (TU Covariant Covariant ((->) e) u) where
-	TU x >>= f = TU $ \e -> x e >>= ($ e) . unwrap . f
+	TU x >>= f = TU $ \e -> x e >>= ($ e) . run . f
 
 env :: Configured e t => t e
 env = adapt $ Environment identity

@@ -17,7 +17,7 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (bool)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (TUV))
@@ -39,12 +39,12 @@ instance Pointable (State s) where
 
 instance Bindable (State s) where
 	State x >>= f = State $ \old ->
-		uncurry (unwrap %) $ f <$> x old
+		uncurry (run %) $ f <$> x old
 
 instance Monad (State s) where
 
 fold :: Traversable t => s -> (a -> s -> s) -> t a -> s
-fold start op struct = extract . unwrap @(State _) % start $
+fold start op struct = extract . run @(State _) % start $
 	struct ->> modify . op $> () *> current
 
 find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
@@ -52,14 +52,14 @@ find p struct = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
-	unwrap (State x) = x
+	run (State x) = x
 
 type instance Schematic Monad (State s) u =
 	TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)
 
 instance Monadic (State s) where
 	lay x = TM . TUV $ \s -> (s :*:) <$> x
-	wrap x = TM . TUV $ point <$> unwrap x
+	wrap x = TM . TUV $ point <$> run x
 
 type Stateful s = Adaptable (State s)
 
@@ -73,7 +73,7 @@ instance Pointable u => Pointable (TUV Covariant Covariant Covariant ((->) s) u 
 	point x = TUV $ \s -> point $ s :*: x
 
 instance Bindable u => Bindable (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
-	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . unwrap . f $ y
+	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . run . f $ y
 
 instance Monad u => Monad (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
 

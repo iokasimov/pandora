@@ -2,7 +2,7 @@ module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), Failable, conclusion,
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
@@ -73,7 +73,7 @@ fail _ (Success y) = Success y
 
 instance Interpreted (Conclusion e) where
 	type Primary (Conclusion e) a = Conclusion e a
-	unwrap x = x
+	run x = x
 
 type instance Schematic Monad (Conclusion e) u = UT Covariant Covariant (Conclusion e) u
 
@@ -93,7 +93,7 @@ instance Pointable u => Pointable (UT Covariant Covariant (Conclusion e) u) wher
 	point = UT . point . point
 
 instance (Pointable u, Bindable u) => Bindable (UT Covariant Covariant (Conclusion e) u) where
-	UT x >>= f = UT $ x >>= conclusion (point . Failure) (unwrap . f)
+	UT x >>= f = UT $ x >>= conclusion (point . Failure) (run . f)
 
 instance Monad u => Monad (UT Covariant Covariant (Conclusion e) u) where
 

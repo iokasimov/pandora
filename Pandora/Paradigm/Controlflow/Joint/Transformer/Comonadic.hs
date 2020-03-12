@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -55,4 +55,4 @@ instance Extendable (Schematic Comonad t u) => Extendable (t :< u) where
 
 instance (Interpreted (Schematic Comonad t u)) => Interpreted (t :< u) where
 	type Primary (t :< u) a = Primary (Schematic Comonad t u) a
-	unwrap (TC x) = unwrap x
+	run (TC x) = run x

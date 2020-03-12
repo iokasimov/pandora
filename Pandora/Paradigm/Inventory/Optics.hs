@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, ove
 import Pandora.Core.Functor (type (|->))
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (unwrap))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Inventory.State (State (State))
 import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
 import Pandora.Pattern.Category ((.))
@@ -16,7 +16,7 @@ import Pandora.Pattern.Functor.Divariant (($))
 
 instance Adjoint (Store s) (State s) where
 	v -| f = State $ \s -> (:*:) s . f . Store $ s :*: (v !)
-	Store (s :*: f) |- g = extract . unwrap % s . g $ f s
+	Store (s :*: f) |- g = extract . run % s . g $ f s
 
 infixr 0 :-.
 type (:-.) s t = Lens s t
