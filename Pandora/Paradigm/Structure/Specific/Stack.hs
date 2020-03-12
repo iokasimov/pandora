@@ -15,6 +15,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), (?))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Basis.Twister (Twister (Twister), untwist)
@@ -50,6 +51,9 @@ instance Semigroup (Stack a) where
 	UT Nothing + UT ys = UT ys
 	UT (Just (Twister x xs)) + UT ys = UT . Just . Twister x . unwrap
 		$ UT @Covariant @Covariant xs + UT @Covariant @Covariant ys
+
+instance Monoid (Stack a) where
+	zero = UT Nothing
 
 push :: a -> Stack a -> Stack a
 push x (UT stack) = UT $ (Twister x . Just <$> stack) <+> (point . point) x
