@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, (^.), (.~), (%~)) where
+module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, zoom, (^.), (.~), (%~)) where
 
 import Pandora.Core.Functor (type (|->))
 import Pandora.Core.Morphism ((!), (%))
@@ -8,11 +8,12 @@ import Pandora.Paradigm.Basis.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Inventory.State (State (State))
 import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Divariant (($))
+import Pandora.Pattern.Functor.Bivariant ((<->))
 
 instance Adjoint (Store s) (State s) where
 	v -| f = State $ \s -> (:*:) s . f . Store $ s :*: (v !)
@@ -50,3 +51,6 @@ over lens f = extract . retrofit f . lens
 -- | Infix version of `over`
 (%~) :: Lens src tgt -> (tgt -> tgt) -> src -> src
 lens %~ f = over lens f
+
+zoom :: Lens bg ls -> State ls a -> State bg a
+zoom lens (State f) = State $ (\(Store (p :*: g)) -> (g <-> identity) . f $ p) . lens
