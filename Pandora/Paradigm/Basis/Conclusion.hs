@@ -14,6 +14,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (False))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Greater))
@@ -45,6 +46,10 @@ instance Bindable (Conclusion e) where
 	Failure y >>= _ = Failure y
 
 instance Monad (Conclusion e) where
+
+instance Bivariant Conclusion where
+	f <-> _ = \(Failure e) -> Failure $ f e
+	_ <-> g = \(Success x) -> Success $ g x
 
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where
 	Success x == Success y = x == y

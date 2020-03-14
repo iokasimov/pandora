@@ -5,6 +5,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 
@@ -30,3 +31,7 @@ instance Alternative (Validation e) where
 instance Traversable (Validation e) where
 	Validated x ->> f = Validated <$> f x
 	Flaws e ->> _ = point $ Flaws e
+
+instance Bivariant Validation where
+	f <-> _ = \(Flaws e) -> Flaws $ f e
+	_ <-> g = \(Validated x) -> Validated $ g x
