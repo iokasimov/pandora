@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory.Store (Store (..), position, access, retrofit) where
+module Pandora.Paradigm.Inventory.Store (Store (..), Storable, position, access, retrofit) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (<-|), type (~>))
 import Pandora.Core.Morphism ((%))

@@ -20,9 +20,9 @@ instance Adjoint (Store s) (State s) where
 	Store (s :*: f) |- g = extract . run % s . g $ f s
 
 infixr 0 :-.
-type (:-.) s t = Lens s t
+type (:-.) src tgt = Lens src tgt
 
-type Lens s t = s |-> Store t
+type Lens src tgt = src |-> Store tgt
 
 -- | Lens composition infix operator
 (|>) :: Lens src btw -> Lens btw tgt -> Lens src tgt
