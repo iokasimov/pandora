@@ -121,7 +121,7 @@ library
     Pandora.Pattern.Object.Setoid
   default-extensions:
     DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints
-    FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms
+    FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms, LambdaCase
     MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes
     ScopedTypeVariables, TypeApplications, TypeFamilies, TypeFamilyDependencies, TypeOperators
   default-language: Haskell2010

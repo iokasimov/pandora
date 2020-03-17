@@ -3,6 +3,7 @@
 module Pandora.Paradigm.Structure.Specific.Stack (Stack, push, top, pop, filter, linearize) where
 
 import Pandora.Core.Functor (type (~>))
+import Pandora.Core.Morphism ((&))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -18,8 +19,11 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
+import Pandora.Paradigm.Basis.Product (Product ((:*:)))
 import Pandora.Paradigm.Basis.Twister (Twister (Twister), untwist)
 import Pandora.Paradigm.Inventory.State (fold)
+import Pandora.Paradigm.Inventory.Store (Store (Store))
+import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 
@@ -58,8 +62,10 @@ instance Monoid (Stack a) where
 push :: a -> Stack a -> Stack a
 push x (UT stack) = UT $ (Twister x . Just <$> stack) <+> (point . point) x
 
-top :: Stack ~> Maybe
-top (UT stack) = extract <$> stack
+top :: Stack a :-. Maybe a
+top stack = Store $ (:*:) (extract <$> run stack) $ \case
+    Just x -> stack & pop & push x
+    Nothing -> pop stack
 
 pop :: Stack ~> Stack
 pop (UT stack) = UT $ stack >>= untwist

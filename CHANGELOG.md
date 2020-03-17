@@ -162,3 +162,4 @@
 * Rename `unwrap` method of `Interpreted` type class to `run`
 * Define `Bivariant` functor type class
 * Define `zoom` optical operator - apply lens within some part of `State`
+* Make `top` method of `Stack` data structure a lens
