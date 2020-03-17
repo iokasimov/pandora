@@ -1,5 +1,6 @@
 module Pandora.Paradigm.Basis.Validation (Validation (..)) where
 
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -33,5 +34,8 @@ instance Traversable (Validation e) where
 	Flaws e ->> _ = point $ Flaws e
 
 instance Bivariant Validation where
-	f <-> _ = \(Flaws e) -> Flaws $ f e
-	_ <-> g = \(Validated x) -> Validated $ g x
+    f <-> g = validation (Flaws . f) (Validated . g)
+
+validation :: (e -> r) -> (a -> r) -> Validation e a -> r
+validation f _ (Flaws x) = f x
+validation _ s (Validated x) = s x

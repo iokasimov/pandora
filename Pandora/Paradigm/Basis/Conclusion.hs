@@ -48,8 +48,7 @@ instance Bindable (Conclusion e) where
 instance Monad (Conclusion e) where
 
 instance Bivariant Conclusion where
-	f <-> _ = \(Failure e) -> Failure $ f e
-	_ <-> g = \(Success x) -> Success $ g x
+    f <-> g = conclusion (Failure . f) (Success . g)
 
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where
 	Success x == Success y = x == y
