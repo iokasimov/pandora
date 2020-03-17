@@ -163,3 +163,4 @@
 * Define `Bivariant` functor type class
 * Define `zoom` optical operator - apply lens within some part of `State`
 * Make `top` method of `Stack` data structure a lens
+* Make `zoom` method of `Optics` adaptable for bigger state

@@ -5,8 +5,9 @@ module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, ove
 import Pandora.Core.Functor (type (|->))
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (adapt)
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (run))
-import Pandora.Paradigm.Inventory.State (State (State))
+import Pandora.Paradigm.Inventory.State (State (State), Stateful)
 import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
 import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
@@ -52,5 +53,5 @@ over lens f = extract . retrofit f . lens
 (%~) :: Lens src tgt -> (tgt -> tgt) -> src -> src
 lens %~ f = over lens f
 
-zoom :: Lens bg ls -> State ls a -> State bg a
-zoom lens (State f) = State $ (\(Store (p :*: g)) -> (g <-> identity) . f $ p) . lens
+zoom :: Stateful bg t => Lens bg ls -> State ls a -> t a
+zoom lens (State f) = adapt . State $ (\(Store (p :*: g)) -> (g <-> identity) . f $ p) . lens
