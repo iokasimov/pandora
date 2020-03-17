@@ -59,13 +59,13 @@ instance Semigroup (Stack a) where
 instance Monoid (Stack a) where
 	zero = UT Nothing
 
-push :: a -> Stack a -> Stack a
-push x (UT stack) = UT $ (Twister x . Just <$> stack) <+> (point . point) x
-
 top :: Stack a :-. Maybe a
 top stack = Store $ (:*:) (extract <$> run stack) $ \case
     Just x -> stack & pop & push x
     Nothing -> pop stack
+
+push :: a -> Stack a -> Stack a
+push x (UT stack) = UT $ (Twister x . Just <$> stack) <+> (point . point) x
 
 pop :: Stack ~> Stack
 pop (UT stack) = UT $ stack >>= untwist
