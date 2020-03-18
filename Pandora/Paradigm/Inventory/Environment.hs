@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
+module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env, Traced) where
 
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
@@ -90,3 +90,5 @@ instance Applicative u => Applicative (UT Covariant Covariant ((->) e) u) where
 
 instance (Semigroup e, Extendable u) => Extendable (UT Covariant Covariant ((->) e) u) where
 	UT x =>> f = UT $ x =>> (\x' e -> f . UT . (<$>) (. (e +)) $ x')
+
+type Traced e t = Adaptable t (Environment e)
