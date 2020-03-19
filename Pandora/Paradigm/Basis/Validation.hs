@@ -8,6 +8,8 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (($))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (False))
+import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Greater))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 
 data Validation e a = Flaws e | Validated a
@@ -22,7 +24,7 @@ instance Pointable (Validation e) where
 instance Semigroup e => Applicative (Validation e) where
 	Flaws e <*> Flaws e' = Flaws $ e + e'
 	Flaws e <*> Validated _ = Flaws e
-	Validated _ <*> Flaws e2 = Flaws e2
+	Validated _ <*> Flaws e' = Flaws e'
 	Validated f <*> Validated x = Validated $ f x
 
 instance Alternative (Validation e) where
@@ -35,6 +37,23 @@ instance Traversable (Validation e) where
 
 instance Bivariant Validation where
     f <-> g = validation (Flaws . f) (Validated . g)
+
+instance (Setoid e, Setoid a) => Setoid (Validation e a) where
+	Validated x == Validated y = x == y
+	Flaws x == Flaws y = x == y
+	_ == _ = False
+
+instance (Chain e, Chain a) => Chain (Validation e a) where
+	Validated x <=> Validated y = x <=> y
+	Flaws x <=> Flaws y = x <=> y
+	Flaws _ <=> Validated _ = Less
+	Validated _ <=> Flaws _ = Greater
+
+instance (Semigroup e, Semigroup a) => Semigroup (Validation e a) where
+	Validated x + Validated y = Validated $ x + y
+	Flaws x + Flaws y = Flaws $ x + y
+	Flaws _ + Validated y = Validated y
+	Validated x + Flaws _ = Validated x
 
 validation :: (e -> r) -> (a -> r) -> Validation e a -> r
 validation f _ (Flaws x) = f x
