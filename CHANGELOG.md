@@ -165,3 +165,4 @@
 * Make `top` method of `Stack` data structure a lens
 * Make `zoom` method of `Optics` adaptable for bigger state
 * Define `Traced` for adaptable `Environment` comonad
+* Define `cata`, `ana` and `hylo` methods of `Fix`
