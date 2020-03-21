@@ -71,6 +71,7 @@ library
     Pandora.Paradigm.Inventory.Accumulator
     Pandora.Paradigm.Inventory.Environment
     Pandora.Paradigm.Inventory.Equipment
+    Pandora.Paradigm.Inventory.Imprint
     Pandora.Paradigm.Inventory.Optics
     Pandora.Paradigm.Inventory.State
     Pandora.Paradigm.Inventory.Store

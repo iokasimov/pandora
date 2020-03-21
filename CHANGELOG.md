@@ -168,3 +168,4 @@
 * Define `cata`, `ana` and `hylo` methods of `Fix`
 * Define `Equipment` datatype to use `Comonad` `Product` transformer
 * Define adaptable `retrieve` method of `Equipment`
+* Extract `Imprint` from `Environment` module
