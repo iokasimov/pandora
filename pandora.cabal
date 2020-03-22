@@ -80,6 +80,7 @@ library
     Pandora.Paradigm.Structure.Cartesian
     Pandora.Paradigm.Structure.Nonempty
     Pandora.Paradigm.Structure.Specific
+    Pandora.Paradigm.Structure.Specific.Stream
     Pandora.Paradigm.Structure.Specific.Stack
     Pandora.Paradigm.Structure.Specific.Graph
     Pandora.Paradigm.Structure.Specific.Binary

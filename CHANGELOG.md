@@ -172,3 +172,4 @@
 
 # 0.2.5
 * Define `Semiring` typeclass
+* Define `Stream` module and type
