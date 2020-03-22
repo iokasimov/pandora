@@ -120,6 +120,7 @@ library
     Pandora.Pattern.Object.Ringoid
     Pandora.Pattern.Object.Semigroup
     Pandora.Pattern.Object.Semilattice
+    Pandora.Pattern.Object.Semiring
     Pandora.Pattern.Object.Setoid
   default-extensions:
     DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints

@@ -169,3 +169,6 @@
 * Define `Equipment` datatype to use `Comonad` `Product` transformer
 * Define adaptable `retrieve` method of `Equipment`
 * Extract `Imprint` from `Environment` module
+
+# 0.2.5
+* Define `Semiring` typeclass
