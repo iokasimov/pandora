@@ -4,6 +4,7 @@ module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
 
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
+import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
@@ -25,11 +26,15 @@ instance Extractable (Equipment e) where
 instance Extendable (Equipment e) where
 	Equipment (e :*: x) =>> f = Equipment . (:*:) e . f . Equipment $ e :*: x
 
-type instance Schematic Comonad (Equipment e) u = TU Covariant Covariant ((:*:) e) u
-
 instance Interpreted (Equipment e) where
 	type Primary (Equipment e) a = e :*: a
 	run (Equipment x) = x
+
+type instance Schematic Comonad (Equipment e) u = TU Covariant Covariant ((:*:) e) u
+
+instance Comonadic (Equipment e) where
+	flick (TC (TU x)) = extract x
+	bring (TC (TU x)) = Equipment $ extract <$> x
 
 type Equipped e t = Adaptable t (Equipment e)
 
