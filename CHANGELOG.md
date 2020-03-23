@@ -173,3 +173,4 @@
 # 0.2.5
 * Define `Semiring` typeclass
 * Define `Stream` module and type
+* Move `Liftable` and `Lowerable` modules from `Functor` to `Transformer` submodule

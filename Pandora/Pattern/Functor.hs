@@ -2,8 +2,6 @@ module Pandora.Pattern.Functor (module Exports) where
 
 import Pandora.Pattern.Functor.Bivariant as Exports
 import Pandora.Pattern.Functor.Divariant as Exports
-import Pandora.Pattern.Functor.Lowerable as Exports
-import Pandora.Pattern.Functor.Liftable as Exports
 import Pandora.Pattern.Functor.Comonad as Exports
 import Pandora.Pattern.Functor.Monad as Exports
 import Pandora.Pattern.Functor.Representable as Exports

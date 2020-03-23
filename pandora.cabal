@@ -103,8 +103,6 @@ library
     Pandora.Pattern.Functor.Extendable
     Pandora.Pattern.Functor.Extractable
     Pandora.Pattern.Functor.Invariant
-    Pandora.Pattern.Functor.Liftable
-    Pandora.Pattern.Functor.Lowerable
     Pandora.Pattern.Functor.Monad
     Pandora.Pattern.Functor.Pointable
     Pandora.Pattern.Functor.Representable
@@ -123,6 +121,10 @@ library
     Pandora.Pattern.Object.Semilattice
     Pandora.Pattern.Object.Semiring
     Pandora.Pattern.Object.Setoid
+    -- Typeclassess about object composition of functors
+    Pandora.Pattern.Transformer
+    Pandora.Pattern.Transformer.Liftable
+    Pandora.Pattern.Transformer.Lowerable
   default-extensions:
     DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints
     FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms, LambdaCase

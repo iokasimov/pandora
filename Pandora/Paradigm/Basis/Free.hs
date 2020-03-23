@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
-import Pandora.Pattern.Functor.Liftable (Liftable (lift))
+import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Divariant (($))
 
 data Free t a = Pure a | Impure (t :. Free t := a)

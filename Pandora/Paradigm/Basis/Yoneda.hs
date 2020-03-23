@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Pattern.Functor.Liftable (Liftable (lift))
+import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Yoneda t a = Yoneda
