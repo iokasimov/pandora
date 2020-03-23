@@ -123,6 +123,7 @@ library
     Pandora.Pattern.Object.Setoid
     -- Typeclassess about object composition of functors
     Pandora.Pattern.Transformer
+    Pandora.Pattern.Transformer.Hoistable
     Pandora.Pattern.Transformer.Liftable
     Pandora.Pattern.Transformer.Lowerable
   default-extensions:
