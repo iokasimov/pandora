@@ -4,8 +4,10 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
+import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 
@@ -17,6 +19,9 @@ instance Interpreted (TU ct cu t u) where
 
 instance Pointable t => Liftable (TU Covariant Covariant t) where
 	lift = TU . point
+
+instance Extractable t => Lowerable (TU Covariant Covariant t) where
+	lower (TU x) = extract x
 
 instance Covariant t => Hoistable (TU Covariant Covariant t) where
 	hoist f (TU x) = TU $ f <$> x
