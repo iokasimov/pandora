@@ -20,7 +20,7 @@ import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (TUV))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
 
@@ -55,27 +55,27 @@ instance Interpreted (State s) where
 	run (State x) = x
 
 type instance Schematic Monad (State s) u =
-	TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)
+	TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)
 
 instance Monadic (State s) where
-	lay x = TM . TUV $ \s -> (s :*:) <$> x
-	wrap x = TM . TUV $ point <$> run x
+	lay x = TM . TUT $ \s -> (s :*:) <$> x
+	wrap x = TM . TUT $ point <$> run x
 
 type Stateful s = Adaptable (State s)
 
-instance Covariant u => Covariant (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
-	f <$> TUV x = TUV $ \old -> f <$$> x old
+instance Covariant u => Covariant (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+	f <$> TUT x = TUT $ \old -> f <$$> x old
 
-instance Bindable u => Applicative (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
-	TUV f <*> TUV x = TUV $ \old -> f old >>= \(new :*: g) -> g <$$> x new
+instance Bindable u => Applicative (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+	TUT f <*> TUT x = TUT $ \old -> f old >>= \(new :*: g) -> g <$$> x new
 
-instance Pointable u => Pointable (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
-	point x = TUV $ \s -> point $ s :*: x
+instance Pointable u => Pointable (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+	point x = TUT $ \s -> point $ s :*: x
 
-instance Bindable u => Bindable (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
-	TUV x >>= f = TUV $ \old -> x old >>= \(new :*: y) -> ($ new) . run . f $ y
+instance Bindable u => Bindable (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+	TUT x >>= f = TUT $ \old -> x old >>= \(new :*: y) -> ($ new) . run . f $ y
 
-instance Monad u => Monad (TUV Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+instance Monad u => Monad (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
 
 current :: Stateful s t => t s
 current = adapt $ State delta

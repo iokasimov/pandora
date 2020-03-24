@@ -60,7 +60,7 @@ library
     Pandora.Paradigm.Controlflow.Joint.Adaptable
     Pandora.Paradigm.Controlflow.Joint.Schemes
     Pandora.Paradigm.Controlflow.Joint.Schemes.TU
-    Pandora.Paradigm.Controlflow.Joint.Schemes.TUV
+    Pandora.Paradigm.Controlflow.Joint.Schemes.TUT
     Pandora.Paradigm.Controlflow.Joint.Schemes.TUVW
     Pandora.Paradigm.Controlflow.Joint.Schemes.UT
     Pandora.Paradigm.Controlflow.Joint.Schemes.UTU

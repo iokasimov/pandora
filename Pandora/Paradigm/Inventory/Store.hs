@@ -14,7 +14,7 @@ import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TUV (TUV (TUV))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
 
 newtype Store p a = Store ((:*:) p :. (->) p := a)
@@ -36,22 +36,22 @@ instance Interpreted (Store p) where
 	run (Store x) = x
 
 type instance Schematic Comonad (Store p) u =
-	TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)
+	TUT Covariant Covariant Covariant ((:*:) p) u ((->) p)
 
 instance Comonadic (Store p) where
-	flick (TC (TUV (p :*: f))) = ($ p) <$> f
-	bring (TC (TUV (p :*: f))) = Store $ p :*: extract f
+	flick (TC (TUT (p :*: f))) = ($ p) <$> f
+	bring (TC (TUT (p :*: f))) = Store $ p :*: extract f
 
 type Storable s x = Adaptable x (Store s)
 
-instance Covariant u => Covariant (TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
-	f <$> TUV (p :*: x) = TUV . (:*:) p $ f <$$> x
+instance Covariant u => Covariant (TUT Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+	f <$> TUT (p :*: x) = TUT . (:*:) p $ f <$$> x
 
-instance Extractable u => Extractable (TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
-	extract (TUV (p :*: x)) = extract x p
+instance Extractable u => Extractable (TUT Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+	extract (TUT (p :*: x)) = extract x p
 
-instance Extendable u => Extendable (TUV Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
-	TUV (old :*: x) =>> f = TUV . (:*:) old $ x =>> (\x' new -> f . TUV . (:*:) new $ x')
+instance Extendable u => Extendable (TUT Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+	TUT (old :*: x) =>> f = TUT . (:*:) old $ x =>> (\x' new -> f . TUT . (:*:) new $ x')
 
 position :: Storable s t => t a -> s
 position = attached . run @(Store _) . adapt
