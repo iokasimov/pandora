@@ -176,3 +176,4 @@
 * Move `Liftable` and `Lowerable` modules from `Functor` to `Transformer` submodule
 * Define `Hoistable` module and typeclass
 * Rename `TUV` joint schema to `TUT`
+* Modify `UTU` joint schema internals
