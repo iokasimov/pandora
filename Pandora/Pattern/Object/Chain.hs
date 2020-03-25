@@ -1,6 +1,6 @@
 module Pandora.Pattern.Object.Chain (Ordering (..), order, Chain (..)) where
 
-import Pandora.Pattern.Object.Setoid (Boolean (True, False), Setoid)
+import Pandora.Pattern.Object.Setoid (Setoid, Boolean (True, False))
 
 data Ordering = Less | Equal | Greater
 

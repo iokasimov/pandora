@@ -121,6 +121,7 @@ library
     Pandora.Pattern.Object.Semilattice
     Pandora.Pattern.Object.Semiring
     Pandora.Pattern.Object.Setoid
+    -- Pandora.Pattern.Object.Property.Boolean
     -- Typeclassess about object composition of functors
     Pandora.Pattern.Transformer
     Pandora.Pattern.Transformer.Hoistable

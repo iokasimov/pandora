@@ -1,5 +1,10 @@
 module Pandora.Pattern.Object.Setoid (Boolean (..), (&&), (||), (?), not, bool, Setoid (..)) where
 
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
+import Pandora.Pattern.Object.Monoid (Monoid (zero))
+import Pandora.Pattern.Object.Quasiring (Quasiring (one))
+
 infixr ||
 infixr 1 ?
 infixr 3 &&
@@ -42,3 +47,22 @@ class Setoid a where
 
 	(/=) :: a -> a -> Boolean
 	(/=) x y = not (x == y)
+
+instance Setoid Boolean where
+	True == True = True
+	False == False = True
+	_ == _ = False
+
+instance Semigroup Boolean where
+	False + False = False
+	_ + _ = True
+
+instance Ringoid Boolean where
+	True * True = True
+	_ * _ = False
+
+instance Monoid Boolean where
+	zero = False
+
+instance Quasiring Boolean where
+	one = True
