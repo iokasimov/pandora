@@ -12,6 +12,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
+import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (inverse))
@@ -47,6 +48,9 @@ instance Monoid a => Monoid (Constant a b) where
 
 instance Ringoid a => Ringoid (Constant a b) where
 	Constant x * Constant y = Constant $ x * y
+
+instance Quasiring a => Quasiring (Constant a b) where
+	 one = Constant one
 
 instance Infimum a => Infimum (Constant a b) where
 	Constant x /\ Constant y = Constant $ x /\ y

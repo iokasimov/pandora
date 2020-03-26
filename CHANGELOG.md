@@ -179,3 +179,4 @@
 * Modify `UTU` joint schema internals
 * Remove `&&` and `||` `Boolean` operators (use `*` and `+` instead)
 * Define precedence for `*` and `+`
+* Change superclass of `Group` class - `Quasiring` instead of `Monoid`

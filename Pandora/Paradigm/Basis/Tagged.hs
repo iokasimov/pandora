@@ -18,6 +18,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
+import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (inverse))
@@ -72,6 +73,9 @@ instance Monoid a => Monoid (Tagged tag a) where
 
 instance Ringoid a => Ringoid (Tagged tag a) where
 	Tag x * Tag y = Tag $ x * y
+
+instance Quasiring a => Quasiring (Tagged tag a) where
+	one = Tag one
 
 instance Infimum a => Infimum (Tagged tag a) where
 	Tag x /\ Tag y = Tag $ x /\ y

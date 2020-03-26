@@ -55,3 +55,7 @@ instance Monoid Boolean where
 
 instance Quasiring Boolean where
 	one = True
+
+instance Group Boolean where
+	inverse False = True
+	inverse True = False
