@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (($))
-import Pandora.Pattern.Object.Setoid (Setoid ((==)), (&&))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
@@ -45,7 +45,7 @@ instance Bivariant Product where
 	f <-> g = \(x :*: y) -> f x :*: g y
 
 instance (Setoid a, Setoid b) => Setoid (Product a b) where
-	(x :*: y) == (x' :*: y') = x == x' && y == y'
+	(x :*: y) == (x' :*: y') = (x == x') * (y == y')
 
 instance (Semigroup a, Semigroup b) => Semigroup (Product a b) where
 	(x :*: y) + (x' :*: y') = x + x' :*: y + y'

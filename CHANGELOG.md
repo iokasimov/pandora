@@ -177,3 +177,5 @@
 * Define `Hoistable` module and typeclass
 * Rename `TUV` joint schema to `TUT`
 * Modify `UTU` joint schema internals
+* Remove `&&` and `||` `Boolean` operators (use `*` and `+` instead)
+* Define precedence for `*` and `+`

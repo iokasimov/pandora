@@ -14,8 +14,9 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Functor.Divariant (($))
-import Pandora.Pattern.Object.Setoid (Setoid ((==)), (&&))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 
 data Twister t a = Twister a (t :. Twister t := a)
@@ -49,7 +50,7 @@ instance Lowerable Twister where
 	lower (Twister _ xs) = extract <$> xs
 
 instance (Setoid a, forall b . Setoid b => Setoid (t b)) => Setoid (Twister t a) where
-	Twister x xs == Twister y ys = x == y && xs == ys
+	Twister x xs == Twister y ys = (x == y) * (xs == ys)
 
 instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (Twister t a) where
 	Twister x xs + Twister y ys = Twister (x + y) $ xs + ys
