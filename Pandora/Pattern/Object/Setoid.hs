@@ -9,16 +9,6 @@ import Pandora.Pattern.Object.Group (Group (invert))
 infixr 1 ?
 infix 4 ==, /=
 
-data Boolean = True | False
-
-bool :: a -> a -> Boolean -> a
-bool x _ False = x
-bool _ y True = y
-
-(?) :: Boolean -> a -> a -> a
-(?) True x _ = x
-(?) False _ y = y
-
 {- |
 > When providing a new instance, you should ensure it satisfies the four laws:
 > * Reflexivity: x == x ≡ True
@@ -33,6 +23,16 @@ class Setoid a where
 
 	(/=) :: a -> a -> Boolean
 	(/=) x y = invert (x == y)
+
+data Boolean = True | False
+
+bool :: a -> a -> Boolean -> a
+bool x _ False = x
+bool _ y True = y
+
+(?) :: Boolean -> a -> a -> a
+(?) True x _ = x
+(?) False _ y = y
 
 instance Setoid Boolean where
 	True == True = True
