@@ -182,3 +182,4 @@
 * Change superclass of `Group` class - `Quasiring` instead of `Monoid`
 * Rename `Jet`'s constructor to `Jet` (previously - `:-`)
 * Rename `Group`'s method from `inverse` to `invert`
+* Remove `not` method of `Boolean`, (use `invert` instead)

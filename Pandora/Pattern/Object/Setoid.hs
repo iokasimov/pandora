@@ -1,4 +1,4 @@
-module Pandora.Pattern.Object.Setoid (Boolean (..), (?), not, bool, Setoid (..)) where
+module Pandora.Pattern.Object.Setoid (Boolean (..), (?), bool, Setoid (..)) where
 
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
@@ -10,10 +10,6 @@ infixr 1 ?
 infix 4 ==, /=
 
 data Boolean = True | False
-
-not :: Boolean -> Boolean
-not True = False
-not False = True
 
 bool :: a -> a -> Boolean -> a
 bool x _ False = x
@@ -36,7 +32,7 @@ class Setoid a where
 	(==) :: a -> a -> Boolean
 
 	(/=) :: a -> a -> Boolean
-	(/=) x y = not (x == y)
+	(/=) x y = invert (x == y)
 
 instance Setoid Boolean where
 	True == True = True
