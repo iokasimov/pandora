@@ -7,18 +7,16 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 
-infixr 6 :-
-
-data Jet t a = a :- Jet t (t a)
+data Jet t a = Jet a (Jet t (t a))
 
 instance Covariant t => Covariant (Jet t) where
-	f <$> a :- as = f a :- f <$$> as
+	f <$> Jet a as = Jet (f a) (f <$$> as)
 
 instance Traversable t => Traversable (Jet t) where
-	a :- as ->> f = (:-) <$> f a <*> as ->>> f
+	Jet a as ->> f = Jet <$> f a <*> as ->>> f
 
 instance (forall u . Avoidable u) => Pointable (Jet t) where
-	point x = x :- empty
+	point x = Jet x empty
 
 instance Covariant t => Extractable (Jet t) where
-	extract (x :- _) = x
+	extract (Jet x _) = x

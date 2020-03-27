@@ -180,3 +180,4 @@
 * Remove `&&` and `||` `Boolean` operators (use `*` and `+` instead)
 * Define precedence for `*` and `+`
 * Change superclass of `Group` class - `Quasiring` instead of `Monoid`
+* Rename `Jet`'s constructor to `Jet` (previously - `:-`)

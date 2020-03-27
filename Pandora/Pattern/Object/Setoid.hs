@@ -4,6 +4,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
+import Pandora.Pattern.Object.Group (Group (inverse))
 
 infixr 1 ?
 infix 4 ==, /=
