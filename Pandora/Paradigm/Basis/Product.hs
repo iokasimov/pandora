@@ -16,7 +16,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
-import Pandora.Pattern.Object.Group (Group (inverse))
+import Pandora.Pattern.Object.Group (Group (invert))
 
 infixr 1 :*:
 
@@ -69,7 +69,7 @@ instance (Supremum a, Supremum b) => Supremum (Product a b) where
 instance (Lattice a, Lattice b) => Lattice (Product a b) where
 
 instance (Group a, Group b) => Group (Product a b) where
-	inverse (x :*: y) = inverse x :*: inverse y
+	invert (x :*: y) = invert x :*: invert y
 
 delta :: a -> a :*: a
 delta x = x :*: x

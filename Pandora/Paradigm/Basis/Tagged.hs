@@ -21,7 +21,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
-import Pandora.Pattern.Object.Group (Group (inverse))
+import Pandora.Pattern.Object.Group (Group (invert))
 
 newtype Tagged tag a = Tag a
 
@@ -86,7 +86,7 @@ instance Supremum a => Supremum (Tagged tag a) where
 instance Lattice a => Lattice (Tagged tag a) where
 
 instance Group a => Group (Tagged tag a) where
-	inverse (Tag x) = Tag $ inverse x
+	invert (Tag x) = Tag $ invert x
 
 retag :: Tagged old a -> Tagged new a
 retag (Tag x) = Tag x

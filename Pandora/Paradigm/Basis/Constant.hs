@@ -15,7 +15,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
-import Pandora.Pattern.Object.Group (Group (inverse))
+import Pandora.Pattern.Object.Group (Group (invert))
 
 newtype Constant a b = Constant a
 
@@ -61,4 +61,4 @@ instance Supremum a => Supremum (Constant a b) where
 instance Lattice a => Lattice (Constant a b) where
 
 instance Group a => Group (Constant a b) where
-	inverse (Constant x) = Constant $ inverse x
+	invert (Constant x) = Constant $ invert x

@@ -21,7 +21,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
-import Pandora.Pattern.Object.Group (Group (inverse))
+import Pandora.Pattern.Object.Group (Group (invert))
 
 newtype Identity a = Identity a
 
@@ -84,4 +84,4 @@ instance Supremum a => Supremum (Identity a) where
 instance Lattice a => Lattice (Identity a) where
 
 instance Group a => Group (Identity a) where
-	inverse (Identity x) = Identity $ inverse x
+	invert (Identity x) = Identity $ invert x
