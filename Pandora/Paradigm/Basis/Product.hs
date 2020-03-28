@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Product (Product (..), type (:*:), Has, Injective
+module Pandora.Paradigm.Basis.Product (Product (..), type (:*:)
 	, delta, swap, attached, curry, uncurry) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -85,16 +85,3 @@ curry f x y = f $ x :*: y
 
 uncurry :: (a -> b -> c) -> (a :*: b -> c)
 uncurry f (x :*: y) = f x y
-
--- Constraint on the content of some type
-type family Has x xs where
-	Has x (x :*: xs) = ()
-	Has x (y :*: xs) = Has x xs
-	Has x x = ()
-
--- All elements of the left product are in the right product
-type family Injective xs ys where
-	Injective (x :*: xs) ys = (Has x ys, Injective xs ys)
-	Injective x (x :*: ys) = ()
-	Injective x (y :*: ys) = Has x ys
-	Injective x x = ()

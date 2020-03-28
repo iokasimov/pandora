@@ -183,3 +183,4 @@
 * Rename `Jet`'s constructor to `Jet` (previously - `:-`)
 * Rename `Group`'s method from `inverse` to `invert`
 * Remove `not` method of `Boolean`, (use `invert` instead)
+* Remove `Injective` and `Has` type families
