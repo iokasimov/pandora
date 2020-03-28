@@ -13,6 +13,7 @@ import Pandora.Paradigm.Basis.Edges as Exports
 import Pandora.Paradigm.Basis.Conclusion as Exports
 import Pandora.Paradigm.Basis.Maybe as Exports
 import Pandora.Paradigm.Basis.Endo as Exports
+import Pandora.Paradigm.Basis.Kan as Exports
 import Pandora.Paradigm.Basis.Jet as Exports
 import Pandora.Paradigm.Basis.Jack as Exports
 import Pandora.Paradigm.Basis.Proxy as Exports

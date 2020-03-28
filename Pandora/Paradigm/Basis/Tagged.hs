@@ -1,5 +1,6 @@
 module Pandora.Paradigm.Basis.Tagged (Tagged (..), retag, tagself, type (:#)) where
 
+import Pandora.Core.Functor (type (|->), type (~>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -88,8 +89,8 @@ instance Lattice a => Lattice (Tagged tag a) where
 instance Group a => Group (Tagged tag a) where
 	invert (Tag x) = Tag $ invert x
 
-retag :: Tagged old a -> Tagged new a
+retag :: Tagged old ~> Tagged new
 retag (Tag x) = Tag x
 
-tagself :: a -> Tagged a a
+tagself :: a |-> Tagged a
 tagself = Tag
