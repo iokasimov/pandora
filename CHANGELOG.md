@@ -187,3 +187,4 @@
 * Change superclasseses for `Liftable` and `Lowerable` classes to provide a law
 
 # 0.2.6
+* Change order of arguments for `TUT` joint schema

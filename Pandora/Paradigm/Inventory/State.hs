@@ -55,7 +55,7 @@ instance Interpreted (State s) where
 	run (State x) = x
 
 type instance Schematic Monad (State s) u =
-	TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)
+	TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u
 
 instance Monadic (State s) where
 	lay x = TM . TUT $ \s -> (s :*:) <$> x
@@ -63,19 +63,19 @@ instance Monadic (State s) where
 
 type Stateful s = Adaptable (State s)
 
-instance Covariant u => Covariant (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+instance Covariant u => Covariant (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
 	f <$> TUT x = TUT $ \old -> f <$$> x old
 
-instance Bindable u => Applicative (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+instance Bindable u => Applicative (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
 	TUT f <*> TUT x = TUT $ \old -> f old >>= \(new :*: g) -> g <$$> x new
 
-instance Pointable u => Pointable (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+instance Pointable u => Pointable (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
 	point x = TUT $ \s -> point $ s :*: x
 
-instance Bindable u => Bindable (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+instance Bindable u => Bindable (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
 	TUT x >>= f = TUT $ \old -> x old >>= \(new :*: y) -> ($ new) . run . f $ y
 
-instance Monad u => Monad (TUT Covariant Covariant Covariant ((->) s) u ((:*:) s)) where
+instance Monad u => Monad (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
 
 current :: Stateful s t => t s
 current = adapt $ State delta

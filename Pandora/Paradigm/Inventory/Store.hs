@@ -36,7 +36,7 @@ instance Interpreted (Store p) where
 	run (Store x) = x
 
 type instance Schematic Comonad (Store p) u =
-	TUT Covariant Covariant Covariant ((:*:) p) u ((->) p)
+	TUT Covariant Covariant Covariant ((:*:) p) ((->) p) u
 
 instance Comonadic (Store p) where
 	flick (TC (TUT (p :*: f))) = ($ p) <$> f
@@ -44,13 +44,13 @@ instance Comonadic (Store p) where
 
 type Storable s x = Adaptable x (Store s)
 
-instance Covariant u => Covariant (TUT Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+instance Covariant u => Covariant (TUT Covariant Covariant Covariant ((:*:) p) ((->) p) u) where
 	f <$> TUT (p :*: x) = TUT . (:*:) p $ f <$$> x
 
-instance Extractable u => Extractable (TUT Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+instance Extractable u => Extractable (TUT Covariant Covariant Covariant ((:*:) p) ((->) p) u) where
 	extract (TUT (p :*: x)) = extract x p
 
-instance Extendable u => Extendable (TUT Covariant Covariant Covariant ((:*:) p) u ((->) p)) where
+instance Extendable u => Extendable (TUT Covariant Covariant Covariant ((:*:) p) ((->) p) u) where
 	TUT (old :*: x) =>> f = TUT . (:*:) old $ x =>> (\x' new -> f . TUT . (:*:) new $ x')
 
 position :: Storable s t => t a -> s
