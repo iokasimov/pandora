@@ -185,3 +185,5 @@
 * Remove `not` method of `Boolean`, (use `invert` instead)
 * Remove `Injective` and `Has` type families
 * Change superclasseses for `Liftable` and `Lowerable` classes to provide a law
+
+# 0.2.6
