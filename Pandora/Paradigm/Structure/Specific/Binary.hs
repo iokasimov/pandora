@@ -16,7 +16,7 @@ import Pandora.Paradigm.Basis.Twister (Twister (Twister))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (type (:-.))
+import Pandora.Paradigm.Inventory.Optics (type (:-.), (%~))
 
 type Binary = UT Covariant Covariant (Twister Wye) Maybe
 
@@ -31,18 +31,8 @@ instance Traversable Binary where
 
 insert :: Chain a => a -> Binary a -> Binary a
 insert x (UT Nothing) = point x
-insert x tree@(UT (Just (Twister y End))) = x <=> y & order
-	(UT . Just . Twister y . Right $ Twister x End) tree
-	(UT . Just . Twister y . Left $ Twister x End)
-insert x tree@(UT (Just (Twister y (Left ls)))) = x <=> y & order
-	(UT . Just . Twister y . Both ls $ Twister x End) tree
-	(UT $ Twister y . Left <$> run (insert x . UT . Just $ ls))
-insert x tree@(UT (Just (Twister y (Right rs)))) = x <=> y & order
-	(UT $ Twister y . Right <$> run (insert x . UT . Just $ rs)) tree
-	(UT . Just . Twister y $ Both (Twister x End) rs)
-insert x tree@(UT (Just (Twister y (Both ls rs)))) = x <=> y & order
-	(UT $ Twister y . Both ls <$> run (insert x . UT . Just $ rs)) tree
-	(UT $ Twister y . Both % rs <$> (run . insert x . UT . Just $ ls))
+insert x tree@(UT (Just (Twister y _))) = x <=> y & order
+	(left_sub_tree %~ insert x $ tree) tree (right_sub_tree %~ insert x $ tree)
 
 left_sub_tree :: Binary a :-. Binary a
 left_sub_tree (UT Nothing) = Store $ (:*:) (UT Nothing) $ (UT Nothing !)
