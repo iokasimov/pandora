@@ -30,22 +30,18 @@ instance Traversable Binary where
 	UT g ->> f = UT <$> g ->>> f
 
 insert :: Chain a => a -> Binary a -> Binary a
-insert x (UT Nothing) = UT $ Just $ Twister x End
-insert x (UT (Just (Twister y End))) = x <=> y & order
-	(UT . Just . Twister y . Right $ Twister x End)
-	(UT . Just . Twister y . Right $ Twister x End)
+insert x (UT Nothing) = point x
+insert x tree@(UT (Just (Twister y End))) = x <=> y & order
+	(UT . Just . Twister y . Right $ Twister x End) tree
 	(UT . Just . Twister y . Left $ Twister x End)
-insert x (UT (Just (Twister y (Left ls)))) = x <=> y & order
-	(UT . Just . Twister y . Both ls $ Twister x End)
-	(UT . Just . Twister y $ Both ls $ Twister x End)
+insert x tree@(UT (Just (Twister y (Left ls)))) = x <=> y & order
+	(UT . Just . Twister y . Both ls $ Twister x End) tree
 	(UT $ Twister y . Left <$> run (insert x . UT . Just $ ls))
-insert x (UT (Just (Twister y (Right rs)))) = x <=> y & order
-	(UT $ Twister y . Right <$> run (insert x . UT . Just $ rs))
-	(UT $ Twister y . Right <$> run (insert x . UT . Just $ rs))
+insert x tree@(UT (Just (Twister y (Right rs)))) = x <=> y & order
+	(UT $ Twister y . Right <$> run (insert x . UT . Just $ rs)) tree
 	(UT . Just . Twister y $ Both (Twister x End) rs)
-insert x (UT (Just (Twister y (Both ls rs)))) = x <=> y & order
-	(UT $ Twister y . Both ls <$> run (insert x . UT . Just $ rs))
-	(UT $ Twister y . Both ls <$> run (insert x . UT . Just $ rs))
+insert x tree@(UT (Just (Twister y (Both ls rs)))) = x <=> y & order
+	(UT $ Twister y . Both ls <$> run (insert x . UT . Just $ rs)) tree
 	(UT $ Twister y . Both % rs <$> (run . insert x . UT . Just $ ls))
 
 left_sub_tree :: Binary a :-. Binary a

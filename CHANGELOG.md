@@ -190,3 +190,4 @@
 * Change order of arguments for `TUT` joint schema
 * `Binary` trees can be empty
 * Define `left_sub_tree` and `right_sub_tree` lenses of `Binary` tree
+* Fix `insert` function: `Binary` tree should not contain duplicate values
