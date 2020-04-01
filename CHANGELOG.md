@@ -193,3 +193,4 @@
 * Fix `insert` function: `Binary` tree should not contain duplicate values
 * Remove `Cartesian` type class
 * Move `Nonempty` module to `Variation` submodule
+* Remove `Specific` module

@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Specific.Graph (Graph, loose) where
+module Pandora.Paradigm.Structure.Graph (Graph, loose) where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.))

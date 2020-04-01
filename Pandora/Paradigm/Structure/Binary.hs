@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Specific.Binary (Binary, insert, left_sub_tree, right_sub_tree) where
+module Pandora.Paradigm.Structure.Binary (Binary, insert, left_sub_tree, right_sub_tree) where
 
 import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.))

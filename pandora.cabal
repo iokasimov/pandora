@@ -77,12 +77,11 @@ library
     Pandora.Paradigm.Inventory.Store
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
+    Pandora.Paradigm.Structure.Stream
+    Pandora.Paradigm.Structure.Stack
+    Pandora.Paradigm.Structure.Graph
+    Pandora.Paradigm.Structure.Binary
     Pandora.Paradigm.Structure.Variation.Nonempty
-    Pandora.Paradigm.Structure.Specific
-    Pandora.Paradigm.Structure.Specific.Stream
-    Pandora.Paradigm.Structure.Specific.Stack
-    Pandora.Paradigm.Structure.Specific.Graph
-    Pandora.Paradigm.Structure.Specific.Binary
 
     Pandora.Pattern
     -- Category typeclass
