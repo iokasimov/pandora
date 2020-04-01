@@ -17,8 +17,11 @@ import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.), (%~))
+import Pandora.Paradigm.Structure.Variation.Nonempty (Nonempty)
 
 type Binary = UT Covariant Covariant (Twister Wye) Maybe
+
+type instance Nonempty Binary = Twister Wye
 
 instance Covariant Binary where
 	f <$> UT g = UT $ f <$$> g

@@ -194,3 +194,4 @@
 * Remove `Cartesian` type class
 * Move `Nonempty` module to `Variation` submodule
 * Remove `Specific` module
+* Add functional dependency to `Nonempty` type family and distribute instances

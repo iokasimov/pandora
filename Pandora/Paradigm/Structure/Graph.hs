@@ -11,9 +11,12 @@ import Pandora.Paradigm.Basis.Edges (Edges (Empty, Overlay))
 import Pandora.Paradigm.Basis.Twister (Twister (Twister))
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Paradigm.Inventory.State (fold)
+import Pandora.Paradigm.Structure.Variation.Nonempty (Nonempty)
 
 -- | Directed acyclic graph structure
 type Graph = UT Covariant Covariant (Twister Edges) Edges
+
+type instance Nonempty Graph = Twister Edges
 
 instance Covariant Graph where
 	f <$> UT g = UT $ f <$$> g

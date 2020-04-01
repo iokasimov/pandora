@@ -26,9 +26,12 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
+import Pandora.Paradigm.Structure.Variation.Nonempty (Nonempty)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = UT Covariant Covariant (Twister Maybe) Maybe
+
+type instance Nonempty Stack = Twister Maybe
 
 instance Covariant Stack where
 	f <$> UT stack = UT $ f <$$> stack
