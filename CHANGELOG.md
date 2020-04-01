@@ -192,3 +192,4 @@
 * Define `left_sub_tree` and `right_sub_tree` lenses of `Binary` tree
 * Fix `insert` function: `Binary` tree should not contain duplicate values
 * Remove `Cartesian` type class
+* Move `Nonempty` module to `Variation` submodule

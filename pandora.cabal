@@ -77,7 +77,7 @@ library
     Pandora.Paradigm.Inventory.Store
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
-    Pandora.Paradigm.Structure.Nonempty
+    Pandora.Paradigm.Structure.Variation.Nonempty
     Pandora.Paradigm.Structure.Specific
     Pandora.Paradigm.Structure.Specific.Stream
     Pandora.Paradigm.Structure.Specific.Stack

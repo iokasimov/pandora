@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Nonempty (Nonempty) where
+module Pandora.Paradigm.Structure.Variation.Nonempty (Nonempty) where
 
 import Pandora.Paradigm.Basis.Maybe (Maybe)
 import Pandora.Paradigm.Basis.Edges (Edges)
