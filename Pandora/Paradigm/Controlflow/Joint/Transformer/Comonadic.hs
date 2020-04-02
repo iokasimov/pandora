@@ -53,6 +53,8 @@ instance Bindable (Schematic Comonad t u) => Bindable (t :< u) where
 instance Extendable (Schematic Comonad t u) => Extendable (t :< u) where
 	TC x =>> f = TC $ x =>> f . TC
 
+instance (Extractable (t :< u), Extendable (t :< u)) => Comonad (t :< u) where
+
 instance (Interpreted (Schematic Comonad t u)) => Interpreted (t :< u) where
 	type Primary (t :< u) a = Primary (Schematic Comonad t u) a
 	run (TC x) = run x
