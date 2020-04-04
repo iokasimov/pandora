@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis (module Exports, note, hush) where
+module Pandora.Paradigm.Basis (module Exports, note, hush, left, right) where
 
 import Pandora.Paradigm.Basis.Twister as Exports
 import Pandora.Paradigm.Basis.Free as Exports
@@ -30,3 +30,15 @@ note x = maybe (Failure x) Success
 
 hush :: Conclusion e ~> Maybe
 hush = conclusion (Nothing !) Just
+
+left :: Wye ~> Maybe
+left (Both ls _) = Just ls
+left (Left ls) = Just ls
+left (Right _) = Nothing
+left End = Nothing
+
+right :: Wye ~> Maybe
+right (Both _ rs) = Just rs
+right (Left _) = Nothing
+right (Right rs) = Just rs
+right End = Nothing

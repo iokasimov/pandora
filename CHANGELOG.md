@@ -195,3 +195,4 @@
 * Move `Nonempty` module to `Variation` submodule
 * Remove `Specific` module
 * Add functional dependency to `Nonempty` type family and distribute instances
+* Define `left` and `right` natural transformations from `Wye` to `Maybe`
