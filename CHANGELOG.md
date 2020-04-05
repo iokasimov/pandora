@@ -197,3 +197,4 @@
 * Add functional dependency to `Nonempty` type family and distribute instances
 * Define `left` and `right` natural transformations from `Wye` to `Maybe`
 * Define experimental `Substructure` type class
+* Remove `left_sub_tree` and `right_sub_tree` lenses of `Binary` tree

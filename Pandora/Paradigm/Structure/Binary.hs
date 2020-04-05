@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Binary (Binary, insert, left_sub_tree, right_sub_tree) where
+module Pandora.Paradigm.Structure.Binary (Binary, insert) where
 
 import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.))
@@ -64,25 +64,3 @@ instance Substructure 'Right Binary where
 		maybe (point x) (UT . Just . Twister x . Right) . run . extract
 	sub (UT (Just (Twister x (Both lst rst)))) = Store $ (:*:) (Tag . UT . Just $ rst) $
 		maybe (UT (Just (Twister x (Left lst)))) (UT . Just . Twister x . Both lst) . run . extract
-
-left_sub_tree :: Binary a :-. Binary a
-left_sub_tree (UT Nothing) = Store $ (:*:) (UT Nothing) $ (UT Nothing !)
-left_sub_tree t@(UT (Just (Twister x End))) = Store $ (:*:) (UT Nothing) $
-	maybe t (UT . Just . Twister x . Left) . run
-left_sub_tree (UT (Just (Twister x (Left lst)))) = Store $ (:*:) (UT . Just $ lst) $
-	maybe (point x) (UT . Just . Twister x . Left) . run
-left_sub_tree t@(UT (Just (Twister x (Right rst)))) = Store $ (:*:) (UT Nothing) $
-	maybe t (UT . Just . Twister x . Both % rst) . run
-left_sub_tree (UT (Just (Twister x (Both lst rst)))) = Store $ (:*:) (UT . Just $ lst) $
-	maybe (UT (Just (Twister x (Right rst)))) (UT . Just . Twister x . Both % rst) . run
-
-right_sub_tree :: Binary a :-. Binary a
-right_sub_tree (UT Nothing) = Store $ UT Nothing :*: (!) (UT Nothing)
-right_sub_tree t@(UT (Just (Twister x End))) = Store $ (:*:) (UT Nothing) $
-	maybe t (UT . Just . Twister x . Right) . run
-right_sub_tree t@(UT (Just (Twister x (Left lst)))) = Store $ (:*:) (UT Nothing) $
-	maybe t (UT . Just . Twister x . Both lst) . run
-right_sub_tree (UT (Just (Twister x (Right rst)))) = Store $ (:*:) (UT . Just $ rst) $
-	maybe (point x) (UT . Just . Twister x . Right) . run
-right_sub_tree (UT (Just (Twister x (Both lst rst)))) = Store $ (:*:) (UT . Just $ rst) $
-	maybe (UT (Just (Twister x (Left lst)))) (UT . Just . Twister x . Both lst) . run
