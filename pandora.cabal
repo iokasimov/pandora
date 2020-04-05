@@ -82,6 +82,7 @@ library
     Pandora.Paradigm.Structure.Graph
     Pandora.Paradigm.Structure.Binary
     Pandora.Paradigm.Structure.Variation.Nonempty
+    Pandora.Paradigm.Structure.Variation.Substructure
 
     Pandora.Pattern
     -- Category typeclass
