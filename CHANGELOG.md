@@ -198,3 +198,4 @@
 * Define `left` and `right` natural transformations from `Wye` to `Maybe`
 * Define experimental `Substructure` type class
 * Remove `left_sub_tree` and `right_sub_tree` lenses of `Binary` tree
+* Define `this` and `that` methods from `Variation` to `Maybe`

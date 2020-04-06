@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis (module Exports, note, hush, left, right) where
+module Pandora.Paradigm.Basis (module Exports, note, hush, left, right, this, that) where
 
 import Pandora.Paradigm.Basis.Twister as Exports
 import Pandora.Paradigm.Basis.Free as Exports
@@ -42,3 +42,13 @@ right (Both _ rs) = Just rs
 right (Left _) = Nothing
 right (Right rs) = Just rs
 right End = Nothing
+
+this :: Variation e ~> Maybe
+this (This x) = Just x
+this (That _) = Nothing
+this (These _ x) = Just x
+
+that :: Variation e a -> Maybe e
+that (This _) = Nothing
+that (That x) = Just x
+that (These y _) = Just y
