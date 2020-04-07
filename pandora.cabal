@@ -27,6 +27,7 @@ library
     Pandora.Paradigm
     -- Basic constructions
     Pandora.Paradigm.Basis
+    Pandora.Paradigm.Basis.Backwards
     Pandora.Paradigm.Basis.Conclusion
     Pandora.Paradigm.Basis.Constant
     Pandora.Paradigm.Basis.Continuation
