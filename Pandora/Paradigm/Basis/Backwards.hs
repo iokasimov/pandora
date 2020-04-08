@@ -3,11 +3,12 @@ module Pandora.Paradigm.Basis.Backwards (Backwards (..)) where
 import Pandora.Core.Morphism ((&))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
+import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 
@@ -29,7 +30,10 @@ instance Traversable t => Traversable (Backwards t) where
 	Backwards x ->> f = Backwards <$> x ->> f
 
 instance Distributive t => Distributive (Backwards t) where
-	x >>- f = Backwards . distribute $ run . f <$> x
+	x >>- f = Backwards $ x >>- run . f
+
+instance Contravariant t => Contravariant (Backwards t) where
+	f >$< Backwards x = Backwards $ f >$< x
 
 instance Interpreted (Backwards t) where
 	type Primary (Backwards t) a = t a
