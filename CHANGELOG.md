@@ -200,3 +200,6 @@
 * Remove `left_sub_tree` and `right_sub_tree` lenses of `Binary` tree
 * Define `this` and `that` methods from `Variation` to `Maybe`
 * Define `Backwards` type to run `Applicative` actions in reverse order
+
+# 0.2.7
+* Replace `Lan` and `Ran` with `Kan` data family
