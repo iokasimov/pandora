@@ -116,6 +116,7 @@ library
     Pandora.Pattern.Object.Lattice
     Pandora.Pattern.Object.Monoid
     Pandora.Pattern.Object.Quasiring
+    Pandora.Pattern.Object.Ring
     Pandora.Pattern.Object.Ringoid
     Pandora.Pattern.Object.Semigroup
     Pandora.Pattern.Object.Semilattice
