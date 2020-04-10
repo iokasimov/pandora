@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Basis (module Exports, note, hush, left, right, this, that) where
 
 import Pandora.Paradigm.Basis.Twister as Exports
-import Pandora.Paradigm.Basis.Free as Exports
+import Pandora.Paradigm.Basis.Instruction as Exports
 import Pandora.Paradigm.Basis.Fix as Exports
 import Pandora.Paradigm.Basis.Yoneda as Exports
 import Pandora.Paradigm.Basis.Continuation as Exports

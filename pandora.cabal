@@ -34,8 +34,8 @@ library
     Pandora.Paradigm.Basis.Edges
     Pandora.Paradigm.Basis.Endo
     Pandora.Paradigm.Basis.Fix
-    Pandora.Paradigm.Basis.Free
     Pandora.Paradigm.Basis.Identity
+    Pandora.Paradigm.Basis.Instruction
     Pandora.Paradigm.Basis.Jack
     Pandora.Paradigm.Basis.Jet
     Pandora.Paradigm.Basis.Kan

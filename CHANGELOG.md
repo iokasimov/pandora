@@ -203,3 +203,4 @@
 
 # 0.2.7
 * Replace `Lan` and `Ran` with `Kan` data family
+* Rename `Free` to `Instruction` and its constructors: `Pure` to `Enter` and `Impure` to `Instruct`
