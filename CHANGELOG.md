@@ -205,3 +205,4 @@
 * Replace `Lan` and `Ran` with `Kan` data family
 * Rename `Free` to `Instruction` and its constructors: `Pure` to `Enter` and `Impure` to `Instruct`
 * Define `Ring` typeclass with `Group` superclass
+* Define `Weighted` type family and define instance for `Graph`
