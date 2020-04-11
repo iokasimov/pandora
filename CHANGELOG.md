@@ -206,3 +206,4 @@
 * Rename `Free` to `Instruction` and its constructors: `Pure` to `Enter` and `Impure` to `Instruct`
 * Define `Ring` typeclass with `Group` superclass
 * Define `Weighted` type family and define instance for `Graph`
+* Add `Leap` to `Edges` to indicate a connection with only the first vertex
