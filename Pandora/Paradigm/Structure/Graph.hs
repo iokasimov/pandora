@@ -27,8 +27,6 @@ instance Covariant Graph where
 instance Traversable Graph where
 	UT g ->> f = UT <$> g ->>> f
 
--- type Weigthed w a = Graph (w :*: a)
-
 -- | Transform any traversable structure into all loose edges graph
 loose :: Traversable t => t ~> Graph
 loose = UT . fold Empty (\x -> Overlay . Twister x)
