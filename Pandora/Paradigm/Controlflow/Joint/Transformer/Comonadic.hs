@@ -3,8 +3,6 @@
 module Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -17,6 +15,8 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Divariant (($))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 
 class Interpreted t => Comonadic t where
 	{-# MINIMAL flick, bring #-}

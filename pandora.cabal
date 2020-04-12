@@ -80,11 +80,9 @@ library
     Pandora.Paradigm.Structure
     Pandora.Paradigm.Structure.Stream
     Pandora.Paradigm.Structure.Stack
-    Pandora.Paradigm.Structure.Graph
     Pandora.Paradigm.Structure.Binary
     Pandora.Paradigm.Structure.Variation.Nonempty
     Pandora.Paradigm.Structure.Variation.Substructure
-    Pandora.Paradigm.Structure.Variation.Weighted
 
     Pandora.Pattern
     -- Category typeclass
