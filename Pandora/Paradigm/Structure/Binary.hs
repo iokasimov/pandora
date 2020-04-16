@@ -36,11 +36,11 @@ instance Traversable Binary where
 insert :: Chain a => a -> Binary a -> Binary a
 insert x (UT Nothing) = point x
 insert x tree@(UT (Just (Twister y _))) = x <=> y & order
-	(sub @'Left %~ (insert x <$>) $ tree) tree
-	(sub @'Right %~ (insert x <$>) $ tree)
+	(sub @Left %~ (insert x <$>) $ tree) tree
+	(sub @Right %~ (insert x <$>) $ tree)
 
-instance Substructure 'Left Binary where
-	type Output 'Left Binary a = 'Left :# Binary a
+instance Substructure Left Binary where
+	type Output Left Binary a = Left :# Binary a
 	sub (UT Nothing) = Store $ (:*:) (Tag $ UT Nothing) $ (UT Nothing !)
 	sub  t@(UT (Just (Twister x End))) = Store $ (:*:) (Tag $ UT Nothing) $
 		maybe t (UT . Just . Twister x . Left) . run . extract
@@ -51,8 +51,8 @@ instance Substructure 'Left Binary where
 	sub  (UT (Just (Twister x (Both lst rst)))) = Store $ (:*:) (Tag . UT . Just $ lst) $
 		maybe (UT (Just (Twister x (Right rst)))) (UT . Just . Twister x . Both % rst) . run . extract
 
-instance Substructure 'Right Binary where
-	type Output 'Right Binary a = 'Right :# Binary a
+instance Substructure Right Binary where
+	type Output Right Binary a = Right :# Binary a
 	sub (UT Nothing) = Store $ Tag (UT Nothing) :*: (!) (UT Nothing)
 	sub t@(UT (Just (Twister x End))) = Store $ (:*:) (Tag $ UT Nothing) $
 		maybe t (UT . Just . Twister x . Right) . run . extract
@@ -65,8 +65,8 @@ instance Substructure 'Right Binary where
 
 type instance Nonempty Binary = Twister Wye
 
-instance Substructure 'Left (Twister Wye) where
-	type Output 'Left (Twister Wye) a = Maybe ('Left :# Twister Wye a)
+instance Substructure Left (Twister Wye) where
+	type Output Left (Twister Wye) a = Maybe (Left :# Twister Wye a)
 	sub (Twister x End) = Store $ (:*:) Nothing $ (Twister x End !)
 	sub (Twister x (Left lst)) = Store $ (:*:) (Just . Tag $ lst) $
 		maybe (Twister x End) (Twister x . Left . extract)
@@ -75,8 +75,8 @@ instance Substructure 'Left (Twister Wye) where
 	sub (Twister x (Both lst rst)) = Store $ (:*:) (Just . Tag $ lst) $
 		maybe (Twister x $ Right rst) (Twister x . Both % rst . extract)
 
-instance Substructure 'Right (Twister Wye) where
-	type Output 'Right (Twister Wye) a = Maybe ('Right :# Twister Wye a)
+instance Substructure Right (Twister Wye) where
+	type Output Right (Twister Wye) a = Maybe (Right :# Twister Wye a)
 	sub (Twister x End) = Store $ (:*:) Nothing $ (Twister x End !)
 	sub tree@(Twister x (Left lst)) = Store $ (:*:) Nothing $
 		maybe tree (Twister x . Both lst . extract)
