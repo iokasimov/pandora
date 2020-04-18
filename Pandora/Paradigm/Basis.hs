@@ -20,6 +20,7 @@ import Pandora.Paradigm.Basis.Proxy as Exports
 import Pandora.Paradigm.Basis.Tagged as Exports
 import Pandora.Paradigm.Basis.Product as Exports
 import Pandora.Paradigm.Basis.Constant as Exports
+import Pandora.Paradigm.Basis.Reverse as Exports
 import Pandora.Paradigm.Basis.Backwards as Exports
 import Pandora.Paradigm.Basis.Identity as Exports
 

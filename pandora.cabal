@@ -43,6 +43,7 @@ library
     Pandora.Paradigm.Basis.Predicate
     Pandora.Paradigm.Basis.Product
     Pandora.Paradigm.Basis.Proxy
+    Pandora.Paradigm.Basis.Reverse
     Pandora.Paradigm.Basis.Tagged
     Pandora.Paradigm.Basis.Twister
     Pandora.Paradigm.Basis.Validation
