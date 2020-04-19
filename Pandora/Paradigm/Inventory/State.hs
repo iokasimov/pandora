@@ -22,7 +22,7 @@ import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wra
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
-import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached, delta, uncurry)
+import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), delta, uncurry)
 
 newtype State s a = State ((->) s :. (:*:) s := a)
 
@@ -31,8 +31,7 @@ instance Covariant (State s) where
 
 instance Applicative (State s) where
 	State f <*> State x = State $ \old ->
-		let latest = attached . x $ old in
-			latest :*: (extract (f old) . extract . x $ old)
+		let (new :*: g) = f old in g <$> x new
 
 instance Pointable (State s) where
 	point x = State $ \s -> s :*: x
