@@ -14,6 +14,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Adjoint ((|-))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (bool)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
@@ -22,7 +23,7 @@ import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wra
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT))
 import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
-import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), delta, uncurry)
+import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), delta)
 
 newtype State s a = State ((->) s :. (:*:) s := a)
 
@@ -38,7 +39,7 @@ instance Pointable (State s) where
 
 instance Bindable (State s) where
 	State x >>= f = State $ \old ->
-		uncurry (run %) $ f <$> x old
+		(|- run) $ f <$> x old
 
 instance Monad (State s) where
 
