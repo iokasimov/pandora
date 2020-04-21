@@ -19,5 +19,13 @@ import Pandora.Paradigm.Basis.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 
 instance Adjoint (Store s) (State s) where
-	v -| f = State $ \s -> (:*:) s . f . Store $ s :*: (v !)
+	x -| f = State $ \s -> (:*:) s . f . Store $ s :*: (x !)
 	Store (s :*: f) |- g = extract . run % s . g $ f s
+
+instance Adjoint (Accumulator e) (Imprint e) where
+	x -| f = Imprint $ x -| f . Accumulator
+	x |- g = run x |- run . g
+
+instance Adjoint (Equipment e) (Environment e) where
+	x -| f = Environment $ x -| f . Equipment
+	x |- g = run x |- run . g
