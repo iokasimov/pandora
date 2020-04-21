@@ -3,22 +3,15 @@
 module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, zoom, (^.), (.~), (%~)) where
 
 import Pandora.Core.Functor (type (|->))
-import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (adapt)
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Inventory.State (State (State), Stateful)
 import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
 import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Functor.Bivariant ((<->))
-
-instance Adjoint (Store s) (State s) where
-	v -| f = State $ \s -> (:*:) s . f . Store $ s :*: (v !)
-	Store (s :*: f) |- g = extract . run % s . g $ f s
 
 infixr 0 :-.
 type (:-.) src tgt = Lens src tgt
