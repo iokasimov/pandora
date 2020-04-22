@@ -209,3 +209,4 @@
 * Add `Leap` to `Edges` to indicate a connection with only the first vertex
 * Remove `Graph` structure and `Weighted` type family
 * Define `Reverse` type to run `Traversable` in reverse order with `Backwards`
+* Rename `Twister` to `Construction` (in contrast of `Instruction`)

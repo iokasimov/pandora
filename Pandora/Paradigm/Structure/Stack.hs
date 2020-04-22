@@ -20,7 +20,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Basis.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Basis.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Basis.Product (Product ((:*:)))
-import Pandora.Paradigm.Basis.Twister (Twister (Twister), untwist)
+import Pandora.Paradigm.Basis.Construction (Construction (Construction), untwist)
 import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
@@ -29,9 +29,9 @@ import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Paradigm.Structure.Variation.Nonempty (Nonempty)
 
 -- | Linear data structure that serves as a collection of elements
-type Stack = UT Covariant Covariant (Twister Maybe) Maybe
+type Stack = UT Covariant Covariant (Construction Maybe) Maybe
 
-type instance Nonempty Stack = Twister Maybe
+type instance Nonempty Stack = Construction Maybe
 
 instance Covariant Stack where
 	f <$> UT stack = UT $ f <$$> stack
@@ -56,7 +56,7 @@ instance Setoid a => Setoid (Stack a) where
 
 instance Semigroup (Stack a) where
 	UT Nothing + UT ys = UT ys
-	UT (Just (Twister x xs)) + UT ys = UT . Just . Twister x . run
+	UT (Just (Construction x xs)) + UT ys = UT . Just . Construction x . run
 		$ UT @Covariant @Covariant xs + UT @Covariant @Covariant ys
 
 instance Monoid (Stack a) where
@@ -68,15 +68,15 @@ top stack = Store $ (:*:) (extract <$> run stack) $ \case
     Nothing -> pop stack
 
 push :: a -> Stack a -> Stack a
-push x (UT stack) = UT $ (Twister x . Just <$> stack) <+> (point . point) x
+push x (UT stack) = UT $ (Construction x . Just <$> stack) <+> (point . point) x
 
 pop :: Stack ~> Stack
 pop (UT stack) = UT $ stack >>= untwist
 
 filter :: Predicate a -> Stack a -> Stack a
 filter (Predicate p) = UT . fold empty
-	(\now new -> p now ? Just (Twister now new) $ new)
+	(\now new -> p now ? Just (Construction now new) $ new)
 
 -- | Transform any traversable structure into a stack
 linearize :: Traversable t => t ~> Stack
-linearize = UT . fold Nothing (\x -> Just . Twister x)
+linearize = UT . fold Nothing (\x -> Just . Construction x)

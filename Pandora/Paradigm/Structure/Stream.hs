@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Structure.Stream (Stream) where
 
 import Pandora.Paradigm.Basis.Identity (Identity)
-import Pandora.Paradigm.Basis.Twister (Twister)
+import Pandora.Paradigm.Basis.Construction (Construction)
 
-type Stream = Twister Identity
+type Stream = Construction Identity
