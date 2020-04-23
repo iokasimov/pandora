@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Structure.Stream (Stream) where
 
-import Pandora.Paradigm.Basis.Identity (Identity)
-import Pandora.Paradigm.Basis.Construction (Construction)
+import Pandora.Paradigm.Primary.Functor.Identity (Identity)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction)
 
 type Stream = Construction Identity

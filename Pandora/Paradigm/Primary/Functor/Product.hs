@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Product (Product (..), type (:*:)
+module Pandora.Paradigm.Primary.Functor.Product (Product (..), type (:*:)
 	, delta, swap, attached, curry, uncurry) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))

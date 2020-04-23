@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
 
-import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))

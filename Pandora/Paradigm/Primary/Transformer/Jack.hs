@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Jack (Jack (..), jack) where
+module Pandora.Paradigm.Primary.Transformer.Jack (Jack (..), jack) where
 
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), comap)

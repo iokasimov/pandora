@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, gather) where
 
-import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)

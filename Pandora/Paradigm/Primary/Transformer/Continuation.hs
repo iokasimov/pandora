@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Continuation (Continuation (..), cwcc, reset, shift) where
+module Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (..), cwcc, reset, shift) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
 import Pandora.Core.Morphism ((!), (%))

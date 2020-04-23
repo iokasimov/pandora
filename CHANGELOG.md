@@ -210,3 +210,4 @@
 * Remove `Graph` structure and `Weighted` type family
 * Define `Reverse` type to run `Traversable` in reverse order with `Backwards`
 * Rename `Twister` to `Construction` (in contrast of `Instruction`)
+* Split `Basis` on `Functor` and `Transformer` modules in `Primary`

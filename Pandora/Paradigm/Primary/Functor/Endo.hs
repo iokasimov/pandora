@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Endo (Endo (..)) where
+module Pandora.Paradigm.Primary.Functor.Endo (Endo (..)) where
 
 import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Invariant (Invariant (invmap))

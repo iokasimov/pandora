@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Proxy where
+module Pandora.Paradigm.Primary.Functor.Proxy where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))

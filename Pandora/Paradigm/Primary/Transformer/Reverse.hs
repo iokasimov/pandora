@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Reverse (Reverse (..)) where
+module Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (..)) where
 
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
-import Pandora.Paradigm.Basis.Backwards (Backwards (Backwards))
+import Pandora.Paradigm.Primary.Transformer.Backwards (Backwards (Backwards))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 
 newtype Reverse t a = Reverse (t a)

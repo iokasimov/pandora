@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Predicate (Predicate (..)) where
+module Pandora.Paradigm.Primary.Functor.Predicate (Predicate (..)) where
 
 import Pandora.Core.Morphism ((!))
 import Pandora.Pattern.Category ((.))

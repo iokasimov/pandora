@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Yoneda (Yoneda (..)) where
+module Pandora.Paradigm.Primary.Transformer.Yoneda (Yoneda (..)) where
 
 import Pandora.Core.Morphism ((!))
 import Pandora.Pattern.Category (identity, (.))

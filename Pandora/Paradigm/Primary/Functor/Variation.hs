@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Variation (Variation (..), variation) where
+module Pandora.Paradigm.Primary.Functor.Variation (Variation (..), variation) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

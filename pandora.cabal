@@ -26,30 +26,31 @@ library
 
     Pandora.Paradigm
     -- Basic constructions
-    Pandora.Paradigm.Basis
-    Pandora.Paradigm.Basis.Backwards
-    Pandora.Paradigm.Basis.Conclusion
-    Pandora.Paradigm.Basis.Constant
-    Pandora.Paradigm.Basis.Continuation
-    Pandora.Paradigm.Basis.Edges
-    Pandora.Paradigm.Basis.Endo
-    Pandora.Paradigm.Basis.Fix
-    Pandora.Paradigm.Basis.Identity
-    Pandora.Paradigm.Basis.Instruction
-    Pandora.Paradigm.Basis.Jack
-    Pandora.Paradigm.Basis.Jet
-    Pandora.Paradigm.Basis.Kan
-    Pandora.Paradigm.Basis.Maybe
-    Pandora.Paradigm.Basis.Predicate
-    Pandora.Paradigm.Basis.Product
-    Pandora.Paradigm.Basis.Proxy
-    Pandora.Paradigm.Basis.Reverse
-    Pandora.Paradigm.Basis.Tagged
-    Pandora.Paradigm.Basis.Construction
-    Pandora.Paradigm.Basis.Validation
-    Pandora.Paradigm.Basis.Variation
-    Pandora.Paradigm.Basis.Wye
-    Pandora.Paradigm.Basis.Yoneda
+    Pandora.Paradigm.Primary.Functor
+    Pandora.Paradigm.Primary.Functor.Conclusion
+    Pandora.Paradigm.Primary.Functor.Constant
+    Pandora.Paradigm.Primary.Functor.Edges
+    Pandora.Paradigm.Primary.Functor.Endo
+    Pandora.Paradigm.Primary.Functor.Fix
+    Pandora.Paradigm.Primary.Functor.Identity
+    Pandora.Paradigm.Primary.Functor.Maybe
+    Pandora.Paradigm.Primary.Functor.Predicate
+    Pandora.Paradigm.Primary.Functor.Product
+    Pandora.Paradigm.Primary.Functor.Proxy
+    Pandora.Paradigm.Primary.Functor.Tagged
+    Pandora.Paradigm.Primary.Functor.Validation
+    Pandora.Paradigm.Primary.Functor.Variation
+    Pandora.Paradigm.Primary.Functor.Wye
+    Pandora.Paradigm.Primary.Transformer
+    Pandora.Paradigm.Primary.Transformer.Backwards
+    Pandora.Paradigm.Primary.Transformer.Reverse
+    Pandora.Paradigm.Primary.Transformer.Continuation
+    Pandora.Paradigm.Primary.Transformer.Construction
+    Pandora.Paradigm.Primary.Transformer.Instruction
+    Pandora.Paradigm.Primary.Transformer.Jack
+    Pandora.Paradigm.Primary.Transformer.Jet
+    Pandora.Paradigm.Primary.Transformer.Kan
+    Pandora.Paradigm.Primary.Transformer.Yoneda
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     -- Typeclassess about functor junctions

@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Edges (Edges (..), edges) where
+module Pandora.Paradigm.Primary.Functor.Edges (Edges (..), edges) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

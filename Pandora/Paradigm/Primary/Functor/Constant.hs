@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Constant (Constant (..)) where
+module Pandora.Paradigm.Primary.Functor.Constant (Constant (..)) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))

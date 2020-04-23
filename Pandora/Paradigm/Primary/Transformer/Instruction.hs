@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Instruction (Instruction (..)) where
+module Pandora.Paradigm.Primary.Transformer.Instruction (Instruction (..)) where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))

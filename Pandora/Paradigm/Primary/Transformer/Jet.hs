@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Jet (Jet (..)) where
+module Pandora.Paradigm.Primary.Transformer.Jet (Jet (..)) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))

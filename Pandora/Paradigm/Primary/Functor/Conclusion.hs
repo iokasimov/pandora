@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Conclusion (Conclusion (..), Failable, conclusion, fail, failure) where
+module Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (..), Failable, conclusion, fail, failure) where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.))

@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Construction (Construction (..), untwist, coiterate, section) where
+module Pandora.Paradigm.Primary.Transformer.Construction (Construction (..), untwist, coiterate, section) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (|->), type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))

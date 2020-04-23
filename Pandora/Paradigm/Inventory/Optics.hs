@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, zoom, (^.), (.~), (%~)) where
 
 import Pandora.Core.Functor (type (|->))
-import Pandora.Paradigm.Basis.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (adapt)
 import Pandora.Paradigm.Inventory.State (State (State), Stateful)
 import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)

@@ -22,8 +22,8 @@ import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT))
-import Pandora.Paradigm.Basis.Predicate (Predicate (predicate))
-import Pandora.Paradigm.Basis.Product (Product ((:*:)), type (:*:), delta)
+import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (predicate))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), delta)
 
 newtype State s a = State ((->) s :. (:*:) s := a)
 

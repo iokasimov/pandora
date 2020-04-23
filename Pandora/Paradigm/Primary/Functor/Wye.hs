@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Wye (Wye (..), wye) where
+module Pandora.Paradigm.Primary.Functor.Wye (Wye (..), wye) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

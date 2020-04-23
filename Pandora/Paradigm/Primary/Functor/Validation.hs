@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Validation (Validation (..)) where
+module Pandora.Paradigm.Primary.Functor.Validation (Validation (..)) where
 
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))

@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Basis.Maybe (Maybe (..), Optional, maybe, nothing) where
+module Pandora.Paradigm.Primary.Functor.Maybe (Maybe (..), Optional, maybe, nothing) where
 
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
