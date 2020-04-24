@@ -20,7 +20,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construction), untwist)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construction), deconstruct)
 import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
@@ -71,7 +71,7 @@ push :: a -> Stack a -> Stack a
 push x (UT stack) = UT $ (Construction x . Just <$> stack) <+> (point . point) x
 
 pop :: Stack ~> Stack
-pop (UT stack) = UT $ stack >>= untwist
+pop (UT stack) = UT $ stack >>= deconstruct
 
 filter :: Predicate a -> Stack a -> Stack a
 filter (Predicate p) = UT . fold empty

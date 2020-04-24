@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Transformer.Construction (Construction (..), untwist, coiterate, section) where
+module Pandora.Paradigm.Primary.Transformer.Construction (Construction (..), deconstruct, coiterate, section) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (|->), type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
@@ -40,7 +40,7 @@ instance Alternative t => Bindable (Construction t) where
 	Construction x xs >>= f = case f x of Construction y ys -> Construction y $ ys <+> (>>= f) <$> xs
 
 instance Covariant t => Extendable (Construction t) where
-	x =>> f = Construction (f x) $ extend f <$> untwist x
+	x =>> f = Construction (f x) $ extend f <$> deconstruct x
 
 instance (Avoidable t, Alternative t) => Monad (Construction t) where
 
@@ -58,8 +58,8 @@ instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (
 instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Construction t a) where
 	zero = Construction zero zero
 
-untwist :: Construction t a -> (t :. Construction t) a
-untwist (Construction _ xs) = xs
+deconstruct :: Construction t a -> (t :. Construction t) a
+deconstruct (Construction _ xs) = xs
 
 coiterate :: Covariant t => a |-> t -> a |-> Construction t
 coiterate coalgebra x = Construction x $ coiterate coalgebra <$> coalgebra x

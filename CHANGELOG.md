@@ -184,7 +184,7 @@
 * Rename `Group`'s method from `inverse` to `invert`
 * Remove `not` method of `Boolean`, (use `invert` instead)
 * Remove `Injective` and `Has` type families
-* Change superclasseses for `Liftable` and `Lowerable` classes to provide a law
+* Change superclasses for `Liftable` and `Lowerable` classes to provide a law
 
 # 0.2.6
 * Change order of arguments for `TUT` joint schema
@@ -211,3 +211,4 @@
 * Define `Reverse` type to run `Traversable` in reverse order with `Backwards`
 * Rename `Twister` to `Construction` (in contrast of `Instruction`)
 * Split `Basis` on `Functor` and `Transformer` modules in `Primary`
+* Rename `untwist` to `deconstruct` in `Construction`
