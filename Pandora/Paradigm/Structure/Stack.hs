@@ -25,42 +25,42 @@ import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Structure.Variation.Nonempty (Nonempty)
 
 -- | Linear data structure that serves as a collection of elements
-type Stack = UT Covariant Covariant (Construction Maybe) Maybe
+type Stack = TU Covariant Covariant Maybe (Construction Maybe)
 
 type instance Nonempty Stack = Construction Maybe
 
 instance Covariant Stack where
-	f <$> UT stack = UT $ f <$$> stack
+	f <$> TU stack = TU $ f <$$> stack
 
 instance Pointable Stack where
-	point = UT . Just . point
+	point = TU . Just . point
 
 instance Alternative Stack where
-	UT x <+> UT y = UT $ x <+> y
+	TU x <+> TU y = TU $ x <+> y
 
 instance Avoidable Stack where
-	empty = UT Nothing
+	empty = TU Nothing
 
 instance Applicative Stack where
-	UT f <*> UT x = UT $ f <**> x
+	TU f <*> TU x = TU $ f <**> x
 
 instance Traversable Stack where
-	UT stack ->> f = UT <$> stack ->>> f
+	TU stack ->> f = TU <$> stack ->>> f
 
 instance Setoid a => Setoid (Stack a) where
-	UT ls == UT rs = ls == rs
+	TU ls == TU rs = ls == rs
 
 instance Semigroup (Stack a) where
-	UT Nothing + UT ys = UT ys
-	UT (Just (Construction x xs)) + UT ys = UT . Just . Construction x . run
-		$ UT @Covariant @Covariant xs + UT @Covariant @Covariant ys
+	TU Nothing + TU ys = TU ys
+	TU (Just (Construction x xs)) + TU ys = TU . Just . Construction x . run
+		$ TU @Covariant @Covariant xs + TU @Covariant @Covariant ys
 
 instance Monoid (Stack a) where
-	zero = UT Nothing
+	zero = TU Nothing
 
 top :: Stack a :-. Maybe a
 top stack = Store $ (:*:) (extract <$> run stack) $ \case
@@ -68,15 +68,15 @@ top stack = Store $ (:*:) (extract <$> run stack) $ \case
     Nothing -> pop stack
 
 push :: a -> Stack a -> Stack a
-push x (UT stack) = UT $ (Construction x . Just <$> stack) <+> (point . point) x
+push x (TU stack) = TU $ (Construction x . Just <$> stack) <+> (point . point) x
 
 pop :: Stack ~> Stack
-pop (UT stack) = UT $ stack >>= deconstruct
+pop (TU stack) = TU $ stack >>= deconstruct
 
 filter :: Predicate a -> Stack a -> Stack a
-filter (Predicate p) = UT . fold empty
+filter (Predicate p) = TU . fold empty
 	(\now new -> p now ? Just (Construction now new) $ new)
 
 -- | Transform any traversable structure into a stack
 linearize :: Traversable t => t ~> Stack
-linearize = UT . fold Nothing (\x -> Just . Construction x)
+linearize = TU . fold Nothing (\x -> Just . Construction x)
