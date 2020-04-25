@@ -212,3 +212,4 @@
 * Rename `Twister` to `Construction` (in contrast of `Instruction`)
 * Split `Basis` on `Functor` and `Transformer` modules in `Primary`
 * Rename `untwist` to `deconstruct` in `Construction`
+* Define `Rose` tree structure
