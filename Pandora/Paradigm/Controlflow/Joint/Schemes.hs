@@ -21,15 +21,21 @@ instance (Covariant (TU Covariant Covariant v t), Covariant (TU Covariant Covari
 
 instance (Covariant (TU Covariant Covariant v t), Covariant (UT Covariant Covariant w u), Adjoint t u, Adjoint v w)
 	=> Adjoint (TU Covariant Covariant v t) (UT Covariant Covariant w u) where
-		TU y |- g = y |- (|- run . g)
+		TU t |- g = t |- (|- run . g)
 		x -| f = UT $ x -| (-| f . TU)
 
 instance (Covariant (UT Covariant Covariant t v), Covariant (UT Covariant Covariant w u), Adjoint t u, Adjoint v w)
 	=> Adjoint (UT Covariant Covariant t v) (UT Covariant Covariant w u) where
-		UT y |- g = y |- (|- run . g)
+		UT t |- g = t |- (|- run . g)
 		x -| f = UT $ x -| (-| f . UT)
 
 instance (Covariant (UT Covariant Covariant t v), Covariant (TU Covariant Covariant w u) , Adjoint v u, Adjoint t w)
 	=> Adjoint (UT Covariant Covariant t v) (TU Covariant Covariant w u) where
-		UT y |- g = y |- (|- run . g)
+		UT t |- g = t |- (|- run . g)
 		x -| f = TU $ x -| (-| f . UT)
+
+instance (Covariant (TUT Covariant Covariant Covariant t u t'), Covariant (TUT Covariant Covariant Covariant v w v')
+	, Adjoint t w, Adjoint t' v', Adjoint t v, Adjoint u v, Adjoint v' t')
+	=> Adjoint (TUT Covariant Covariant Covariant t u t') (TUT Covariant Covariant Covariant v w v') where
+		TUT t |- g = t |- (|- (|- run . g))
+		x -| f = TUT $ x -| (-| (-| f . TUT))
