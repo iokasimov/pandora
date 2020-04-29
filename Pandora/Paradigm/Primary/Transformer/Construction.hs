@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Primary.Transformer.Construction (Construction (..), deconstruct, coiterate, section) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (|->), type (~>))
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -18,6 +19,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 
 data Construction t a = Construction a (t :. Construction t := a)
 
@@ -66,3 +68,21 @@ coiterate coalgebra x = Construction x $ coiterate coalgebra <$> coalgebra x
 
 section :: Comonad t => t ~> Construction t
 section as = Construction (extract as) $ extend section as
+
+instance (Covariant t, Covariant u) => Covariant (TU Covariant Covariant u (Construction t)) where
+	f <$> TU g = TU $ f <$$> g
+
+instance (Avoidable t, Pointable u) => Pointable (TU Covariant Covariant u (Construction t)) where
+	point x = TU . point . Construction x $ empty
+
+instance (Applicative t, Applicative u) => Applicative (TU Covariant Covariant u (Construction t)) where
+	TU f <*> TU x = TU $ f <**> x
+
+instance (Covariant t, Alternative u) => Alternative (TU Covariant Covariant u (Construction t)) where
+	TU x <+> TU y = TU $ x <+> y
+
+instance (Covariant t, Avoidable u) => Avoidable (TU Covariant Covariant u (Construction t)) where
+	empty = TU empty
+
+instance (Traversable t, Traversable u) => Traversable (TU Covariant Covariant u (Construction t)) where
+	TU g ->> f = TU <$> g ->>> f

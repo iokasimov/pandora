@@ -5,14 +5,13 @@ module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, filter, lineariz
 import Pandora.Core.Functor (type (~>))
 import Pandora.Core.Morphism ((&))
 import Pandora.Pattern.Category ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Alternative ((<+>))
+import Pandora.Pattern.Functor.Avoidable (empty)
+import Pandora.Pattern.Functor.Pointable (point)
+import Pandora.Pattern.Functor.Extractable (extract)
+import Pandora.Pattern.Functor.Traversable (Traversable)
+import Pandora.Pattern.Functor.Bindable ((>>=))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)), (?))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -32,24 +31,6 @@ import Pandora.Paradigm.Structure.Variation.Nonempty (Nonempty)
 type Stack = TU Covariant Covariant Maybe (Construction Maybe)
 
 type instance Nonempty Stack = Construction Maybe
-
-instance Covariant Stack where
-	f <$> TU stack = TU $ f <$$> stack
-
-instance Pointable Stack where
-	point = TU . Just . point
-
-instance Alternative Stack where
-	TU x <+> TU y = TU $ x <+> y
-
-instance Avoidable Stack where
-	empty = TU Nothing
-
-instance Applicative Stack where
-	TU f <*> TU x = TU $ f <**> x
-
-instance Traversable Stack where
-	TU stack ->> f = TU <$> stack ->>> f
 
 instance Setoid a => Setoid (Stack a) where
 	TU ls == TU rs = ls == rs

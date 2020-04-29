@@ -4,9 +4,7 @@ module Pandora.Paradigm.Structure.Binary (Binary, insert) where
 
 import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), order)
@@ -24,17 +22,8 @@ import Pandora.Paradigm.Structure.Variation.Substructure (Substructure (Output, 
 
 type Binary = TU Covariant Covariant Maybe (Construction Wye)
 
-instance Covariant Binary where
-	f <$> TU g = TU $ f <$$> g
-
-instance Pointable Binary where
-	point x = TU . Just . Construction x $ End
-
-instance Traversable Binary where
-	TU g ->> f = TU <$> g ->>> f
-
 insert :: Chain a => a -> Binary a -> Binary a
-insert x (TU Nothing) = point x
+insert x (TU Nothing) = TU . Just . Construction x $ End
 insert x tree@(TU (Just (Construction y _))) = x <=> y & order
 	(sub @Left %~ (insert x <$>) $ tree) tree
 	(sub @Right %~ (insert x <$>) $ tree)
@@ -45,7 +34,7 @@ instance Substructure Left Binary where
 	sub  t@(TU (Just (Construction x End))) = Store $ (:*:) (Tag $ TU Nothing) $
 		maybe t (TU . Just . Construction x . Left) . run . extract
 	sub (TU (Just (Construction x (Left lst)))) = Store $ (:*:) (Tag . TU . Just $ lst) $
-		maybe (point x) (TU . Just . Construction x . Left) . run . extract
+		maybe (TU . Just . Construction x $ End) (TU . Just . Construction x . Left) . run . extract
 	sub t@(TU (Just (Construction x (Right rst)))) = Store $ (:*:) (Tag $ TU Nothing) $
 		maybe t (TU . Just . Construction x . Both % rst) . run . extract
 	sub  (TU (Just (Construction x (Both lst rst)))) = Store $ (:*:) (Tag . TU . Just $ lst) $
@@ -59,7 +48,7 @@ instance Substructure Right Binary where
 	sub t@(TU (Just (Construction x (Left lst)))) = Store $ (:*:) (Tag $ TU Nothing) $
 		maybe t (TU . Just . Construction x . Both lst) . run . extract
 	sub (TU (Just (Construction x (Right rst)))) = Store $ (:*:) (Tag . TU . Just $ rst) $
-		maybe (point x) (TU . Just . Construction x . Right) . run . extract
+		maybe (TU . Just . Construction x $ End) (TU . Just . Construction x . Right) . run . extract
 	sub (TU (Just (Construction x (Both lst rst)))) = Store $ (:*:) (Tag . TU . Just $ rst) $
 		maybe (TU (Just (Construction x (Left lst)))) (TU . Just . Construction x . Both lst) . run . extract
 
