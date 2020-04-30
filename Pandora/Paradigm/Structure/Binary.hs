@@ -29,19 +29,19 @@ insert x tree@(TU (Just (Construction y _))) = x <=> y & order
 	(sub @Right %~ (insert x <$>) $ tree)
 
 instance Substructure Left Binary where
-	type Output Left Binary a = Left :# Binary a
+	type Output Left Binary a = Binary a
 	sub (TU Nothing) = Store $ (:*:) (Tag $ TU Nothing) $ (TU Nothing !)
-	sub  t@(TU (Just (Construction x End))) = Store $ (:*:) (Tag $ TU Nothing) $
+	sub t@(TU (Just (Construction x End))) = Store $ (:*:) (Tag $ TU Nothing) $
 		maybe t (TU . Just . Construction x . Left) . run . extract
 	sub (TU (Just (Construction x (Left lst)))) = Store $ (:*:) (Tag . TU . Just $ lst) $
 		maybe (TU . Just . Construction x $ End) (TU . Just . Construction x . Left) . run . extract
 	sub t@(TU (Just (Construction x (Right rst)))) = Store $ (:*:) (Tag $ TU Nothing) $
 		maybe t (TU . Just . Construction x . Both % rst) . run . extract
-	sub  (TU (Just (Construction x (Both lst rst)))) = Store $ (:*:) (Tag . TU . Just $ lst) $
+	sub (TU (Just (Construction x (Both lst rst)))) = Store $ (:*:) (Tag . TU . Just $ lst) $
 		maybe (TU (Just (Construction x (Right rst)))) (TU . Just . Construction x . Both % rst) . run . extract
 
 instance Substructure Right Binary where
-	type Output Right Binary a = Right :# Binary a
+	type Output Right Binary a = Binary a
 	sub (TU Nothing) = Store $ Tag (TU Nothing) :*: (!) (TU Nothing)
 	sub t@(TU (Just (Construction x End))) = Store $ (:*:) (Tag $ TU Nothing) $
 		maybe t (TU . Just . Construction x . Right) . run . extract
@@ -55,21 +55,22 @@ instance Substructure Right Binary where
 type instance Nonempty Binary = Construction Wye
 
 instance Substructure Left (Construction Wye) where
-	type Output Left (Construction Wye) a = Maybe (Left :# Construction Wye a)
-	sub (Construction x End) = Store $ (:*:) Nothing $ (Construction x End !)
-	sub (Construction x (Left lst)) = Store $ (:*:) (Just . Tag $ lst) $
-		maybe (Construction x End) (Construction x . Left . extract)
-	sub tree@(Construction x (Right rst)) = Store $ (:*:) Nothing $
-		maybe tree (Construction x . Both % rst . extract)
-	sub (Construction x (Both lst rst)) = Store $ (:*:) (Just . Tag $ lst) $
-		maybe (Construction x $ Right rst) (Construction x . Both % rst . extract)
+	type Output Left (Construction Wye) a = Maybe (Construction Wye a)
+	sub (Construction x End) = Store $ Tag Nothing :*: (Construction x End !)
+	sub (Construction x (Left lst)) = Store $ (:*:) (Tag . Just $ lst) $
+		maybe (Construction x End) (Construction x . Left) . extract
+	sub tree@(Construction x (Right rst)) = Store $ (:*:) (Tag Nothing) $
+		maybe tree (Construction x . Both % rst) . extract
+	sub (Construction x (Both lst rst)) = Store $ (:*:) (Tag . Just $ lst) $
+		maybe (Construction x $ Right rst) (Construction x . Both % rst) . extract
 
 instance Substructure Right (Construction Wye) where
-	type Output Right (Construction Wye) a = Maybe (Right :# Construction Wye a)
-	sub (Construction x End) = Store $ (:*:) Nothing $ (Construction x End !)
-	sub tree@(Construction x (Left lst)) = Store $ (:*:) Nothing $
-		maybe tree (Construction x . Both lst . extract)
-	sub (Construction x (Right rst)) = Store $ (:*:) (Just . Tag $ rst) $
-		maybe (Construction x End) (Construction x . Right . extract)
-	sub (Construction x (Both lst rst)) = Store $ (:*:) (Just . Tag $ rst) $
-		maybe (Construction x $ Left lst) (Construction x . Both lst . extract)
+	type Output Right (Construction Wye) a = Maybe (Construction Wye a)
+	-- type Output Right (Construction Wye) a = Maybe (Right :# Construction Wye a)
+	sub (Construction x End) = Store $ Tag Nothing :*: (Construction x End !)
+	sub tree@(Construction x (Left lst)) = Store $ (:*:) (Tag Nothing) $
+		maybe tree (Construction x . Both lst) . extract
+	sub (Construction x (Right rst)) = Store $ (:*:) (Tag . Just $ rst) $
+		maybe (Construction x End) (Construction x . Right) . extract
+	sub (Construction x (Both lst rst)) = Store $ (:*:) (Tag . Just $ rst) $
+		maybe (Construction x $ Left lst) (Construction x . Both lst) . extract

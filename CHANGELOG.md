@@ -214,3 +214,4 @@
 * Rename `untwist` to `deconstruct` in `Construction`
 * Define `Rose` tree structure
 * Replace `UT` joint scheme with `TU` in data structures
+* Change `sub` method of `Substructure` - it always returns `Tagged` value
