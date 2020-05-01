@@ -19,7 +19,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construction), deconstruct)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
@@ -37,7 +37,7 @@ instance Setoid a => Setoid (Stack a) where
 
 instance Semigroup (Stack a) where
 	TU Nothing + TU ys = TU ys
-	TU (Just (Construction x xs)) + TU ys = TU . Just . Construction x . run
+	TU (Just (Construct x xs)) + TU ys = TU . Just . Construct x . run
 		$ TU @Covariant @Covariant xs + TU @Covariant @Covariant ys
 
 instance Monoid (Stack a) where
@@ -49,15 +49,15 @@ top stack = Store $ (:*:) (extract <$> run stack) $ \case
     Nothing -> pop stack
 
 push :: a -> Stack a -> Stack a
-push x (TU stack) = TU $ (Construction x . Just <$> stack) <+> (point . point) x
+push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct
 
 filter :: Predicate a -> Stack a -> Stack a
 filter (Predicate p) = TU . fold empty
-	(\now new -> p now ? Just (Construction now new) $ new)
+	(\now new -> p now ? Just (Construct now new) $ new)
 
 -- | Transform any traversable structure into a stack
 linearize :: Traversable t => t ~> Stack
-linearize = TU . fold Nothing (\x -> Just . Construction x)
+linearize = TU . fold Nothing (\x -> Just . Construct x)
