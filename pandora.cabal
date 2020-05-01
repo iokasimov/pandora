@@ -1,5 +1,5 @@
 name:                pandora
-version:             0.2.6
+version:             0.2.7
 synopsis:            A box of patterns and paradigms
 description:         Humble attempt to define a library for problem solving based on math abstractions.
 homepage:            https://github.com/iokasimov/pandora
@@ -125,7 +125,6 @@ library
     Pandora.Pattern.Object.Semilattice
     Pandora.Pattern.Object.Semiring
     Pandora.Pattern.Object.Setoid
-    -- Pandora.Pattern.Object.Property.Boolean
     -- Typeclassess about object composition of functors
     Pandora.Pattern.Transformer
     Pandora.Pattern.Transformer.Hoistable
