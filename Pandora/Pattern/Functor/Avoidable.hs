@@ -9,4 +9,5 @@ import Pandora.Pattern.Functor.Alternative (Alternative)
 -}
 
 class Alternative t => Avoidable t where
+	{-# MINIMAL empty #-}
 	empty :: t a

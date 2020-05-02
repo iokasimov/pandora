@@ -216,3 +216,5 @@
 * Replace `UT` joint scheme with `TU` in data structures
 * Change `sub` method of `Substructure` - it always returns `Tagged` value
 * Rename `Construction` constructor of `Construction` to `Construct`
+
+# 0.2.8
