@@ -218,3 +218,4 @@
 * Rename `Construction` constructor of `Construction` to `Construct`
 
 # 0.2.8
+* Define `Outline` free applicative transformer
