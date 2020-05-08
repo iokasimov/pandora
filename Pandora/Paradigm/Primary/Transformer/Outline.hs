@@ -34,7 +34,7 @@ instance Liftable Outline where
 	lift t = Outlined t (Line identity)
 
 instance Hoistable Outline where
-	hoist f (Line x) = Line x
+	hoist _ (Line x) = Line x
 	hoist f (Outlined x y) = Outlined (f x) (hoist f y)
 
 instance (Pointable t, Applicative t) => Interpreted (Outline t) where

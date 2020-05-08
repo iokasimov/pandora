@@ -1,6 +1,8 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Paradigm.Structure.Rose (Rose) where
 
-import Pandora.Core.Morphism ((&), (%), (!))
+import Pandora.Core.Morphism ((!))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Extractable (extract)
