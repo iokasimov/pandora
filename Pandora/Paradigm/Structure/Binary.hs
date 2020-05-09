@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Structure.Binary (Binary, insert) where
 
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -55,7 +56,7 @@ instance Substructure Right Binary where
 type instance Nonempty Binary = Construction Wye
 
 instance Substructure Left (Construction Wye) where
-	type Output Left (Construction Wye) a = Maybe (Construction Wye a)
+	type Output Left (Construction Wye) a = Maybe :. Construction Wye := a
 	sub (Construct x End) = Store $ Tag Nothing :*: (Construct x End !)
 	sub (Construct x (Left lst)) = Store $ (:*:) (Tag . Just $ lst) $
 		maybe (Construct x End) (Construct x . Left) . extract
@@ -65,7 +66,7 @@ instance Substructure Left (Construction Wye) where
 		maybe (Construct x $ Right rst) (Construct x . Both % rst) . extract
 
 instance Substructure Right (Construction Wye) where
-	type Output Right (Construction Wye) a = Maybe (Construction Wye a)
+	type Output Right (Construction Wye) a = Maybe :. Construction Wye := a
 	sub (Construct x End) = Store $ Tag Nothing :*: (Construct x End !)
 	sub tree@(Construct x (Left lst)) = Store $ (:*:) (Tag Nothing) $
 		maybe tree (Construct x . Both lst) . extract

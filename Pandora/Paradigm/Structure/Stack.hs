@@ -45,8 +45,8 @@ instance Monoid (Stack a) where
 
 top :: Stack a :-. Maybe a
 top stack = Store $ (:*:) (extract <$> run stack) $ \case
-    Just x -> stack & pop & push x
-    Nothing -> pop stack
+	Just x -> stack & pop & push x
+	Nothing -> pop stack
 
 push :: a -> Stack a -> Stack a
 push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x

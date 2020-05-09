@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Structure.Rose (Rose) where
 
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((!))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
@@ -22,6 +23,10 @@ type Rose = TU Covariant Covariant Maybe (Construction Stack)
 type instance Nonempty Rose = Construction Stack
 
 instance Substructure Just Rose where
-	type Output Just Rose a = Stack (Construction Stack a)
+	type Output Just Rose a = Stack :. Construction Stack := a
 	sub (TU Nothing) = Store $ Tag (TU Nothing) :*: (TU Nothing !)
 	sub (TU (Just (Construct x xs))) = Store $ Tag xs :*: (TU . Just . Construct x . extract)
+
+instance Substructure Just (Construction Stack) where
+	type Output Just (Construction Stack) a = Stack :. Construction Stack := a
+	sub (Construct x xs) = Store $ Tag xs :*: (Construct x . extract)
