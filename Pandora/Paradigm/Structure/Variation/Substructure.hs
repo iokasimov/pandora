@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Variation.Substructure (Substructure (..)) where
+module Pandora.Paradigm.Structure.These.Substructure (Substructure (..)) where
 
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)

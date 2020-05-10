@@ -40,8 +40,8 @@ library
     Pandora.Paradigm.Primary.Functor.Product
     Pandora.Paradigm.Primary.Functor.Proxy
     Pandora.Paradigm.Primary.Functor.Tagged
+    Pandora.Paradigm.Primary.Functor.These
     Pandora.Paradigm.Primary.Functor.Validation
-    Pandora.Paradigm.Primary.Functor.Variation
     Pandora.Paradigm.Primary.Functor.Wye
     Pandora.Paradigm.Primary.Functor.Wedge
     Pandora.Paradigm.Primary.Transformer

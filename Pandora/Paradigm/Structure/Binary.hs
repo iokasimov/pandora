@@ -18,8 +18,8 @@ import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics ((%~))
-import Pandora.Paradigm.Structure.Variation.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Variation.Substructure (Substructure (Output, sub))
+import Pandora.Paradigm.Structure.These.Nonempty (Nonempty)
+import Pandora.Paradigm.Structure.These.Substructure (Substructure (Output, sub))
 
 type Binary = TU Covariant Covariant Maybe (Construction Wye)
 

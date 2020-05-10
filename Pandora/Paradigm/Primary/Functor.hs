@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Predicate as Exports
-import Pandora.Paradigm.Primary.Functor.Variation as Exports
+import Pandora.Paradigm.Primary.Functor.These as Exports
 import Pandora.Paradigm.Primary.Functor.Validation as Exports
 import Pandora.Paradigm.Primary.Functor.Wedge as Exports
 import Pandora.Paradigm.Primary.Functor.Wye as Exports
@@ -38,12 +38,12 @@ right (Left _) = Nothing
 right (Right rs) = Just rs
 right End = Nothing
 
-this :: Variation e ~> Maybe
+this :: These e ~> Maybe
 this (This x) = Just x
 this (That _) = Nothing
 this (These _ x) = Just x
 
-that :: Variation e a -> Maybe e
+that :: These e a -> Maybe e
 that (This _) = Nothing
 that (That x) = Just x
 that (These y _) = Just y

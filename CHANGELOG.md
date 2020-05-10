@@ -221,3 +221,4 @@
 * Define `Outline` free applicative transformer
 * Define `Delta` datatype
 * Define `Wedge` datatype
+* Rename `Variation` to `These`
