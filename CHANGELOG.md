@@ -222,3 +222,4 @@
 * Define `Delta` datatype
 * Define `Wedge` datatype
 * Rename `Variation` to `These`
+* Define two experimental methods in `Bindable` class - `$>>=` and `>>=$`

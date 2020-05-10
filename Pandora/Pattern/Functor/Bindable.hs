@@ -3,7 +3,7 @@ module Pandora.Pattern.Functor.Bindable (Bindable (..)) where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category (identity)
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 
 infixl 1 >>=
 infixr 1 =<<, <=<, >=>
@@ -33,6 +33,12 @@ class Covariant t => Bindable t where
 	-- | Right-to-left Kleisli composition
 	(<=<) :: (b -> t c) -> (a -> t b) -> (a -> t c)
 	(<=<) = (%) (>=>)
+
+	-- | Experimental methods
+	($>>=) :: Covariant u => (a -> t b) -> u :. t := a -> u :. t := b
+	f $>>= x = (>>= f) <$> x
+	(>>=$) :: (t b -> c) -> (a -> t b) -> t a -> c
+	f >>=$ g = f <$> (>>= g)
 
 instance Bindable ((->) e) where
 	f >>= g = \x -> g (f x) x
