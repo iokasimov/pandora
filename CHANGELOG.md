@@ -220,3 +220,4 @@
 # 0.2.8
 * Define `Outline` free applicative transformer
 * Define `Delta` datatype
+* Define `Wedge` datatype

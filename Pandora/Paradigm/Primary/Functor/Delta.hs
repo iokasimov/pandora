@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Primary.Functor.Delta (Delta (..), type (:^:)) where
 
-import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))

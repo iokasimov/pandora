@@ -43,6 +43,7 @@ library
     Pandora.Paradigm.Primary.Functor.Validation
     Pandora.Paradigm.Primary.Functor.Variation
     Pandora.Paradigm.Primary.Functor.Wye
+    Pandora.Paradigm.Primary.Functor.Wedge
     Pandora.Paradigm.Primary.Transformer
     Pandora.Paradigm.Primary.Transformer.Backwards
     Pandora.Paradigm.Primary.Transformer.Reverse

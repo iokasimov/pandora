@@ -4,6 +4,7 @@ import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Predicate as Exports
 import Pandora.Paradigm.Primary.Functor.Variation as Exports
 import Pandora.Paradigm.Primary.Functor.Validation as Exports
+import Pandora.Paradigm.Primary.Functor.Wedge as Exports
 import Pandora.Paradigm.Primary.Functor.Wye as Exports
 import Pandora.Paradigm.Primary.Functor.Edges as Exports
 import Pandora.Paradigm.Primary.Functor.Conclusion as Exports
