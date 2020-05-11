@@ -223,3 +223,4 @@
 * Define `Wedge` datatype
 * Rename `Variation` to `These`
 * Define two experimental methods in `Bindable` class - `$>>=` and `>>=$`
+* Define `here` and `there` methods from `Wedge` to `Maybe`

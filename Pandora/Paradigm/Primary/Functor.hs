@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right, this, that) where
+module Pandora.Paradigm.Primary.Functor where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Predicate as Exports
@@ -47,3 +47,13 @@ that :: These e a -> Maybe e
 that (This _) = Nothing
 that (That x) = Just x
 that (These y _) = Just y
+
+here :: Wedge e a -> Maybe e
+here Nowhere = Nothing
+here (Here x) = Just x
+here (There _) = Nothing
+
+there :: Wedge e ~> Maybe
+there Nowhere = Nothing
+there (Here _) = Nothing
+there (There x) = Just x
