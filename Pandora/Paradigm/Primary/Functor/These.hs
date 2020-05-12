@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.These (These (..), These) where
+module Pandora.Paradigm.Primary.Functor.These (These (..), these) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

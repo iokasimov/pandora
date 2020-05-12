@@ -1,6 +1,7 @@
 module Pandora.Pattern.Object.Chain (Ordering (..), order, Chain (..)) where
 
-import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (True, False))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 
 {- |
 > When providing a new instance, you should ensure it satisfies the three laws:

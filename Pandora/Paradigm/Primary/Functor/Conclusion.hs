@@ -2,11 +2,6 @@ module Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (..), Failable, c
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
-import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -16,9 +11,15 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (($))
-import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (False))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Greater))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 
 data Conclusion e a = Failure e | Success a
 

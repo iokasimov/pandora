@@ -1,10 +1,5 @@
 module Pandora.Paradigm.Primary.Functor.Maybe (Maybe (..), Optional, maybe, nothing) where
 
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
-import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -15,12 +10,18 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (($))
-import Pandora.Pattern.Object.Setoid (Setoid ((==)), Boolean (True, False))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Equal, Greater))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT))
 
 data Maybe a = Nothing | Just a
 
