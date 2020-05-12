@@ -18,11 +18,6 @@ bool _ y True = y
 (?) True x _ = x
 (?) False _ y = y
 
--- instance Setoid Boolean where
--- 	True == True = True
--- 	False == False = True
--- 	_ == _ = False
-
 instance Semigroup Boolean where
 	False + False = False
 	_ + _ = True

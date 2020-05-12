@@ -9,10 +9,10 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Greater))
+import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
+import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 
 data Validation e a = Flaws e | Validated a
 

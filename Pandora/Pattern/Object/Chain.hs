@@ -1,7 +1,8 @@
-module Pandora.Pattern.Object.Chain (Ordering (..), order, Chain (..)) where
+module Pandora.Pattern.Object.Chain (Chain (..)) where
 
-import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Pattern.Object.Setoid (Setoid)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
+import Pandora.Paradigm.Primary.Object.Ordering (Ordering, order)
 
 {- |
 > When providing a new instance, you should ensure it satisfies the three laws:
@@ -22,27 +23,3 @@ class Setoid a => Chain a where
 	x > y = order False False True (x <=> y)
 	(>=) :: a -> a -> Boolean
 	x >= y = order False True True (x <=> y)
-
-data Ordering = Less | Equal | Greater
-
-order :: a -> a -> a -> Ordering -> a
-order x _ _ Less = x
-order _ y _ Equal = y
-order _ _ z Greater = z
-
-instance Setoid Ordering where
-	Less == Less = True
-	Equal == Equal = True
-	Greater == Greater = True
-	_ == _ = False
-
-instance Chain Ordering where
-	Less <=> Less = Equal
-	Less <=> Equal = Less
-	Less <=> Greater = Less
-	Equal <=> Less = Greater
-	Equal <=> Equal = Equal
-	Equal <=> Greater = Less
-	Greater <=> Less = Greater
-	Greater <=> Equal = Greater
-	Greater <=> Greater = Equal

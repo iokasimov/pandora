@@ -30,6 +30,7 @@ library
     Pandora.Paradigm.Primary
     Pandora.Paradigm.Primary.Object
     Pandora.Paradigm.Primary.Object.Boolean
+    Pandora.Paradigm.Primary.Object.Ordering
     Pandora.Paradigm.Primary.Functor
     Pandora.Paradigm.Primary.Functor.Conclusion
     Pandora.Paradigm.Primary.Functor.Constant

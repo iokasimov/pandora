@@ -12,8 +12,9 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
-import Pandora.Pattern.Object.Chain (Chain ((<=>)), Ordering (Less, Greater))
+import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 
 data Jack t a = It a | Other (t a)
 
