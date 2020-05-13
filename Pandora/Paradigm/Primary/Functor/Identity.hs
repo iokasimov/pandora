@@ -11,6 +11,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -52,6 +53,11 @@ instance Extendable Identity where
 	x =>> f = Identity . f $ x
 
 instance Comonad Identity
+
+instance Representable Identity where
+	type Representation Identity = ()
+	() <#> Identity x = x
+	tabulate f = Identity $ f ()
 
 instance Adjoint Identity Identity where
 	x -| f = Identity . f . Identity $ x
