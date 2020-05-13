@@ -4,6 +4,8 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 
 data Delta a = a :^: a
 
@@ -20,3 +22,9 @@ instance Applicative Delta where
 
 instance Traversable Delta where
 	x :^: y ->> f = (:^:) <$> f x <*> f y
+
+instance Representable Delta where
+	type Representation Delta = Boolean
+	True <#> (x :^: _) = x
+	False <#> (_ :^: y) = y
+	tabulate f = f True :^: f False
