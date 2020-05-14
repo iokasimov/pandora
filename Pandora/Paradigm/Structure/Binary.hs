@@ -20,6 +20,7 @@ import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics ((%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, root, singleton))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, sub))
 
 type Binary = TU Covariant Covariant Maybe (Construction Wye)
@@ -29,6 +30,11 @@ insert x (TU Nothing) = TU . Just . Construct x $ End
 insert x tree@(TU (Just (Construct y _))) = x <=> y & order
 	(sub @Left %~ (insert x <$>) $ tree) tree
 	(sub @Right %~ (insert x <$>) $ tree)
+
+instance Focusable Binary where
+	type Focus Binary a = Maybe a
+	root (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % End)
+	singleton = TU . Just . Construct % End
 
 instance Substructure Left Binary where
 	type Substructural Left Binary a = Binary a
@@ -55,6 +61,11 @@ instance Substructure Right Binary where
 		maybe (TU (Just (Construct x (Left lst)))) (TU . Just . Construct x . Both lst) . run . extract
 
 type instance Nonempty Binary = Construction Wye
+
+instance Focusable (Construction Wye) where
+	type Focus (Construction Wye) a = a
+	root (Construct x xs) = Store $ x :*: Construct % xs
+	singleton = Construct % End
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a

@@ -227,3 +227,4 @@
 * Move `Boolean` definition to its own module
 * Move `Ordering` definition to its own module
 * Rename `Variation` submodule to `Ability` and create umbrella-module
+* Define `Focusable` typeclass for getting root and creating singleton
