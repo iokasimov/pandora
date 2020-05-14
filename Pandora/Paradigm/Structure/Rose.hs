@@ -15,8 +15,8 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Stack (Stack)
-import Pandora.Paradigm.Structure.These.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.These.Substructure (Substructure (Substructural, sub))
+import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, sub))
 
 type Rose = TU Covariant Covariant Maybe (Construction Stack)
 

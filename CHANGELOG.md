@@ -226,3 +226,4 @@
 * Define `here` and `there` methods from `Wedge` to `Maybe`
 * Move `Boolean` definition to its own module
 * Move `Ordering` definition to its own module
+* Rename `Variation` submodule to `Ability` and create umbrella-module

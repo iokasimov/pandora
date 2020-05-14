@@ -26,7 +26,7 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
-import Pandora.Paradigm.Structure.These.Nonempty (Nonempty)
+import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = TU Covariant Covariant Maybe (Construction Maybe)
