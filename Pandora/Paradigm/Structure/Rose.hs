@@ -16,17 +16,17 @@ import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Stack (Stack)
 import Pandora.Paradigm.Structure.These.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.These.Substructure (Substructure (Output, sub))
+import Pandora.Paradigm.Structure.These.Substructure (Substructure (Substructural, sub))
 
 type Rose = TU Covariant Covariant Maybe (Construction Stack)
 
 type instance Nonempty Rose = Construction Stack
 
 instance Substructure Just Rose where
-	type Output Just Rose a = Stack :. Construction Stack := a
+	type Substructural Just Rose a = Stack :. Construction Stack := a
 	sub (TU Nothing) = Store $ Tag (TU Nothing) :*: (TU Nothing !)
 	sub (TU (Just (Construct x xs))) = Store $ Tag xs :*: (TU . Just . Construct x . extract)
 
 instance Substructure Just (Construction Stack) where
-	type Output Just (Construction Stack) a = Stack :. Construction Stack := a
+	type Substructural Just (Construction Stack) a = Stack :. Construction Stack := a
 	sub (Construct x xs) = Store $ Tag xs :*: (Construct x . extract)

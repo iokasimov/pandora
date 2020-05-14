@@ -20,7 +20,7 @@ import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics ((%~))
 import Pandora.Paradigm.Structure.These.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.These.Substructure (Substructure (Output, sub))
+import Pandora.Paradigm.Structure.These.Substructure (Substructure (Substructural, sub))
 
 type Binary = TU Covariant Covariant Maybe (Construction Wye)
 
@@ -31,7 +31,7 @@ insert x tree@(TU (Just (Construct y _))) = x <=> y & order
 	(sub @Right %~ (insert x <$>) $ tree)
 
 instance Substructure Left Binary where
-	type Output Left Binary a = Binary a
+	type Substructural Left Binary a = Binary a
 	sub (TU Nothing) = Store $ (:*:) (Tag $ TU Nothing) $ (TU Nothing !)
 	sub t@(TU (Just (Construct x End))) = Store $ (:*:) (Tag $ TU Nothing) $
 		maybe t (TU . Just . Construct x . Left) . run . extract
@@ -43,7 +43,7 @@ instance Substructure Left Binary where
 		maybe (TU (Just (Construct x (Right rst)))) (TU . Just . Construct x . Both % rst) . run . extract
 
 instance Substructure Right Binary where
-	type Output Right Binary a = Binary a
+	type Substructural Right Binary a = Binary a
 	sub (TU Nothing) = Store $ Tag (TU Nothing) :*: (!) (TU Nothing)
 	sub t@(TU (Just (Construct x End))) = Store $ (:*:) (Tag $ TU Nothing) $
 		maybe t (TU . Just . Construct x . Right) . run . extract
@@ -57,7 +57,7 @@ instance Substructure Right Binary where
 type instance Nonempty Binary = Construction Wye
 
 instance Substructure Left (Construction Wye) where
-	type Output Left (Construction Wye) a = Maybe :. Construction Wye := a
+	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
 	sub (Construct x End) = Store $ Tag Nothing :*: (Construct x End !)
 	sub (Construct x (Left lst)) = Store $ (:*:) (Tag . Just $ lst) $
 		maybe (Construct x End) (Construct x . Left) . extract
@@ -67,7 +67,7 @@ instance Substructure Left (Construction Wye) where
 		maybe (Construct x $ Right rst) (Construct x . Both % rst) . extract
 
 instance Substructure Right (Construction Wye) where
-	type Output Right (Construction Wye) a = Maybe :. Construction Wye := a
+	type Substructural Right (Construction Wye) a = Maybe :. Construction Wye := a
 	sub (Construct x End) = Store $ Tag Nothing :*: (Construct x End !)
 	sub tree@(Construct x (Left lst)) = Store $ (:*:) (Tag Nothing) $
 		maybe tree (Construct x . Both lst) . extract
