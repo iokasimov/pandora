@@ -31,8 +31,6 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, sing
 -- | Linear data structure that serves as a collection of elements
 type Stack = TU Covariant Covariant Maybe (Construction Maybe)
 
-type instance Nonempty Stack = Construction Maybe
-
 instance Setoid a => Setoid (Stack a) where
 	TU ls == TU rs = ls == rs
 
@@ -50,6 +48,13 @@ instance Focusable Stack where
 		Just x -> stack & pop & push x
 		Nothing -> pop stack
 	singleton = TU . Just . Construct % Nothing
+
+type instance Nonempty Stack = Construction Maybe
+
+instance Focusable (Construction Maybe) where
+	type Focus (Construction Maybe) a = a
+	top stack = Store $ extract stack :*: Construct % (deconstruct stack)
+	singleton = Construct % Nothing
 
 push :: a -> Stack a -> Stack a
 push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
