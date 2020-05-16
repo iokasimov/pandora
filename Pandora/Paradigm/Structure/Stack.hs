@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, filter, linearize) where
+module Pandora.Paradigm.Structure.Stack (Stack, push, pop, filter, linearize) where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Core.Morphism ((&), (%))
@@ -23,11 +23,10 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, root, singleton))
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = TU Covariant Covariant Maybe (Construction Maybe)
@@ -47,15 +46,10 @@ instance Monoid (Stack a) where
 
 instance Focusable Stack where
 	type Focus Stack a = Maybe a
-	root stack = Store $ (:*:) (extract <$> run stack) $ \case
+	top stack = Store $ (:*:) (extract <$> run stack) $ \case
 		Just x -> stack & pop & push x
 		Nothing -> pop stack
 	singleton = TU . Just . Construct % Nothing
-
-top :: Stack a :-. Maybe a
-top stack = Store $ (:*:) (extract <$> run stack) $ \case
-	Just x -> stack & pop & push x
-	Nothing -> pop stack
 
 push :: a -> Stack a -> Stack a
 push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x

@@ -20,7 +20,7 @@ import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics ((%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, root, singleton))
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, sub))
 
 type Binary = TU Covariant Covariant Maybe (Construction Wye)
@@ -39,8 +39,8 @@ rebalance (Both x y) = extract x <=> extract y & order
 
 instance (forall a . Chain a) => Focusable Binary where
 	type Focus Binary a = Maybe a
-	root (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % End)
-	root (TU (Just x)) = Store . (:*:) (Just $ extract x) $ maybe
+	top (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % End)
+	top (TU (Just x)) = Store . (:*:) (Just $ extract x) $ maybe
 		(TU . Just . rebalance $ deconstruct x)
 		(TU . Just . Construct % (deconstruct x))
 	singleton = TU . Just . Construct % End
@@ -73,7 +73,7 @@ type instance Nonempty Binary = Construction Wye
 
 instance Focusable (Construction Wye) where
 	type Focus (Construction Wye) a = a
-	root (Construct x xs) = Store $ x :*: Construct % xs
+	top (Construct x xs) = Store $ x :*: Construct % xs
 	singleton = Construct % End
 
 instance Substructure Left (Construction Wye) where
