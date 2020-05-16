@@ -14,7 +14,7 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing), maybe)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
@@ -31,9 +31,18 @@ insert x tree@(TU (Just (Construct y _))) = x <=> y & order
 	(sub @Left %~ (insert x <$>) $ tree) tree
 	(sub @Right %~ (insert x <$>) $ tree)
 
-instance Focusable Binary where
+rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
+rebalance (Both x y) = extract x <=> extract y & order
+	(Construct (extract y) $ Both x (rebalance $ deconstruct y))
+	(Construct (extract x) $ Both (rebalance $ deconstruct x) (rebalance $ deconstruct y))
+	(Construct (extract x) $ Both (rebalance $ deconstruct x) y)
+
+instance (forall a . Chain a) => Focusable Binary where
 	type Focus Binary a = Maybe a
 	root (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % End)
+	root (TU (Just x)) = Store . (:*:) (Just $ extract x) $ maybe
+		(TU . Just . rebalance $ deconstruct x)
+		(TU . Just . Construct % (deconstruct x))
 	singleton = TU . Just . Construct % End
 
 instance Substructure Left Binary where
