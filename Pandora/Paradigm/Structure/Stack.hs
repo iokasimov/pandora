@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Stack (Stack, push, top, pop, filter, linearize) where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Core.Morphism ((&))
+import Pandora.Core.Morphism ((&), (%))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative ((<+>))
@@ -27,6 +27,7 @@ import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, root, singleton))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = TU Covariant Covariant Maybe (Construction Maybe)
@@ -43,6 +44,13 @@ instance Semigroup (Stack a) where
 
 instance Monoid (Stack a) where
 	zero = TU Nothing
+
+instance Focusable Stack where
+	type Focus Stack a = Maybe a
+	root stack = Store $ (:*:) (extract <$> run stack) $ \case
+		Just x -> stack & pop & push x
+		Nothing -> pop stack
+	singleton = TU . Just . Construct % Nothing
 
 top :: Stack a :-. Maybe a
 top stack = Store $ (:*:) (extract <$> run stack) $ \case
