@@ -53,7 +53,7 @@ type instance Nonempty Stack = Construction Maybe
 
 instance Focusable (Construction Maybe) where
 	type Focus (Construction Maybe) a = a
-	top stack = Store $ extract stack :*: Construct % (deconstruct stack)
+	top stack = Store $ extract stack :*: Construct % deconstruct stack
 	singleton = Construct % Nothing
 
 push :: a -> Stack a -> Stack a

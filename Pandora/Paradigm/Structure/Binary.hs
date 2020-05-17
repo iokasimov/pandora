@@ -42,7 +42,7 @@ instance (forall a . Chain a) => Focusable Binary where
 	top (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % End)
 	top (TU (Just x)) = Store . (:*:) (Just $ extract x) $ maybe
 		(TU . Just . rebalance $ deconstruct x)
-		(TU . Just . Construct % (deconstruct x))
+		(TU . Just . Construct % deconstruct x)
 	singleton = TU . Just . Construct % End
 
 instance Substructure Left Binary where
@@ -59,15 +59,15 @@ instance Substructure Left Binary where
 
 instance Substructure Right Binary where
 	type Substructural Right Binary a = Binary a
-	sub (TU Nothing) = Store $ Tag (TU Nothing) :*: (!) (TU Nothing)
-	sub t@(TU (Just (Construct x End))) = Store $ (:*:) (Tag $ TU Nothing) $
-		maybe t (TU . Just . Construct x . Right) . run . extract
-	sub t@(TU (Just (Construct x (Left lst)))) = Store $ (:*:) (Tag $ TU Nothing) $
-		maybe t (TU . Just . Construct x . Both lst) . run . extract
-	sub (TU (Just (Construct x (Right rst)))) = Store $ (:*:) (Tag . TU . Just $ rst) $
-		maybe (TU . Just . Construct x $ End) (TU . Just . Construct x . Right) . run . extract
-	sub (TU (Just (Construct x (Both lst rst)))) = Store $ (:*:) (Tag . TU . Just $ rst) $
-		maybe (TU (Just (Construct x (Left lst)))) (TU . Just . Construct x . Both lst) . run . extract
+	sub (TU Nothing) = Store $ Tag (TU Nothing) :*: (TU Nothing !)
+	sub t@(TU (Just (Construct x End))) = Store $ Tag (TU Nothing)
+		:*: maybe t (TU . Just . Construct x . Right) . run . extract
+	sub t@(TU (Just (Construct x (Left lst)))) = Store $ Tag (TU Nothing)
+		:*: maybe t (TU . Just . Construct x . Both lst) . run . extract
+	sub (TU (Just (Construct x (Right rst)))) = Store $ (Tag . TU . Just $ rst)
+		:*: maybe (TU . Just . Construct x $ End) (TU . Just . Construct x . Right) . run . extract
+	sub (TU (Just (Construct x (Both lst rst)))) = Store $ (Tag . TU . Just $ rst)
+		:*: maybe (TU . Just . Construct x $ Left lst) (TU . Just . Construct x . Both lst) . run . extract
 
 type instance Nonempty Binary = Construction Wye
 
@@ -79,19 +79,19 @@ instance Focusable (Construction Wye) where
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
 	sub (Construct x End) = Store $ Tag Nothing :*: (Construct x End !)
-	sub (Construct x (Left lst)) = Store $ (:*:) (Tag . Just $ lst) $
-		maybe (Construct x End) (Construct x . Left) . extract
-	sub tree@(Construct x (Right rst)) = Store $ (:*:) (Tag Nothing) $
-		maybe tree (Construct x . Both % rst) . extract
-	sub (Construct x (Both lst rst)) = Store $ (:*:) (Tag . Just $ lst) $
-		maybe (Construct x $ Right rst) (Construct x . Both % rst) . extract
+	sub (Construct x (Left lst)) = Store $ Tag (Just lst)
+		:*: maybe (Construct x End) (Construct x . Left) . extract
+	sub tree@(Construct x (Right rst)) = Store $ Tag Nothing
+		:*: maybe tree (Construct x . Both % rst) . extract
+	sub (Construct x (Both lst rst)) = Store $ Tag (Just lst)
+		:*: maybe (Construct x $ Right rst) (Construct x . Both % rst) . extract
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) a = Maybe :. Construction Wye := a
 	sub (Construct x End) = Store $ Tag Nothing :*: (Construct x End !)
-	sub tree@(Construct x (Left lst)) = Store $ (:*:) (Tag Nothing) $
-		maybe tree (Construct x . Both lst) . extract
-	sub (Construct x (Right rst)) = Store $ (:*:) (Tag . Just $ rst) $
-		maybe (Construct x End) (Construct x . Right) . extract
-	sub (Construct x (Both lst rst)) = Store $ (:*:) (Tag . Just $ rst) $
-		maybe (Construct x $ Left lst) (Construct x . Both lst) . extract
+	sub tree@(Construct x (Left lst)) = Store $ Tag Nothing
+		:*: maybe tree (Construct x . Both lst) . extract
+	sub (Construct x (Right rst)) = Store $ Tag (Just rst)
+		:*: maybe (Construct x End) (Construct x . Right) . extract
+	sub (Construct x (Both lst rst)) = Store $ Tag (Just rst)
+		:*: maybe (Construct x $ Left lst) (Construct x . Both lst) . extract

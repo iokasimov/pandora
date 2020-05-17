@@ -24,24 +24,24 @@ type Rose = TU Covariant Covariant Maybe (Construction Stack)
 
 instance Focusable Rose where
 	type Focus Rose a = Maybe a
-	top (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % empty)
-	top (TU (Just x)) = Store . (:*:) (Just $ extract x) $ maybe
+	top (TU Nothing) = Store $ Nothing :*: TU . (<$>) (Construct % empty)
+	top (TU (Just x)) = Store $ Just (extract x) :*: maybe
 		(TU $ Just x) -- TODO: Nothing at top's lens - should it remove something?
-		(TU . Just . Construct % (deconstruct x))
+		(TU . Just . Construct % deconstruct x)
 	singleton = TU . Just . Construct % empty
 
 instance Substructure Just Rose where
 	type Substructural Just Rose a = Stack :. Construction Stack := a
 	sub (TU Nothing) = Store $ Tag (TU Nothing) :*: (TU Nothing !)
-	sub (TU (Just (Construct x xs))) = Store $ Tag xs :*: (TU . Just . Construct x . extract)
+	sub (TU (Just (Construct x xs))) = Store $ Tag xs :*: TU . Just . Construct x . extract
 
 type instance Nonempty Rose = Construction Stack
 
 instance Substructure Just (Construction Stack) where
 	type Substructural Just (Construction Stack) a = Stack :. Construction Stack := a
-	sub (Construct x xs) = Store $ Tag xs :*: (Construct x . extract)
+	sub (Construct x xs) = Store $ Tag xs :*: Construct x . extract
 
 instance Focusable (Construction Stack) where
 	type Focus (Construction Stack) a = a
-	top rose = Store $ extract rose :*: Construct % (deconstruct rose)
+	top rose = Store $ extract rose :*: Construct % deconstruct rose
 	singleton = Construct % empty
