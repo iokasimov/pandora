@@ -229,3 +229,4 @@
 * Rename `Variation` submodule to `Ability` and create umbrella-module
 * Define `Focusable` typeclass for getting root and creating singleton
 * Replace `top` method of `Stack` structure with `Focusable` instance
+* Add `Covariant` constraint on `natural transformation` in `Hoistable` typeclass
