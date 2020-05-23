@@ -230,3 +230,6 @@
 * Define `Focusable` typeclass for getting root and creating singleton
 * Replace `top` method of `Stack` structure with `Focusable` instance
 * Add `Covariant` constraint on `natural transformation` in `Hoistable` typeclass
+
+# 0.2.9
+* Define `Zipper` type family to walk datastructures with context

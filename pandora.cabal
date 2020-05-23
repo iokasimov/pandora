@@ -94,8 +94,9 @@ library
     Pandora.Paradigm.Structure.Rose
     Pandora.Paradigm.Structure.Ability
     Pandora.Paradigm.Structure.Ability.Focusable
-    Pandora.Paradigm.Structure.Ability.Nonempty
     Pandora.Paradigm.Structure.Ability.Substructure
+    Pandora.Paradigm.Structure.Ability.Nonempty
+    Pandora.Paradigm.Structure.Ability.Zipper
 
     Pandora.Pattern
     -- Category typeclass
