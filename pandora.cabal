@@ -54,6 +54,7 @@ library
     Pandora.Paradigm.Primary.Transformer.Continuation
     Pandora.Paradigm.Primary.Transformer.Construction
     Pandora.Paradigm.Primary.Transformer.Instruction
+    Pandora.Paradigm.Primary.Transformer.Tap
     Pandora.Paradigm.Primary.Transformer.Outline
     Pandora.Paradigm.Primary.Transformer.Jack
     Pandora.Paradigm.Primary.Transformer.Jet
