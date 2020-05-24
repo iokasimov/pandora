@@ -2,18 +2,18 @@
 
 module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
 
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
-import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Divariant (($))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
+import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Equipment e a = Equipment (e :*: a)
 
@@ -30,7 +30,7 @@ instance Interpreted (Equipment e) where
 	type Primary (Equipment e) a = e :*: a
 	run (Equipment x) = x
 
-type instance Schematic Comonad (Equipment e) u = TU Covariant Covariant ((:*:) e) u
+type instance Schematic Comonad (Equipment e) u = (:*:) e <:.> u
 
 instance Comonadic (Equipment e) where
 	flick (TC (TU x)) = extract x
@@ -38,13 +38,13 @@ instance Comonadic (Equipment e) where
 
 type Equipped e t = Adaptable t (Equipment e)
 
-instance Covariant u => Covariant (TU Covariant Covariant ((:*:) e) u) where
+instance Covariant u => Covariant ((:*:) e <:.> u) where
 	f <$> TU x = TU $ f <$$> x
 
-instance Extractable u => Extractable (TU Covariant Covariant ((:*:) e) u) where
+instance Extractable u => Extractable ((:*:) e <:.> u) where
 	extract (TU x) = extract . extract $ x
 
-instance Extendable u => Extendable (TU Covariant Covariant ((:*:) e) u) where
+instance Extendable u => Extendable ((:*:) e <:.> u) where
 	TU (e :*: x) =>> f = TU . (:*:) e $ x =>> f . TU . (:*:) e
 
 instance Comonad (Equipment e) where

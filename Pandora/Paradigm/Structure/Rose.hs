@@ -13,14 +13,14 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing), maybe)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Stack (Stack)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, sub))
 
-type Rose = TU Covariant Covariant Maybe (Construction Stack)
+type Rose = Maybe <:.> Construction Stack
 
 instance Focusable Rose where
 	type Focus Rose a = Maybe a

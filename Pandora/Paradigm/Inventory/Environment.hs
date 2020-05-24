@@ -2,12 +2,6 @@
 
 module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
-import Pandora.Core.Morphism ((!), (%))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
-import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
 import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -16,6 +10,12 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (($))
+import Pandora.Core.Morphism ((!), (%))
+import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
+import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
+import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Environment e a = Environment (e -> a)
 
@@ -40,7 +40,7 @@ instance Interpreted (Environment e) where
 	type Primary (Environment e) a = (->) e a
 	run (Environment x) = x
 
-type instance Schematic Monad (Environment e) u = TU Covariant Covariant ((->) e) u
+type instance Schematic Monad (Environment e) u = (->) e <:.> u
 
 instance Monadic (Environment e) where
 	lay = TM . TU . (!)
@@ -48,16 +48,16 @@ instance Monadic (Environment e) where
 
 type Configured e = Adaptable (Environment e)
 
-instance Covariant u => Covariant (TU Covariant Covariant ((->) e) u) where
+instance Covariant u => Covariant ((->) e <:.> u) where
 	f <$> TU x = TU $ f <$$> x
 
-instance (Covariant u, Pointable u) => Pointable (TU Covariant Covariant ((->) e) u) where
+instance (Covariant u, Pointable u) => Pointable ((->) e <:.> u) where
 	point = TU . point . point
 
-instance Applicative u => Applicative (TU Covariant Covariant ((->) e) u) where
+instance Applicative u => Applicative ((->) e <:.> u) where
 	TU f <*> TU x = TU $ f <**> x
 
-instance Bindable u => Bindable (TU Covariant Covariant ((->) e) u) where
+instance Bindable u => Bindable ((->) e <:.> u) where
 	TU x >>= f = TU $ \e -> x e >>= ($ e) . run . f
 
 env :: Configured e t => t e

@@ -15,7 +15,7 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics ((%~))
@@ -23,7 +23,7 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, sub))
 
-type Binary = TU Covariant Covariant Maybe (Construction Wye)
+type Binary = Maybe <:.> Construction Wye
 
 insert :: Chain a => a -> Binary a -> Binary a
 insert x (TU Nothing) = TU . Just . Construct x $ End

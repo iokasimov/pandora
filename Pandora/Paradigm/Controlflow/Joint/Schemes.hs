@@ -14,23 +14,23 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 
-instance (Covariant (TU Covariant Covariant v t), Covariant (TU Covariant Covariant u w), Adjoint t u, Adjoint v w)
-	=> Adjoint (TU Covariant Covariant v t) (TU Covariant Covariant u w) where
+instance (Covariant (v <:.> t), Covariant (u <:.> w), Adjoint t u, Adjoint v w)
+	=> Adjoint (v <:.> t) (u <:.> w) where
 		TU y |- g = y |- (|- run . g)
 		x -| f = TU $ x -| (-| f . TU)
 
-instance (Covariant (TU Covariant Covariant v t), Covariant (UT Covariant Covariant w u), Adjoint t u, Adjoint v w)
-	=> Adjoint (TU Covariant Covariant v t) (UT Covariant Covariant w u) where
+instance (Covariant (v <:.> t), Covariant (w <.:> u), Adjoint t u, Adjoint v w)
+	=> Adjoint (v <:.> t) (w <.:> u) where
 		TU t |- g = t |- (|- run . g)
 		x -| f = UT $ x -| (-| f . TU)
 
-instance (Covariant (UT Covariant Covariant t v), Covariant (UT Covariant Covariant w u), Adjoint t u, Adjoint v w)
-	=> Adjoint (UT Covariant Covariant t v) (UT Covariant Covariant w u) where
+instance (Covariant (t <.:> v), Covariant (w <.:> u), Adjoint t u, Adjoint v w)
+	=> Adjoint (t <.:> v) (w <.:> u) where
 		UT t |- g = t |- (|- run . g)
 		x -| f = UT $ x -| (-| f . UT)
 
-instance (Covariant (UT Covariant Covariant t v), Covariant (TU Covariant Covariant w u) , Adjoint v u, Adjoint t w)
-	=> Adjoint (UT Covariant Covariant t v) (TU Covariant Covariant w u) where
+instance (Covariant (t <.:> v), Covariant (w <:.> u) , Adjoint v u, Adjoint t w)
+	=> Adjoint (t <.:> v) (w <:.> u) where
 		UT t |- g = t |- (|- run . g)
 		x -| f = TU $ x -| (-| f . UT)
 

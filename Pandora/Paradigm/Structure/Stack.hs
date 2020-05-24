@@ -27,13 +27,13 @@ import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (view)
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
 
 -- | Linear data structure that serves as a collection of elements
-type Stack = TU Covariant Covariant Maybe (Construction Maybe)
+type Stack = Maybe <:.> Construction Maybe
 
 instance Setoid a => Setoid (Stack a) where
 	TU ls == TU rs = ls == rs
@@ -74,7 +74,7 @@ instance Focusable (Construction Maybe) where
 	top stack = Store $ extract stack :*: Construct % deconstruct stack
 	singleton = Construct % Nothing
 
-type instance Zipper Stack = Tap (TU Covariant Covariant Delta Stack)
+type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 forward, backward :: Zipper Stack a -> Maybe (Zipper Stack a)
 forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> view top fs
