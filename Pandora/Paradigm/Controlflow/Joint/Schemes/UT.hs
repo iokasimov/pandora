@@ -1,7 +1,8 @@
-module Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (..)) where
+module Pandora.Paradigm.Controlflow.Joint.Schemes.UT where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Divariant (($))
@@ -10,6 +11,11 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 
 newtype UT ct cu t u a = UT (u :. t := a)
+
+type (<.:>) = UT Covariant Covariant
+type (>.:>) = UT Contravariant Covariant
+type (<.:<) = UT Covariant Contravariant
+type (>.:<) = UT Contravariant Contravariant
 
 instance Interpreted (UT ct cu t u) where
 	type Primary (UT ct cu t u) a = u :. t := a
