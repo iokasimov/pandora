@@ -14,7 +14,7 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), at
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
 
 newtype Store p a = Store ((:*:) p :. (->) p := a)
@@ -36,7 +36,7 @@ instance Interpreted (Store p) where
 	run (Store x) = x
 
 type instance Schematic Comonad (Store p) u =
-	TUT Covariant Covariant Covariant ((:*:) p) ((->) p) u
+	((:*:) p <:<.>:> (->) p) u
 
 instance Comonadic (Store p) where
 	flick (TC (TUT (p :*: f))) = ($ p) <$> f
@@ -44,13 +44,13 @@ instance Comonadic (Store p) where
 
 type Storable s x = Adaptable x (Store s)
 
-instance Covariant u => Covariant (TUT Covariant Covariant Covariant ((:*:) p) ((->) p) u) where
+instance Covariant u => Covariant (((:*:) p <:<.>:> (->) p) u) where
 	f <$> TUT (p :*: x) = TUT . (:*:) p $ f <$$> x
 
-instance Extractable u => Extractable (TUT Covariant Covariant Covariant ((:*:) p) ((->) p) u) where
+instance Extractable u => Extractable (((:*:) p <:<.>:> (->) p) u) where
 	extract (TUT (p :*: x)) = extract x p
 
-instance Extendable u => Extendable (TUT Covariant Covariant Covariant ((:*:) p) ((->) p) u) where
+instance Extendable u => Extendable (((:*:) p <:<.>:> (->) p) u) where
 	TUT (old :*: x) =>> f = TUT . (:*:) old $ x =>> (\x' new -> f . TUT . (:*:) new $ x')
 
 position :: Storable s t => t a -> s

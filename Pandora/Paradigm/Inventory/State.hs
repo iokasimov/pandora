@@ -20,7 +20,7 @@ import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT))
+import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Object.Boolean (bool)
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), delta)
@@ -54,8 +54,7 @@ instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
 	run (State x) = x
 
-type instance Schematic Monad (State s) u =
-	TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u
+type instance Schematic Monad (State s) u = ((->) s <:<.>:> (:*:) s) u
 
 instance Monadic (State s) where
 	lay x = TM . TUT $ \s -> (s :*:) <$> x
@@ -63,19 +62,19 @@ instance Monadic (State s) where
 
 type Stateful s = Adaptable (State s)
 
-instance Covariant u => Covariant (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
+instance Covariant u => Covariant (((->) s <:<.>:> (:*:) s) u) where
 	f <$> TUT x = TUT $ \old -> f <$$> x old
 
-instance Bindable u => Applicative (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
+instance Bindable u => Applicative (((->) s <:<.>:> (:*:) s) u) where
 	TUT f <*> TUT x = TUT $ \old -> f old >>= \(new :*: g) -> g <$$> x new
 
-instance Pointable u => Pointable (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
+instance Pointable u => Pointable (((->) s <:<.>:> (:*:) s) u) where
 	point x = TUT $ \s -> point $ s :*: x
 
-instance Bindable u => Bindable (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
+instance Bindable u => Bindable (((->) s <:<.>:> (:*:) s) u) where
 	TUT x >>= f = TUT $ \old -> x old >>= \(new :*: y) -> ($ new) . run . f $ y
 
-instance Monad u => Monad (TUT Covariant Covariant Covariant ((->) s) ((:*:) s) u) where
+instance Monad u => Monad (((->) s <:<.>:> (:*:) s) u) where
 
 current :: Stateful s t => t s
 current = adapt $ State delta

@@ -34,8 +34,8 @@ instance (Covariant (t <.:> v), Covariant (w <:.> u) , Adjoint v u, Adjoint t w)
 		UT t |- g = t |- (|- run . g)
 		x -| f = TU $ x -| (-| f . UT)
 
-instance (Covariant (TUT Covariant Covariant Covariant t u t'), Covariant (TUT Covariant Covariant Covariant v w v')
+instance (Covariant ((t <:<.>:> u) t'), Covariant ((v <:<.>:> w) v')
 	, Adjoint t w, Adjoint t' v', Adjoint t v, Adjoint u v, Adjoint v' t')
-	=> Adjoint (TUT Covariant Covariant Covariant t u t') (TUT Covariant Covariant Covariant v w v') where
+	=> Adjoint ((t <:<.>:> u) t') ((v <:<.>:> w) v') where
 		TUT t |- g = t |- (|- (|- run . g))
 		x -| f = TUT $ x -| (-| (-| f . TUT))

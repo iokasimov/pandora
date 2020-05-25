@@ -234,4 +234,4 @@
 # 0.2.9
 * Define `Zipper` type family to walk datastructures with context
 * Define `Tap` datatype for context dependent values
-* Define type synonyms for `TU` and `UT` joint schemes
+* Define type synonyms for `TU`, `UT`, `TUT` and `UTU` joint schemes
