@@ -14,7 +14,7 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), at
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT (TUT (TUT), type (<:<.>:>))
+import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
 
 newtype Store p a = Store ((:*:) p :. (->) p := a)

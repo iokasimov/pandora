@@ -16,7 +16,7 @@ import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.UT (UT (UT), type (<.:>))
+import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
 newtype Imprint e a = Imprint (e -> a)
 

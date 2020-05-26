@@ -13,7 +13,7 @@ import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Equipment e a = Equipment (e :*: a)
 

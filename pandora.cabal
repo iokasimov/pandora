@@ -60,6 +60,13 @@ library
     Pandora.Paradigm.Primary.Transformer.Jet
     Pandora.Paradigm.Primary.Transformer.Kan
     Pandora.Paradigm.Primary.Transformer.Yoneda
+    -- Schemes of functor compositions
+    Pandora.Paradigm.Schemes
+    Pandora.Paradigm.Schemes.TU
+    Pandora.Paradigm.Schemes.TUT
+    Pandora.Paradigm.Schemes.TUVW
+    Pandora.Paradigm.Schemes.UT
+    Pandora.Paradigm.Schemes.UTU
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     -- Typeclassess about functor junctions
@@ -70,12 +77,6 @@ library
     Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic
     Pandora.Paradigm.Controlflow.Joint.Schematic
     Pandora.Paradigm.Controlflow.Joint.Adaptable
-    Pandora.Paradigm.Controlflow.Joint.Schemes
-    Pandora.Paradigm.Controlflow.Joint.Schemes.TU
-    Pandora.Paradigm.Controlflow.Joint.Schemes.TUT
-    Pandora.Paradigm.Controlflow.Joint.Schemes.TUVW
-    Pandora.Paradigm.Controlflow.Joint.Schemes.UT
-    Pandora.Paradigm.Controlflow.Joint.Schemes.UTU
     Pandora.Paradigm.Controlflow.Observable
     Pandora.Paradigm.Controlflow.Pipeline
     -- Tools for datastructures

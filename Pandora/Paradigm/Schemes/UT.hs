@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Controlflow.Joint.Schemes.UT where
+module Pandora.Paradigm.Schemes.UT where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))

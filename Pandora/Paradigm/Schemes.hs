@@ -1,12 +1,12 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Controlflow.Joint.Schemes (module Exports) where
+module Pandora.Paradigm.Schemes (module Exports) where
 
-import Pandora.Paradigm.Controlflow.Joint.Schemes.UTU as Exports
-import Pandora.Paradigm.Controlflow.Joint.Schemes.UT as Exports
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TUVW as Exports
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TUT as Exports
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TU as Exports
+import Pandora.Paradigm.Schemes.UTU as Exports
+import Pandora.Paradigm.Schemes.UT as Exports
+import Pandora.Paradigm.Schemes.TUVW as Exports
+import Pandora.Paradigm.Schemes.TUT as Exports
+import Pandora.Paradigm.Schemes.TU as Exports
 
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant)

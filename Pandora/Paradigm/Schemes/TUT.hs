@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Controlflow.Joint.Schemes.TUT where
+module Pandora.Paradigm.Schemes.TUT where
 
 import Pandora.Pattern.Category (identity)
 import Pandora.Core.Functor (type (:.), type (:=))

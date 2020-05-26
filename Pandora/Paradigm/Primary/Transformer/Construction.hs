@@ -20,7 +20,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Controlflow.Joint.Schemes.TU (TU (TU))
+import Pandora.Paradigm.Schemes.TU (TU (TU))
 
 data Construction t a = Construct a (t :. Construction t := a)
 

@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Controlflow.Joint.Schemes.TUVW (TUVW (..)) where
+module Pandora.Paradigm.Schemes.TUVW (TUVW (..)) where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
