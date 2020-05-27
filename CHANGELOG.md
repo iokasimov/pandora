@@ -237,3 +237,4 @@
 * Define type synonyms for `TU`, `UT`, `TUT` and `UTU` joint schemes
 * Move `Schemes` module to `Paradigm` submodule
 * Move `$` definition from `Divariant` to `Category`
+* Define generalized point free combinators in `Covariant` module
