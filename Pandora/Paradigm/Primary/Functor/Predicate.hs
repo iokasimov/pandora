@@ -1,10 +1,9 @@
 module Pandora.Paradigm.Primary.Functor.Predicate (Predicate (..)) where
 
 import Pandora.Core.Morphism ((!))
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Determinable (Determinable (determine))
-import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 
 newtype Predicate a = Predicate { predicate :: a -> Boolean }

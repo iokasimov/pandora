@@ -1,12 +1,11 @@
 module Pandora.Paradigm.Primary.Transformer.Outline (Outline (..)) where
 
 import Pandora.Core.Morphism ((%))
-import Pandora.Pattern.Category (identity, (.))
+import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))

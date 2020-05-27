@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Bivariant (Bivariant (..)) where
 
-import Pandora.Pattern.Functor.Divariant (($))
+import Pandora.Pattern.Category (($))
 
 infixl 4 <->
 

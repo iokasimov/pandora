@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Schemes.TUT where
 
-import Pandora.Pattern.Category (identity)
 import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
@@ -9,7 +9,6 @@ import Pandora.Pattern.Functor.Applicative (Applicative)
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))

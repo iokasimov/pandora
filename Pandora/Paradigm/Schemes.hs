@@ -8,10 +8,9 @@ import Pandora.Paradigm.Schemes.TUVW as Exports
 import Pandora.Paradigm.Schemes.TUT as Exports
 import Pandora.Paradigm.Schemes.TU as Exports
 
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
 
 instance (Covariant (v <:.> t), Covariant (u <:.> w), Adjoint t u, Adjoint v w)

@@ -2,14 +2,13 @@ module Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (..), cwc
 
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
 import Pandora.Core.Morphism ((!), (%))
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Pattern.Functor.Divariant (($))
 
 newtype Continuation r t a = Continuation { continue :: (->) ::|:. a :. t := r }
 

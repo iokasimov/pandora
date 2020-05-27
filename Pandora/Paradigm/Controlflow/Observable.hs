@@ -1,9 +1,8 @@
 module Pandora.Paradigm.Controlflow.Observable (Observable, observe,
 	notify, follow, subscribe, watch, (.:~.), (.:~*), (*:~.), (*:~*)) where
 
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Applicative (Applicative (forever))
-import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation, continue))
 
 newtype Capture r t a = Capture { captured :: t r }

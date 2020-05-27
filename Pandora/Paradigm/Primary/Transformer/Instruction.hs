@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Primary.Transformer.Instruction (Instruction (..)) where
 
 import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -9,7 +10,6 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Pattern.Functor.Divariant (($))
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 

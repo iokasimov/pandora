@@ -4,12 +4,11 @@ module Pandora.Paradigm.Inventory.Store (Store (..), Storable, position, access,
 
 import Pandora.Core.Functor (type (:.), type (:=), type (<-|), type (~>))
 import Pandora.Core.Morphism ((%))
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Divariant (($))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))

@@ -1,9 +1,8 @@
 module Pandora.Pattern.Functor.Divariant (Divariant (..)) where
 
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Category ((.), ($))
 
 infixl 4 >->
-infixr 0 $
 
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
@@ -17,9 +16,6 @@ class Divariant (v :: * -> * -> *) where
 	-- | Prefix version of '>->'
 	dimap :: v a b -> v c d -> v b c -> v a d
 	dimap f g x = f >-> g $ x
-	-- Generalized function application
-	($) :: v a b -> v a b
-	($) f = f
 
 instance Divariant ((->)) where
 	(>->) ab cd bc = cd . bc . ab

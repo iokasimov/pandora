@@ -1,10 +1,10 @@
 module Pandora.Paradigm.Primary.Functor.Wye (Wye (..), wye) where
 
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Divariant (($))
 
 data Wye a = End | Left a | Right a | Both a a
 

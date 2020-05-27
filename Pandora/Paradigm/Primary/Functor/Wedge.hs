@@ -1,9 +1,9 @@
 module Pandora.Paradigm.Primary.Functor.Wedge (Wedge (..), wedge) where
 
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Divariant (($))
 
 data Wedge e a = Nowhere | Here e | There a
 
