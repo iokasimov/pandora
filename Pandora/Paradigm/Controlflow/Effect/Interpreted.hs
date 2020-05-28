@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (..)) where
+module Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (..)) where
 
 class Interpreted t where
 	{-# MINIMAL run #-}

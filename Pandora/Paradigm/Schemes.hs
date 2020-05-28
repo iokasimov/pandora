@@ -11,7 +11,7 @@ import Pandora.Paradigm.Schemes.TU as Exports
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 instance (Covariant (v <:.> t), Covariant (u <:.> w), Adjoint t u, Adjoint v w)
 	=> Adjoint (v <:.> t) (u <:.> w) where

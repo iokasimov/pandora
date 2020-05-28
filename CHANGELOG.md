@@ -238,3 +238,4 @@
 * Move `Schemes` module to `Paradigm` submodule
 * Move `$` definition from `Divariant` to `Category`
 * Define generalized point free combinators in `Covariant` module
+* Rename `Joint` module To `Effect`

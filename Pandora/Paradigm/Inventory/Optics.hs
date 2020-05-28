@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
-import Pandora.Paradigm.Controlflow.Joint.Adaptable (adapt)
+import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
 import Pandora.Paradigm.Inventory.State (State (State), Stateful)
 import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
 

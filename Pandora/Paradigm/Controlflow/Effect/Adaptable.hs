@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pandora.Paradigm.Controlflow.Joint.Adaptable (Adaptable (..)) where
+module Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (..)) where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (identity, (.))
@@ -9,18 +9,17 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Paradigm.Controlflow.Joint.Schematic (Schematic)
-import Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic (Monadic (lay, wrap), (:>))
-import Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic (Comonadic (flick, bring), (:<))
+import Pandora.Paradigm.Controlflow.Effect.Schematic (Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, lay, wrap, flick, bring, (:>), (:<))
 
 class Adaptable t u where
 	{-# MINIMAL adapt #-}
 	adapt :: t ~> u
 
-type Layable t u = (Monadic t, Covariant u)
-type Wrappable t u = (Monadic t, Pointable u)
-type Flickable t u = (Comonadic t, Covariant u)
-type Bringable t u = (Comonadic t, Extractable u)
+type Layable t u = (Transformer Monad t, Covariant u)
+type Wrappable t u = (Transformer Monad t, Pointable u)
+type Flickable t u = (Transformer Comonad t, Covariant u)
+type Bringable t u = (Transformer Comonad t, Extractable u)
 
 instance Covariant t => Adaptable t t where
 	adapt = identity

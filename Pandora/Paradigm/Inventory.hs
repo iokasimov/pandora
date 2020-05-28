@@ -15,7 +15,7 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 instance Adjoint (Store s) (State s) where
 	x -| f = State $ \s -> (:*:) s . f . Store $ s :*: (x !)

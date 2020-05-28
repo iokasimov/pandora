@@ -70,13 +70,13 @@ library
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     -- Typeclassess about functor junctions
-    Pandora.Paradigm.Controlflow.Joint
-    Pandora.Paradigm.Controlflow.Joint.Interpreted
-    Pandora.Paradigm.Controlflow.Joint.Transformer
-    Pandora.Paradigm.Controlflow.Joint.Transformer.Monadic
-    Pandora.Paradigm.Controlflow.Joint.Transformer.Comonadic
-    Pandora.Paradigm.Controlflow.Joint.Schematic
-    Pandora.Paradigm.Controlflow.Joint.Adaptable
+    Pandora.Paradigm.Controlflow.Effect
+    Pandora.Paradigm.Controlflow.Effect.Interpreted
+    Pandora.Paradigm.Controlflow.Effect.Transformer
+    Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic
+    Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic
+    Pandora.Paradigm.Controlflow.Effect.Schematic
+    Pandora.Paradigm.Controlflow.Effect.Adaptable
     Pandora.Paradigm.Controlflow.Observable
     Pandora.Paradigm.Controlflow.Pipeline
     -- Tools for datastructures

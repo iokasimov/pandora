@@ -3,7 +3,7 @@ module Pandora.Paradigm.Schemes.UTU where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Paradigm.Controlflow.Joint.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
 
 newtype UTU ct cu t u u' a = UTU (u :. t :. u' := a)
 
