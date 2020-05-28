@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Traversable (Traversable (..)) where
+module Pandora.Pattern.Functor.Traversable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity, (.))

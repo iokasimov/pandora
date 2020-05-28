@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Bindable (Bindable (..)) where
+module Pandora.Pattern.Functor.Bindable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))

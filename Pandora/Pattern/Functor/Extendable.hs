@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Extendable (Extendable (..)) where
+module Pandora.Pattern.Functor.Extendable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))

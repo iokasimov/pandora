@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Distributive (Distributive (..)) where
+module Pandora.Pattern.Functor.Distributive where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))

@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Representable (Representable (..)) where
+module Pandora.Pattern.Functor.Representable where
 
 import Pandora.Core.Functor (type (<-|))
 import Pandora.Core.Morphism ((%))

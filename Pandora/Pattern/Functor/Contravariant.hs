@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Contravariant (Contravariant (..)) where
+module Pandora.Pattern.Functor.Contravariant where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((!), (%))

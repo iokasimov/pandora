@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Pointable (Pointable (..)) where
+module Pandora.Pattern.Functor.Pointable where
 
 import Pandora.Core.Functor (type (|->))
 import Pandora.Core.Morphism ((!))

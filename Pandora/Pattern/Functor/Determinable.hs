@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Determinable (Determinable (..)) where
+module Pandora.Pattern.Functor.Determinable where
 
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 

@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Invariant (Invariant (..)) where
+module Pandora.Pattern.Functor.Invariant where
 
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:

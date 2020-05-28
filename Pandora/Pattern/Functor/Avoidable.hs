@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Avoidable (Avoidable (..)) where
+module Pandora.Pattern.Functor.Avoidable where
 
 import Pandora.Pattern.Functor.Alternative (Alternative)
 

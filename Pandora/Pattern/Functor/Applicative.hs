@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Applicative (Applicative (..)) where
+module Pandora.Pattern.Functor.Applicative where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity)

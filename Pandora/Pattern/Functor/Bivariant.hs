@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Bivariant (Bivariant (..)) where
+module Pandora.Pattern.Functor.Bivariant where
 
 import Pandora.Pattern.Category (($))
 

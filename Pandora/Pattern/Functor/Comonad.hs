@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Comonad (Comonad) where
+module Pandora.Pattern.Functor.Comonad where
 
 import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Extendable (Extendable)

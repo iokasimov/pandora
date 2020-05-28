@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Adjoint (Adjoint (..), type (-|)) where
+module Pandora.Pattern.Functor.Adjoint where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity)

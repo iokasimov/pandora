@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Alternative (Alternative (..)) where
+module Pandora.Pattern.Functor.Alternative where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
 

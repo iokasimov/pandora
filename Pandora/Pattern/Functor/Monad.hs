@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor.Monad (Monad) where
+module Pandora.Pattern.Functor.Monad where
 
 import Pandora.Pattern.Functor.Bindable (Bindable)
 import Pandora.Pattern.Functor.Pointable (Pointable)
