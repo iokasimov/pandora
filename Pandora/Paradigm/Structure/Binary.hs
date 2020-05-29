@@ -2,13 +2,16 @@
 
 module Pandora.Paradigm.Structure.Binary (Binary, insert) where
 
-import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (:=), type (|->))
 import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
+import Pandora.Paradigm.Primary.Functor (left, right)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing), maybe)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
@@ -35,6 +38,20 @@ rebalance (Both x y) = extract x <=> extract y & order
 	(Construct (extract y) $ Both x (rebalance $ deconstruct y))
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) (rebalance $ deconstruct y))
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) y)
+
+zig :: forall a . Nonempty Binary a |-> Maybe
+zig (Construct parent st) = Construct <$> found <*> subtree where
+
+	found :: Maybe a
+	found = extract <$> left st
+
+	subtree :: Maybe :. Wye :. Nonempty Binary := a
+	subtree = Both <$> a <*> (Construct parent <$> (Both <$> b <*> c))
+
+	a, b, c :: Maybe :. Nonempty Binary := a
+	a = deconstruct <$> left st >>= left
+	b = deconstruct <$> left st >>= right
+	c = right st
 
 instance (forall a . Chain a) => Focusable Binary where
 	type Focus Binary a = Maybe a
