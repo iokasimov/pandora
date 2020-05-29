@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Stack (Stack, push, pop, filter, linearize, forward, backward) where
+module Pandora.Paradigm.Structure.Stack where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Core.Morphism ((&), (%))

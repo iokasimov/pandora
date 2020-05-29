@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Rose (Rose) where
+module Pandora.Paradigm.Structure.Rose where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((!), (%))

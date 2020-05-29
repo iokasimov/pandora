@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Ability.Focusable (Focusable (..)) where
+module Pandora.Paradigm.Structure.Ability.Focusable where
 
 import Pandora.Core.Functor (type (|->))
 import Pandora.Paradigm.Inventory.Optics (type (:-.))

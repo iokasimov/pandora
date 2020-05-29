@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Binary (Binary, insert) where
+module Pandora.Paradigm.Structure.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (|->))
 import Pandora.Core.Morphism ((&), (%), (!))
