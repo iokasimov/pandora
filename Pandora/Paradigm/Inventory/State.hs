@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.State (State (..), Stateful, current, modify, 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -43,17 +43,17 @@ instance Bindable (State s) where
 instance Monad (State s) where
 
 fold :: Traversable t => s -> (a -> s -> s) -> t a -> s
-fold start op struct = extract . run @(State _) % start $
-	struct ->> modify . op $> () *> current
+fold start op struct = extract . run @(State _) % start
+	$ struct ->> modify . op *> current
 
 find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
-find p struct = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p $ x) struct
+find p = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p $ x)
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
 	run (State x) = x
 
-type instance Schematic Monad (State s) u = ((->) s <:<.>:> (:*:) s) u
+type instance Schematic Monad (State s) u = (->) s <:<.>:> (:*:) s := u
 
 instance Monadic (State s) where
 	lay x = TM . TUT $ \s -> (s :*:) <$> x
@@ -61,25 +61,25 @@ instance Monadic (State s) where
 
 type Stateful s = Adaptable (State s)
 
-instance Covariant u => Covariant (((->) s <:<.>:> (:*:) s) u) where
+instance Covariant u => Covariant ((->) s <:<.>:> (:*:) s := u) where
 	f <$> TUT x = TUT $ \old -> f <$$> x old
 
-instance Bindable u => Applicative (((->) s <:<.>:> (:*:) s) u) where
+instance Bindable u => Applicative ((->) s <:<.>:> (:*:) s := u) where
 	TUT f <*> TUT x = TUT $ \old -> f old >>= \(new :*: g) -> g <$$> x new
 
-instance Pointable u => Pointable (((->) s <:<.>:> (:*:) s) u) where
-	point x = TUT $ \s -> point $ s :*: x
+instance Pointable u => Pointable ((->) s <:<.>:> (:*:) s := u) where
+	point = TUT . (-| point)
 
-instance Bindable u => Bindable (((->) s <:<.>:> (:*:) s) u) where
+instance Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
 	TUT x >>= f = TUT $ \old -> x old >>= \(new :*: y) -> ($ new) . run . f $ y
 
-instance Monad u => Monad (((->) s <:<.>:> (:*:) s) u) where
+instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
 
 current :: Stateful s t => t s
 current = adapt $ State delta
 
 modify :: Stateful s t => (s -> s) -> t ()
-modify f = adapt $ State $ \s -> f s :*: ()
+modify f = adapt . State $ (:*: ()) . f
 
 replace :: Stateful s t => s -> t ()
-replace s = adapt $ State $ \_ -> s :*: ()
+replace s = adapt . State $ \_ -> s :*: ()

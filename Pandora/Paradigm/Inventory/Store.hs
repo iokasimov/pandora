@@ -9,6 +9,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Adjoint ((|-))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
@@ -34,8 +35,7 @@ instance Interpreted (Store p) where
 	type Primary (Store p) a = (:*:) p :. (->) p := a
 	run (Store x) = x
 
-type instance Schematic Comonad (Store p) u =
-	((:*:) p <:<.>:> (->) p) u
+type instance Schematic Comonad (Store p) u = (:*:) p <:<.>:> (->) p := u
 
 instance Comonadic (Store p) where
 	flick (TC (TUT (p :*: f))) = ($ p) <$> f
@@ -43,14 +43,15 @@ instance Comonadic (Store p) where
 
 type Storable s x = Adaptable x (Store s)
 
-instance Covariant u => Covariant (((:*:) p <:<.>:> (->) p) u) where
+instance Covariant u => Covariant ((:*:) p <:<.>:> (->) p := u) where
 	f <$> TUT (p :*: x) = TUT . (:*:) p $ f <$$> x
 
-instance Extractable u => Extractable (((:*:) p <:<.>:> (->) p) u) where
-	extract (TUT (p :*: x)) = extract x p
+instance Extractable u => Extractable ((:*:) p <:<.>:> (->) p := u) where
+	extract = (|- extract) . run
 
-instance Extendable u => Extendable (((:*:) p <:<.>:> (->) p) u) where
+instance Extendable u => Extendable ((:*:) p <:<.>:> (->) p := u) where
 	TUT (old :*: x) =>> f = TUT . (:*:) old $ x =>> (\x' new -> f . TUT . (:*:) new $ x')
+
 
 position :: Storable s t => t a -> s
 position = attached . run @(Store _) . adapt
