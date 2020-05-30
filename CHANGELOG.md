@@ -222,7 +222,7 @@
 * Define `Delta` datatype
 * Define `Wedge` datatype
 * Rename `Variation` to `These`
-* Define two experimental methods in `Bindable` class - `$>>=` and `>>=$`
+* Define experimental methods in `Bindable` class - `$>>=` and `>>=$`
 * Define `here` and `there` methods from `Wedge` to `Maybe`
 * Move `Boolean` definition to its own module
 * Move `Ordering` definition to its own module
@@ -240,3 +240,4 @@
 * Define generalized point free combinators in `Covariant` module
 * Rename `Joint` module To `Effect`
 * Define `zig` `Splay` rotation for `Binary` tree
+* Define experimental methods in `Extendable` class - `$=>>` and `<<=$`

@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Stack where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Core.Morphism ((&), (%))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (.|..))
 import Pandora.Pattern.Functor.Alternative ((<+>))
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Pointable (point)
@@ -64,7 +64,7 @@ filter (Predicate p) = TU . fold empty
 
 -- | Transform any traversable structure into a stack
 linearize :: Traversable t => t ~> Stack
-linearize = TU . fold Nothing (\x -> Just . Construct x)
+linearize = TU . fold Nothing (Just .|.. Construct)
 
 type instance Nonempty Stack = Construction Maybe
 

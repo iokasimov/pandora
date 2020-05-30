@@ -3,7 +3,7 @@ module Pandora.Pattern.Functor.Extendable where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category (identity, (.))
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 
 infixl 1 =>>
 infixr 1 <<=, =<=, =>=
@@ -34,3 +34,9 @@ class Covariant t => Extendable t where
 	-- | Left-to-right Cokleisli composition
 	(=>=) :: (t a -> b) -> (t b -> c) -> t a -> c
 	f =>= g = g . extend f
+
+	-- | Experimental methods
+	($=>>) :: Covariant u => (t a -> b) -> u :. t := a -> u :. t := b
+	f $=>> x = (=>> f) <$> x
+	(<<=$) :: Covariant u => u :. t := a -> (t a -> b) -> u :. t := b
+	x <<=$ f = (=>> f) <$> x
