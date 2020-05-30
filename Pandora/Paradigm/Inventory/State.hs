@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.State (State (..), Stateful, current, modify, 
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Adjoint ((|-))
+import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
@@ -34,7 +34,7 @@ instance Applicative (State s) where
 		let (new :*: g) = f old in g <$> x new
 
 instance Pointable (State s) where
-	point x = State $ \s -> s :*: x
+	point = State . (-| identity)
 
 instance Bindable (State s) where
 	State x >>= f = State $ \old ->
