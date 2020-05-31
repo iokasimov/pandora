@@ -53,6 +53,20 @@ left_zig (Construct parent st) = Construct % subtree <$> found where
 	b = deconstruct <$> left st >>= right
 	c = right st
 
+right_zig :: forall a . Nonempty Binary a |-> Maybe
+right_zig (Construct parent st) = Construct % subtree <$> found where
+
+	found :: Maybe a
+	found = extract <$> right st
+
+	subtree :: Wye :. Nonempty Binary := a
+	subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
+
+	a, b, c :: Maybe :. Nonempty Binary := a
+	a = left st
+	b = deconstruct <$> right st >>= left
+	c = deconstruct <$> right st >>= right
+
 maybe_subtree :: Maybe a -> Maybe a -> Wye a
 maybe_subtree (Just x) (Just y) = Both x y
 maybe_subtree Nothing (Just y) = Right y
