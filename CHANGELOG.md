@@ -239,5 +239,5 @@
 * Move `$` definition from `Divariant` to `Category`
 * Define generalized point free combinators in `Covariant` module
 * Rename `Joint` module To `Effect`
-* Define `zig` `Splay` rotation for `Binary` tree
+* Define `left_zig` `Splay` rotation for `Binary` tree
 * Define experimental methods in `Extendable` class - `$=>>` and `<<=$`

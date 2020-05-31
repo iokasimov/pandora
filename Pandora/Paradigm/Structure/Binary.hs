@@ -7,7 +7,7 @@ import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+-- import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
@@ -39,19 +39,25 @@ rebalance (Both x y) = extract x <=> extract y & order
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) (rebalance $ deconstruct y))
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) y)
 
-zig :: forall a . Nonempty Binary a |-> Maybe
-zig (Construct parent st) = Construct <$> found <*> subtree where
+left_zig :: forall a . Nonempty Binary a |-> Maybe
+left_zig (Construct parent st) = Construct % subtree <$> found where
 
 	found :: Maybe a
 	found = extract <$> left st
 
-	subtree :: Maybe :. Wye :. Nonempty Binary := a
-	subtree = Both <$> a <*> (Construct parent <$> (Both <$> b <*> c))
+	subtree :: Wye :. Nonempty Binary := a
+	subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
 
 	a, b, c :: Maybe :. Nonempty Binary := a
 	a = deconstruct <$> left st >>= left
 	b = deconstruct <$> left st >>= right
 	c = right st
+
+maybe_subtree :: Maybe a -> Maybe a -> Wye a
+maybe_subtree (Just x) (Just y) = Both x y
+maybe_subtree Nothing (Just y) = Right y
+maybe_subtree (Just x) Nothing = Left x
+maybe_subtree Nothing Nothing = End
 
 instance (forall a . Chain a) => Focusable Binary where
 	type Focus Binary a = Maybe a
