@@ -7,8 +7,7 @@ import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
--- import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), ($>>=)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Functor (left, right)
@@ -66,6 +65,14 @@ right_zig (Construct parent st) = Construct % subtree <$> found where
 	a = left st
 	b = deconstruct <$> right st >>= left
 	c = deconstruct <$> right st >>= right
+
+left_zig_zig, right_zig_zig :: Nonempty Binary a |-> Maybe
+left_zig_zig tree = left_zig tree >>= left_zig
+right_zig_zig tree = right_zig tree >>= right_zig
+
+left_zig_zag, right_zig_zag :: Nonempty Binary a |-> Maybe
+left_zig_zag tree = tree & sub @Left %~ (right_zig $>>=) & left_zig
+right_zig_zag tree = tree & sub @Left %~ (left_zig $>>=) & right_zig
 
 maybe_subtree :: Maybe a -> Maybe a -> Wye a
 maybe_subtree (Just x) (Just y) = Both x y
