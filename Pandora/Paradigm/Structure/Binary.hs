@@ -1,10 +1,11 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Pandora.Paradigm.Structure.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (|->))
 import Pandora.Core.Morphism ((&), (%), (!))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), ($>>=)))
@@ -37,48 +38,6 @@ rebalance (Both x y) = extract x <=> extract y & order
 	(Construct (extract y) $ Both x (rebalance $ deconstruct y))
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) (rebalance $ deconstruct y))
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) y)
-
-left_zig :: forall a . Nonempty Binary a |-> Maybe
-left_zig (Construct parent st) = Construct % subtree <$> found where
-
-	found :: Maybe a
-	found = extract <$> left st
-
-	subtree :: Wye :. Nonempty Binary := a
-	subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
-
-	a, b, c :: Maybe :. Nonempty Binary := a
-	a = deconstruct <$> left st >>= left
-	b = deconstruct <$> left st >>= right
-	c = right st
-
-right_zig :: forall a . Nonempty Binary a |-> Maybe
-right_zig (Construct parent st) = Construct % subtree <$> found where
-
-	found :: Maybe a
-	found = extract <$> right st
-
-	subtree :: Wye :. Nonempty Binary := a
-	subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
-
-	a, b, c :: Maybe :. Nonempty Binary := a
-	a = left st
-	b = deconstruct <$> right st >>= left
-	c = deconstruct <$> right st >>= right
-
-left_zig_zig, right_zig_zig :: Nonempty Binary a |-> Maybe
-left_zig_zig tree = left_zig tree >>= left_zig
-right_zig_zig tree = right_zig tree >>= right_zig
-
-left_zig_zag, right_zig_zag :: Nonempty Binary a |-> Maybe
-left_zig_zag tree = tree & sub @Left %~ (right_zig $>>=) & left_zig
-right_zig_zag tree = tree & sub @Left %~ (left_zig $>>=) & right_zig
-
-maybe_subtree :: Maybe a -> Maybe a -> Wye a
-maybe_subtree (Just x) (Just y) = Both x y
-maybe_subtree Nothing (Just y) = Right y
-maybe_subtree (Just x) Nothing = Left x
-maybe_subtree Nothing Nothing = End
 
 instance (forall a . Chain a) => Focusable Binary where
 	type Focus Binary a = Maybe a
@@ -138,3 +97,74 @@ instance Substructure Right (Construction Wye) where
 		:*: maybe (Construct x End) (Construct x . Right) . extract
 	sub (Construct x (Both lst rst)) = Store $ Tag (Just rst)
 		:*: maybe (Construct x $ Left lst) (Construct x . Both lst) . extract
+
+class Rotatable (f :: k) t where
+	rotate :: (Tagged f) (t a) -> Maybe (t a)
+
+data Splay a = Zig a | Zag a
+
+instance Rotatable (Left Zig) (Construction Wye) where
+	rotate (Tag (Construct parent st)) = Construct % subtree <$> found where
+
+		subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
+		found = extract <$> left st
+		a = deconstruct <$> left st >>= left
+		b = deconstruct <$> left st >>= right
+		c = right st
+
+instance Rotatable (Right Zig) (Construction Wye) where
+	rotate (Tag (Construct parent st)) = Construct % subtree <$> found where
+
+		found = extract <$> right st
+		subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
+		a = left st
+		b = deconstruct <$> right st >>= left
+		c = deconstruct <$> right st >>= right
+
+instance Rotatable (Left (Zig Zig)) (Construction Wye) where
+	rotate (Tag tree) = rotate (Tag @(Left Zig) tree) >>= rotate . Tag @(Left Zig)
+
+instance Rotatable (Right (Zig Zig)) (Construction Wye) where
+	rotate (Tag tree) = rotate (Tag @(Right Zig) tree) >>= rotate . Tag @(Right Zig)
+
+left_zig :: forall a . Nonempty Binary a |-> Maybe
+left_zig (Construct parent st) = Construct % subtree <$> found where
+
+	found :: Maybe a
+	found = extract <$> left st
+
+	subtree :: Wye :. Nonempty Binary := a
+	subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
+
+	a, b, c :: Maybe :. Nonempty Binary := a
+	a = deconstruct <$> left st >>= left
+	b = deconstruct <$> left st >>= right
+	c = right st
+
+right_zig :: forall a . Nonempty Binary a |-> Maybe
+right_zig (Construct parent st) = Construct % subtree <$> found where
+
+	found :: Maybe a
+	found = extract <$> right st
+
+	subtree :: Wye :. Nonempty Binary := a
+	subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
+
+	a, b, c :: Maybe :. Nonempty Binary := a
+	a = left st
+	b = deconstruct <$> right st >>= left
+	c = deconstruct <$> right st >>= right
+
+left_zig_zig, right_zig_zig :: Nonempty Binary a |-> Maybe
+left_zig_zig tree = left_zig tree >>= left_zig
+right_zig_zig tree = right_zig tree >>= right_zig
+
+left_zig_zag, right_zig_zag :: Nonempty Binary a |-> Maybe
+left_zig_zag tree = tree & sub @Left %~ (right_zig $>>=) & left_zig
+right_zig_zag tree = tree & sub @Right %~ (left_zig $>>=) & right_zig
+
+maybe_subtree :: Maybe a -> Maybe a -> Wye a
+maybe_subtree (Just x) (Just y) = Both x y
+maybe_subtree Nothing (Just y) = Right y
+maybe_subtree (Just x) Nothing = Left x
+maybe_subtree Nothing Nothing = End
