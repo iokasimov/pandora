@@ -1,6 +1,7 @@
 module Pandora.Pattern.Transformer.Liftable (Liftable (..)) where
 
 import Pandora.Core.Functor (type (~>))
+import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |
 > When providing a new instance, you should ensure it satisfies one law:
@@ -8,4 +9,4 @@ import Pandora.Core.Functor (type (~>))
 -}
 
 class Liftable t where
-	lift :: u ~> t u
+	lift :: Covariant u => u ~> t u
