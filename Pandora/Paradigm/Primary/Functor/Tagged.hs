@@ -88,7 +88,7 @@ instance Lattice a => Lattice (Tagged tag a) where
 instance Group a => Group (Tagged tag a) where
 	invert (Tag x) = Tag $ invert x
 
-retag :: Tagged old ~> Tagged new
+retag :: forall new old . Tagged old ~> Tagged new
 retag (Tag x) = Tag x
 
 tagself :: a |-> Tagged a
