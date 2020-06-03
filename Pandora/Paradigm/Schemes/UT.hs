@@ -21,7 +21,7 @@ instance Interpreted (UT ct cu t u) where
 	type Primary (UT ct cu t u) a = u :. t := a
 	run (UT x) = x
 
-instance Pointable t => Liftable (UT Covariant Covariant t) where
+instance (forall u . Covariant u, Pointable t) => Liftable (UT Covariant Covariant t) where
 	lift x = UT $ point <$> x
 
 instance Extractable t => Lowerable (UT Covariant Covariant t) where

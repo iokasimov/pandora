@@ -8,6 +8,7 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
+import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing), maybe)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
@@ -25,14 +26,14 @@ instance Focusable Rose where
 	type Focus Rose a = Maybe a
 	top (TU Nothing) = Store $ Nothing :*: TU . (<$>) (Construct % empty)
 	top (TU (Just x)) = Store $ Just (extract x) :*: maybe
-		(TU $ Just x) -- TODO: Nothing at top's lens - should it remove something?
-		(TU . Just . Construct % deconstruct x)
-	singleton = TU . Just . Construct % empty
+		(lift x) -- TODO: Nothing at top's lens - should it remove something?
+		(lift . Construct % deconstruct x)
+	singleton = lift . Construct % empty
 
 instance Substructure Just Rose where
 	type Substructural Just Rose a = Stack :. Construction Stack := a
 	sub (Tag (TU Nothing)) = Store $ TU Nothing :*: (Tag (TU Nothing) !)
-	sub (Tag (TU (Just (Construct x xs)))) = Store $ xs :*: Tag . TU . Just . Construct x
+	sub (Tag (TU (Just (Construct x xs)))) = Store $ xs :*: Tag . lift . Construct x
 
 type instance Nonempty Rose = Construction Stack
 

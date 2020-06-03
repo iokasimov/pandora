@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Bindable ((>>=))
+import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -39,7 +40,7 @@ instance Setoid a => Setoid (Stack a) where
 
 instance Semigroup (Stack a) where
 	TU Nothing + TU ys = TU ys
-	TU (Just (Construct x xs)) + TU ys = TU . Just . Construct x . run
+	TU (Just (Construct x xs)) + TU ys = lift . Construct x . run
 		$ TU @Covariant @Covariant xs + TU @Covariant @Covariant ys
 
 instance Monoid (Stack a) where
@@ -50,7 +51,7 @@ instance Focusable Stack where
 	top stack = Store $ (:*:) (extract <$> run stack) $ \case
 		Just x -> stack & pop & push x
 		Nothing -> pop stack
-	singleton = TU . Just . Construct % Nothing
+	singleton = lift . Construct % Nothing
 
 push :: a -> Stack a -> Stack a
 push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x

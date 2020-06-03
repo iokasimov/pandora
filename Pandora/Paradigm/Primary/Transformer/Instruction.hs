@@ -41,5 +41,5 @@ instance Traversable t => Traversable (Instruction t) where
 	Enter x ->> f = Enter <$> f x
 	Instruct xs ->> f = Instruct <$> xs ->>> f
 
-instance Liftable Instruction where
+instance (forall u . Covariant u) => Liftable Instruction where
 	lift x = Instruct $ Enter <$> x

@@ -3,12 +3,12 @@
 
 module Pandora.Paradigm.Structure.Binary where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (|->))
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%), (!))
-import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), (=<<), ($>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
@@ -29,7 +29,7 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructu
 type Binary = Maybe <:.> Construction Wye
 
 insert :: Chain a => a -> Binary a -> Binary a
-insert x (TU Nothing) = TU . Just . Construct x $ End
+insert x (TU Nothing) = lift . Construct x $ End
 insert x tree@(TU (Just (Construct y _))) = x <=> y & order
 	(extract $ sub @Left %~ insert x $ Tag tree) tree
 	(extract $ sub @Right %~ insert x $ Tag tree)
@@ -43,34 +43,33 @@ rebalance (Both x y) = extract x <=> extract y & order
 instance (forall a . Chain a) => Focusable Binary where
 	type Focus Binary a = Maybe a
 	top (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % End)
-	top (TU (Just x)) = Store . (:*:) (Just $ extract x) $ maybe
-		(TU . Just . rebalance $ deconstruct x)
-		(TU . Just . Construct % deconstruct x)
-	singleton = TU . Just . Construct % End
+	top (TU (Just x)) = Store $ Just (extract x)
+		:*: lift . maybe (rebalance $ deconstruct x) (Construct % deconstruct x)
+	singleton = lift . Construct % End
 
 instance Substructure Left Binary where
 	type Substructural Left Binary a = Binary a
 	sub (Tag (TU Nothing)) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
 	sub t@(Tag (TU (Just (Construct x End)))) = Store $ TU Nothing
-		:*: Tag . maybe (extract t) (TU . Just . Construct x . Left) . run
-	sub (Tag (TU (Just (Construct x (Left lst))))) = Store $ TU (Just lst)
-		:*: Tag . TU . Just . Construct x . maybe End Left . run
+		:*: Tag . maybe (extract t) (lift . Construct x . Left) . run
+	sub (Tag (TU (Just (Construct x (Left lst))))) = Store $ lift lst
+		:*: Tag . lift . Construct x . maybe End Left . run
 	sub t@(Tag (TU (Just (Construct x (Right rst))))) = Store $ TU Nothing
-		:*: Tag . maybe (extract t) (TU . Just . Construct x . Both % rst) . run
-	sub (Tag (TU (Just (Construct x (Both lst rst))))) = Store $ TU (Just lst)
-		:*: Tag . TU . Just . Construct x . maybe (Right rst) (Both % rst) . run
+		:*: Tag . maybe (extract t) (lift . Construct x . Both % rst) . run
+	sub (Tag (TU (Just (Construct x (Both lst rst))))) = Store $ lift lst
+		:*: Tag . lift . Construct x . maybe (Right rst) (Both % rst) . run
 
 instance Substructure Right Binary where
 	type Substructural Right Binary a = Binary a
 	sub (Tag (TU Nothing)) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
 	sub t@(Tag (TU (Just (Construct x End)))) = Store $ TU Nothing
-		:*: Tag . maybe (extract t) (TU . Just . Construct x . Right) . run
+		:*: Tag . maybe (extract t) (lift . Construct x . Right) . run
 	sub t@(Tag (TU (Just (Construct x (Left lst))))) = Store $ TU Nothing
-		:*: Tag . maybe (extract t) (TU . Just . Construct x . Both lst) . run
-	sub (Tag (TU (Just (Construct x (Right rst))))) = Store $ TU (Just rst)
-		:*: Tag . TU . Just . Construct x . maybe End Right . run
-	sub (Tag (TU (Just (Construct x (Both lst rst))))) = Store $ TU (Just rst)
-		:*: Tag . TU . Just . Construct x . maybe (Left lst) (Both lst) . run
+		:*: Tag . maybe (extract t) (lift . Construct x . Both lst) . run
+	sub (Tag (TU (Just (Construct x (Right rst))))) = Store $ lift rst
+		:*: Tag . lift . Construct x . maybe End Right . run
+	sub (Tag (TU (Just (Construct x (Both lst rst))))) = Store $ lift rst
+		:*: Tag . lift . Construct x . maybe (Left lst) (Both lst) . run
 
 type instance Nonempty Binary = Construction Wye
 
