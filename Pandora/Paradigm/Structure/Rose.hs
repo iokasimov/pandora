@@ -31,14 +31,14 @@ instance Focusable Rose where
 
 instance Substructure Just Rose where
 	type Substructural Just Rose a = Stack :. Construction Stack := a
-	sub (TU Nothing) = Store $ Tag (TU Nothing) :*: (TU Nothing !)
-	sub (TU (Just (Construct x xs))) = Store $ Tag xs :*: TU . Just . Construct x . extract
+	sub (Tag (TU Nothing)) = Store $ TU Nothing :*: (Tag (TU Nothing) !)
+	sub (Tag (TU (Just (Construct x xs)))) = Store $ xs :*: Tag . TU . Just . Construct x
 
 type instance Nonempty Rose = Construction Stack
 
 instance Substructure Just (Construction Stack) where
 	type Substructural Just (Construction Stack) a = Stack :. Construction Stack := a
-	sub (Construct x xs) = Store $ Tag xs :*: Construct x . extract
+	sub (Tag (Construct x xs)) = Store $ xs :*: Tag . Construct x
 
 instance Focusable (Construction Stack) where
 	type Focus (Construction Stack) a = a

@@ -5,4 +5,4 @@ import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 
 class Substructure f t where
 	type Substructural (f :: * -> k) (t :: * -> *) a
-	sub :: t a :-. Tagged f (Substructural f t a)
+	sub :: Tagged f (t a) :-. Substructural f t a
