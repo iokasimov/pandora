@@ -241,5 +241,6 @@
 * Rename `Joint` module To `Effect`
 * Define left and right `zig`, `zig-zig` and `zig-zag` `Splay` rotations for `Binary` tree
 * Define experimental methods in `Extendable` class - `$=>>` and `<<=$`
-* Define `substructure` method which doesn't involve `Tagged`
 * Define `Rotatable` typeclass to rotate trees
+* Rename `sub` method of `Substructure` typeclass to `substructure`
+* Define `sub` method which doesn't involve `Tagged`

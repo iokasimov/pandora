@@ -10,7 +10,7 @@ import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 
 class Substructure f t where
 	type Substructural (f :: * -> k) (t :: * -> *) a
-	sub :: Tagged f (t a) :-. Substructural f t a
+	substructure :: Tagged f (t a) :-. Substructural f t a
 
-substructure :: forall f t a . Substructure f t => t a :-. Substructural f t a
-substructure = comap extract . sub . Tag @f
+sub :: forall f t a . Substructure f t => t a :-. Substructural f t a
+sub = comap extract . substructure. Tag @f

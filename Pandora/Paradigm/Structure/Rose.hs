@@ -19,7 +19,7 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Stack (Stack)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, sub))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
 
 type Rose = Maybe <:.> Construction Stack
 
@@ -33,14 +33,14 @@ instance Focusable Rose where
 
 instance Substructure Just Rose where
 	type Substructural Just Rose a = Stack :. Construction Stack := a
-	sub (run . extract -> Nothing) = Store $ TU Nothing :*: (Tag (TU Nothing) !)
-	sub (run . extract -> Just (Construct x xs)) = Store $ xs :*: Tag . lift . Construct x
+	substructure (run . extract -> Nothing) = Store $ TU Nothing :*: (Tag (TU Nothing) !)
+	substructure (run . extract -> Just (Construct x xs)) = Store $ xs :*: Tag . lift . Construct x
 
 type instance Nonempty Rose = Construction Stack
 
 instance Substructure Just (Construction Stack) where
 	type Substructural Just (Construction Stack) a = Stack :. Construction Stack := a
-	sub (Tag (Construct x xs)) = Store $ xs :*: Tag . Construct x
+	substructure (Tag (Construct x xs)) = Store $ xs :*: Tag . Construct x
 
 instance Focusable (Construction Stack) where
 	type Focus (Construction Stack) a = a
