@@ -145,7 +145,7 @@ library
   default-extensions:
     DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints
     FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms, LambdaCase
-    MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes
+    MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes, ViewPatterns
     ScopedTypeVariables, TypeApplications, TypeFamilies, TypeFamilyDependencies, TypeOperators
   default-language: Haskell2010
   ghc-options: -Wall -fno-warn-tabs -fno-warn-unticked-promoted-constructors

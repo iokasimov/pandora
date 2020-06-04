@@ -14,6 +14,7 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Stack (Stack)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -32,8 +33,8 @@ instance Focusable Rose where
 
 instance Substructure Just Rose where
 	type Substructural Just Rose a = Stack :. Construction Stack := a
-	sub (Tag (TU Nothing)) = Store $ TU Nothing :*: (Tag (TU Nothing) !)
-	sub (Tag (TU (Just (Construct x xs)))) = Store $ xs :*: Tag . lift . Construct x
+	sub (run . extract -> Nothing) = Store $ TU Nothing :*: (Tag (TU Nothing) !)
+	sub (run . extract -> Just (Construct x xs)) = Store $ xs :*: Tag . lift . Construct x
 
 type instance Nonempty Rose = Construction Stack
 

@@ -24,7 +24,7 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics ((%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, sub))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, sub), substructure)
 
 type Binary = Maybe <:.> Construction Wye
 
@@ -43,33 +43,24 @@ rebalance (Both x y) = extract x <=> extract y & order
 instance (forall a . Chain a) => Focusable Binary where
 	type Focus Binary a = Maybe a
 	top (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % End)
-	top (TU (Just x)) = Store $ Just (extract x)
-		:*: lift . maybe (rebalance $ deconstruct x) (Construct % deconstruct x)
+	top (TU (Just x)) = Store $ Just (extract x) :*: lift . maybe (rebalance $ deconstruct x) (Construct % deconstruct x)
 	singleton = lift . Construct % End
 
 instance Substructure Left Binary where
 	type Substructural Left Binary a = Binary a
-	sub (Tag (TU Nothing)) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
-	sub t@(Tag (TU (Just (Construct x End)))) = Store $ TU Nothing
-		:*: Tag . maybe (extract t) (lift . Construct x . Left) . run
-	sub (Tag (TU (Just (Construct x (Left lst))))) = Store $ lift lst
-		:*: Tag . lift . Construct x . maybe End Left . run
-	sub t@(Tag (TU (Just (Construct x (Right rst))))) = Store $ TU Nothing
-		:*: Tag . maybe (extract t) (lift . Construct x . Both % rst) . run
-	sub (Tag (TU (Just (Construct x (Both lst rst))))) = Store $ lift lst
-		:*: Tag . lift . Construct x . maybe (Right rst) (Both % rst) . run
+	sub (run . extract -> Nothing) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
+	sub (run . extract -> Just (Construct x End)) = Store $ TU Nothing :*: Tag . lift . Construct x . maybe End Left . run
+	sub (run . extract -> Just (Construct x (Left lst))) = Store $ lift lst :*: Tag . lift . Construct x . maybe End Left . run
+	sub (run . extract -> Just (Construct x (Right rst))) = Store $ TU Nothing :*: Tag . lift . Construct x . maybe (Right rst) (Both % rst) . run
+	sub (run . extract -> Just (Construct x (Both lst rst))) = Store $ lift lst :*: Tag . lift . Construct x . maybe (Right rst) (Both % rst) . run
 
 instance Substructure Right Binary where
 	type Substructural Right Binary a = Binary a
-	sub (Tag (TU Nothing)) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
-	sub t@(Tag (TU (Just (Construct x End)))) = Store $ TU Nothing
-		:*: Tag . maybe (extract t) (lift . Construct x . Right) . run
-	sub t@(Tag (TU (Just (Construct x (Left lst))))) = Store $ TU Nothing
-		:*: Tag . maybe (extract t) (lift . Construct x . Both lst) . run
-	sub (Tag (TU (Just (Construct x (Right rst))))) = Store $ lift rst
-		:*: Tag . lift . Construct x . maybe End Right . run
-	sub (Tag (TU (Just (Construct x (Both lst rst))))) = Store $ lift rst
-		:*: Tag . lift . Construct x . maybe (Left lst) (Both lst) . run
+	sub (run . extract -> Nothing) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
+	sub (run . extract -> Just (Construct x End)) = Store $ TU Nothing :*: Tag . lift . Construct x . maybe End Right . run
+	sub (run . extract -> Just (Construct x (Left lst))) = Store $ TU Nothing :*: Tag . lift . Construct x . maybe (Left lst) (Both lst) . run
+	sub (run . extract -> Just (Construct x (Right rst))) = Store $ lift rst :*: Tag . lift . Construct x . maybe End Right . run
+	sub (run . extract -> Just (Construct x (Both lst rst))) = Store $ lift rst :*: Tag . lift . Construct x . maybe (Left lst) (Both lst) . run
 
 type instance Nonempty Binary = Construction Wye
 
@@ -81,22 +72,16 @@ instance Focusable (Construction Wye) where
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
 	sub (Tag (Construct x End)) = Store $ Nothing :*: ((Tag $ Construct x End) !)
-	sub (Tag (Construct x (Left lst))) = Store $ Just lst
-		:*: Tag . Construct x . maybe End Left
-	sub tree@(Tag (Construct x (Right rst))) = Store $ Nothing
-		:*: maybe tree (Tag . Construct x . Both % rst)
-	sub (Tag (Construct x (Both lst rst))) = Store $ Just lst
-		:*: Tag . Construct x . maybe (Right rst) (Both % rst)
+	sub (Tag (Construct x (Left lst))) = Store $ Just lst :*: Tag . Construct x . maybe End Left
+	sub tree@(Tag (Construct x (Right rst))) = Store $ Nothing :*: maybe tree (Tag . Construct x . Both % rst)
+	sub (Tag (Construct x (Both lst rst))) = Store $ Just lst :*: Tag . Construct x . maybe (Right rst) (Both % rst)
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) a = Maybe :. Construction Wye := a
-	sub (Tag (Construct x End)) = Store $ Nothing :*: ((Tag $ Construct x End) !)
-	sub tree@(Tag (Construct x (Left lst))) = Store $ Nothing
-		:*: maybe tree (Tag . Construct x . Both lst)
-	sub (Tag (Construct x (Right rst))) = Store $ Just rst
-		:*: Tag . Construct x . maybe End Right
-	sub (Tag (Construct x (Both lst rst))) = Store $ Just rst
-		:*: Tag . Construct x . maybe (Left lst) (Both lst)
+	sub (extract -> Construct x End) = Store $ Nothing :*: ((Tag $ Construct x End) !)
+	sub (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . maybe (Left lst) (Both lst)
+	sub (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . maybe End Right
+	sub (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . maybe (Left lst) (Both lst)
 
 class Rotatable (f :: k) t where
 	rotate :: (Tagged f) (t a) -> Maybe (t a)
@@ -128,14 +113,14 @@ instance Rotatable (Right (Zig Zig)) (Construction Wye) where
 	rotate (Tag tree) = rotate (Tag @(Right Zig) tree) >>= rotate . Tag @(Right Zig)
 
 instance Rotatable (Left (Zig Zag)) (Construction Wye) where
-	rotate tree = retag @Left tree
-		& sub %~ (>>= (rotate . Tag @(Right Zig)))
-		& rotate . retag @(Left Zig)
+	rotate tree = extract tree
+		& substructure @Left %~ (>>= (rotate . Tag @(Right Zig)))
+		& rotate . Tag @(Left Zig)
 
 instance Rotatable (Right (Zig Zag)) (Construction Wye) where
-	rotate tree = retag @Right tree
-		& sub %~ (>>= (rotate . Tag @(Left Zig)))
-		& rotate . retag @(Right Zig)
+	rotate tree = extract tree
+		& substructure @Right %~ (>>= (rotate . Tag @(Left Zig)))
+		& rotate . Tag @(Right Zig)
 
 maybe_subtree :: Maybe a -> Maybe a -> Wye a
 maybe_subtree (Just x) (Just y) = Both x y
