@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, ove
 
 import Pandora.Core.Functor (type (|->))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
+import Pandora.Pattern.Functor.Covariant ((<$))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
@@ -18,7 +18,7 @@ type (:-.) src tgt = Lens src tgt
 type Lens src tgt = src |-> Store tgt
 
 -- | Lens composition infix operator
-(|>) :: Lens src btw -> Lens btw tgt -> Lens src tgt
+(|>) :: Lens src old -> Lens old new -> Lens src new
 from |> to = \x -> ((<$) x . to) . position . from $ x
 
 -- | Get the target of a lens

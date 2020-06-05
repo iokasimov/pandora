@@ -21,7 +21,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics ((%~))
+import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (rotation), rotate)
@@ -50,18 +50,15 @@ instance (forall a . Chain a) => Focusable Binary where
 instance Substructure Left Binary where
 	type Substructural Left Binary a = Binary a
 	substructure (run . extract -> Nothing) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
-	substructure (run . extract -> Just (Construct x End)) = Store $ TU Nothing :*: Tag . lift . Construct x . maybe End Left . run
-	substructure (run . extract -> Just (Construct x (Left lst))) = Store $ lift lst :*: Tag . lift . Construct x . maybe End Left . run
-	substructure (run . extract -> Just (Construct x (Right rst))) = Store $ TU Nothing :*: Tag . lift . Construct x . maybe (Right rst) (Both % rst) . run
-	substructure (run . extract -> Just (Construct x (Both lst rst))) = Store $ lift lst :*: Tag . lift . Construct x . maybe (Right rst) (Both % rst) . run
+	substructure (run . extract -> Just tree) = Tag . lift <$> (sub @Left |> can_be_empty) tree
 
 instance Substructure Right Binary where
 	type Substructural Right Binary a = Binary a
 	substructure (run . extract -> Nothing) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
-	substructure (run . extract -> Just (Construct x End)) = Store $ TU Nothing :*: Tag . lift . Construct x . maybe End Right . run
-	substructure (run . extract -> Just (Construct x (Left lst))) = Store $ TU Nothing :*: Tag . lift . Construct x . maybe (Left lst) (Both lst) . run
-	substructure (run . extract -> Just (Construct x (Right rst))) = Store $ lift rst :*: Tag . lift . Construct x . maybe End Right . run
-	substructure (run . extract -> Just (Construct x (Both lst rst))) = Store $ lift rst :*: Tag . lift . Construct x . maybe (Left lst) (Both lst) . run
+	substructure (run . extract -> Just tree) = Tag . lift <$> (sub @Right |> can_be_empty) tree
+
+can_be_empty :: Maybe (Construction Wye a) :-. Binary a
+can_be_empty maybe_tree = Store $ TU maybe_tree :*: run
 
 type instance Nonempty Binary = Construction Wye
 
@@ -74,7 +71,7 @@ instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
 	substructure (Tag (Construct x End)) = Store $ Nothing :*: ((Tag $ Construct x End) !)
 	substructure (Tag (Construct x (Left lst))) = Store $ Just lst :*: Tag . Construct x . maybe End Left
-	substructure tree@(Tag (Construct x (Right rst))) = Store $ Nothing :*: maybe tree (Tag . Construct x . Both % rst)
+	substructure (Tag (Construct x (Right rst))) = Store $ Nothing :*: Tag . Construct x . maybe (Right rst) (Both % rst)
 	substructure (Tag (Construct x (Both lst rst))) = Store $ Just lst :*: Tag . Construct x . maybe (Right rst) (Both % rst)
 
 instance Substructure Right (Construction Wye) where
