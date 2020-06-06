@@ -6,7 +6,7 @@ module Pandora.Paradigm.Structure.Binary where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -30,10 +30,9 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructu
 type Binary = Maybe <:.> Construction Wye
 
 insert :: Chain a => a -> Binary a -> Binary a
-insert x (TU Nothing) = lift . Construct x $ End
-insert x tree@(TU (Just (Construct y _))) = x <=> y & order
-	(sub @Left %~ insert x $ tree) tree
-	(sub @Right %~ insert x $ tree)
+insert x (run -> Nothing) = lift . Construct x $ End
+insert x tree@(run -> Just nonempty) = x <=> extract nonempty & order
+	(sub @Left %~ insert x $ tree) tree (sub @Right %~ insert x $ tree)
 
 rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
 rebalance (Both x y) = extract x <=> extract y & order
@@ -43,18 +42,18 @@ rebalance (Both x y) = extract x <=> extract y & order
 
 instance (forall a . Chain a) => Focusable Binary where
 	type Focus Binary a = Maybe a
-	top (TU Nothing) = Store . (:*:) Nothing $ TU . (<$>) (Construct % End)
-	top (TU (Just x)) = Store $ Just (extract x) :*: lift . maybe (rebalance $ deconstruct x) (Construct % deconstruct x)
+	top (run -> Nothing) = Store $ Nothing :*: TU . comap (Construct % End)
+	top (run -> Just x) = Store $ Just (extract x) :*: lift . maybe (rebalance $ deconstruct x) (Construct % deconstruct x)
 	singleton = lift . Construct % End
 
 instance Substructure Left Binary where
 	type Substructural Left Binary a = Binary a
-	substructure (run . extract -> Nothing) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
+	substructure empty_tree@(run . extract -> Nothing) = Store $ extract empty_tree :*: (!) empty_tree
 	substructure (run . extract -> Just tree) = Tag . lift <$> (sub @Left |> can_be_empty) tree
 
 instance Substructure Right Binary where
 	type Substructural Right Binary a = Binary a
-	substructure (run . extract -> Nothing) = Store $ TU Nothing :*: ((Tag $ TU Nothing) !)
+	substructure empty_tree@(run . extract -> Nothing) = Store $ extract empty_tree :*: (!) empty_tree
 	substructure (run . extract -> Just tree) = Tag . lift <$> (sub @Right |> can_be_empty) tree
 
 can_be_empty :: Maybe (Construction Wye a) :-. Binary a
@@ -69,14 +68,14 @@ instance Focusable (Construction Wye) where
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
-	substructure (Tag (Construct x End)) = Store $ Nothing :*: ((Tag $ Construct x End) !)
-	substructure (Tag (Construct x (Left lst))) = Store $ Just lst :*: Tag . Construct x . maybe End Left
-	substructure (Tag (Construct x (Right rst))) = Store $ Nothing :*: Tag . Construct x . maybe (Right rst) (Both % rst)
-	substructure (Tag (Construct x (Both lst rst))) = Store $ Just lst :*: Tag . Construct x . maybe (Right rst) (Both % rst)
+	substructure empty_tree@(extract -> Construct _ End) = Store $ Nothing :*: (!) empty_tree
+	substructure (extract -> Construct x (Left lst)) = Store $ Just lst :*: Tag . Construct x . maybe End Left
+	substructure (extract -> Construct x (Right rst)) = Store $ Nothing :*: Tag . Construct x . maybe (Right rst) (Both % rst)
+	substructure (extract -> Construct x (Both lst rst)) = Store $ Just lst :*: Tag . Construct x . maybe (Right rst) (Both % rst)
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) a = Maybe :. Construction Wye := a
-	substructure (extract -> Construct x End) = Store $ Nothing :*: ((Tag $ Construct x End) !)
+	substructure emtpy_tree@(extract -> Construct _ End) = Store $ Nothing :*: (!) emtpy_tree
 	substructure (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . maybe (Left lst) (Both lst)
 	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . maybe End Right
 	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . maybe (Left lst) (Both lst)
