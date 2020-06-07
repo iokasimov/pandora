@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Rose where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant (comap))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -18,18 +18,17 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Stack (Stack)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Root)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
 
 type Rose = Maybe <:.> Construction Stack
 
-instance Focusable Rose where
-	type Focus Rose a = Maybe a
-	top (TU Nothing) = Store $ Nothing :*: TU . (<$>) (Construct % empty)
-	top (TU (Just x)) = Store $ Just (extract x) :*: maybe
-		(lift x) -- TODO: Nothing at top's lens - should it remove something?
+instance Focusable Root Rose where
+	type Focusing Root Rose a = Maybe a
+	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap (Construct % empty)
+	focusing (run . extract -> Just x) = Store $ Just (extract x) :*: Tag . maybe
+		(lift x) -- FIXME: rebalance
 		(lift . Construct % deconstruct x)
-	singleton = lift . Construct % empty
 
 instance Substructure Just Rose where
 	type Substructural Just Rose a = Stack :. Construction Stack := a
@@ -38,11 +37,10 @@ instance Substructure Just Rose where
 
 type instance Nonempty Rose = Construction Stack
 
+instance Focusable Root (Construction Stack) where
+	type Focusing Root (Construction Stack) a = a
+	focusing (Tag rose) = Store $ extract rose :*: Tag . Construct % deconstruct rose
+
 instance Substructure Just (Construction Stack) where
 	type Substructural Just (Construction Stack) a = Stack :. Construction Stack := a
 	substructure (Tag (Construct x xs)) = Store $ xs :*: Tag . Construct x
-
-instance Focusable (Construction Stack) where
-	type Focus (Construction Stack) a = a
-	top rose = Store $ extract rose :*: Construct % deconstruct rose
-	singleton = Construct % empty

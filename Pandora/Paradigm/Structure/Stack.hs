@@ -21,6 +21,7 @@ import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (fold)
@@ -30,7 +31,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Root, focus)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -46,12 +47,11 @@ instance Semigroup (Stack a) where
 instance Monoid (Stack a) where
 	zero = TU Nothing
 
-instance Focusable Stack where
-	type Focus Stack a = Maybe a
-	top stack = Store $ (:*:) (extract <$> run stack) $ \case
-		Just x -> stack & pop & push x
-		Nothing -> pop stack
-	singleton = lift . Construct % Nothing
+instance Focusable Root Stack where
+	type Focusing Root Stack a = Maybe a
+	focusing (Tag stack) = Store $ (:*:) (extract <$> run stack) $ \case
+		Just x -> stack & pop & push x & Tag
+		Nothing -> Tag $ pop stack
 
 push :: a -> Stack a -> Stack a
 push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
@@ -69,13 +69,12 @@ linearize = TU . fold Nothing (Just .|.. Construct)
 
 type instance Nonempty Stack = Construction Maybe
 
-instance Focusable (Construction Maybe) where
-	type Focus (Construction Maybe) a = a
-	top stack = Store $ extract stack :*: Construct % deconstruct stack
-	singleton = Construct % Nothing
+instance Focusable Root (Construction Maybe) where
+	type Focusing Root (Construction Maybe) a = a
+	focusing (Tag stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 forward, backward :: Zipper Stack a -> Maybe (Zipper Stack a)
-forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> view top fs
-backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: push x fs) <$> view top bs
+forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> view (focus @Root) fs
+backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: push x fs) <$> view (focus @Root) bs

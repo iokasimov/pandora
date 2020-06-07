@@ -23,7 +23,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focus, top, singleton))
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Root)
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (rotation), rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
 
@@ -40,11 +40,10 @@ rebalance (Both x y) = extract x <=> extract y & order
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) (rebalance $ deconstruct y))
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) y)
 
-instance (forall a . Chain a) => Focusable Binary where
-	type Focus Binary a = Maybe a
-	top (run -> Nothing) = Store $ Nothing :*: TU . comap (Construct % End)
-	top (run -> Just x) = Store $ Just (extract x) :*: lift . maybe (rebalance $ deconstruct x) (Construct % deconstruct x)
-	singleton = lift . Construct % End
+instance (forall a . Chain a) => Focusable Root Binary where
+	type Focusing Root Binary a = Maybe a
+	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap (Construct % End)
+	focusing (run . extract -> Just x) = Store $ Just (extract x) :*: Tag . lift . maybe (rebalance $ deconstruct x) (Construct % deconstruct x)
 
 instance Substructure Left Binary where
 	type Substructural Left Binary a = Binary a
@@ -61,10 +60,9 @@ can_be_empty maybe_tree = Store $ TU maybe_tree :*: run
 
 type instance Nonempty Binary = Construction Wye
 
-instance Focusable (Construction Wye) where
-	type Focus (Construction Wye) a = a
-	top (Construct x xs) = Store $ x :*: Construct % xs
-	singleton = Construct % End
+instance Focusable Root (Construction Wye) where
+	type Focusing Root (Construction Wye) a = a
+	focusing (extract -> Construct x xs) = Store $ x :*: Tag . Construct % xs
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
