@@ -16,19 +16,18 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Structure.Stack (Stack)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Root)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
+import Pandora.Paradigm.Structure.Stack (Stack)
 
 type Rose = Maybe <:.> Construction Stack
 
 instance Focusable Root Rose where
 	type Focusing Root Rose a = Maybe a
 	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap (Construct % empty)
-	focusing (run . extract -> Just x) = Store $ Just (extract x) :*: Tag . maybe
-		(lift x) -- FIXME: rebalance
-		(lift . Construct % deconstruct x)
+	focusing (run . extract -> Just rose) = Store $ Just (extract rose)
+		:*: Tag . maybe (TU Nothing) (lift . Construct % deconstruct rose)
 
 instance Substructure Just Rose where
 	type Substructural Just Rose a = Stack :. Construction Stack := a

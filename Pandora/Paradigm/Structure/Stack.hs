@@ -26,7 +26,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (view)
+import Pandora.Paradigm.Inventory.Optics ((^.))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -49,7 +49,7 @@ instance Monoid (Stack a) where
 
 instance Focusable Root Stack where
 	type Focusing Root Stack a = Maybe a
-	focusing (Tag stack) = Store $ (:*:) (extract <$> run stack) $ \case
+	focusing (Tag stack) = Store $ extract <$> run stack :*: \case
 		Just x -> stack & pop & push x & Tag
 		Nothing -> Tag $ pop stack
 
@@ -76,5 +76,5 @@ instance Focusable Root (Construction Maybe) where
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 forward, backward :: Zipper Stack a -> Maybe (Zipper Stack a)
-forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> view (focus @Root) fs
-backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: push x fs) <$> view (focus @Root) bs
+forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> focus @Root ^. fs
+backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: push x fs) <$> focus @Root ^. bs
