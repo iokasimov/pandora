@@ -245,3 +245,6 @@
 * Rename `sub` method of `Substructure` typeclass to `substructure`
 * Define `sub` method which doesn't involve `Tagged`
 * Change `Focusable` typeclass - now it's possible to point not only top/root
+
+# 0.3.0
+* Rename `Root` datatype to `Location` with `Head` (stack) and `Root` (tree) constructors

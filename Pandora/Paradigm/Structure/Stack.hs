@@ -31,7 +31,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Root, focus)
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -47,11 +47,15 @@ instance Semigroup (Stack a) where
 instance Monoid (Stack a) where
 	zero = TU Nothing
 
-instance Focusable Root Stack where
-	type Focusing Root Stack a = Maybe a
+instance Focusable Head Stack where
+	type Focusing Head Stack a = Maybe a
 	focusing (Tag stack) = Store $ extract <$> run stack :*: \case
 		Just x -> stack & pop & push x & Tag
 		Nothing -> Tag $ pop stack
+
+instance Focusable Last Stack where
+	type Focusing Last Stack a = Maybe a
+	focusing (Tag stack) = Store $ extract <$> run stack :*: \case
 
 push :: a -> Stack a -> Stack a
 push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
@@ -69,12 +73,12 @@ linearize = TU . fold Nothing (Just .|.. Construct)
 
 type instance Nonempty Stack = Construction Maybe
 
-instance Focusable Root (Construction Maybe) where
-	type Focusing Root (Construction Maybe) a = a
+instance Focusable Head (Construction Maybe) where
+	type Focusing Head (Construction Maybe) a = a
 	focusing (Tag stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 forward, backward :: Zipper Stack a -> Maybe (Zipper Stack a)
-forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> focus @Root ^. fs
-backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: push x fs) <$> focus @Root ^. bs
+forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> focus @Head ^. fs
+backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: push x fs) <$> focus @Head ^. bs
