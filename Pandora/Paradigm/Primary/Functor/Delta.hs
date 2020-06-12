@@ -9,24 +9,26 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 
+infixr 1 :^:
+
 data Delta a = a :^: a
 
 type (:^:) = Delta
 
 instance Covariant Delta where
-	f <$> x :^: y = f x :^: f y
+	f <$> (x :^: y) = f x :^: f y
 
 instance Pointable Delta where
 	point x = x :^: x
 
 instance Applicative Delta where
-	f :^: g <*> x :^: y = f x :^: g y
+	(f :^: g) <*> (x :^: y) = f x :^: g y
 
 instance Distributive Delta where
-	t >>- f = ((True <#>) . f <$> t) :^: ((False <#>) . f <$> t)
+	t >>- f = (True <#>) . f <$> t :^: (False <#>) . f <$> t
 
 instance Traversable Delta where
-	x :^: y ->> f = (:^:) <$> f x <*> f y
+	(x :^: y) ->> f = (:^:) <$> f x <*> f y
 
 instance Representable Delta where
 	type Representation Delta = Boolean
