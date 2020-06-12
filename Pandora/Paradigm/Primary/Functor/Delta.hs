@@ -23,7 +23,7 @@ instance Applicative Delta where
 	f :^: g <*> x :^: y = f x :^: g y
 
 instance Distributive Delta where
-	t >>- f = ((\(x :^: _) -> x) . f <$> t) :^: ((\(_ :^: y) -> y) . f <$> t)
+	t >>- f = ((True <#>) . f <$> t) :^: ((False <#>) . f <$> t)
 
 instance Traversable Delta where
 	x :^: y ->> f = (:^:) <$> f x <*> f y

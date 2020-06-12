@@ -53,10 +53,6 @@ instance Focusable Head Stack where
 		Just x -> stack & pop & push x & Tag
 		Nothing -> Tag $ pop stack
 
-instance Focusable Last Stack where
-	type Focusing Last Stack a = Maybe a
-	focusing (Tag stack) = Store $ extract <$> run stack :*: \case
-
 push :: a -> Stack a -> Stack a
 push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 
