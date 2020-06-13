@@ -22,7 +22,7 @@ class Pointable t => Representable t where
 	tabulate :: (Representation t -> a) -> t a
 	-- | Prefix and flipped version of '<#>'
 	index :: t a -> Representation t -> a
-	index x f = f <#> x
+	index x r = r <#> x
 
 instance Representable ((->) e) where
 	type Representation ((->) e) = e

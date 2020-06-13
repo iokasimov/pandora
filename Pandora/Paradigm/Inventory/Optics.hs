@@ -1,13 +1,16 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory.Optics (Lens, type (:-.), (|>), view, set, over, zoom, (^.), (.~), (%~)) where
+module Pandora.Paradigm.Inventory.Optics where
 
 import Pandora.Core.Functor (type (|->))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant ((<$))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Bivariant ((<->))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
 import Pandora.Paradigm.Inventory.State (State (State), Stateful)
 import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
@@ -47,3 +50,6 @@ lens %~ f = over lens f
 
 zoom :: Stateful bg t => Lens bg ls -> State ls a -> t a
 zoom lens (State f) = adapt . State $ (\(Store (p :*: g)) -> (g <-> identity) . f $ p) . lens
+
+represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
+represent r x = Store $ (r <#> x) :*: \new -> tabulate (\r' -> r' == r ? new $ r' <#> x)
