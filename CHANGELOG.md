@@ -249,3 +249,4 @@
 # 0.3.0
 * Rename `Root` datatype to `Location` with `Head` (stack) and `Root` (tree) constructors
 * Define `represent` as lens in `Representable` containers
+* Define `Equivalence` datatype and define `Contravariant` instance for it

@@ -21,7 +21,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (lay, wr
 import Pandora.Paradigm.Controlflow.Effect.Schematic (Schematic)
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Object.Boolean (bool)
-import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (predicate))
+import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), delta)
 
 newtype State s a = State ((->) s :. (:*:) s := a)
@@ -47,7 +47,7 @@ fold start op struct = extract . run @(State _) % start
 	$ struct ->> modify . op *> current
 
 find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
-find p = fold empty (\x s -> (<+>) s . bool empty (point x) . predicate p $ x)
+find (Predicate p) = fold empty (\x s -> (<+>) s . bool empty (point x) . p $ x)
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a

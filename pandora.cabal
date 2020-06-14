@@ -40,7 +40,6 @@ library
     Pandora.Paradigm.Primary.Functor.Fix
     Pandora.Paradigm.Primary.Functor.Identity
     Pandora.Paradigm.Primary.Functor.Maybe
-    Pandora.Paradigm.Primary.Functor.Predicate
     Pandora.Paradigm.Primary.Functor.Product
     Pandora.Paradigm.Primary.Functor.Proxy
     Pandora.Paradigm.Primary.Functor.Tagged
@@ -48,6 +47,8 @@ library
     Pandora.Paradigm.Primary.Functor.Validation
     Pandora.Paradigm.Primary.Functor.Wye
     Pandora.Paradigm.Primary.Functor.Wedge
+    Pandora.Paradigm.Primary.Functor.Predicate
+    Pandora.Paradigm.Primary.Functor.Equivalence
     Pandora.Paradigm.Primary.Transformer
     Pandora.Paradigm.Primary.Transformer.Backwards
     Pandora.Paradigm.Primary.Transformer.Reverse

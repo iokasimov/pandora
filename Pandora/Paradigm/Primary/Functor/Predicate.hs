@@ -6,10 +6,10 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Determinable (Determinable (determine))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 
-newtype Predicate a = Predicate { predicate :: a -> Boolean }
+newtype Predicate a = Predicate (a -> Boolean)
 
 instance Contravariant Predicate where
-	f >$< g = Predicate $ predicate g . f
+	f >$< Predicate g = Predicate $ g . f
 
 instance Determinable Predicate where
 	determine = Predicate (True !)

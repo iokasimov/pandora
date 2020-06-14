@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right, this, that, here, there) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
+import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
 import Pandora.Paradigm.Primary.Functor.Predicate as Exports
 import Pandora.Paradigm.Primary.Functor.These as Exports
 import Pandora.Paradigm.Primary.Functor.Validation as Exports
