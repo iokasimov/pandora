@@ -8,11 +8,9 @@ import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
-import Pandora.Paradigm.Primary.Functor (left, right)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing), maybe)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
@@ -24,7 +22,6 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
-import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (rotation), rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
 
 type Binary = Maybe <:.> Construction Wye
@@ -77,43 +74,3 @@ instance Substructure Right (Construction Wye) where
 	substructure (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . maybe (Left lst) (Both lst)
 	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . maybe End Right
 	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . maybe (Left lst) (Both lst)
-
-data Splay a = Zig a | Zag a
-
-instance Rotatable (Left Zig) (Construction Wye) where
-	rotation (Tag (Construct parent st)) = Construct % subtree <$> found where
-
-		subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
-		found = extract <$> left st
-		a = deconstruct <$> left st >>= left
-		b = deconstruct <$> left st >>= right
-		c = right st
-
-instance Rotatable (Right Zig) (Construction Wye) where
-	rotation (Tag (Construct parent st)) = Construct % subtree <$> found where
-
-		found = extract <$> right st
-		subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
-		a = left st
-		b = deconstruct <$> right st >>= left
-		c = deconstruct <$> right st >>= right
-
-instance Rotatable (Left (Zig Zig)) (Construction Wye) where
-	rotation (Tag tree) = rotate @(Left Zig) tree >>= rotate @(Left Zig)
-
-instance Rotatable (Right (Zig Zig)) (Construction Wye) where
-	rotation (Tag tree) = rotate @(Right Zig) tree >>= rotate @(Right Zig)
-
-instance Rotatable (Left (Zig Zag)) (Construction Wye) where
-	rotation (Tag tree) = rotate @(Left Zig)
-		$ sub @Left %~ (>>= rotate @(Right Zig)) $ tree
-
-instance Rotatable (Right (Zig Zag)) (Construction Wye) where
-	rotation (Tag tree) = rotate @(Right Zig)
-		$ sub @Right %~ (>>= rotate @(Left Zig)) $ tree
-
-maybe_subtree :: Maybe a -> Maybe a -> Wye a
-maybe_subtree (Just x) (Just y) = Both x y
-maybe_subtree Nothing (Just y) = Right y
-maybe_subtree (Just x) Nothing = Left x
-maybe_subtree Nothing Nothing = End

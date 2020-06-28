@@ -94,6 +94,7 @@ library
     Pandora.Paradigm.Structure.Stream
     Pandora.Paradigm.Structure.Stack
     Pandora.Paradigm.Structure.Binary
+    Pandora.Paradigm.Structure.Splay
     Pandora.Paradigm.Structure.Rose
     Pandora.Paradigm.Structure.Ability
     Pandora.Paradigm.Structure.Ability.Focusable
