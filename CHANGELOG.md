@@ -250,4 +250,4 @@
 * Rename `Root` datatype to `Location` with `Head` (stack) and `Root` (tree) constructors
 * Define `represent` as lens in `Representable` containers
 * Define `Equivalence` datatype and define `Contravariant` instance for it
-* Define `swap` for `Wye` (useful if you want to invert binary tree with `hoist swap`)
+* Define `swop` for `Wye` (useful if you want to invert binary tree with `hoist swap`)
