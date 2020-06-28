@@ -1,11 +1,8 @@
 module Pandora.Paradigm.Primary.Functor.Equivalence (Equivalence (..)) where
 
-import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant ((.|..))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
-import Pandora.Pattern.Functor.Bivariant ((<->))
-import Pandora.Paradigm.Primary.Functor.Product (uncurry)
-import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean)
 
 data Equivalence a = Equivalence (a -> a -> Boolean)
 
