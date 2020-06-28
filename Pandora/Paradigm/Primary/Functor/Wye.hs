@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Wye (Wye (..), wye) where
+module Pandora.Paradigm.Primary.Functor.Wye (Wye (..), wye, swap) where
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -25,3 +25,9 @@ wye r _ _ _ End = r
 wye _ f _ _ (Left x) = f x
 wye _ _ g _ (Right y) = g y
 wye _ _ _ h (Both x y) = h x y
+
+swap :: Wye ~> Wye
+swap End = End
+swap (Both l r) = Both r l
+swap (Left l) = Right l
+swap (Right r) = Left r
