@@ -7,6 +7,9 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 
 infixr 1 :^:
@@ -35,3 +38,12 @@ instance Representable Delta where
 	True <#> (x :^: _) = x
 	False <#> (_ :^: y) = y
 	tabulate f = f True :^: f False
+
+instance Setoid a => Setoid (Delta a) where
+	(x :^: y) == (x' :^: y') = (x == x') * (y == y')
+
+instance Semigroup a => Semigroup (Delta a) where
+	(x :^: y) + (x' :^: y') = (x + x') :^: (y + y')
+
+instance Ringoid a => Ringoid (Delta a) where
+	(x :^: y) * (x' :^: y') = (x * x') :^: (y * y')
