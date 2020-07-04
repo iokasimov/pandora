@@ -75,6 +75,9 @@ instance Focusable Head (Construction Maybe) where
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
+instance Covariant (Delta <:.> Stack) where
+	f <$> (TU (bs :^: fs)) = TU $ f <$> bs :^: f <$> fs
+
 forward, backward :: Zipper Stack a -> Maybe (Zipper Stack a)
 forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> focus @Head ^. fs
 backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: push x fs) <$> focus @Head ^. bs

@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Delta (Delta (..), type (:^:)) where
+module Pandora.Paradigm.Primary.Functor.Delta (Delta (..)) where
 
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -15,8 +15,6 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 infixr 1 :^:
 
 data Delta a = a :^: a
-
-type (:^:) = Delta
 
 instance Covariant Delta where
 	f <$> (x :^: y) = f x :^: f y
