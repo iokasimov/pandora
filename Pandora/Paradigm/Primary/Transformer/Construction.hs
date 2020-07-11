@@ -19,7 +19,8 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Schemes.TU (TU (TU))
+import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 data Construction t a = Construct a (t :. Construction t := a)
 
@@ -39,7 +40,8 @@ instance Traversable t => Traversable (Construction t) where
 	Construct x xs ->> f = Construct <$> f x <*> xs ->>> f
 
 instance Alternative t => Bindable (Construction t) where
-	Construct x xs >>= f = case f x of Construct y ys -> Construct y $ ys <+> (>>= f) <$> xs
+	Construct x xs >>= f = case f x of
+		Construct y ys -> Construct y $ ys <+> (>>= f) <$> xs
 
 instance Covariant t => Extendable (Construction t) where
 	x =>> f = Construct (f x) $ extend f <$> deconstruct x
@@ -72,20 +74,24 @@ coiterate coalgebra x = Construct x $ coiterate coalgebra <$> coalgebra x
 section :: Comonad t => t ~> Construction t
 section as = Construct (extract as) $ extend section as
 
-instance (Covariant t, Covariant u) => Covariant (TU Covariant Covariant u (Construction t)) where
+instance (Covariant t, Covariant u) => Covariant (u <:.> Construction t) where
 	f <$> TU g = TU $ f <$$> g
 
-instance (Avoidable t, Pointable u) => Pointable (TU Covariant Covariant u (Construction t)) where
+instance (Avoidable t, Pointable u) => Pointable (u <:.> Construction t) where
 	point x = TU . point . Construct x $ empty
 
-instance (Applicative t, Applicative u) => Applicative (TU Covariant Covariant u (Construction t)) where
+instance (Applicative t, Applicative u) => Applicative (u <:.> Construction t) where
 	TU f <*> TU x = TU $ f <**> x
 
-instance (Covariant t, Alternative u) => Alternative (TU Covariant Covariant u (Construction t)) where
+instance (Covariant t, Alternative u) => Alternative (u <:.> Construction t) where
 	TU x <+> TU y = TU $ x <+> y
 
-instance (Covariant t, Avoidable u) => Avoidable (TU Covariant Covariant u (Construction t)) where
+instance (Covariant t, Avoidable u) => Avoidable (u <:.> Construction t) where
 	empty = TU empty
 
-instance (Traversable t, Traversable u) => Traversable (TU Covariant Covariant u (Construction t)) where
+instance (Traversable t, Traversable u) => Traversable (u <:.> Construction t) where
 	TU g ->> f = TU <$> g ->>> f
+
+instance (Bindable t, Alternative t) => Bindable (t <:.> Construction t) where
+	TU t >>= f = TU $ t >>= \case
+		Construct x xs -> run (f x) <+> run (TU xs >>= f)
