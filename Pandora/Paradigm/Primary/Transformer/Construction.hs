@@ -1,3 +1,5 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Primary.Transformer.Construction (Construction (..), deconstruct, coiterate, section) where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (|->), type (~>))
@@ -92,6 +94,6 @@ instance (Covariant t, Avoidable u) => Avoidable (u <:.> Construction t) where
 instance (Traversable t, Traversable u) => Traversable (u <:.> Construction t) where
 	TU g ->> f = TU <$> g ->>> f
 
-instance (Bindable t, Alternative t) => Bindable (t <:.> Construction t) where
+instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (t <:.> Construction t) where
 	TU t >>= f = TU $ t >>= \case
-		Construct x xs -> run (f x) <+> run (TU xs >>= f)
+		Construct x xs -> run $ f x + (TU xs >>= f)
