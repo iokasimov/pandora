@@ -94,6 +94,6 @@ instance (Covariant t, Avoidable u) => Avoidable (u <:.> Construction t) where
 instance (Traversable t, Traversable u) => Traversable (u <:.> Construction t) where
 	TU g ->> f = TU <$> g ->>> f
 
+-- TODO: think more about more generic solution, this instance is to make Stack behave like List from base
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (t <:.> Construction t) where
-	TU t >>= f = TU $ t >>= \case
-		Construct x xs -> run $ f x + (TU xs >>= f)
+	TU t >>= f = TU $ t >>= \(Construct x xs) -> run $ f x + (TU xs >>= f)
