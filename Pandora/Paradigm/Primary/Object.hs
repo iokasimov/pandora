@@ -18,3 +18,20 @@ instance Chain Boolean where
 	True <=> False = Greater
 	False <=> True = Less
 	False <=> False = Equal
+
+instance Setoid Ordering where
+	Less == Less = True
+	Equal == Equal = True
+	Greater == Greater = True
+	_ == _ = False
+
+instance Chain Ordering where
+	Less <=> Less = Equal
+	Less <=> Equal = Less
+	Less <=> Greater = Less
+	Equal <=> Less = Greater
+	Equal <=> Equal = Equal
+	Equal <=> Greater = Equal
+	Greater <=> Less = Greater
+	Greater <=> Equal = Greater
+	Greater <=> Greater = Equal
