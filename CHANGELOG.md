@@ -251,3 +251,4 @@
 * Define `represent` as lens in `Representable` containers
 * Define `Equivalence` datatype and define `Contravariant` instance for it
 * Define `swop` for `Wye` (useful if you want to invert binary tree with `hoist swap`)
+* Add experimental `Monotonic` typeclass
