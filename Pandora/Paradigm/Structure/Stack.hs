@@ -59,6 +59,11 @@ push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct
 
+delete :: Setoid a => a -> Stack a -> Stack a
+delete _ (TU Nothing) = TU Nothing
+delete x (TU (Just (Construct y ys))) = x == y ? TU ys
+	$ lift . Construct x . run . delete x $ TU ys
+
 filter :: Predicate a -> Stack a -> Stack a
 filter (Predicate p) = TU . fold empty
 	(\now new -> p now ? Just (Construct now new) $ new)
