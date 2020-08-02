@@ -17,6 +17,7 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (iterate))
 
 infixr 1 :*:
 
@@ -70,6 +71,9 @@ instance (Lattice a, Lattice b) => Lattice (Product a b) where
 
 instance (Group a, Group b) => Group (Product a b) where
 	invert (x :*: y) = invert x :*: invert y
+
+instance Monotonic e a => Monotonic (Product a e) a where
+	iterate f r (x :*: e) = iterate f (f x r) e
 
 delta :: a -> a :*: a
 delta x = x :*: x
