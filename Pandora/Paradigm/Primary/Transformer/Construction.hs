@@ -22,7 +22,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
 
 data Construction t a = Construct a (t :. Construction t := a)
 
@@ -94,6 +94,15 @@ instance (Covariant t, Avoidable u) => Avoidable (u <:.> Construction t) where
 instance (Traversable t, Traversable u) => Traversable (u <:.> Construction t) where
 	TU g ->> f = TU <$> g ->>> f
 
--- TODO: think more about more generic solution, this instance is to make Stack behave like List from base
-instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (t <:.> Construction t) where
-	TU t >>= f = TU $ t >>= \(Construct x xs) -> run $ f x + (TU xs >>= f)
+-- Experimental wrapper for data structures that can behave like list comprehensions
+newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
+
+instance Interpreted (Comprehension t) where
+	type Primary (Comprehension t) a = t <:.> Construction t := a
+	run (Comprehension x) = x
+
+instance Covariant (t <:.> Construction t) => Covariant (Comprehension t) where
+	f <$> Comprehension x = Comprehension $ f <$> x
+
+instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (Comprehension t) where
+	Comprehension (TU t) >>= f = Comprehension . TU $ t >>= \(Construct x xs) -> run $ run (f x) + run (Comprehension (TU xs) >>= f)

@@ -1,7 +1,5 @@
 module Pandora.Paradigm.Structure.Ability.Monotonic where
 
-import Pandora.Core.Functor (type (|->))
-
 class Monotonic e a where
 	iterate :: (a -> r -> r) -> r -> e -> r
 

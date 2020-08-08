@@ -253,3 +253,4 @@
 * Define `swop` for `Wye` (useful if you want to invert binary tree with `hoist swap`)
 * Add experimental `Monotonic` typeclass
 * Implement delete method for Stack
+* Define `Comprehension` wrapper for data structures that can behave like list comprehensions
