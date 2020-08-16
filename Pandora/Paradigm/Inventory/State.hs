@@ -75,6 +75,12 @@ instance Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
 
 instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
 
+instance Alternative u => Alternative ((->) s <:<.>:> (:*:) s := u) where
+	TUT x <+> TUT y = TUT $ \s -> x s <+> y s
+
+instance Avoidable u => Avoidable ((->) s <:<.>:> (:*:) s := u) where
+	empty = TUT $ \_ -> empty
+
 current :: Stateful s t => t s
 current = adapt $ State delta
 
