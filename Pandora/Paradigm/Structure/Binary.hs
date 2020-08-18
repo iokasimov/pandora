@@ -22,20 +22,21 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
+import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
 
 type Binary = Maybe <:.> Construction Wye
-
-insert :: Chain a => a -> Binary a -> Binary a
-insert x (run -> Nothing) = lift . Construct x $ End
-insert x tree@(run -> Just nonempty) = x <=> extract nonempty & order
-	(sub @Left %~ insert x $ tree) tree (sub @Right %~ insert x $ tree)
 
 rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
 rebalance (Both x y) = extract x <=> extract y & order
 	(Construct (extract y) $ Both x (rebalance $ deconstruct y))
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) (rebalance $ deconstruct y))
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) y)
+
+instance (forall a . Chain a) => Insertable Binary where
+	insert x (run -> Nothing) = lift . Construct x $ End
+	insert x tree@(run -> Just nonempty) = x <=> extract nonempty & order
+		(sub @Left %~ insert x $ tree) tree (sub @Right %~ insert x $ tree)
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a

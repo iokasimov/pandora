@@ -32,6 +32,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
+import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -50,11 +51,11 @@ instance Monoid (Stack a) where
 instance Focusable Head Stack where
 	type Focusing Head Stack a = Maybe a
 	focusing (Tag stack) = Store $ extract <$> run stack :*: \case
-		Just x -> stack & pop & push x & Tag
+		Just x -> stack & pop & insert x & Tag
 		Nothing -> Tag $ pop stack
 
-push :: a -> Stack a -> Stack a
-push x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
+instance Insertable Stack where
+	insert x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct
@@ -84,5 +85,5 @@ instance Covariant (Delta <:.> Stack) where
 	f <$> (TU (bs :^: fs)) = TU $ f <$> bs :^: f <$> fs
 
 forward, backward :: Zipper Stack a -> Maybe (Zipper Stack a)
-forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ push x bs :^: pop fs) <$> focus @Head ^. fs
-backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: push x fs) <$> focus @Head ^. bs
+forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: pop fs) <$> focus @Head ^. fs
+backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: insert x fs) <$> focus @Head ^. bs
