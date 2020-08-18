@@ -62,6 +62,10 @@ instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a
 	focusing (extract -> Construct x xs) = Store $ x :*: Tag . Construct % xs
 
+instance (forall a . Chain a) => Insertable (Construction Wye) where
+	insert x nonempty = let change = Just . maybe (Construct x End) (insert x) in
+		x <=> extract nonempty & order (sub @Left %~ change $ nonempty) nonempty (sub @Right %~ change $ nonempty)
+
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
 	substructure empty_tree@(extract -> Construct _ End) = Store $ Nothing :*: (!) empty_tree

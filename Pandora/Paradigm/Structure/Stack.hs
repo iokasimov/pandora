@@ -79,6 +79,9 @@ instance Focusable Head (Construction Maybe) where
 	type Focusing Head (Construction Maybe) a = a
 	focusing (Tag stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
 
+instance Insertable (Construction Maybe) where
+	insert x = Construct x . Just
+
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 instance Covariant (Delta <:.> Stack) where
