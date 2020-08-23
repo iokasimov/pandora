@@ -60,6 +60,7 @@ library
     Pandora.Paradigm.Primary.Transformer.Jack
     Pandora.Paradigm.Primary.Transformer.Jet
     Pandora.Paradigm.Primary.Transformer.Kan
+    Pandora.Paradigm.Primary.Transformer.Day
     Pandora.Paradigm.Primary.Transformer.Yoneda
     -- Schemes of functor compositions
     Pandora.Paradigm.Schemes

@@ -4,6 +4,7 @@ import Pandora.Paradigm.Primary.Transformer.Yoneda as Exports
 import Pandora.Paradigm.Primary.Transformer.Tap as Exports
 import Pandora.Paradigm.Primary.Transformer.Continuation as Exports
 import Pandora.Paradigm.Primary.Transformer.Kan as Exports
+import Pandora.Paradigm.Primary.Transformer.Day as Exports
 import Pandora.Paradigm.Primary.Transformer.Jet as Exports
 import Pandora.Paradigm.Primary.Transformer.Jack as Exports
 import Pandora.Paradigm.Primary.Transformer.Outline as Exports
