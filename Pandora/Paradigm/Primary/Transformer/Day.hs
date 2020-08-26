@@ -6,6 +6,8 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 
 data Day t u a = forall b c . Day (t b) (u c) (b -> c -> a)
@@ -25,3 +27,9 @@ instance (Extractable t, Extractable u) => Extractable (Day t u) where
 
 instance (Extendable t, Extendable u) => Extendable (Day t u) where
 	day@(Day tb uc _) =>> f = Day tb uc (\_ _ -> f day)
+
+instance Extractable t => Lowerable (Day t) where
+	lower (Day tb uc bca) = bca (extract tb) <$> uc
+
+instance Hoistable (Day t) where
+	hoist g (Day tb uc bca) = Day tb (g uc) bca
