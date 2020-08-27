@@ -256,3 +256,4 @@
 * Define `Comprehension` wrapper for data structures that can behave like list comprehensions
 * Define experimental `Insertable` typeclass
 * Define `Day convolution` datatype in `Transformer` module
+* Define experimental methods: `<*+>`, `<**+>`, `<***+>`
