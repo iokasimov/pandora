@@ -2,6 +2,7 @@ module Pandora.Paradigm.Primary.Transformer.Yoneda (Yoneda (..)) where
 
 import Pandora.Core.Morphism ((!))
 import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -18,7 +19,7 @@ instance Covariant (Yoneda t) where
 	f <$> x = Yoneda (\k -> yoneda x (k . f))
 
 instance Alternative t => Alternative (Yoneda t) where
-	Yoneda f <+> Yoneda g = Yoneda (\k -> f k <+> g k)
+	Yoneda f <+> Yoneda g = Yoneda (f <*+> g)
 
 instance Applicative t => Applicative (Yoneda t) where
 	Yoneda f <*> Yoneda x = Yoneda (\g -> f (g .) <*> x identity)

@@ -5,6 +5,7 @@ module Pandora.Paradigm.Inventory.State (State (..), Stateful, current, modify, 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -76,7 +77,7 @@ instance Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
 instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
 
 instance Alternative u => Alternative ((->) s <:<.>:> (:*:) s := u) where
-	TUT x <+> TUT y = TUT $ \s -> x s <+> y s
+	TUT x <+> TUT y = TUT (x <*+> y)
 
 instance Avoidable u => Avoidable ((->) s <:<.>:> (:*:) s := u) where
 	empty = TUT $ \_ -> empty
