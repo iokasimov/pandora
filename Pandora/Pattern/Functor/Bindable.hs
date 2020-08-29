@@ -37,8 +37,9 @@ class Covariant t => Bindable t where
 	-- | Experimental methods
 	($>>=) :: Covariant u => (a -> t b) -> u :. t := a -> u :. t := b
 	f $>>= x = (>>= f) <$> x
-	(>>=$) :: (t b -> c) -> (a -> t b) -> t a -> c
-	f >>=$ g = f <$> (>>= g)
+
+	(<>>=) :: (t b -> c) -> (a -> t b) -> t a -> c
+	f <>>= g = f <$> (>>= g)
 
 instance Bindable ((->) e) where
 	f >>= g = \x -> g (f x) x

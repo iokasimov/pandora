@@ -257,3 +257,4 @@
 * Define experimental `Insertable` typeclass
 * Define `Day convolution` datatype in `Transformer` module
 * Define experimental methods: `<*+>`, `<**+>`, `<***+>`
+* Rename Bindable method `>>=$` to `<>>=`
