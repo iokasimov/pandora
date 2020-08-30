@@ -258,3 +258,4 @@
 * Define `Day convolution` datatype in `Transformer` module
 * Define experimental methods: `<*+>`, `<**+>`, `<***+>`
 * Rename Bindable method `>>=$` to `<>>=`
+* Move `Comprehension` wrapper from `Construction` to `Structure.Ability` module
