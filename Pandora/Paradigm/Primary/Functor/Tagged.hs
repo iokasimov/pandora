@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Tagged (Tagged (..), retag, tagself, type (:#)) where
+module Pandora.Paradigm.Primary.Functor.Tagged where
 
 import Pandora.Core.Functor (type (|->), type (~>))
 import Pandora.Pattern.Category ((.), ($))

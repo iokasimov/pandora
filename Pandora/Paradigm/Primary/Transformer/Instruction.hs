@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Transformer.Instruction (Instruction (..)) where
+module Pandora.Paradigm.Primary.Transformer.Instruction where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (($))

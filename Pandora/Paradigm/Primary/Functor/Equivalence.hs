@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Equivalence (Equivalence (..)) where
+module Pandora.Paradigm.Primary.Functor.Equivalence where
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))

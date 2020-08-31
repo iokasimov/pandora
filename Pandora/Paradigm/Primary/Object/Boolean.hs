@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Object.Boolean (Boolean (..), bool, (?)) where
+module Pandora.Paradigm.Primary.Object.Boolean where
 
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))

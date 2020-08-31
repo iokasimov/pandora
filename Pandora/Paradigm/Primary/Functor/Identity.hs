@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Identity (Identity (..)) where
+module Pandora.Paradigm.Primary.Functor.Identity where
 
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))

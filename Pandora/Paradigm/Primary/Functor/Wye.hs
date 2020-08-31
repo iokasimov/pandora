@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Wye (Wye (..), wye, swop) where
+module Pandora.Paradigm.Primary.Functor.Wye where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (($))

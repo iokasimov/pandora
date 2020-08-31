@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Maybe (Maybe (..), Optional, maybe, nothing) where
+module Pandora.Paradigm.Primary.Functor.Maybe where
 
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))

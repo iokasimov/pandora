@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Delta (Delta (..)) where
+module Pandora.Paradigm.Primary.Functor.Delta where
 
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))

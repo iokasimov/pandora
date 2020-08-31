@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Transformer.Outline (Outline (..)) where
+module Pandora.Paradigm.Primary.Transformer.Outline where
 
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category (identity, (.), ($))

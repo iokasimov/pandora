@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Object.Ordering (Ordering (..), order) where
+module Pandora.Paradigm.Primary.Object.Ordering where
 
 data Ordering = Less | Equal | Greater
 

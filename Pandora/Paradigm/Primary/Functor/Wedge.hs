@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Wedge (Wedge (..), wedge) where
+module Pandora.Paradigm.Primary.Functor.Wedge where
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))

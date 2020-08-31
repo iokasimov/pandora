@@ -1,11 +1,11 @@
-module Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (..), Failable, conclusion, fail, failure) where
+module Pandora.Paradigm.Primary.Functor.Conclusion where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -92,7 +92,7 @@ instance Covariant u => Covariant (UT Covariant Covariant (Conclusion e) u) wher
 	f <$> UT x = UT $ f <$$> x
 
 instance Applicative u => Applicative (UT Covariant Covariant (Conclusion e) u) where
-	UT f <*> UT x = UT $ apply <$> f <*> x
+	UT f <*> UT x = UT $ (<*>) <$> f <*> x
 
 instance Pointable u => Pointable (UT Covariant Covariant (Conclusion e) u) where
 	point = UT . point . point

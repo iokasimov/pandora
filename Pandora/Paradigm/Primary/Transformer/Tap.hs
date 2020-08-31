@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Transformer.Tap (Tap (..)) where
+module Pandora.Paradigm.Primary.Transformer.Tap where
 
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.), ($))

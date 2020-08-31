@@ -1,5 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Product (Product (..), type (:*:)
-	, delta, swap, attached, curry, uncurry) where
+module Pandora.Paradigm.Primary.Functor.Product where
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))

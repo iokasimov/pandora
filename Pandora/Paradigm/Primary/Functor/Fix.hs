@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Fix (Fix (..), cata, ana, hylo) where
+module Pandora.Paradigm.Primary.Functor.Fix where
 
 import Pandora.Core.Functor (type (<-|), type (|->))
 import Pandora.Pattern.Category ((.))

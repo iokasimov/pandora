@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Transformer.Kan (Kan (..)) where
+module Pandora.Paradigm.Primary.Transformer.Kan where
 
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))

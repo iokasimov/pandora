@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Transformer.Backwards (Backwards (..)) where
+module Pandora.Paradigm.Primary.Transformer.Backwards where
 
 import Pandora.Core.Morphism ((&))
 import Pandora.Pattern.Category ((.), ($))
