@@ -1,5 +1,5 @@
 name:                pandora
-version:             0.2.9
+version:             0.3.0
 synopsis:            A box of patterns and paradigms
 description:         Humble attempt to define a library for problem solving based on math abstractions.
 homepage:            https://github.com/iokasimov/pandora
@@ -26,7 +26,6 @@ library
 
     Pandora.Paradigm
     -- Basic constructions
-
     Pandora.Paradigm.Primary
     Pandora.Paradigm.Primary.Object
     Pandora.Paradigm.Primary.Object.Boolean
