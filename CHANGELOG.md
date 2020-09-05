@@ -259,3 +259,6 @@
 * Define experimental methods: `<*+>`, `<**+>`, `<***+>`
 * Rename Bindable method `>>=$` to `<>>=`
 * Move `Comprehension` wrapper from `Construction` to `Structure.Ability` module
+
+# 0.3.1
+* Define `Set` interface for data structures with `member` method

@@ -105,6 +105,8 @@ library
     Pandora.Paradigm.Structure.Ability.Nonempty
     Pandora.Paradigm.Structure.Ability.Zipper
     Pandora.Paradigm.Structure.Ability.Monotonic
+    Pandora.Paradigm.Structure.Interface
+    Pandora.Paradigm.Structure.Interface.Set
 
     Pandora.Pattern
     -- Category typeclass
