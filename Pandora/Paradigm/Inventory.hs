@@ -18,7 +18,9 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 instance Adjoint (Store s) (State s) where
+	(-|) :: a -> (Store s a -> b) -> State s b
 	x -| f = State $ \s -> (:*:) s . f . Store $ s :*: (x !)
+	(|-) :: Store s a -> (a -> State s b) -> b
 	Store (s :*: f) |- g = extract . run % s . g $ f s
 
 instance Adjoint (Accumulator e) (Imprint e) where
