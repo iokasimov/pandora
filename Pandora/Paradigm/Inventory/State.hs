@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), (>=>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -63,16 +63,16 @@ instance Monadic (State s) where
 type Stateful s = Adaptable (State s)
 
 instance Covariant u => Covariant ((->) s <:<.>:> (:*:) s := u) where
-	f <$> TUT x = TUT $ \old -> f <$$> x old
+	f <$> TUT x = TUT $ (<$$>) f . x
 
 instance Bindable u => Applicative ((->) s <:<.>:> (:*:) s := u) where
-	TUT f <*> TUT x = TUT $ \old -> f old >>= \(new :*: g) -> g <$$> x new
+	TUT f <*> TUT x = TUT $ f >=> \(new :*: g) -> g <$$> x new
 
 instance Pointable u => Pointable ((->) s <:<.>:> (:*:) s := u) where
 	point = TUT . (-| point)
 
 instance Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
-	TUT x >>= f = TUT $ \old -> x old >>= \(new :*: y) -> ($ new) . run . f $ y
+	TUT x >>= f = TUT $ x >=> \(new :*: y) -> ($ new) . run . f $ y
 
 instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
 

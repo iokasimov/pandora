@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 > When providing a new instance, you should ensure it satisfies the three laws:
 > * Left identity: point a >>= f ≡ f a
 > * Right identity: h >>= point ≡ h
-> * Associativity: h >>= (\x -> f x >>= g) ≡ (h >>= f) >>= g
+> * Associativity: h >>= (f >=> g) ≡ (h >>= f) >>= g
 -}
 
 class (Pointable t, Bindable t) => Monad t
