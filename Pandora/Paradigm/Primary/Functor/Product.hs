@@ -20,56 +20,58 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (iterate))
 
 infixr 1 :*:
 
-data Product a b = a :*: b
+data Product s a = s :*: a
 
 type (:*:) = Product
 
-instance Covariant (Product a) where
-	f <$> (x :*: y) = x :*: f y
+instance Covariant (Product s) where
+	f <$> (s :*: x) = s :*: f x
 
 instance Extractable (Product a) where
 	extract (_ :*: y) = y
 
-instance Traversable (Product a) where
-	(x :*: y) ->> f = (:*:) x <$> f y
+instance Traversable (Product s) where
+	(s :*: x) ->> f = (s :*:) <$> f x
 
-instance Extendable (Product a) where
-	(x :*: y) =>> f = (:*:) x $ f (x :*: y)
+instance Extendable (Product s) where
+	(s :*: x) =>> f = s :*: f (s :*: x)
 
-instance Comonad (Product a) where
+instance Comonad (Product s) where
 
-instance Adjoint (Product a) ((->) a) where
-	x -| f = \y -> f $ y :*: x
-	(y :*: x) |- f = f x y
+instance Adjoint (Product s) ((->) s) where
+	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)
+	x -| f = \s -> f $ s :*: x
+	(|-) :: (s :*: a) -> (a -> s -> b) -> b
+	(s :*: x) |- f = f x s
 
 instance Bivariant Product where
-	f <-> g = \(x :*: y) -> f x :*: g y
+	f <-> g = \(s :*: x) -> f s :*: g x
 
-instance (Setoid a, Setoid b) => Setoid (Product a b) where
-	(x :*: y) == (x' :*: y') = (x == x') * (y == y')
+instance (Setoid s, Setoid a) => Setoid (Product s a) where
+	(s :*: x) == (s' :*: x') = (s == s') * (x == x')
 
-instance (Semigroup a, Semigroup b) => Semigroup (Product a b) where
-	(x :*: y) + (x' :*: y') = x + x' :*: y + y'
+instance (Semigroup s, Semigroup a) => Semigroup (Product s a) where
+	(s :*: x) + (s' :*: x') = s + s' :*: x + x'
 
-instance (Monoid a, Monoid b) => Monoid (Product a b) where
+instance (Monoid s, Monoid a) => Monoid (Product s a) where
 	zero = zero :*: zero
 
-instance (Ringoid a, Ringoid b) => Ringoid (Product a b) where
-	(x :*: y) * (x' :*: y') = x * x' :*: y * y'
+instance (Ringoid s, Ringoid a) => Ringoid (Product s a) where
+	(s :*: x) * (s' :*: x') = s * s' :*: x * x'
 
-instance (Quasiring a, Quasiring b) => Quasiring (Product a b) where
+instance (Quasiring s, Quasiring a) => Quasiring (Product s a) where
 	one = one :*: one
 
-instance (Infimum a, Infimum b) => Infimum (Product a b) where
-	(x :*: y) /\ (x' :*: y') = x /\ x' :*: y /\ y'
+instance (Infimum s, Infimum a) => Infimum (Product s a) where
+	(s :*: x) /\ (s' :*: x') = s /\ s' :*: x /\ x'
 
-instance (Supremum a, Supremum b) => Supremum (Product a b) where
-	(x :*: y) \/ (x' :*: y') = x \/ x' :*: y \/ y'
+instance (Supremum s, Supremum a) => Supremum (Product s a) where
+	(s :*: x) \/ (s' :*: x') = s \/ s' :*: x \/ x'
 
-instance (Lattice a, Lattice b) => Lattice (Product a b) where
+instance (Lattice s, Lattice a) => Lattice (Product s a) where
 
-instance (Group a, Group b) => Group (Product a b) where
-	invert (x :*: y) = invert x :*: invert y
+instance (Group s, Group a) => Group (Product s a) where
+	invert (s :*: x) = invert s :*: invert x
 
 instance Monotonic e a => Monotonic (Product a e) a where
 	iterate f r (x :*: e) = iterate f (f x r) e
