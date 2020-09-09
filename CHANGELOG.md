@@ -262,3 +262,4 @@
 
 # 0.3.1
 * Define `Set` interface for data structures with `member` method
+* Rewrite `zoom` function with right adjunction and move it to `Inventory` module

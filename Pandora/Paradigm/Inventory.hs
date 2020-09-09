@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory (module Exports) where
+module Pandora.Paradigm.Inventory (module Exports, zoom) where
 
 import Pandora.Paradigm.Inventory.Optics as Exports
 import Pandora.Paradigm.Inventory.Store as Exports
@@ -16,6 +16,7 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
 
 instance Adjoint (Store s) (State s) where
 	(-|) :: a -> (Store s a -> b) -> State s b
@@ -30,3 +31,6 @@ instance Adjoint (Accumulator e) (Imprint e) where
 instance Adjoint (Equipment e) (Environment e) where
 	x -| f = Environment $ x -| f . Equipment
 	x |- g = run x |- run . g
+
+zoom :: Stateful bg t => Lens bg ls -> State ls a -> t a
+zoom lens state = adapt . State $ \bg -> bg :*: lens bg |- (state !)
