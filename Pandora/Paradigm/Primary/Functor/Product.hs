@@ -6,7 +6,6 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -37,12 +36,6 @@ instance Extendable (Product s) where
 	(s :*: x) =>> f = s :*: f (s :*: x)
 
 instance Comonad (Product s) where
-
-instance Adjoint (Product s) ((->) s) where
-	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)
-	x -| f = \s -> f $ s :*: x
-	(|-) :: (s :*: a) -> (a -> s -> b) -> b
-	(s :*: x) |- f = f x s
 
 instance Bivariant Product where
 	f <-> g = \(s :*: x) -> f s :*: g x

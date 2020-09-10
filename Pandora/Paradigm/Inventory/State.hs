@@ -1,29 +1,15 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory.State (State (..), Stateful, current, modify, replace, fold, find) where
+module Pandora.Paradigm.Inventory.State where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor ((<*+>))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
-import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), (>=>)))
-import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
-import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
-import Pandora.Paradigm.Controlflow.Effect.Schematic (Schematic)
+import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>)), Avoidable (empty), Pointable (point), Applicative ((<*>), (*>)), Alternative ((<+>)), Traversable ((->>)), Bindable ((>>=), (>=>)), Monad, extract, (-|), (|-), (<*+>))
+import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Monadic (lay, wrap), (:>) (TM), Schematic)
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
-import Pandora.Paradigm.Primary.Object.Boolean (bool)
-import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), delta)
+import Pandora.Paradigm.Primary.Functor (Predicate (Predicate), Product ((:*:)), type (:*:), delta)
+import Pandora.Paradigm.Primary.Object (bool)
 
 newtype State s a = State ((->) s :. (:*:) s := a)
 

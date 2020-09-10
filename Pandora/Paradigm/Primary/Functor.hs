@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right, this, that, here, there) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
@@ -20,6 +22,14 @@ import Pandora.Paradigm.Primary.Functor.Identity as Exports
 
 import Pandora.Core.Morphism ((!))
 import Pandora.Core.Functor (type (~>))
+import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+
+instance Adjoint (Product s) ((->) s) where
+	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)
+	x -| f = \s -> f $ s :*: x
+	(|-) :: (s :*: a) -> (a -> s -> b) -> b
+	(s :*: x) |- f = f x s
 
 note :: e -> Maybe ~> Conclusion e
 note x = maybe (Failure x) Success

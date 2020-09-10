@@ -1,21 +1,14 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory.Store (Store (..), Storable, position, access, retrofit) where
+module Pandora.Paradigm.Inventory.Store where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (<-|), type (~>))
-import Pandora.Core.Morphism ((%))
+import Pandora.Core (type (:.), type (:=), type (<-|), type (~>), (%))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>)), (.|..))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), (<<=$)))
-import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
-import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Effect.Schematic (Schematic)
+import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>), (<$$$>)), Extractable (extract), Extendable ((=>>), (<<=$)), Comonad, (.|..), (-|), (|-))
+import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Schematic, Comonadic (flick, bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
-import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
+
 
 newtype Store p a = Store ((:*:) p :. (->) p := a)
 
