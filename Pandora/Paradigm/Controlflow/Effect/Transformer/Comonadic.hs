@@ -14,8 +14,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Effect.Schematic (Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
 
 class Interpreted t => Comonadic t where
 	{-# MINIMAL flick, bring #-}

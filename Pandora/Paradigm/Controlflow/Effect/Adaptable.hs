@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Paradigm.Controlflow.Effect.Schematic (Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, lay, wrap, flick, bring, (:>), (:<))
 
 class Adaptable t u where

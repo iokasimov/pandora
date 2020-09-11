@@ -76,7 +76,6 @@ library
     Pandora.Paradigm.Controlflow.Effect.Transformer
     Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic
     Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic
-    Pandora.Paradigm.Controlflow.Effect.Schematic
     Pandora.Paradigm.Controlflow.Effect.Adaptable
     Pandora.Paradigm.Controlflow.Observable
     Pandora.Paradigm.Controlflow.Pipeline
