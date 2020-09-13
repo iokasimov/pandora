@@ -9,6 +9,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, lay, wrap, flick, bring, (:>), (:<))
 
@@ -23,6 +24,11 @@ type Bringable t u = (Transformer Comonad t, Extractable u)
 
 instance Covariant t => Adaptable t t where
 	adapt = identity
+
+-- FIXME: there is no matching instances because it's impossible to define Hoistable ((:>) t)
+-- cause of type family Schematic - impossible to get it partially like `Hoistable (Schematic Monad t)`
+instance (Covariant u, Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u) (t :> u') where
+	adapt = hoist adapt
 
 instance (Covariant (t :> u), Layable t u) => Adaptable u (t :> u) where
 	adapt = lay
