@@ -11,7 +11,3 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 
 class Hoistable t where
 	hoist :: Covariant u => u ~> v -> t u ~> t v
-
--- data family Schematron (c :: (* -> *) -> k) (t :: * -> *) (u :: * -> *) :: * -> *
---
--- instance Hoistable (Schematron c t) where

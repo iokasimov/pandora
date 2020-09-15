@@ -14,6 +14,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
 
 class Interpreted t => Monadic t where
@@ -52,6 +53,9 @@ instance Extendable (Schematic Monad t u) => Extendable (t :> u) where
 	TM x =>> f = TM $ x =>> f . TM
 
 instance (Pointable (t :> u), Bindable (t :> u)) => Monad (t :> u) where
+
+instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
+	lift = TM . lift
 
 instance (Interpreted (Schematic Monad t u)) => Interpreted (t :> u) where
 	type Primary (t :> u) a = Primary (Schematic Monad t u) a
