@@ -27,7 +27,7 @@ instance Interpreted (Store p) where
 	type Primary (Store p) a = (:*:) p :. (->) p := a
 	run (Store x) = x
 
-type instance Schematic Comonad (Store p) u = (:*:) p <:<.>:> (->) p := u
+type instance Schematic Comonad (Store p) = (:*:) p <:<.>:> (->) p
 
 instance Comonadic (Store p) where
 	flick (TC (TUT (p :*: f))) = ($ p) <$> f

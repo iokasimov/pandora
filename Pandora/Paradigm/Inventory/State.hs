@@ -40,7 +40,7 @@ instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
 	run (State x) = x
 
-type instance Schematic Monad (State s) u = (->) s <:<.>:> (:*:) s := u
+type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 
 instance Monadic (State s) where
 	lay x = TM . TUT $ \s -> (s :*:) <$> x

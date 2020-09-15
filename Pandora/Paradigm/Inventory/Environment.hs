@@ -38,7 +38,7 @@ instance Interpreted (Environment e) where
 	type Primary (Environment e) a = (->) e a
 	run (Environment x) = x
 
-type instance Schematic Monad (Environment e) u = (->) e <:.> u
+type instance Schematic Monad (Environment e) = (<:.>) ((->) e)
 
 instance Monadic (Environment e) where
 	lay = TM . TU . (!)

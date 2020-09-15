@@ -28,7 +28,7 @@ instance Interpreted (Equipment e) where
 	type Primary (Equipment e) a = e :*: a
 	run (Equipment x) = x
 
-type instance Schematic Comonad (Equipment e) u = (:*:) e <:.> u
+type instance Schematic Comonad (Equipment e) = (<:.>) ((:*:) e)
 
 instance Comonadic (Equipment e) where
 	flick (TC (TU x)) = extract x

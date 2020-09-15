@@ -87,7 +87,8 @@ maybe :: b -> (a -> b) -> Maybe a -> b
 maybe x _ Nothing = x
 maybe _ f (Just y) = f y
 
-type instance Schematic Monad Maybe u = UT Covariant Covariant Maybe u
+-- type instance Schematic Monad Maybe u = UT Covariant Covariant Maybe u
+type instance Schematic Monad Maybe = UT Covariant Covariant Maybe
 
 instance Interpreted Maybe where
 	type Primary Maybe a = Maybe a

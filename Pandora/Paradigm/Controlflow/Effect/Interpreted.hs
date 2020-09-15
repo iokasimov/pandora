@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (..)) where
 
-type family Schematic (c :: (* -> *) -> k) (t :: * -> *) (u :: * -> *) = (r :: * -> *) | r -> t u
+type family Schematic (c :: (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 
 class Interpreted t where
 	{-# MINIMAL run #-}

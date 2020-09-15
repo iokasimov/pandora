@@ -34,7 +34,7 @@ instance Interpreted (Imprint e) where
 	type Primary (Imprint e) a = (->) e a
 	run (Imprint x) = x
 
-type instance Schematic Comonad (Imprint e) u = (->) e <.:> u
+type instance Schematic Comonad (Imprint e) = (<.:>) ((->) e)
 
 instance Monoid e => Comonadic (Imprint e) where
 	flick (TC (UT x)) = extract <$> x

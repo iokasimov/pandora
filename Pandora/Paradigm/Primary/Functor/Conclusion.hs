@@ -79,7 +79,7 @@ instance Interpreted (Conclusion e) where
 	type Primary (Conclusion e) a = Conclusion e a
 	run x = x
 
-type instance Schematic Monad (Conclusion e) u = UT Covariant Covariant (Conclusion e) u
+type instance Schematic Monad (Conclusion e) = UT Covariant Covariant (Conclusion e)
 
 instance Monadic (Conclusion e) where
 	lay x = TM . UT $ Success <$> x

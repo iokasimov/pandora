@@ -32,7 +32,7 @@ instance Semigroup e => Bindable (Accumulator e) where
 	Accumulator (e :*: x) >>= f = let (e' :*: b) = run $ f x in
 		Accumulator $ e + e':*: b
 
-type instance Schematic Monad (Accumulator e) u = (:*:) e <.:> u
+type instance Schematic Monad (Accumulator e) = (<.:>) ((:*:) e)
 
 instance Interpreted (Accumulator e) where
 	type Primary (Accumulator e) a = e :*: a
