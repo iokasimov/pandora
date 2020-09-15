@@ -14,6 +14,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
 
 class Interpreted t => Comonadic t where
@@ -52,6 +53,9 @@ instance Extendable (Schematic Comonad t u) => Extendable (t :< u) where
 	TC x =>> f = TC $ x =>> f . TC
 
 instance (Extractable (t :< u), Extendable (t :< u)) => Comonad (t :< u) where
+
+instance Lowerable (Schematic Comonad t) => Lowerable ((:<) t) where
+	lower (TC x) = lower x
 
 instance (Interpreted (Schematic Comonad t u)) => Interpreted (t :< u) where
 	type Primary (t :< u) a = Primary (Schematic Comonad t u) a
