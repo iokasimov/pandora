@@ -19,8 +19,7 @@ import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
 
 class Interpreted t => Monadic t where
-	{-# MINIMAL lay, wrap #-}
-	lay :: Covariant u => u ~> t :> u
+	{-# MINIMAL wrap #-}
 	wrap :: Pointable u => t ~> t :> u
 
 infixr 3 :>

@@ -266,3 +266,4 @@
 * Move `Adjoint` instance for `(:*:)` and `(->)` to `Paradigm.Primary.Functor` module
 * Remove `Schematic` module and move `Schematic` type family to `Interpreted` module
 * Change arity of `Schematic` type family
+* Remove `lay` method of `Monadic` type class, use `lift` instead

@@ -9,15 +9,16 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
-import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, lay, wrap, flick, bring, (:>), (:<))
+import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, wrap, flick, bring, (:>), (:<))
 
 class Adaptable t u where
 	{-# MINIMAL adapt #-}
 	adapt :: t ~> u
 
-type Layable t u = (Transformer Monad t, Covariant u)
+type Layable t u = (Transformer Monad t, Liftable (Schematic Monad t), Covariant u)
 type Wrappable t u = (Transformer Monad t, Pointable u)
 type Flickable t u = (Transformer Comonad t, Covariant u)
 type Bringable t u = (Transformer Comonad t, Extractable u)
@@ -25,13 +26,8 @@ type Bringable t u = (Transformer Comonad t, Extractable u)
 instance Covariant t => Adaptable t t where
 	adapt = identity
 
--- FIXME: there is no matching instances because it's impossible to define Hoistable ((:>) t)
--- cause of type family Schematic - impossible to get it partially like `Hoistable (Schematic Monad t)`
-instance (Covariant u, Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u) (t :> u') where
-	adapt = hoist adapt
-
 instance (Covariant (t :> u), Layable t u) => Adaptable u (t :> u) where
-	adapt = lay
+	adapt = lift
 
 instance (Covariant (t :> u), Wrappable t u) => Adaptable t (t :> u) where
 	adapt = wrap
@@ -44,17 +40,19 @@ instance (Covariant (t :< u), Bringable t u) => Adaptable (t :< u) t where
 
 instance
 	( Covariant (t :> u :> v)
-	, Layable t (Schematic Monad u v)
+	, Transformer Monad t
+	, Liftable (Schematic Monad t)
+	, Covariant (Schematic Monad u v)
 	, Wrappable u v
 	) => Adaptable u (t :> u :> v) where
-	adapt = lay . wrap
+	adapt = lift . wrap
 
 instance
 	( Covariant (t :> u :> v)
 	, Layable t (Schematic Monad u v)
 	, Layable u v
 	) => Adaptable v (t :> u :> v) where
-	adapt = lay . lay
+	adapt = lift . lift
 
 instance
 	( Covariant (t :< u :< v)
@@ -72,11 +70,12 @@ instance
 
 instance
 	( Covariant (t :> u :> v :> w)
+	, Liftable (Schematic Monad t)
 	, Layable t (Schematic Monad u (v :> w))
 	, Layable u (Schematic Monad v w)
 	, Wrappable v w
 	) => Adaptable v (t :> u :> v :> w) where
-	adapt = lay . lay . wrap
+	adapt = lift . lift . wrap
 
 instance
 	( Covariant (t :> u :> v :> w)
@@ -85,7 +84,7 @@ instance
 	, Layable u (Schematic Monad v w)
 	, Layable v w
 	) => Adaptable w (t :> u :> v :> w) where
-	adapt = lay . lay . lay
+	adapt = lift . lift . lift
 
 instance
 	( Covariant (t :< u :< v :< w)
@@ -111,7 +110,7 @@ instance
 	, Layable v (Schematic Monad w x)
 	, Layable w x
 	) => Adaptable x (t :> u :> v :> w :> x) where
-	adapt = lay . lay . lay . lay
+	adapt = lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x)
@@ -120,7 +119,7 @@ instance
 	, Layable v (Schematic Monad w x)
 	, Wrappable w x
 	) => Adaptable w (t :> u :> v :> w :> x) where
-	adapt = lay . lay . lay . wrap
+	adapt = lift . lift . lift . wrap
 
 instance
 	( Covariant (t :< u :< v :< w :< x)
@@ -148,7 +147,7 @@ instance
 	, Layable w (Schematic Monad x y)
 	, Layable x y
 	) => Adaptable y (t :> u :> v :> w :> x :> y) where
-	adapt = lay . lay . lay . lay . lay
+	adapt = lift . lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y)
@@ -158,7 +157,7 @@ instance
 	, Layable w (Schematic Monad x y)
 	, Wrappable x y
 	) => Adaptable x (t :> u :> v :> w :> x :> y) where
-	adapt = lay . lay . lay . lay . wrap
+	adapt = lift . lift . lift . lift . wrap
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y)
@@ -189,7 +188,7 @@ instance
 	, Layable x (Schematic Monad y z)
 	, Layable y z
 	) => Adaptable z (t :> u :> v :> w :> x :> y :> z) where
-	adapt = lay . lay . lay . lay . lay . lay
+	adapt = lift . lift . lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z)
@@ -200,7 +199,7 @@ instance
 	, Layable x (Schematic Monad y z)
 	, Wrappable y z
 	) => Adaptable y (t :> u :> v :> w :> x :> y :> z) where
-	adapt = lay . lay . lay . lay . lay . wrap
+	adapt = lift . lift . lift . lift . lift . wrap
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z)
@@ -234,7 +233,7 @@ instance
 	, Layable y (Schematic Monad z f)
 	, Layable z f
 	) => Adaptable f (t :> u :> v :> w :> x :> y :> z :> f) where
-	adapt = lay . lay . lay . lay . lay . lay . lay
+	adapt = lift . lift . lift . lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f)
@@ -246,7 +245,7 @@ instance
 	, Layable y (Schematic Monad z f)
 	, Wrappable z f
 	) => Adaptable z (t :> u :> v :> w :> x :> y :> z :> f) where
-	adapt = lay . lay . lay . lay . lay . lay . wrap
+	adapt = lift . lift . lift . lift . lift . lift . wrap
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z :< f)
@@ -283,7 +282,7 @@ instance
 	, Layable z (Schematic Monad f h)
 	, Layable f h
 	) => Adaptable h (t :> u :> v :> w :> x :> y :> z :> f :> h) where
-	adapt = lay . lay . lay . lay . lay . lay . lay . lay
+	adapt = lift . lift . lift . lift . lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f :> h)
@@ -296,7 +295,7 @@ instance
 	, Layable z (Schematic Monad f h)
 	, Wrappable f h
 	) => Adaptable f (t :> u :> v :> w :> x :> y :> z :> f :> h) where
-	adapt = lay . lay . lay . lay . lay . lay . lay . wrap
+	adapt = lift . lift . lift . lift . lift . lift . lift . wrap
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z :< f :< h)
@@ -323,3 +322,6 @@ instance
 	, Bringable f h
 	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f :< h) f where
 	adapt = bring . flick . flick . flick . flick . flick . flick . flick
+
+instance (Covariant u, Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u) (t :> u') where
+	adapt = hoist adapt

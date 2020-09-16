@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
+import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
@@ -41,7 +41,6 @@ instance Interpreted (Environment e) where
 type instance Schematic Monad (Environment e) = (<:.>) ((->) e)
 
 instance Monadic (Environment e) where
-	lay = TM . TU . (!)
 	wrap x = TM . TU $ point <$> run x
 
 type Configured e = Adaptable (Environment e)

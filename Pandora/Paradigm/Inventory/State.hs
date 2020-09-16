@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>)), Avoidable (empty), Pointable (point), Applicative ((<*>), (*>)), Alternative ((<+>)), Traversable ((->>)), Bindable ((>>=), (>=>)), Monad, extract, (-|), (|-), (<*+>))
-import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Monadic (lay, wrap), (:>) (TM), Schematic)
+import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Monadic (wrap), (:>) (TM), Schematic)
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Functor (Predicate (Predicate), Product ((:*:)), type (:*:), delta)
 import Pandora.Paradigm.Primary.Object (bool)
@@ -43,7 +43,6 @@ instance Interpreted (State s) where
 type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 
 instance Monadic (State s) where
-	lay x = TM . TUT $ \s -> (s :*:) <$> x
 	wrap x = TM . TUT $ point <$> run x
 
 type Stateful s = Adaptable (State s)

@@ -18,7 +18,7 @@ import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Equal, Greater))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
+import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT))
 
@@ -95,7 +95,6 @@ instance Interpreted Maybe where
 	run x = x
 
 instance Monadic Maybe where
-	lay x = TM . UT $ Just <$> x
 	wrap x = TM . UT . point $ x
 
 type Optional = Adaptable Maybe

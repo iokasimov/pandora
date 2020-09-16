@@ -16,7 +16,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (lay, wrap), (:>) (TM))
+import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT))
 
@@ -82,7 +82,6 @@ instance Interpreted (Conclusion e) where
 type instance Schematic Monad (Conclusion e) = UT Covariant Covariant (Conclusion e)
 
 instance Monadic (Conclusion e) where
-	lay x = TM . UT $ Success <$> x
 	wrap x = TM . UT . point $ x
 
 type Failable e = Adaptable (Conclusion e)
