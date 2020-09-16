@@ -19,8 +19,7 @@ import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
 
 class Interpreted t => Comonadic t where
-	{-# MINIMAL flick, bring #-}
-	flick :: Covariant u => t :< u ~> u
+	{-# MINIMAL bring #-}
 	bring :: Extractable u => t :< u ~> t
 
 infixr 3 :<

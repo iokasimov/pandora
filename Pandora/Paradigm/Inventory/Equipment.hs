@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
+import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
@@ -31,7 +31,6 @@ instance Interpreted (Equipment e) where
 type instance Schematic Comonad (Equipment e) = (<:.>) ((:*:) e)
 
 instance Comonadic (Equipment e) where
-	flick (TC (TU x)) = extract x
 	bring (TC (TU x)) = Equipment $ extract <$> x
 
 type Equipped e t = Adaptable t (Equipment e)

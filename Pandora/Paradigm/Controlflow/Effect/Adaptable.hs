@@ -9,10 +9,9 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower), Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
-import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, wrap, flick, bring, (:>), (:<))
+import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, wrap, bring, (:>), (:<))
 
 class Adaptable t u where
 	{-# MINIMAL adapt #-}
@@ -20,7 +19,7 @@ class Adaptable t u where
 
 type Lifting t u = (Transformer Monad t, Liftable (Schematic Monad t), Covariant u)
 type Wrappable t u = (Transformer Monad t, Pointable u)
-type Flickable t u = (Transformer Comonad t, Covariant u)
+type Lowering t u = (Transformer Comonad t, Lowerable (Schematic Comonad t), Covariant u)
 type Bringable t u = (Transformer Comonad t, Extractable u)
 
 instance Covariant t => Adaptable t t where
@@ -32,8 +31,8 @@ instance (Covariant (t :> u), Lifting t u) => Adaptable u (t :> u) where
 instance (Covariant (t :> u), Wrappable t u) => Adaptable t (t :> u) where
 	adapt = wrap
 
-instance (Covariant (t :> u), Flickable t u) => Adaptable (t :< u) u where
-	adapt = flick
+instance (Covariant (t :> u), Lowering t u) => Adaptable (t :< u) u where
+	adapt = lower
 
 instance (Covariant (t :< u), Bringable t u) => Adaptable (t :< u) t where
 	adapt = bring
@@ -56,17 +55,17 @@ instance
 
 instance
 	( Covariant (t :< u :< v)
-	, Flickable t (Schematic Comonad u v)
+	, Lowering t (Schematic Comonad u v)
 	, Bringable u v
 	) => Adaptable (t :< u :< v) u where
-	adapt = bring . flick
+	adapt = bring . lower
 
 instance
 	( Covariant (t :< u :< v)
-	, Flickable t (Schematic Comonad u v)
-	, Flickable u v
+	, Lowering t (Schematic Comonad u v)
+	, Lowering u v
 	) => Adaptable (t :< u :< v) v where
-	adapt = flick . flick
+	adapt = lower . lower
 
 instance
 	( Covariant (t :> u :> v :> w)
@@ -88,20 +87,20 @@ instance
 
 instance
 	( Covariant (t :< u :< v :< w)
-	, Flickable t (Schematic Comonad u (v :< w))
-	, Flickable u (Schematic Comonad v w)
+	, Lowering t (Schematic Comonad u (v :< w))
+	, Lowering u (Schematic Comonad v w)
 	, Bringable v w
 	) => Adaptable (t :< u :< v :< w) v where
-	adapt = bring . flick . flick
+	adapt = bring . lower . lower
 
 instance
 	( Covariant (t :< u :< v :< w)
-	, Flickable t (Schematic Comonad u v)
-	, Flickable t (Schematic Comonad u (v :< w))
-	, Flickable u (Schematic Comonad v w)
-	, Flickable v w
+	, Lowering t (Schematic Comonad u v)
+	, Lowering t (Schematic Comonad u (v :< w))
+	, Lowering u (Schematic Comonad v w)
+	, Lowering v w
 	) => Adaptable (t :< u :< v :< w) w where
-	adapt = flick . flick . flick
+	adapt = lower . lower . lower
 
 instance
 	( Covariant (t :> u :> v :> w :> x)
@@ -123,21 +122,21 @@ instance
 
 instance
 	( Covariant (t :< u :< v :< w :< x)
-	, Flickable t (Schematic Comonad u (v :< w :< x))
-	, Flickable u (Schematic Comonad v (w :< x))
-	, Flickable v (Schematic Comonad w x)
-	, Flickable w x
+	, Lowering t (Schematic Comonad u (v :< w :< x))
+	, Lowering u (Schematic Comonad v (w :< x))
+	, Lowering v (Schematic Comonad w x)
+	, Lowering w x
 	) => Adaptable (t :< u :< v :< w :< x) x where
-	adapt = flick . flick . flick . flick
+	adapt = lower . lower . lower . lower
 
 instance
 	( Covariant (t :< u :< v :< w :< x)
-	, Flickable t (Schematic Comonad u (v :< w :< x))
-	, Flickable u (Schematic Comonad v (w :< x))
-	, Flickable v (Schematic Comonad w x)
+	, Lowering t (Schematic Comonad u (v :< w :< x))
+	, Lowering u (Schematic Comonad v (w :< x))
+	, Lowering v (Schematic Comonad w x)
 	, Bringable w x
 	) => Adaptable (t :< u :< v :< w :< x) w where
-	adapt = bring . flick . flick . flick
+	adapt = bring . lower . lower . lower
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y)
@@ -161,23 +160,23 @@ instance
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y)
-	, Flickable t (Schematic Comonad u (v :< w :< x :< y))
-	, Flickable u (Schematic Comonad v (w :< x :< y))
-	, Flickable v (Schematic Comonad w (x :< y))
-	, Flickable w (Schematic Comonad x y)
-	, Flickable x y
+	, Lowering t (Schematic Comonad u (v :< w :< x :< y))
+	, Lowering u (Schematic Comonad v (w :< x :< y))
+	, Lowering v (Schematic Comonad w (x :< y))
+	, Lowering w (Schematic Comonad x y)
+	, Lowering x y
 	) => Adaptable (t :< u :< v :< w :< x :< y) y where
-	adapt = flick . flick . flick . flick . flick
+	adapt = lower . lower . lower . lower . lower
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y)
-	, Flickable t (Schematic Comonad u (v :< w :< x :< y))
-	, Flickable u (Schematic Comonad v (w :< x :< y))
-	, Flickable v (Schematic Comonad w (x :< y))
-	, Flickable w (Schematic Comonad x y)
+	, Lowering t (Schematic Comonad u (v :< w :< x :< y))
+	, Lowering u (Schematic Comonad v (w :< x :< y))
+	, Lowering v (Schematic Comonad w (x :< y))
+	, Lowering w (Schematic Comonad x y)
 	, Bringable x y
 	) => Adaptable (t :< u :< v :< w :< x :< y) x where
-	adapt = bring . flick . flick . flick . flick
+	adapt = bring . lower . lower . lower . lower
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z)
@@ -203,25 +202,25 @@ instance
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z)
-	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z))
-	, Flickable u (Schematic Comonad v (w :< x :< y :< z))
-	, Flickable v (Schematic Comonad w (x :< y :< z))
-	, Flickable w (Schematic Comonad x (y :< z))
-	, Flickable x (Schematic Comonad y z)
-	, Flickable y z
+	, Lowering t (Schematic Comonad u (v :< w :< x :< y :< z))
+	, Lowering u (Schematic Comonad v (w :< x :< y :< z))
+	, Lowering v (Schematic Comonad w (x :< y :< z))
+	, Lowering w (Schematic Comonad x (y :< z))
+	, Lowering x (Schematic Comonad y z)
+	, Lowering y z
 	) => Adaptable (t :< u :< v :< w :< x :< y :< z) z where
-	adapt = flick . flick . flick . flick . flick . flick
+	adapt = lower . lower . lower . lower . lower . lower
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z)
-	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z))
-	, Flickable u (Schematic Comonad v (w :< x :< y :< z))
-	, Flickable v (Schematic Comonad w (x :< y :< z))
-	, Flickable w (Schematic Comonad x (y :< z))
-	, Flickable x (Schematic Comonad y z)
+	, Lowering t (Schematic Comonad u (v :< w :< x :< y :< z))
+	, Lowering u (Schematic Comonad v (w :< x :< y :< z))
+	, Lowering v (Schematic Comonad w (x :< y :< z))
+	, Lowering w (Schematic Comonad x (y :< z))
+	, Lowering x (Schematic Comonad y z)
 	, Bringable y z
 	) => Adaptable (t :< u :< v :< w :< x :< y :< z) y where
-	adapt = bring . flick . flick . flick . flick . flick
+	adapt = bring . lower . lower . lower . lower . lower
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f)
@@ -249,27 +248,27 @@ instance
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z :< f)
-	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z :< f))
-	, Flickable u (Schematic Comonad v (w :< x :< y :< z :< f))
-	, Flickable v (Schematic Comonad w (x :< y :< z :< f))
-	, Flickable w (Schematic Comonad x (y :< z :< f))
-	, Flickable x (Schematic Comonad y (z :< f))
-	, Flickable y (Schematic Comonad z f)
-	, Flickable z f
+	, Lowering t (Schematic Comonad u (v :< w :< x :< y :< z :< f))
+	, Lowering u (Schematic Comonad v (w :< x :< y :< z :< f))
+	, Lowering v (Schematic Comonad w (x :< y :< z :< f))
+	, Lowering w (Schematic Comonad x (y :< z :< f))
+	, Lowering x (Schematic Comonad y (z :< f))
+	, Lowering y (Schematic Comonad z f)
+	, Lowering z f
 	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f) f where
-	adapt = flick . flick . flick . flick . flick . flick . flick
+	adapt = lower . lower . lower . lower . lower . lower . lower
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z :< f)
-	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z :< f))
-	, Flickable u (Schematic Comonad v (w :< x :< y :< z :< f))
-	, Flickable v (Schematic Comonad w (x :< y :< z :< f))
-	, Flickable w (Schematic Comonad x (y :< z :< f))
-	, Flickable x (Schematic Comonad y (z :< f))
-	, Flickable y (Schematic Comonad z f)
+	, Lowering t (Schematic Comonad u (v :< w :< x :< y :< z :< f))
+	, Lowering u (Schematic Comonad v (w :< x :< y :< z :< f))
+	, Lowering v (Schematic Comonad w (x :< y :< z :< f))
+	, Lowering w (Schematic Comonad x (y :< z :< f))
+	, Lowering x (Schematic Comonad y (z :< f))
+	, Lowering y (Schematic Comonad z f)
 	, Bringable z f
 	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f) z where
-	adapt = bring . flick . flick . flick . flick . flick . flick
+	adapt = bring . lower . lower . lower . lower . lower . lower
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f :> h)
@@ -299,29 +298,29 @@ instance
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z :< f :< h)
-	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z :< f :< h))
-	, Flickable u (Schematic Comonad v (w :< x :< y :< z :< f :< h))
-	, Flickable v (Schematic Comonad w (x :< y :< z :< f :< h))
-	, Flickable w (Schematic Comonad x (y :< z :< f :< h))
-	, Flickable x (Schematic Comonad y (z :< f :< h))
-	, Flickable y (Schematic Comonad z (f :< h))
-	, Flickable z (Schematic Comonad f h)
-	, Flickable f h
+	, Lowering t (Schematic Comonad u (v :< w :< x :< y :< z :< f :< h))
+	, Lowering u (Schematic Comonad v (w :< x :< y :< z :< f :< h))
+	, Lowering v (Schematic Comonad w (x :< y :< z :< f :< h))
+	, Lowering w (Schematic Comonad x (y :< z :< f :< h))
+	, Lowering x (Schematic Comonad y (z :< f :< h))
+	, Lowering y (Schematic Comonad z (f :< h))
+	, Lowering z (Schematic Comonad f h)
+	, Lowering f h
 	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f :< h) h where
-	adapt = flick . flick . flick . flick . flick . flick . flick . flick
+	adapt = lower . lower . lower . lower . lower . lower . lower . lower
 
 instance
 	( Covariant (t :< u :< v :< w :< x :< y :< z :< f :< h)
-	, Flickable t (Schematic Comonad u (v :< w :< x :< y :< z :< f :< h))
-	, Flickable u (Schematic Comonad v (w :< x :< y :< z :< f :< h))
-	, Flickable v (Schematic Comonad w (x :< y :< z :< f :< h))
-	, Flickable w (Schematic Comonad x (y :< z :< f :< h))
-	, Flickable x (Schematic Comonad y (z :< f :< h))
-	, Flickable y (Schematic Comonad z (f :< h))
-	, Flickable z (Schematic Comonad f h)
+	, Lowering t (Schematic Comonad u (v :< w :< x :< y :< z :< f :< h))
+	, Lowering u (Schematic Comonad v (w :< x :< y :< z :< f :< h))
+	, Lowering v (Schematic Comonad w (x :< y :< z :< f :< h))
+	, Lowering w (Schematic Comonad x (y :< z :< f :< h))
+	, Lowering x (Schematic Comonad y (z :< f :< h))
+	, Lowering y (Schematic Comonad z (f :< h))
+	, Lowering z (Schematic Comonad f h)
 	, Bringable f h
 	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f :< h) f where
-	adapt = bring . flick . flick . flick . flick . flick . flick . flick
+	adapt = bring . lower . lower . lower . lower . lower . lower . lower
 
 instance (Covariant u, Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u) (t :> u') where
 	adapt = hoist adapt

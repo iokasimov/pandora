@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
-import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (flick, bring), (:<) (TC))
+import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable)
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
@@ -37,7 +37,6 @@ instance Interpreted (Imprint e) where
 type instance Schematic Comonad (Imprint e) = (<.:>) ((->) e)
 
 instance Monoid e => Comonadic (Imprint e) where
-	flick (TC (UT x)) = extract <$> x
 	bring (TC (UT x)) = Imprint . extract $ x
 
 instance Covariant u => Covariant ((->) e <.:> u) where

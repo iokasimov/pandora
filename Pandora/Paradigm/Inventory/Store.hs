@@ -6,7 +6,7 @@ import Pandora.Core (type (:.), type (:=), type (<-|), type (~>), (%))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>), (<$$$>)), Extractable (extract), Extendable ((=>>), (<<=$)), Comonad, (.|..), (-|), (|-))
 import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), attached)
-import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Schematic, Comonadic (flick, bring), (:<) (TC))
+import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Schematic, Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 
 
@@ -30,7 +30,6 @@ instance Interpreted (Store p) where
 type instance Schematic Comonad (Store p) = (:*:) p <:<.>:> (->) p
 
 instance Comonadic (Store p) where
-	flick (TC (TUT (p :*: f))) = ($ p) <$> f
 	bring (TC (TUT (p :*: f))) = Store $ p :*: extract f
 
 type Storable s x = Adaptable x (Store s)
