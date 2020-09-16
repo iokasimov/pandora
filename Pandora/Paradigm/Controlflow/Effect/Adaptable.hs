@@ -18,7 +18,7 @@ class Adaptable t u where
 	{-# MINIMAL adapt #-}
 	adapt :: t ~> u
 
-type Layable t u = (Transformer Monad t, Liftable (Schematic Monad t), Covariant u)
+type Lifting t u = (Transformer Monad t, Liftable (Schematic Monad t), Covariant u)
 type Wrappable t u = (Transformer Monad t, Pointable u)
 type Flickable t u = (Transformer Comonad t, Covariant u)
 type Bringable t u = (Transformer Comonad t, Extractable u)
@@ -26,7 +26,7 @@ type Bringable t u = (Transformer Comonad t, Extractable u)
 instance Covariant t => Adaptable t t where
 	adapt = identity
 
-instance (Covariant (t :> u), Layable t u) => Adaptable u (t :> u) where
+instance (Covariant (t :> u), Lifting t u) => Adaptable u (t :> u) where
 	adapt = lift
 
 instance (Covariant (t :> u), Wrappable t u) => Adaptable t (t :> u) where
@@ -49,8 +49,8 @@ instance
 
 instance
 	( Covariant (t :> u :> v)
-	, Layable t (Schematic Monad u v)
-	, Layable u v
+	, Lifting t (Schematic Monad u v)
+	, Lifting u v
 	) => Adaptable v (t :> u :> v) where
 	adapt = lift . lift
 
@@ -71,18 +71,18 @@ instance
 instance
 	( Covariant (t :> u :> v :> w)
 	, Liftable (Schematic Monad t)
-	, Layable t (Schematic Monad u (v :> w))
-	, Layable u (Schematic Monad v w)
+	, Lifting t (Schematic Monad u (v :> w))
+	, Lifting u (Schematic Monad v w)
 	, Wrappable v w
 	) => Adaptable v (t :> u :> v :> w) where
 	adapt = lift . lift . wrap
 
 instance
 	( Covariant (t :> u :> v :> w)
-	, Layable t (Schematic Monad u v)
-	, Layable t (Schematic Monad u (v :> w))
-	, Layable u (Schematic Monad v w)
-	, Layable v w
+	, Lifting t (Schematic Monad u v)
+	, Lifting t (Schematic Monad u (v :> w))
+	, Lifting u (Schematic Monad v w)
+	, Lifting v w
 	) => Adaptable w (t :> u :> v :> w) where
 	adapt = lift . lift . lift
 
@@ -105,18 +105,18 @@ instance
 
 instance
 	( Covariant (t :> u :> v :> w :> x)
-	, Layable t (Schematic Monad u (v :> w :> x))
-	, Layable u (Schematic Monad v (w :> x))
-	, Layable v (Schematic Monad w x)
-	, Layable w x
+	, Lifting t (Schematic Monad u (v :> w :> x))
+	, Lifting u (Schematic Monad v (w :> x))
+	, Lifting v (Schematic Monad w x)
+	, Lifting w x
 	) => Adaptable x (t :> u :> v :> w :> x) where
 	adapt = lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x)
-	, Layable t (Schematic Monad u (v :> w :> x))
-	, Layable u (Schematic Monad v (w :> x))
-	, Layable v (Schematic Monad w x)
+	, Lifting t (Schematic Monad u (v :> w :> x))
+	, Lifting u (Schematic Monad v (w :> x))
+	, Lifting v (Schematic Monad w x)
 	, Wrappable w x
 	) => Adaptable w (t :> u :> v :> w :> x) where
 	adapt = lift . lift . lift . wrap
@@ -141,20 +141,20 @@ instance
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y)
-	, Layable t (Schematic Monad u (v :> w :> x :> y))
-	, Layable u (Schematic Monad v (w :> x :> y))
-	, Layable v (Schematic Monad w (x :> y))
-	, Layable w (Schematic Monad x y)
-	, Layable x y
+	, Lifting t (Schematic Monad u (v :> w :> x :> y))
+	, Lifting u (Schematic Monad v (w :> x :> y))
+	, Lifting v (Schematic Monad w (x :> y))
+	, Lifting w (Schematic Monad x y)
+	, Lifting x y
 	) => Adaptable y (t :> u :> v :> w :> x :> y) where
 	adapt = lift . lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y)
-	, Layable t (Schematic Monad u (v :> w :> x :> y))
-	, Layable u (Schematic Monad v (w :> x :> y))
-	, Layable v (Schematic Monad w (x :> y))
-	, Layable w (Schematic Monad x y)
+	, Lifting t (Schematic Monad u (v :> w :> x :> y))
+	, Lifting u (Schematic Monad v (w :> x :> y))
+	, Lifting v (Schematic Monad w (x :> y))
+	, Lifting w (Schematic Monad x y)
 	, Wrappable x y
 	) => Adaptable x (t :> u :> v :> w :> x :> y) where
 	adapt = lift . lift . lift . lift . wrap
@@ -181,22 +181,22 @@ instance
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z)
-	, Layable t (Schematic Monad u (v :> w :> x :> y :> z))
-	, Layable u (Schematic Monad v (w :> x :> y :> z))
-	, Layable v (Schematic Monad w (x :> y :> z))
-	, Layable w (Schematic Monad x (y :> z))
-	, Layable x (Schematic Monad y z)
-	, Layable y z
+	, Lifting t (Schematic Monad u (v :> w :> x :> y :> z))
+	, Lifting u (Schematic Monad v (w :> x :> y :> z))
+	, Lifting v (Schematic Monad w (x :> y :> z))
+	, Lifting w (Schematic Monad x (y :> z))
+	, Lifting x (Schematic Monad y z)
+	, Lifting y z
 	) => Adaptable z (t :> u :> v :> w :> x :> y :> z) where
 	adapt = lift . lift . lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z)
-	, Layable t (Schematic Monad u (v :> w :> x :> y :> z))
-	, Layable u (Schematic Monad v (w :> x :> y :> z))
-	, Layable v (Schematic Monad w (x :> y :> z))
-	, Layable w (Schematic Monad x (y :> z))
-	, Layable x (Schematic Monad y z)
+	, Lifting t (Schematic Monad u (v :> w :> x :> y :> z))
+	, Lifting u (Schematic Monad v (w :> x :> y :> z))
+	, Lifting v (Schematic Monad w (x :> y :> z))
+	, Lifting w (Schematic Monad x (y :> z))
+	, Lifting x (Schematic Monad y z)
 	, Wrappable y z
 	) => Adaptable y (t :> u :> v :> w :> x :> y :> z) where
 	adapt = lift . lift . lift . lift . lift . wrap
@@ -225,24 +225,24 @@ instance
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f)
-	, Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f))
-	, Layable u (Schematic Monad v (w :> x :> y :> z :> f))
-	, Layable v (Schematic Monad w (x :> y :> z :> f))
-	, Layable w (Schematic Monad x (y :> z :> f))
-	, Layable x (Schematic Monad y (z :> f))
-	, Layable y (Schematic Monad z f)
-	, Layable z f
+	, Lifting t (Schematic Monad u (v :> w :> x :> y :> z :> f))
+	, Lifting u (Schematic Monad v (w :> x :> y :> z :> f))
+	, Lifting v (Schematic Monad w (x :> y :> z :> f))
+	, Lifting w (Schematic Monad x (y :> z :> f))
+	, Lifting x (Schematic Monad y (z :> f))
+	, Lifting y (Schematic Monad z f)
+	, Lifting z f
 	) => Adaptable f (t :> u :> v :> w :> x :> y :> z :> f) where
 	adapt = lift . lift . lift . lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f)
-	, Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f))
-	, Layable u (Schematic Monad v (w :> x :> y :> z :> f))
-	, Layable v (Schematic Monad w (x :> y :> z :> f))
-	, Layable w (Schematic Monad x (y :> z :> f))
-	, Layable x (Schematic Monad y (z :> f))
-	, Layable y (Schematic Monad z f)
+	, Lifting t (Schematic Monad u (v :> w :> x :> y :> z :> f))
+	, Lifting u (Schematic Monad v (w :> x :> y :> z :> f))
+	, Lifting v (Schematic Monad w (x :> y :> z :> f))
+	, Lifting w (Schematic Monad x (y :> z :> f))
+	, Lifting x (Schematic Monad y (z :> f))
+	, Lifting y (Schematic Monad z f)
 	, Wrappable z f
 	) => Adaptable z (t :> u :> v :> w :> x :> y :> z :> f) where
 	adapt = lift . lift . lift . lift . lift . lift . wrap
@@ -273,26 +273,26 @@ instance
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f :> h)
-	, Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f :> h))
-	, Layable u (Schematic Monad v (w :> x :> y :> z :> f :> h))
-	, Layable v (Schematic Monad w (x :> y :> z :> f :> h))
-	, Layable w (Schematic Monad x (y :> z :> f :> h))
-	, Layable x (Schematic Monad y (z :> f :> h))
-	, Layable y (Schematic Monad z (f :> h))
-	, Layable z (Schematic Monad f h)
-	, Layable f h
+	, Lifting t (Schematic Monad u (v :> w :> x :> y :> z :> f :> h))
+	, Lifting u (Schematic Monad v (w :> x :> y :> z :> f :> h))
+	, Lifting v (Schematic Monad w (x :> y :> z :> f :> h))
+	, Lifting w (Schematic Monad x (y :> z :> f :> h))
+	, Lifting x (Schematic Monad y (z :> f :> h))
+	, Lifting y (Schematic Monad z (f :> h))
+	, Lifting z (Schematic Monad f h)
+	, Lifting f h
 	) => Adaptable h (t :> u :> v :> w :> x :> y :> z :> f :> h) where
 	adapt = lift . lift . lift . lift . lift . lift . lift . lift
 
 instance
 	( Covariant (t :> u :> v :> w :> x :> y :> z :> f :> h)
-	, Layable t (Schematic Monad u (v :> w :> x :> y :> z :> f :> h))
-	, Layable u (Schematic Monad v (w :> x :> y :> z :> f :> h))
-	, Layable v (Schematic Monad w (x :> y :> z :> f :> h))
-	, Layable w (Schematic Monad x (y :> z :> f :> h))
-	, Layable x (Schematic Monad y (z :> f :> h))
-	, Layable y (Schematic Monad z (f :> h))
-	, Layable z (Schematic Monad f h)
+	, Lifting t (Schematic Monad u (v :> w :> x :> y :> z :> f :> h))
+	, Lifting u (Schematic Monad v (w :> x :> y :> z :> f :> h))
+	, Lifting v (Schematic Monad w (x :> y :> z :> f :> h))
+	, Lifting w (Schematic Monad x (y :> z :> f :> h))
+	, Lifting x (Schematic Monad y (z :> f :> h))
+	, Lifting y (Schematic Monad z (f :> h))
+	, Lifting z (Schematic Monad f h)
 	, Wrappable f h
 	) => Adaptable f (t :> u :> v :> w :> x :> y :> z :> f :> h) where
 	adapt = lift . lift . lift . lift . lift . lift . lift . wrap
