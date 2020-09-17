@@ -18,8 +18,8 @@ class Adaptable t u where
 	adapt :: t ~> u
 
 type Lifting t u = (Transformer Monad t, Liftable (Schematic Monad t), Covariant u)
-type Wrappable t u = (Transformer Monad t, Pointable u)
 type Lowering t u = (Transformer Comonad t, Lowerable (Schematic Comonad t), Covariant u)
+type Wrappable t u = (Transformer Monad t, Pointable u)
 type Bringable t u = (Transformer Comonad t, Extractable u)
 
 instance Covariant t => Adaptable t t where
@@ -39,7 +39,6 @@ instance (Covariant (t :< u), Bringable t u) => Adaptable (t :< u) t where
 
 instance
 	( Covariant (t :> u :> v)
-	, Transformer Monad t
 	, Liftable (Schematic Monad t)
 	, Covariant (Schematic Monad u v)
 	, Wrappable u v
@@ -324,3 +323,43 @@ instance
 
 instance (Covariant u, Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u) (t :> u') where
 	adapt = hoist adapt
+
+instance
+	( Covariant u
+	, Covariant v
+	, Covariant (Schematic Monad u v)
+	, Hoistable ((:>) (t :> u))
+	, Hoistable (Schematic Monad t)
+	, Hoistable (Schematic Monad u)
+	, Adaptable v v'
+	) => Adaptable (t :> u :> v) (t :> u :> v') where
+	adapt = hoist (hoist adapt)
+
+instance
+	( Covariant u, Covariant v, Covariant w
+	, Covariant (Schematic Monad u v)
+	, Covariant (Schematic Monad u (v :> w))
+	, Covariant (Schematic Monad v w)
+	, Hoistable ((:>) (t :> u :> v))
+	, Hoistable (Schematic Monad t)
+	, Hoistable (Schematic Monad u)
+	, Hoistable (Schematic Monad v)
+	, Adaptable w w'
+	) => Adaptable (t :> u :> v :> w) (t :> u :> v :> w') where
+	adapt = hoist (hoist (hoist adapt))
+
+instance
+	( Covariant u, Covariant v, Covariant w, Covariant x
+	, Covariant (Schematic Monad u v)
+	, Covariant (Schematic Monad u (v :> w))
+	, Covariant (Schematic Monad v (w :> x))
+	, Covariant (Schematic Monad u (v :> (w :> x)))
+	, Covariant (Schematic Monad w x)
+	, Hoistable ((:>) (t :> u :> v))
+	, Hoistable (Schematic Monad t)
+	, Hoistable (Schematic Monad u)
+	, Hoistable (Schematic Monad v)
+	, Hoistable (Schematic Monad w)
+	, Adaptable x x'
+	) => Adaptable (t :> u :> v :> w :> x) (t :> u :> v :> w :> x') where
+	adapt = hoist (hoist (hoist (hoist adapt)))
