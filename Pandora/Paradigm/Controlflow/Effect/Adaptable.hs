@@ -7,6 +7,7 @@ import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Extractable (Extractable)
+import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower), Hoistable (hoist))
@@ -17,7 +18,7 @@ class Adaptable t u where
 	{-# MINIMAL adapt #-}
 	adapt :: t ~> u
 
-type Lifting t u = (Transformer Monad t, Liftable (Schematic Monad t), Covariant u)
+type Lifting t u = (Transformer Monad t, Liftable (Schematic Monad t), Traversable u)
 type Lowering t u = (Transformer Comonad t, Lowerable (Schematic Comonad t), Covariant u)
 type Wrappable t u = (Transformer Monad t, Pointable u)
 type Bringable t u = (Transformer Comonad t, Extractable u)
@@ -40,7 +41,7 @@ instance (Covariant (t :< u), Bringable t u) => Adaptable (t :< u) t where
 instance
 	( Covariant (t :> u :> v)
 	, Liftable (Schematic Monad t)
-	, Covariant (Schematic Monad u v)
+	, Traversable (Schematic Monad u v)
 	, Wrappable u v
 	) => Adaptable u (t :> u :> v) where
 	adapt = lift . wrap
@@ -327,7 +328,7 @@ instance (Covariant u, Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u)
 instance
 	( Covariant u
 	, Covariant v
-	, Covariant (Schematic Monad u v)
+	, Traversable (Schematic Monad u v)
 	, Hoistable ((:>) (t :> u))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)
@@ -337,9 +338,9 @@ instance
 
 instance
 	( Covariant u, Covariant v, Covariant w
-	, Covariant (Schematic Monad u v)
-	, Covariant (Schematic Monad u (v :> w))
-	, Covariant (Schematic Monad v w)
+	, Traversable (Schematic Monad u v)
+	, Traversable (Schematic Monad u (v :> w))
+	, Traversable (Schematic Monad v w)
 	, Hoistable ((:>) (t :> u :> v))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)
@@ -350,11 +351,11 @@ instance
 
 instance
 	( Covariant u, Covariant v, Covariant w, Covariant x
-	, Covariant (Schematic Monad u v)
-	, Covariant (Schematic Monad u (v :> w))
-	, Covariant (Schematic Monad v (w :> x))
-	, Covariant (Schematic Monad u (v :> (w :> x)))
-	, Covariant (Schematic Monad w x)
+	, Traversable (Schematic Monad u v)
+	, Traversable (Schematic Monad u (v :> w))
+	, Traversable (Schematic Monad v (w :> x))
+	, Traversable (Schematic Monad u (v :> (w :> x)))
+	, Traversable (Schematic Monad w x)
 	, Hoistable ((:>) (t :> u :> v))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)

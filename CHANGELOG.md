@@ -268,3 +268,4 @@
 * Change arity of `Schematic` type family
 * Remove `lay` method of `Monadic` type class, use `lift` instead
 * Remove `flick` method of `Comonadic` type class, use `lower` instead
+* Change `lift` constraint: from `Covariant` to `Traversable`
