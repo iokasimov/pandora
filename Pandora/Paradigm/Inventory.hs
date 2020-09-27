@@ -11,10 +11,8 @@ import Pandora.Paradigm.Inventory.Environment as Exports
 import Pandora.Paradigm.Inventory.Accumulator as Exports
 
 import Pandora.Core.Morphism ((!), (%))
-import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Pattern.Functor ()
+import Pandora.Pattern.Category ((.), ($), identity)
+import Pandora.Pattern.Functor (Adjoint ((-|), (|-)), extract, (<->))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
@@ -34,4 +32,4 @@ instance Adjoint (Equipment e) (Environment e) where
 	x |- g = run x |- run . g
 
 zoom :: Stateful bg t => Lens bg ls -> State ls a -> t a
-zoom lens state = adapt . State $ \bg -> bg :*: lens bg |- (state !)
+zoom lens (State f) = adapt . State $ (\(Store (p :*: g)) -> (g <-> identity) . f $ p) . lens
