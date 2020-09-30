@@ -4,9 +4,6 @@ import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Pointable (Pointable)
-import Pandora.Pattern.Functor.Applicative (Applicative)
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -28,9 +25,9 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 	type Primary (TUT ct ct' cu t t' u) a = t :. u :. t' := a
 	run (TUT x) = x
 
-instance (Adjoint t' t, Applicative t, Pointable t) => Liftable (t <:<.>:> t') where
-	lift :: Traversable u => u ~> t <:<.>:> t' := u
-	lift x = TUT $ x ->> (-| identity)
+instance (Adjoint t' t, Distributive t) => Liftable (t <:<.>:> t') where
+	lift :: Covariant u => u ~> t <:<.>:> t' := u
+	lift x = TUT $ x >>- (-| identity)
 
 instance (Adjoint t t', Distributive t') => Lowerable (t <:<.>:> t') where
 	lower :: Covariant u => (t <:<.>:> t' := u) ~> u

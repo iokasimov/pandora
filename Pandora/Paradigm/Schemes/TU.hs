@@ -6,7 +6,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
@@ -24,7 +23,7 @@ instance Interpreted (TU ct cu t u) where
 	run (TU x) = x
 
 instance Pointable t => Liftable (TU Covariant Covariant t) where
-	lift :: Traversable u => u ~> t <:.> u
+	lift :: Covariant u => u ~> t <:.> u
 	lift = TU . point
 
 instance Extractable t => Lowerable (TU Covariant Covariant t) where
