@@ -262,7 +262,7 @@
 
 # 0.3.1
 * Define `Set` interface for data structures with `member` method
-* Rewrite `zoom` function with right adjunction and move it to `Inventory` module
+* Move `zoom` function to `Inventory` module
 * Move `Adjoint` instance for `(:*:)` and `(->)` to `Paradigm.Primary.Functor` module
 * Remove `Schematic` module and move `Schematic` type family to `Interpreted` module
 * Change arity of `Schematic` type family
