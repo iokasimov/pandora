@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Monad where
 
-import Pandora.Pattern.Functor.Bindable (Bindable)
-import Pandora.Pattern.Functor.Pointable (Pointable)
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Pointable (Pointable (point))
 
 {- |
 > Let f :: (Pointable t, Bindable t) => a -> t a
@@ -14,4 +14,10 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 > * Associativity: h >>= (f >=> g) ≡ (h >>= f) >>= g
 -}
 
-class (Pointable t, Bindable t) => Monad t
+infixl 1 >>=
+
+class (Pointable t, Bindable t) => Monad t where
+	(>>=-) :: t a -> t b -> t a
+	(>>=-) x y = x >>= \r -> y >>= \_ -> point r
+	(->>=) :: t a -> t b -> t b
+	(->>=) x y = x >>= \_ -> y >>= \r -> point r

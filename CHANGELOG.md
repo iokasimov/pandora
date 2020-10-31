@@ -269,3 +269,6 @@
 * Remove `lay` method of `Monadic` type class, use `lift` instead
 * Remove `flick` method of `Comonadic` type class, use `lower` instead
 * Change `lift` constraint: from `Covariant` to `Traversable`
+
+# 0.3.2
+* Define experimental methods: `->>=`, `>>=-`
