@@ -14,10 +14,15 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 > * Associativity: h >>= (f >=> g) ≡ (h >>= f) >>= g
 -}
 
-infixl 1 >>=
+infixl 1 >>=-, ->>=
+infixr 1 -=<<, =<<-
 
 class (Pointable t, Bindable t) => Monad t where
 	(>>=-) :: t a -> t b -> t a
 	(>>=-) x y = x >>= \r -> y >>= \_ -> point r
 	(->>=) :: t a -> t b -> t b
 	(->>=) x y = x >>= \_ -> y >>= \r -> point r
+	(-=<<) :: t a -> t b -> t b
+	(-=<<) x y = x >>= \_ -> y >>= \r -> point r
+	(=<<-) :: t a -> t b -> t a
+	(=<<-) x y = x >>= \r -> y >>= \_ -> point r

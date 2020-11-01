@@ -271,4 +271,4 @@
 * Change `lift` constraint: from `Covariant` to `Traversable`
 
 # 0.3.2
-* Define experimental methods: `->>=`, `>>=-`
+* Define experimental methods: `->>=`, `>>=-`, `-=<<`, `=<<-`
