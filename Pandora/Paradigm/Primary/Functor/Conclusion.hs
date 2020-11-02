@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Schemes.UT (UT (UT))
+import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
 data Conclusion e a = Failure e | Success a
 
@@ -79,26 +79,26 @@ instance Interpreted (Conclusion e) where
 	type Primary (Conclusion e) a = Conclusion e a
 	run x = x
 
-type instance Schematic Monad (Conclusion e) = UT Covariant Covariant (Conclusion e)
+type instance Schematic Monad (Conclusion e) = (<.:>) (Conclusion e)
 
 instance Monadic (Conclusion e) where
 	wrap x = TM . UT . point $ x
 
 type Failable e = Adaptable (Conclusion e)
 
-instance Covariant u => Covariant (UT Covariant Covariant (Conclusion e) u) where
+instance Covariant u => Covariant (Conclusion e <.:> u) where
 	f <$> UT x = UT $ f <$$> x
 
-instance Applicative u => Applicative (UT Covariant Covariant (Conclusion e) u) where
+instance Applicative u => Applicative (Conclusion e <.:> u) where
 	UT f <*> UT x = UT $ (<*>) <$> f <*> x
 
-instance Pointable u => Pointable (UT Covariant Covariant (Conclusion e) u) where
+instance Pointable u => Pointable (Conclusion e <.:> u) where
 	point = UT . point . point
 
-instance (Pointable u, Bindable u) => Bindable (UT Covariant Covariant (Conclusion e) u) where
+instance (Pointable u, Bindable u) => Bindable (Conclusion e <.:> u) where
 	UT x >>= f = UT $ x >>= conclusion (point . Failure) (run . f)
 
-instance Monad u => Monad (UT Covariant Covariant (Conclusion e) u) where
+instance Monad u => Monad (Conclusion e <.:> u) where
 
 failure :: Failable e t => e -> t a
 failure = adapt . Failure
@@ -110,5 +110,5 @@ instance Catchable e (Conclusion e) where
 	catch (Failure e) handle = handle e
 	catch (Success x) _ = Success x
 
-instance Monad u => Catchable e (UT Covariant Covariant (Conclusion e) u) where
+instance Monad u => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = UT $ x >>= conclusion (run . handle) (point . Success)
