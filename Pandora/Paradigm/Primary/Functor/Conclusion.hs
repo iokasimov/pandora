@@ -102,3 +102,13 @@ instance Monad u => Monad (UT Covariant Covariant (Conclusion e) u) where
 
 failure :: Failable e t => e -> t a
 failure = adapt . Failure
+
+class Catchable e t where
+	catch :: t a -> (e -> t a) -> t a
+
+instance Catchable e (Conclusion e) where
+	catch (Failure e) handle = handle e
+	catch (Success x) _ = Success x
+
+instance Monad u => Catchable e (UT Covariant Covariant (Conclusion e) u) where
+	catch (UT x) handle = UT $ x >>= conclusion (run . handle) (point . Success)
