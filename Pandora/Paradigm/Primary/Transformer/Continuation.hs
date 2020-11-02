@@ -41,3 +41,6 @@ reset = lift . continue % point
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it
 shift :: Pointable t => ((a -> t r) -> Continuation r t r) -> Continuation r t a
 shift f = Continuation $ continue % point . f
+
+interruptable :: Pointable t => ((a -> Continuation a t a) -> Continuation a t a) -> t a
+interruptable = continue % point . cwcc

@@ -272,3 +272,4 @@
 
 # 0.3.2
 * Define experimental methods: `->>=`, `>>=-`, `-=<<`, `=<<-`
+* Define `interruptable` method for `Continuation`
