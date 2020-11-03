@@ -7,6 +7,7 @@ import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (.|..))
 import Pandora.Pattern.Functor.Alternative ((<+>))
+import Pandora.Pattern.Functor.Applicative ((<*>))
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -34,7 +35,7 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
-import Pandora.Paradigm.Structure.Interface.Set (Set (member, subset))
+import Pandora.Paradigm.Structure.Interface.Set (Set (member, subset, cartesian))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -62,6 +63,7 @@ instance Insertable Stack where
 instance Set Stack where
 	member x = maybe False (True !) . find (Predicate (== x))
 	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
+	cartesian x y = (:*:) <$> x <*> y
 
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct
