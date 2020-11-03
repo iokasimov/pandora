@@ -274,3 +274,4 @@
 * Define experimental methods: `->>=`, `>>=-`, `-=<<`, `=<<-`
 * Define `interruptable` method for `Continuation`
 * Define `Catchable` typeclass to catch errors from `Conclusion`
+* Define `repeat` method of `Stream` datatype

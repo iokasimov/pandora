@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Maybe where
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -91,10 +91,10 @@ type instance Schematic Monad Maybe = (<.:>) Maybe
 
 instance Interpreted Maybe where
 	type Primary Maybe a = Maybe a
-	run x = x
+	run = identity
 
 instance Monadic Maybe where
-	wrap x = TM . UT . point $ x
+	wrap = TM . UT . point
 
 type Optional = Adaptable Maybe
 

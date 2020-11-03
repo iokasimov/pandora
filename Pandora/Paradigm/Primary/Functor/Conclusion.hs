@@ -1,7 +1,8 @@
 module Pandora.Paradigm.Primary.Functor.Conclusion where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -77,12 +78,12 @@ fail _ (Success y) = Success y
 
 instance Interpreted (Conclusion e) where
 	type Primary (Conclusion e) a = Conclusion e a
-	run x = x
+	run = identity
 
 type instance Schematic Monad (Conclusion e) = (<.:>) (Conclusion e)
 
 instance Monadic (Conclusion e) where
-	wrap x = TM . UT . point $ x
+	wrap = TM . UT . point
 
 type Failable e = Adaptable (Conclusion e)
 
