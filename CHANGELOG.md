@@ -276,3 +276,4 @@
 * Define `Catchable` typeclass to catch errors from `Conclusion`
 * Define `repeat` method of `Stream` datatype
 * Define `subset` and `cartesian` methods of `Set` interface
+* Define `satisfy` method in `Predicate` module
