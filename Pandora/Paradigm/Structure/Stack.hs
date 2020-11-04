@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Stack where
 
-import Pandora.Core.Functor (type (~>))
+import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (.|..))
@@ -26,7 +26,7 @@ import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Object (Boolean (True, False))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
-import Pandora.Paradigm.Inventory.State (fold, find)
+import Pandora.Paradigm.Inventory.State (State, fold, find)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics ((^.))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
@@ -35,7 +35,7 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
-import Pandora.Paradigm.Structure.Interface.Set (Set (member, subset, cartesian))
+import Pandora.Paradigm.Structure.Interface.Set (Set (member, subset))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -60,9 +60,9 @@ instance Focusable Head Stack where
 instance Insertable Stack where
 	insert x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 
-instance Set Stack where
-	member x = maybe False (True !) . find (Predicate (== x))
-	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
+-- instance Set Stack where
+-- 	member x = maybe False (True !) . find (Predicate (== x))
+-- 	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
 
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct
@@ -72,13 +72,14 @@ delete _ (TU Nothing) = TU Nothing
 delete x (TU (Just (Construct y ys))) = x == y ? TU ys
 	$ lift . Construct y . run . delete x $ TU ys
 
-filter :: Predicate a -> Stack a -> Stack a
-filter (Predicate p) = TU . fold empty
-	(\now new -> p now ? Just (Construct now new) $ new)
+filter :: forall a . Predicate a -> Stack a -> Stack a
+filter (Predicate p) = TU . extract
+	. run @(State (Maybe :. Nonempty Stack := a)) % Nothing
+	. fold (\now new -> p now ? Just (Construct now new) $ new)
 
 -- | Transform any traversable structure into a stack
-linearize :: Traversable t => t ~> Stack
-linearize = TU . fold Nothing (Just .|.. Construct)
+linearize :: forall t a . Traversable t => t a -> Stack a
+linearize = TU . extract . run @(State (Maybe :. Nonempty Stack := a)) % Nothing . fold (Just .|.. Construct)
 
 type instance Nonempty Stack = Construction Maybe
 
@@ -89,9 +90,9 @@ instance Focusable Head (Construction Maybe) where
 instance Insertable (Construction Maybe) where
 	insert x = Construct x . Just
 
-instance Set (Construction Maybe) where
-	member x = maybe False (True !) . find (Predicate (== x))
-	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
+-- instance Set (Construction Maybe) where
+-- 	member x = maybe False (True !) . find (Predicate (== x))
+-- 	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 

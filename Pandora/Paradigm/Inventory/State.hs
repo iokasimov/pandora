@@ -8,8 +8,7 @@ import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>)), Avoidable (empty), Pointable (point), Applicative ((<*>), (*>)), Alternative ((<+>)), Traversable ((->>)), Bindable ((>>=), (>=>)), Monad, extract, (-|), (|-), (<*+>))
 import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Monadic (wrap), (:>) (TM), Schematic)
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
-import Pandora.Paradigm.Primary.Functor (Predicate (Predicate), Product ((:*:)), type (:*:), delta)
-import Pandora.Paradigm.Primary.Object (bool)
+import Pandora.Paradigm.Primary.Functor (Predicate, Product ((:*:)), type (:*:), delta, satisfy)
 
 newtype State s a = State ((->) s :. (:*:) s := a)
 
@@ -28,13 +27,6 @@ instance Bindable (State s) where
 		(|- run) $ f <$> x old
 
 instance Monad (State s) where
-
-fold :: Traversable t => s -> (a -> s -> s) -> t a -> s
-fold start op struct = extract . run @(State _) % start
-	$ struct ->> modify . op *> current
-
-find :: (Pointable u, Avoidable u, Alternative u, Traversable t) => Predicate a -> t a -> u a
-find (Predicate p) = fold empty (\x s -> (<+>) s . bool empty (point x) . p $ x)
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
@@ -75,3 +67,12 @@ modify f = adapt . State $ (:*: ()) . f
 
 replace :: Stateful s t => s -> t ()
 replace s = adapt . State $ \_ -> s :*: ()
+
+type Memorable s t = (Pointable t, Applicative t, Stateful s t)
+
+fold :: (Traversable t, Memorable s u) => (a -> s -> s) -> t a -> u s
+fold op struct = struct ->> modify . op *> current
+
+-- TODO: try to use adjuntion here
+find :: (Traversable t, Pointable u, Avoidable u, Alternative u, Applicative u, Memorable (u a) v) => Predicate a -> t a -> v (u a)
+find p = fold (\x s -> s <+> satisfy p x)
