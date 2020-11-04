@@ -63,7 +63,6 @@ instance Insertable Stack where
 instance Set Stack where
 	member x = maybe False (True !) . find (Predicate (== x))
 	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
-	cartesian x y = (:*:) <$> x <*> y
 
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct
@@ -89,6 +88,10 @@ instance Focusable Head (Construction Maybe) where
 
 instance Insertable (Construction Maybe) where
 	insert x = Construct x . Just
+
+instance Set (Construction Maybe) where
+	member x = maybe False (True !) . find (Predicate (== x))
+	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
