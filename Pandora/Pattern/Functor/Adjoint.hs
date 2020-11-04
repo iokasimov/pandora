@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 
 type (-|) = Adjoint
 
-infixl 4 -|, |-
+infixl 3 -|, |-
 
 {- |
 > When providing a new instance, you should ensure it satisfies the four laws:

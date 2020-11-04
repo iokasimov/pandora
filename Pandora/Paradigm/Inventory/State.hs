@@ -3,10 +3,20 @@
 module Pandora.Paradigm.Inventory.State where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>)), Avoidable (empty), Pointable (point), Applicative ((<*>), (*>)), Alternative ((<+>)), Traversable ((->>)), Bindable ((>>=), (>=>)), Monad, extract, (-|), (|-), (<*+>))
-import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Monadic (wrap), (:>) (TM), Schematic)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
+import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), (>=>)))
+import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
+import Pandora.Pattern.Functor ((<*+>))
+import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run), Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Functor (Predicate, Product ((:*:)), type (:*:), delta, satisfy)
 
@@ -73,6 +83,7 @@ type Memorable s t = (Pointable t, Applicative t, Stateful s t)
 fold :: (Traversable t, Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = struct ->> modify . op *> current
 
--- TODO: try to use adjuntion here
-find :: (Traversable t, Pointable u, Avoidable u, Alternative u, Applicative u, Memorable (u a) v) => Predicate a -> t a -> v (u a)
+type Decisive t = (Pointable t, Avoidable t, Alternative t, Applicative t)
+
+find :: (Traversable t, Decisive u, Memorable (u a) v) => Predicate a -> t a -> v (u a)
 find p = fold (\x s -> s <+> satisfy p x)
