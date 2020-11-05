@@ -8,6 +8,7 @@ import Pandora.Paradigm.Structure.Rose as Exports
 import Pandora.Paradigm.Structure.Splay as Exports
 import Pandora.Paradigm.Structure.Binary as Exports
 import Pandora.Paradigm.Structure.Stack as Exports
+import Pandora.Paradigm.Structure.Stream as Exports
 
 import Pandora.Pattern (($), (.), extract)
 import Pandora.Paradigm.Primary (Product ((:*:)), Tagged (Tag), Wye (Left, Right))
