@@ -12,7 +12,9 @@ import Pandora.Paradigm.Inventory.State (State, find)
 import Pandora.Paradigm.Controlflow (run)
 
 member :: forall t a . (Traversable t, Setoid a) => a -> t a -> Boolean
-member x = maybe False (True !) . extract . run @(State (Maybe a)) % Nothing . find (equate x)
+member x = let result = extract . run @(State (Maybe a)) % Nothing
+	in maybe False (True !) . result . find (equate x)
 
 subset :: forall t a . (Traversable t, Setoid a, Setoid (t a)) => t a -> t a -> Boolean
-subset ss s = Nothing /= (ss ->> extract . run @(State (Maybe a)) % Nothing . find % s . equate)
+subset ss s = let result = extract . run @(State (Maybe a)) % Nothing
+	in Nothing /= (ss ->> result . find % s . equate)
