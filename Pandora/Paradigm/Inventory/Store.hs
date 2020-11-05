@@ -3,12 +3,12 @@
 module Pandora.Paradigm.Inventory.Store where
 
 import Pandora.Core (type (:.), type (:=), type (<-|), type (~>), (%))
+import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>), (<$$$>)), Extractable (extract), Extendable ((=>>), (<<=$)), Comonad, (.|..), (-|), (|-))
+import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>), (<$$$>)), Extractable (extract), Extendable ((=>>), (<<=$)), Comonad, (-|), (|-))
 import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Schematic, Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
-
 
 newtype Store p a = Store ((:*:) p :. (->) p := a)
 

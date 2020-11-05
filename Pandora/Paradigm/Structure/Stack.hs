@@ -4,8 +4,9 @@ module Pandora.Paradigm.Structure.Stack where
 
 import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%))
+import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (.|..))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative ((<+>))
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
