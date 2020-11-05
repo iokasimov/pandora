@@ -278,3 +278,4 @@
 * Define `subset` method of `Set` interface
 * Define `satisfy` method in `Predicate` module
 * Make `fold` and `find` stateful expressions
+* Define `equate` method of `Predicate` dataype

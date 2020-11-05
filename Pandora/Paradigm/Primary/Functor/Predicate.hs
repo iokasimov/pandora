@@ -1,12 +1,13 @@
 module Pandora.Paradigm.Primary.Functor.Predicate where
 
+import Pandora.Core.Functor (type (|->))
 import Pandora.Core.Morphism ((!))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Determinable (Determinable (determine))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
--- import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True), (?))
 
 newtype Predicate a = Predicate (a -> Boolean)
@@ -16,6 +17,9 @@ instance Contravariant Predicate where
 
 instance Determinable Predicate where
 	determine = Predicate (True !)
+
+equate :: Setoid a => a |-> Predicate
+equate x = Predicate (== x)
 
 satisfy :: (Pointable t, Avoidable t) => Predicate a -> a -> t a
 satisfy (Predicate p) x = p x ? point x $ empty
