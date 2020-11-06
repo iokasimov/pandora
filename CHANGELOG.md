@@ -279,3 +279,5 @@
 * Define `satisfy` method in `Predicate` module
 * Make `fold` and `find` stateful expressions
 * Define `equate` method of `Predicate` dataype
+* Define `Zipper` instance of `Nonempty Stack`
+* Define `forward'` and `backward'` methods for `Zipper` of `Nonempty Stack`

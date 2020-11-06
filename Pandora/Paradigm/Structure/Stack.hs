@@ -96,3 +96,9 @@ type instance Zipper Stack = Tap (Delta <:.> Stack)
 forward, backward :: Zipper Stack a -> Maybe (Zipper Stack a)
 forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: pop fs) <$> focus @Head ^. fs
 backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: insert x fs) <$> focus @Head ^. bs
+
+type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
+
+forward', backward' :: Zipper (Nonempty Stack) a -> Maybe (Zipper (Nonempty Stack) a)
+forward' (Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
+backward' (Tap x (TU (bs :^: fs))) = Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
