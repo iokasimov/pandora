@@ -46,6 +46,3 @@ instance Semigroup a => Semigroup (Delta a) where
 
 instance Ringoid a => Ringoid (Delta a) where
 	(x :^: y) * (x' :^: y') = (x * x') :^: (y * y')
-
-instance Covariant t => Covariant (Delta <:.> t) where
-	f <$> (TU (xs :^: ys)) = TU $ f <$> xs :^: f <$> ys
