@@ -6,6 +6,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -31,6 +32,9 @@ instance Distributive Delta where
 
 instance Traversable Delta where
 	(x :^: y) ->> f = (:^:) <$> f x <*> f y
+
+instance Extendable Delta where
+	x =>> f = f x :^: f x
 
 instance Representable Delta where
 	type Representation Delta = Boolean
