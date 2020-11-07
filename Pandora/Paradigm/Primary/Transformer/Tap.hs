@@ -34,7 +34,7 @@ instance Traversable t => Traversable (Tap t) where
 instance (Extractable t, Alternative t, Bindable t) => Bindable (Tap t) where
 	Tap x xs >>= f = case f x of Tap y ys -> Tap y $ ys <+> (xs >>= lower . f)
 
-instance (Extractable t, Extendable t) => Extendable (Tap t) where
+instance Extendable t => Extendable (Tap t) where
 	x =>> f = Tap (f x) $ lower x =>> f . Tap (extract x)
 
 instance Lowerable Tap where

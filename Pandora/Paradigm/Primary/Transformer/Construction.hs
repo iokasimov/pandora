@@ -73,20 +73,26 @@ coiterate coalgebra x = Construct x $ coiterate coalgebra <$> coalgebra x
 section :: Comonad t => t ~> Construction t
 section as = Construct (extract as) $ extend section as
 
-instance (Covariant t, Covariant u) => Covariant (u <:.> Construction t) where
+instance (Covariant u, Covariant t) => Covariant (t <:.> Construction u) where
 	f <$> TU g = TU $ f <$$> g
 
-instance (Avoidable t, Pointable u) => Pointable (u <:.> Construction t) where
+instance (Avoidable u, Pointable t) => Pointable (t <:.> Construction u) where
 	point x = TU . point . Construct x $ empty
 
-instance (Applicative t, Applicative u) => Applicative (u <:.> Construction t) where
+instance (Applicative u, Applicative t) => Applicative (t <:.> Construction u) where
 	TU f <*> TU x = TU $ f <**> x
 
-instance (Covariant t, Alternative u) => Alternative (u <:.> Construction t) where
+instance (Covariant u, Alternative t) => Alternative (t <:.> Construction u) where
 	TU x <+> TU y = TU $ x <+> y
 
-instance (Covariant t, Avoidable u) => Avoidable (u <:.> Construction t) where
+instance (Covariant u, Avoidable t) => Avoidable (t <:.> Construction u) where
 	empty = TU empty
 
-instance (Traversable t, Traversable u) => Traversable (u <:.> Construction t) where
+instance (Traversable u, Traversable t) => Traversable (t <:.> Construction u) where
 	TU g ->> f = TU <$> g ->>> f
+
+instance (Extendable t, Avoidable u) => Extendable (t <:.> Construction u) where
+	TU x =>> f = TU $ x =>> (\x -> Construct x empty) . f . TU -- WRONG
+
+-- instance Covariant t => Extendable (Construction t) where
+	-- x =>> f = Construct (f x) $ extend f <$> deconstruct x
