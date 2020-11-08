@@ -24,7 +24,7 @@ import Pandora.Paradigm.Primary.Functor (Predicate, Product ((:*:)), type (:*:),
 newtype State s a = State ((->) s :. (:*:) s := a)
 
 instance Covariant (State s) where
-	f <$> x = State $ \old -> f <$> run x old
+	f <$> x = State $ (<$>) f . run x
 
 instance Applicative (State s) where
 	f <*> x = State $ (|- (<$>)) . (run x <-> identity) . run f
@@ -33,8 +33,7 @@ instance Pointable (State s) where
 	point = State . (-| identity)
 
 instance Bindable (State s) where
-	x >>= f = State $ \old ->
-		(|- run) $ f <$> run x old
+	x >>= f = State $ (|- run) . (<$>) f . run x
 
 instance Monad (State s) where
 
@@ -50,21 +49,21 @@ instance Monadic (State s) where
 type Stateful s = Adaptable (State s)
 
 instance Covariant u => Covariant ((->) s <:<.>:> (:*:) s := u) where
-	f <$> TUT x = TUT $ (<$$>) f . x
+	f <$> x = TUT $ (<$$>) f . run x
 
 instance Bindable u => Applicative ((->) s <:<.>:> (:*:) s := u) where
-	TUT f <*> TUT x = TUT $ f >=> \ ~(new :*: g) -> g <$$> x new
+	f <*> x = TUT $ run f >=> \ ~(new :*: g) -> g <$$> run x new
 
 instance Pointable u => Pointable ((->) s <:<.>:> (:*:) s := u) where
 	point = TUT . (-| point)
 
 instance Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
-	TUT x >>= f = TUT $ x >=> \ ~(new :*: y) -> ($ new) . run . f $ y
+	x >>= f = TUT $ run x >=> \ ~(new :*: y) -> ($ new) . run . f $ y
 
 instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
 
 instance Alternative u => Alternative ((->) s <:<.>:> (:*:) s := u) where
-	TUT x <+> TUT y = TUT (x <*+> y)
+	x <+> y = TUT $ run x <*+> run y
 
 instance Avoidable u => Avoidable ((->) s <:<.>:> (:*:) s := u) where
 	empty = TUT $ \_ -> empty

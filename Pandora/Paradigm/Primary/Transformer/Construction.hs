@@ -19,6 +19,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
+import Pandora.Paradigm.Controlflow (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 data Construction t a = Construct a (t :. Construction t := a)
@@ -75,19 +76,19 @@ section :: Comonad t => t ~> Construction t
 section xs = Construct (extract xs) $ xs =>> section
 
 instance (Covariant u, Covariant t) => Covariant (t <:.> Construction u) where
-	f <$> TU g = TU $ f <$$> g
+	f <$> g = TU $ f <$$> run g
 
 instance (Avoidable u, Pointable t) => Pointable (t <:.> Construction u) where
 	point x = TU . point . Construct x $ empty
 
 instance (Applicative u, Applicative t) => Applicative (t <:.> Construction u) where
-	TU f <*> TU x = TU $ f <**> x
+	f <*> x = TU $ run f <**> run x
 
 instance (Covariant u, Alternative t) => Alternative (t <:.> Construction u) where
-	TU x <+> TU y = TU $ x <+> y
+	x <+> y = TU $ run x <+> run y
 
 instance (Covariant u, Avoidable t) => Avoidable (t <:.> Construction u) where
 	empty = TU empty
 
 instance (Traversable u, Traversable t) => Traversable (t <:.> Construction u) where
-	TU g ->> f = TU <$> g ->>> f
+	g ->> f = TU <$> run g ->>> f

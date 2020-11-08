@@ -24,62 +24,56 @@ data Product s a = s :*: a
 type (:*:) = Product
 
 instance Covariant (Product s) where
-	f <$> (s :*: x) = s :*: f x
+	f <$> x = attached x :*: f (extract x)
 
 instance Extractable (Product a) where
-	extract (_ :*: y) = y
+	extract ~(_ :*: y) = y
 
 instance Traversable (Product s) where
-	(s :*: x) ->> f = (s :*:) <$> f x
+	x ->> f = (attached x :*:) <$> f (extract x)
 
 instance Extendable (Product s) where
-	(s :*: x) =>> f = s :*: f (s :*: x)
+	x =>> f = attached x :*: f (attached x :*: extract x)
 
 instance Comonad (Product s) where
 
 instance Bivariant Product where
-	f <-> g = \(s :*: x) -> f s :*: g x
+	f <-> g = \ ~(s :*: x) -> f s :*: g x
 
 instance (Setoid s, Setoid a) => Setoid (Product s a) where
-	(s :*: x) == (s' :*: x') = (s == s') * (x == x')
+	x == y = (attached x == attached y) * (extract x == extract y)
 
 instance (Semigroup s, Semigroup a) => Semigroup (Product s a) where
-	(s :*: x) + (s' :*: x') = s + s' :*: x + x'
+	x + y = attached x + attached y :*: extract x + extract y
 
 instance (Monoid s, Monoid a) => Monoid (Product s a) where
 	zero = zero :*: zero
 
 instance (Ringoid s, Ringoid a) => Ringoid (Product s a) where
-	(s :*: x) * (s' :*: x') = s * s' :*: x * x'
+	x * y = attached x * attached y :*: extract x * extract y
 
 instance (Quasiring s, Quasiring a) => Quasiring (Product s a) where
 	one = one :*: one
 
 instance (Infimum s, Infimum a) => Infimum (Product s a) where
-	(s :*: x) /\ (s' :*: x') = s /\ s' :*: x /\ x'
+	x /\ y = attached x /\ attached y :*: extract x /\ extract y
 
 instance (Supremum s, Supremum a) => Supremum (Product s a) where
-	(s :*: x) \/ (s' :*: x') = s \/ s' :*: x \/ x'
+	x \/ y = attached x \/ attached y :*: extract x \/ extract y
 
 instance (Lattice s, Lattice a) => Lattice (Product s a) where
 
 instance (Group s, Group a) => Group (Product s a) where
-	invert (s :*: x) = invert s :*: invert x
+	invert x = invert (attached x) :*: invert (extract x)
 
 instance Monotonic e a => Monotonic (Product a e) a where
-	iterate f r (x :*: e) = iterate f (f x r) e
+	iterate f r x = iterate f (f (attached x) r) $ extract x
 
 delta :: a -> a :*: a
 delta x = x :*: x
 
 swap :: a :*: b -> b :*: a
-swap (x :*: y) = y :*: x
+swap ~(x :*: y) = y :*: x
 
 attached :: a :*: b -> a
-attached (x :*: _) = x
-
-curry :: (a :*: b -> c) -> a -> b -> c
-curry f x y = f $ x :*: y
-
-uncurry :: (a -> b -> c) -> (a :*: b -> c)
-uncurry f (x :*: y) = f x y
+attached ~(x :*: _) = x
