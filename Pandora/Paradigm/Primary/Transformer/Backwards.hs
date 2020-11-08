@@ -39,7 +39,7 @@ instance Contravariant t => Contravariant (Backwards t) where
 
 instance Interpreted (Backwards t) where
 	type Primary (Backwards t) a = t a
-	run (Backwards x) = x
+	run ~(Backwards x) = x
 
 instance Liftable Backwards where
 	lift = Backwards

@@ -15,7 +15,7 @@ newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
 
 instance Interpreted (Comprehension t) where
 	type Primary (Comprehension t) a = t <:.> Construction t := a
-	run (Comprehension x) = x
+	run ~(Comprehension x) = x
 
 instance Covariant (t <:.> Construction t) => Covariant (Comprehension t) where
 	f <$> Comprehension x = Comprehension $ f <$> x

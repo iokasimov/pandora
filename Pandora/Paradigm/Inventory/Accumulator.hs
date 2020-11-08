@@ -36,7 +36,7 @@ type instance Schematic Monad (Accumulator e) = (<.:>) ((:*:) e)
 
 instance Interpreted (Accumulator e) where
 	type Primary (Accumulator e) a = e :*: a
-	run (Accumulator x) = x
+	run ~(Accumulator x) = x
 
 instance Monoid e => Monadic (Accumulator e) where
 	wrap = TM . UT . point . run

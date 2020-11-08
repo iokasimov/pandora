@@ -26,7 +26,7 @@ instance Extendable (Equipment e) where
 
 instance Interpreted (Equipment e) where
 	type Primary (Equipment e) a = e :*: a
-	run (Equipment x) = x
+	run ~(Equipment x) = x
 
 type instance Schematic Comonad (Equipment e) = (<:.>) ((:*:) e)
 

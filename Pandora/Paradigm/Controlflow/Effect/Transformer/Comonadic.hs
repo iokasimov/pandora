@@ -62,4 +62,4 @@ instance Hoistable (Schematic Comonad t) => Hoistable ((:<) t) where
 
 instance (Interpreted (Schematic Comonad t u)) => Interpreted (t :< u) where
 	type Primary (t :< u) a = Primary (Schematic Comonad t u) a
-	run (TC x) = run x
+	run ~(TC x) = run x

@@ -25,7 +25,7 @@ instance Comonad (Store p) where
 
 instance Interpreted (Store p) where
 	type Primary (Store p) a = (:*:) p :. (->) p := a
-	run (Store x) = x
+	run ~(Store x) = x
 
 type instance Schematic Comonad (Store p) = (:*:) p <:<.>:> (->) p
 

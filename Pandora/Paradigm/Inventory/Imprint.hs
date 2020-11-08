@@ -32,7 +32,7 @@ instance Semigroup e => Extendable (Imprint e) where
 
 instance Interpreted (Imprint e) where
 	type Primary (Imprint e) a = (->) e a
-	run (Imprint x) = x
+	run ~(Imprint x) = x
 
 type instance Schematic Comonad (Imprint e) = (<.:>) ((->) e)
 

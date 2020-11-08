@@ -36,7 +36,7 @@ instance Monad (Environment e) where
 
 instance Interpreted (Environment e) where
 	type Primary (Environment e) a = (->) e a
-	run (Environment x) = x
+	run ~(Environment x) = x
 
 type instance Schematic Monad (Environment e) = (<:.>) ((->) e)
 

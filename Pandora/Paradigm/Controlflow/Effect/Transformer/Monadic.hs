@@ -62,4 +62,4 @@ instance Hoistable (Schematic Monad t) => Hoistable ((:>) t) where
 
 instance (Interpreted (Schematic Monad t u)) => Interpreted (t :> u) where
 	type Primary (t :> u) a = Primary (Schematic Monad t u) a
-	run (TM x) = run x
+	run ~(TM x) = run x

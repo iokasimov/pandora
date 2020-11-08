@@ -23,7 +23,7 @@ type (>:>.<:<) = TUT Contravariant Contravariant Contravariant
 
 instance Interpreted (TUT ct ct' cu t t' u) where
 	type Primary (TUT ct ct' cu t t' u) a = t :. u :. t' := a
-	run (TUT x) = x
+	run ~(TUT x) = x
 
 instance (Adjoint t' t, Distributive t) => Liftable (t <:<.>:> t') where
 	lift :: Covariant u => u ~> t <:<.>:> t' := u

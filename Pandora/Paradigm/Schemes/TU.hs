@@ -20,7 +20,7 @@ type (>:.<) = TU Contravariant Contravariant
 
 instance Interpreted (TU ct cu t u) where
 	type Primary (TU ct cu t u) a = t :. u := a
-	run (TU x) = x
+	run ~(TU x) = x
 
 instance Pointable t => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <:.> u
