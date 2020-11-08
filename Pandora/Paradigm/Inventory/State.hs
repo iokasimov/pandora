@@ -24,24 +24,23 @@ import Pandora.Paradigm.Primary.Functor (Predicate, Product ((:*:)), type (:*:),
 newtype State s a = State ((->) s :. (:*:) s := a)
 
 instance Covariant (State s) where
-	f <$> State x = State $ \old -> f <$> x old
+	f <$> x = State $ \old -> f <$> run x old
 
 instance Applicative (State s) where
-	State f <*> State x = State $
-		(|- (<$>)) . (x <-> identity) . f
+	f <*> x = State $ (|- (<$>)) . (run x <-> identity) . run f
 
 instance Pointable (State s) where
 	point = State . (-| identity)
 
 instance Bindable (State s) where
-	State x >>= f = State $ \old ->
-		(|- run) $ f <$> x old
+	x >>= f = State $ \old ->
+		(|- run) $ f <$> run x old
 
 instance Monad (State s) where
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
-	run (State x) = x
+	run ~(State x) = x
 
 type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 

@@ -24,23 +24,24 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 data Construction t a = Construct a (t :. Construction t := a)
 
 instance Covariant t => Covariant (Construction t) where
-	f <$> Construct x xs = Construct (f x) $ f <$$> xs
+	f <$> x = Construct (f $ extract x) $ f <$$> deconstruct x
 
 instance Avoidable t => Pointable (Construction t) where
 	point x = Construct x empty
 
 instance Covariant t => Extractable (Construction t) where
-	extract (Construct x _) = x
+	extract ~(Construct x _) = x
 
 instance Applicative t => Applicative (Construction t) where
-	Construct f fs <*> Construct x xs = Construct (f x) $ fs <**> xs
+	f <*> x = Construct (extract f $ extract x)
+		$ deconstruct f <**> deconstruct x
 
 instance Traversable t => Traversable (Construction t) where
-	Construct x xs ->> f = Construct <$> f x <*> xs ->>> f
+	x ->> f = Construct <$> f (extract x) <*> deconstruct x ->>> f
 
 instance Alternative t => Bindable (Construction t) where
-	Construct x xs >>= f = case f x of
-		~(Construct y ys) -> Construct y $ ys <+> (>>= f) <$> xs
+	x >>= f = Construct (extract . f $ extract x)
+		$ (deconstruct . f $ extract x) <+> (>>= f) <$> deconstruct x
 
 instance Covariant t => Extendable (Construction t) where
 	x =>> f = Construct (f x) $ extend f <$> deconstruct x
@@ -50,22 +51,22 @@ instance (Avoidable t, Alternative t) => Monad (Construction t) where
 instance Covariant t => Comonad (Construction t) where
 
 instance Lowerable Construction where
-	lower (Construct _ xs) = extract <$> xs
+	lower x = extract <$> deconstruct x
 
 instance Hoistable Construction where
-	hoist f (Construct x xs) = Construct x . f $ hoist f <$> xs
+	hoist f x = Construct (extract x) . f $ hoist f <$> deconstruct x
 
-instance (Setoid a, forall b . Setoid b => Setoid (t b)) => Setoid (Construction t a) where
-	Construct x xs == Construct y ys = (x == y) * (xs == ys)
+instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant t) => Setoid (Construction t a) where
+	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)
 
-instance (Semigroup a, forall b . Semigroup b => Semigroup (t b)) => Semigroup (Construction t a) where
-	Construct x xs + Construct y ys = Construct (x + y) $ xs + ys
+instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant t) => Semigroup (Construction t a) where
+	x + y = Construct (extract x + extract y) $ deconstruct x + deconstruct y
 
-instance (Monoid a, forall b . Semigroup b => Monoid (t b)) => Monoid (Construction t a) where
+instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t) => Monoid (Construction t a) where
 	zero = Construct zero zero
 
 deconstruct :: Construction t a -> (t :. Construction t) a
-deconstruct (Construct _ xs) = xs
+deconstruct ~(Construct _ xs) = xs
 
 coiterate :: Covariant t => a |-> t -> a |-> Construction t
 coiterate coalgebra x = Construct x $ coiterate coalgebra <$> coalgebra x
