@@ -53,13 +53,13 @@ instance Covariant u => Covariant ((->) s <:<.>:> (:*:) s := u) where
 	f <$> TUT x = TUT $ (<$$>) f . x
 
 instance Bindable u => Applicative ((->) s <:<.>:> (:*:) s := u) where
-	TUT f <*> TUT x = TUT $ f >=> \(new :*: g) -> g <$$> x new
+	TUT f <*> TUT x = TUT $ f >=> \ ~(new :*: g) -> g <$$> x new
 
 instance Pointable u => Pointable ((->) s <:<.>:> (:*:) s := u) where
 	point = TUT . (-| point)
 
 instance Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
-	TUT x >>= f = TUT $ x >=> \(new :*: y) -> ($ new) . run . f $ y
+	TUT x >>= f = TUT $ x >=> \ ~(new :*: y) -> ($ new) . run . f $ y
 
 instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
 
