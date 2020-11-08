@@ -13,6 +13,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), (>=>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
+import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run), Schematic)
@@ -26,8 +27,8 @@ instance Covariant (State s) where
 	f <$> State x = State $ \old -> f <$> x old
 
 instance Applicative (State s) where
-	State f <*> State x = State $ \old ->
-		let (new :*: g) = f old in g <$> x new
+	State f <*> State x = State $
+		(|- (<$>)) . (x <-> identity) . f
 
 instance Pointable (State s) where
 	point = State . (-| identity)

@@ -29,7 +29,7 @@ instance Adjoint (Product s) ((->) s) where
 	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)
 	x -| f = \s -> f $ s :*: x
 	(|-) :: (s :*: a) -> (a -> s -> b) -> b
-	(s :*: x) |- f = f x s
+	~(s :*: x) |- f = f x s
 
 note :: e -> Maybe ~> Conclusion e
 note x = maybe (Failure x) Success
