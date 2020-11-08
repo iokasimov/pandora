@@ -40,7 +40,7 @@ instance Traversable t => Traversable (Construction t) where
 
 instance Alternative t => Bindable (Construction t) where
 	Construct x xs >>= f = case f x of
-		Construct y ys -> Construct y $ ys <+> (>>= f) <$> xs
+		~(Construct y ys) -> Construct y $ ys <+> (>>= f) <$> xs
 
 instance Covariant t => Extendable (Construction t) where
 	x =>> f = Construct (f x) $ extend f <$> deconstruct x
@@ -71,7 +71,7 @@ coiterate :: Covariant t => a |-> t -> a |-> Construction t
 coiterate coalgebra x = Construct x $ coiterate coalgebra <$> coalgebra x
 
 section :: Comonad t => t ~> Construction t
-section as = Construct (extract as) $ extend section as
+section xs = Construct (extract xs) $ xs =>> section
 
 instance (Covariant u, Covariant t) => Covariant (t <:.> Construction u) where
 	f <$> TU g = TU $ f <$$> g
@@ -90,9 +90,3 @@ instance (Covariant u, Avoidable t) => Avoidable (t <:.> Construction u) where
 
 instance (Traversable u, Traversable t) => Traversable (t <:.> Construction u) where
 	TU g ->> f = TU <$> g ->>> f
-
-instance (Extendable t, Avoidable u) => Extendable (t <:.> Construction u) where
-	TU x =>> f = TU $ x =>> (\x -> Construct x empty) . f . TU -- WRONG
-
--- instance Covariant t => Extendable (Construction t) where
-	-- x =>> f = Construct (f x) $ extend f <$> deconstruct x

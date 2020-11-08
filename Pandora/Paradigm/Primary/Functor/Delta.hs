@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Delta where
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -12,7 +12,6 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 infixr 1 :^:
 

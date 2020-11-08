@@ -57,10 +57,6 @@ instance Focusable Head Stack where
 instance Insertable Stack where
 	insert x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 
--- instance Set Stack where
--- 	member x = maybe False (True !) . find (Predicate (== x))
--- 	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
-
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct
 
@@ -86,10 +82,6 @@ instance Focusable Head (Construction Maybe) where
 
 instance Insertable (Construction Maybe) where
 	insert x = Construct x . Just
-
--- instance Set (Construction Maybe) where
--- 	member x = maybe False (True !) . find (Predicate (== x))
--- 	subset ss s = Nothing /= (ss ->> \x -> find (Predicate (== x)) s)
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
