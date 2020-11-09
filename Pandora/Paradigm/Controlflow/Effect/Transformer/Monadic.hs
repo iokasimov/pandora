@@ -9,6 +9,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
@@ -39,6 +40,9 @@ instance Applicative (Schematic Monad t u) => Applicative (t :> u) where
 
 instance Alternative (Schematic Monad t u) => Alternative (t :> u) where
 	TM x <+> TM y = TM $ x <+> y
+
+instance Avoidable (Schematic Monad t u) => Avoidable (t :> u) where
+	empty = TM empty
 
 instance Traversable (Schematic Monad t u) => Traversable (t :> u) where
 	TM x ->> f = TM <$> x ->> f
