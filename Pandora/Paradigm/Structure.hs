@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure (module Exports) where
+module Pandora.Paradigm.Structure (module Exports, find) where
 
 import Pandora.Paradigm.Structure.Ability as Exports
 import Pandora.Paradigm.Structure.Interface as Exports
@@ -11,7 +11,8 @@ import Pandora.Paradigm.Structure.Stack as Exports
 import Pandora.Paradigm.Structure.Stream as Exports
 
 import Pandora.Pattern (($), (.), extract)
-import Pandora.Paradigm.Primary (Product ((:*:)), Tagged (Tag), Wye (Left, Right))
+import Pandora.Pattern.Functor ((<+>))
+import Pandora.Paradigm.Primary.Functor (Maybe (Nothing), Predicate, satisfy, Product ((:*:)), Tagged (Tag), Wye (Left, Right))
 import Pandora.Paradigm.Inventory (Store (Store))
 
 instance Substructure Left (Product s) where
@@ -21,3 +22,6 @@ instance Substructure Left (Product s) where
 instance Substructure Right (Product s) where
 	type Substructural Right (Product s) a = a
 	substructure (extract -> s :*: x) = Store $ x :*: Tag . (s :*:)
+
+find :: Monotonic e a => Predicate a -> e -> Maybe a
+find p struct = iterate (\x r -> r <+> satisfy p x) Nothing struct

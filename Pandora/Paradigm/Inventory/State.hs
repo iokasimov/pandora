@@ -84,5 +84,5 @@ fold op struct = struct ->> modify . op *> current
 
 type Decisive t = (Pointable t, Avoidable t, Alternative t, Applicative t)
 
-find :: (Traversable t, Decisive u, Memorable (u a) v) => Predicate a -> t a -> v (u a)
-find p = fold (\x s -> s <+> satisfy p x)
+-- find :: (Traversable t, Decisive u, Memorable (u a) v) => Predicate a -> t a -> v (u a)
+-- find p = fold (\x s -> s <+> satisfy p x)
