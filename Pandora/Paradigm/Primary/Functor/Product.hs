@@ -15,7 +15,7 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (iterate))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (bypass))
 
 infixr 1 :*:
 
@@ -67,7 +67,7 @@ instance (Group s, Group a) => Group (Product s a) where
 	invert x = invert (attached x) :*: invert (extract x)
 
 instance Monotonic e a => Monotonic (Product a e) a where
-	iterate f r x = iterate f (f (attached x) r) $ extract x
+	bypass f r x = bypass f (f (attached x) r) $ extract x
 
 delta :: a -> a :*: a
 delta x = x :*: x

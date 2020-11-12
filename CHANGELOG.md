@@ -280,3 +280,4 @@
 * Define `equate` method of `Predicate` dataype
 * Define `Zipper` instance of `Nonempty Stack`
 * Define `forward'` and `backward'` methods for `Zipper` of `Nonempty Stack`
+* Rename `iterate` method of `Monotonic` typeclass to `bypass`

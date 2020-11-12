@@ -24,4 +24,4 @@ instance Substructure Right (Product s) where
 	substructure (extract -> s :*: x) = Store $ x :*: Tag . (s :*:)
 
 find :: Monotonic e a => Predicate a -> e -> Maybe a
-find p struct = iterate (\x r -> r <+> satisfy p x) Nothing struct
+find p struct = bypass (\x r -> r <+> satisfy p x) Nothing struct

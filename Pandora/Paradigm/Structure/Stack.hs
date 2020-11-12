@@ -33,7 +33,7 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (iterate))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (bypass))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -85,7 +85,7 @@ instance Insertable (Construction Maybe) where
 	insert x = Construct x . Just
 
 instance Monotonic (Construction Maybe a) a where
-	iterate f r ~(Construct x xs) = f x $ iterate f r xs
+	bypass f r ~(Construct x xs) = f x $ bypass f r xs
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
@@ -100,8 +100,8 @@ forward' (Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$
 backward' (Tap x (TU (bs :^: fs))) = Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
 
 instance Monotonic (Maybe :. Construction Maybe := a) a where
-	iterate f r (Just x) = iterate f r x
-	iterate f r Nothing = r
+	bypass f r (Just x) = bypass f r x
+	bypass f r Nothing = r
 
 instance Monotonic (Maybe <:.> Construction Maybe := a) a where
-	iterate f r ~(TU x) = iterate f r x
+	bypass f r ~(TU x) = bypass f r x
