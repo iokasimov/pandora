@@ -13,7 +13,13 @@ import Pandora.Paradigm.Structure.Stream as Exports
 import Pandora.Pattern (($), (.), extract)
 import Pandora.Pattern.Functor ((<+>))
 import Pandora.Paradigm.Inventory (Store (Store))
-import Pandora.Paradigm.Primary.Functor (Maybe (Nothing), Predicate, satisfy, Product ((:*:)), Tagged (Tag), Wye (Left, Right))
+
+import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Nothing))
+import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, satisfy)
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 
 instance Substructure Left (Product s) where
 	type Substructural Left (Product s) a = s
@@ -22,6 +28,14 @@ instance Substructure Left (Product s) where
 instance Substructure Right (Product s) where
 	type Substructural Right (Product s) a = a
 	substructure (extract -> s :*: x) = Store $ x :*: Tag . (s :*:)
+
+instance Substructure Left Delta where
+	type Substructural Left Delta a = a
+	substructure (extract -> l :^: r) = Store $ l :*: Tag . (:^: r)
+
+instance Substructure Right Delta where
+	type Substructural Right Delta a = a
+	substructure (extract -> l :^: r) = Store $ r :*: Tag . (l :^:)
 
 find :: Monotonic e a => Predicate a -> e -> Maybe a
 find p struct = bypass (\x r -> r <+> satisfy p x) Nothing struct
