@@ -40,33 +40,33 @@ instance Comonad (Product s) where
 instance Bivariant Product where
 	f <-> g = \ ~(s :*: x) -> f s :*: g x
 
-instance (Setoid s, Setoid a) => Setoid (Product s a) where
+instance (Setoid s, Setoid a) => Setoid (s :*: a) where
 	x == y = (attached x == attached y) * (extract x == extract y)
 
-instance (Semigroup s, Semigroup a) => Semigroup (Product s a) where
+instance (Semigroup s, Semigroup a) => Semigroup (s :*: a) where
 	x + y = attached x + attached y :*: extract x + extract y
 
-instance (Monoid s, Monoid a) => Monoid (Product s a) where
+instance (Monoid s, Monoid a) => Monoid (s :*: a) where
 	zero = zero :*: zero
 
-instance (Ringoid s, Ringoid a) => Ringoid (Product s a) where
+instance (Ringoid s, Ringoid a) => Ringoid (s :*: a) where
 	x * y = attached x * attached y :*: extract x * extract y
 
-instance (Quasiring s, Quasiring a) => Quasiring (Product s a) where
+instance (Quasiring s, Quasiring a) => Quasiring (s :*: a) where
 	one = one :*: one
 
-instance (Infimum s, Infimum a) => Infimum (Product s a) where
+instance (Infimum s, Infimum a) => Infimum (s :*: a) where
 	x /\ y = attached x /\ attached y :*: extract x /\ extract y
 
-instance (Supremum s, Supremum a) => Supremum (Product s a) where
+instance (Supremum s, Supremum a) => Supremum (s :*: a) where
 	x \/ y = attached x \/ attached y :*: extract x \/ extract y
 
-instance (Lattice s, Lattice a) => Lattice (Product s a) where
+instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 
-instance (Group s, Group a) => Group (Product s a) where
+instance (Group s, Group a) => Group (s :*: a) where
 	invert x = invert (attached x) :*: invert (extract x)
 
-instance Monotonic e a => Monotonic (Product a e) a where
+instance Monotonic a s => Monotonic (s :*: a) s where
 	bypass f r x = bypass f (f (attached x) r) $ extract x
 
 delta :: a -> a :*: a

@@ -101,7 +101,7 @@ backward' (Tap x (TU (bs :^: fs))) = Tap (extract bs) . TU . (:^: insert x fs) <
 
 instance Monotonic (Maybe :. Construction Maybe := a) a where
 	bypass f r (Just x) = bypass f r x
-	bypass f r Nothing = r
+	bypass _ r Nothing = r
 
 instance Monotonic (Maybe <:.> Construction Maybe := a) a where
 	bypass f r ~(TU x) = bypass f r x
