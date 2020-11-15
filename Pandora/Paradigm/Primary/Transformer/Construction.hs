@@ -69,8 +69,8 @@ instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t) => Mono
 deconstruct :: Construction t a -> (t :. Construction t) a
 deconstruct ~(Construct _ xs) = xs
 
-coiterate :: Covariant t => a |-> t -> a |-> Construction t
-coiterate coalgebra x = Construct x $ coiterate coalgebra <$> coalgebra x
+coiterate :: Covariant t => (a |-> t) -> (a |-> Construction t)
+coiterate f x = Construct x $ coiterate f <$> f x
 
 section :: Comonad t => t ~> Construction t
 section xs = Construct (extract xs) $ xs =>> section

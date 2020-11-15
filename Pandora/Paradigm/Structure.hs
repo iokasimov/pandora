@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure (module Exports, find) where
+module Pandora.Paradigm.Structure (module Exports) where
 
 import Pandora.Paradigm.Structure.Ability as Exports
 import Pandora.Paradigm.Structure.Interface as Exports
@@ -11,17 +11,17 @@ import Pandora.Paradigm.Structure.Stack as Exports
 import Pandora.Paradigm.Structure.Stream as Exports
 
 import Pandora.Pattern (($), (.), extract)
-import Pandora.Pattern.Functor ((<+>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory (Store (Store), (^.), (.~))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
-import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Nothing))
-import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, satisfy)
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
+
+instance Monotonic a s => Monotonic (s :*: a) s where
+	bypass f r x = bypass f (f (attached x) r) $ extract x
 
 instance Substructure Left (Product s) where
 	type Substructural Left (Product s) a = s
@@ -48,6 +48,3 @@ instance Substructure Right t => Substructure Right (Tap (t <:.> u)) where
 	type Substructural Right (Tap (t <:.> u)) a = Substructural Right t (u a)
 	substructure (extract -> Tap x xs) = Store $
 		sub @Right ^. run xs :*: Tag . (\new -> sub @Right .~ new $ Tap x xs)
-
-find :: Monotonic e a => Predicate a -> e -> Maybe a
-find p struct = bypass (\x r -> r <+> satisfy p x) Nothing struct

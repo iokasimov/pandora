@@ -1,12 +1,12 @@
 module Pandora.Paradigm.Structure.Stream where
 
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
+import Pandora.Paradigm.Primary.Functor.Delta (Delta)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
-import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
+import Pandora.Paradigm.Primary.Transformer.Tap (Tap)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
 type Stream = Construction Identity
 

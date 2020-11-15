@@ -19,7 +19,7 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
-import Pandora.Paradigm.Primary.Functor (Predicate, Product ((:*:)), type (:*:), delta, satisfy)
+import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), delta)
 
 newtype State s a = State ((->) s :. (:*:) s := a)
 
@@ -83,6 +83,3 @@ fold :: (Traversable t, Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = struct ->> modify . op *> current
 
 type Decisive t = (Pointable t, Avoidable t, Alternative t, Applicative t)
-
--- find :: (Traversable t, Decisive u, Memorable (u a) v) => Predicate a -> t a -> v (u a)
--- find p = fold (\x s -> s <+> satisfy p x)

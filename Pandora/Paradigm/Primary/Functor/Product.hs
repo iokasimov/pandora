@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Primary.Functor.Product where
 
-import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -15,7 +14,6 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (bypass))
 
 infixr 1 :*:
 
@@ -65,9 +63,6 @@ instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 
 instance (Group s, Group a) => Group (s :*: a) where
 	invert x = invert (attached x) :*: invert (extract x)
-
-instance Monotonic a s => Monotonic (s :*: a) s where
-	bypass f r x = bypass f (f (attached x) r) $ extract x
 
 delta :: a -> a :*: a
 delta x = x :*: x
