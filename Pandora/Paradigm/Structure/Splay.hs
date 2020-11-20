@@ -13,13 +13,14 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Inventory.Optics ((%~))
-import Pandora.Paradigm.Structure.Binary ()
-import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (rotation), rotate)
+import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (sub)
+import Pandora.Paradigm.Structure.Binary ()
 
 data Splay a = Zig a | Zag a
 
 instance Rotatable (Left Zig) (Construction Wye) where
+	type Rotational (Left Zig) (Construction Wye) a = Maybe (Construction Wye a)
 	rotation (Tag (Construct parent st)) = Construct % subtree <$> found where
 
 		subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
@@ -29,6 +30,7 @@ instance Rotatable (Left Zig) (Construction Wye) where
 		c = right st
 
 instance Rotatable (Right Zig) (Construction Wye) where
+	type Rotational (Right Zig) (Construction Wye) a = Maybe (Construction Wye a)
 	rotation (Tag (Construct parent st)) = Construct % subtree <$> found where
 
 		found = extract <$> right st
@@ -38,18 +40,20 @@ instance Rotatable (Right Zig) (Construction Wye) where
 		c = deconstruct <$> right st >>= right
 
 instance Rotatable (Left (Zig Zig)) (Construction Wye) where
+	type Rotational (Left (Zig Zig)) (Construction Wye) a = Maybe (Construction Wye a)
 	rotation (Tag tree) = rotate @(Left Zig) tree >>= rotate @(Left Zig)
 
 instance Rotatable (Right (Zig Zig)) (Construction Wye) where
+	type Rotational (Right (Zig Zig)) (Construction Wye) a = Maybe (Construction Wye a)
 	rotation (Tag tree) = rotate @(Right Zig) tree >>= rotate @(Right Zig)
 
 instance Rotatable (Left (Zig Zag)) (Construction Wye) where
-	rotation (Tag tree) = rotate @(Left Zig)
-		$ sub @Left %~ (>>= rotate @(Right Zig)) $ tree
+	type Rotational (Left (Zig Zag)) (Construction Wye) a = Maybe (Construction Wye a)
+	rotation (Tag tree) = rotate @(Left Zig) $ sub @Left %~ (>>= rotate @(Right Zig)) $ tree
 
 instance Rotatable (Right (Zig Zag)) (Construction Wye) where
-	rotation (Tag tree) = rotate @(Right Zig)
-		$ sub @Right %~ (>>= rotate @(Left Zig)) $ tree
+	type Rotational (Right (Zig Zag)) (Construction Wye) a = Maybe (Construction Wye a)
+	rotation (Tag tree) = rotate @(Right Zig) $ sub @Right %~ (>>= rotate @(Left Zig)) $ tree
 
 maybe_subtree :: Maybe a -> Maybe a -> Wye a
 maybe_subtree (Just x) (Just y) = Both x y
