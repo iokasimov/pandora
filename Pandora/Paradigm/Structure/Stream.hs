@@ -30,6 +30,3 @@ instance Rotatable Right (Tap (Delta <:.> Stream)) where
 
 repeat :: a -> Stream a
 repeat x = Construct x . Identity $ repeat x
-
-iterate :: (a -> a) -> a -> Stream a
-iterate f x = Construct x . Identity $ iterate f (f x)

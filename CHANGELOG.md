@@ -281,4 +281,4 @@
 * Define `Zipper` instance of `Nonempty Stack`
 * Define `forward'` and `backward'` methods for `Zipper` of `Nonempty Stack`
 * Rename `iterate` method of `Monotonic` typeclass to `bypass`
-* Define `iterate` method of `Stream` datastructure
+* Rename `coiterate` method of `Construction` datatype to `iterate`
