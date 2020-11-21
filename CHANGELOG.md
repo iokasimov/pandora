@@ -282,3 +282,5 @@
 * Define `forward'` and `backward'` methods for `Zipper` of `Nonempty Stack`
 * Rename `iterate` method of `Monotonic` typeclass to `bypass`
 * Rename `coiterate` method of `Construction` datatype to `iterate`
+
+# 0.3.3
