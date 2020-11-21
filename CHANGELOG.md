@@ -284,3 +284,4 @@
 * Rename `coiterate` method of `Construction` datatype to `iterate`
 
 # 0.3.3
+* Define inductive `Natural` number datatype in `Object` module
