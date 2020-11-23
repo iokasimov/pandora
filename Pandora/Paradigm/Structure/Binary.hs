@@ -24,6 +24,7 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
+import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
 type Binary = Maybe <:.> Construction Wye
 
@@ -79,3 +80,12 @@ instance Substructure Right (Construction Wye) where
 	substructure (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . maybe (Left lst) (Both lst)
 	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . maybe End Right
 	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . maybe (Left lst) (Both lst)
+
+-- Doesn't it look like Construction (Top | Left a | Right a)?
+data Biforked t a = Top | Leftward (Biforked t a) (t a) | Rightward (Biforked t a) (t a)
+
+data Bifurcation t a = Bifurcation (t a) (Biforked t a)
+
+type instance Zipper (Construction Wye) = Bifurcation (Construction Wye)
+
+-- data Tap t a = Tap a (t a)
