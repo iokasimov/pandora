@@ -17,6 +17,7 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
@@ -83,11 +84,4 @@ instance Substructure Right (Construction Wye) where
 
 data Biforked t a = Top | Leftward (t a) a (Biforked t a) | Rightward a (t a) (Biforked t a)
 
-data Bifurcation t a = Bifurcation (t a) (Biforked t a)
-
-type instance Zipper (Construction Wye) = Bifurcation (Construction Wye)
-
--- How zipper and lens for binary tree related?
--- It both abstrations we store some focused subtree
--- but in Zippper we have actual data of parent tree
--- and in Lens we have a function to get the focused value
+type instance Zipper (Construction Wye) = Construction Wye <:.:> Biforked (Construction Wye)
