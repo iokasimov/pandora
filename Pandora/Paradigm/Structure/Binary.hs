@@ -81,11 +81,15 @@ instance Substructure Right (Construction Wye) where
 	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . maybe End Right
 	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . maybe (Left lst) (Both lst)
 
--- Doesn't it look like Construction (Top | Left a | Right a)?
-data Biforked t a = Top | Leftward (Biforked t a) (t a) | Rightward (Biforked t a) (t a)
+data Biforked t a = Top | Leftward (t a) a (Biforked t a) | Rightward a (t a) (Biforked t a)
 
 data Bifurcation t a = Bifurcation (t a) (Biforked t a)
 
 type instance Zipper (Construction Wye) = Bifurcation (Construction Wye)
 
--- data Tap t a = Tap a (t a)
+-- Construction (Wye :. )
+
+-- How zipper and lens for binary tree related?
+-- It both abstrations we store some focused subtree
+-- but in Zippper we have actual data of parent tree
+-- and in Lens we have a function to get the focused value
