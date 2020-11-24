@@ -87,8 +87,6 @@ data Bifurcation t a = Bifurcation (t a) (Biforked t a)
 
 type instance Zipper (Construction Wye) = Bifurcation (Construction Wye)
 
--- Construction (Wye :. )
-
 -- How zipper and lens for binary tree related?
 -- It both abstrations we store some focused subtree
 -- but in Zippper we have actual data of parent tree

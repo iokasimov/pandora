@@ -286,4 +286,4 @@
 # 0.3.3
 * Define inductive `Natural` number datatype in `Object` module
 * Add `cardinality` method to `Set` interface
-* Define new functor scheme - `T_U`
+* Define new functor schemes: `T_U`, `U_T`
