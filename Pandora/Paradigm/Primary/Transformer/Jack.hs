@@ -9,6 +9,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
+import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -48,6 +49,10 @@ instance Traversable t => Traversable (Jack t) where
 
 instance Distributive t => Distributive (Jack t) where
 	x >>- f = distribute $ f <$> x
+
+instance Extendable t => Extendable (Jack t) where
+	It x =>> f = It . f $ It x
+	Other x =>> f = Other $ x =>> f . Other
 
 instance Liftable Jack where
 	lift = Other
