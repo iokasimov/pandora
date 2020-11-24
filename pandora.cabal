@@ -69,6 +69,7 @@ library
     Pandora.Paradigm.Schemes.TUVW
     Pandora.Paradigm.Schemes.UT
     Pandora.Paradigm.Schemes.UTU
+    Pandora.Paradigm.Schemes.T_U
     -- Control flow primitives
     Pandora.Paradigm.Controlflow
     -- Typeclassess about functor junctions

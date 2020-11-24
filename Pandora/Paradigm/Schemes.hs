@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Schemes (module Exports) where
 
+import Pandora.Paradigm.Schemes.T_U as Exports
 import Pandora.Paradigm.Schemes.UTU as Exports
 import Pandora.Paradigm.Schemes.UT as Exports
 import Pandora.Paradigm.Schemes.TUVW as Exports
