@@ -2,11 +2,12 @@ module Pandora.Paradigm.Schemes.T_U where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
 
@@ -27,4 +28,8 @@ instance Avoidable t => Liftable (T_U Covariant Covariant t) where
 
 instance Lowerable (T_U Covariant Covariant t) where
 	lower :: t <:.:> u ~> u
-	lower (T_U (x :*: y)) = y
+	lower ~(T_U (x :*: y)) = y
+
+instance Covariant t => Hoistable (T_U Covariant Covariant t) where
+	hoist :: u ~> v -> (t <:.:> u ~> t <:.:> v)
+	hoist f (T_U (x :*: y)) = T_U $ x :*: f y
