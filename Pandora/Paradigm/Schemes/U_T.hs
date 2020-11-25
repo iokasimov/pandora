@@ -6,6 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
+import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
 
@@ -23,3 +24,7 @@ instance Interpreted (U_T ct cu t u) where
 instance Avoidable t => Liftable (U_T Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <.:.> u
 	lift x = U_T $ x :*: empty
+
+instance Lowerable (U_T Covariant Covariant t) where
+	lower :: t <.:.> u ~> u
+	lower (U_T (x :*: y)) = x
