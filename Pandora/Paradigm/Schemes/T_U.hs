@@ -2,7 +2,7 @@ module Pandora.Paradigm.Schemes.T_U where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -28,7 +28,7 @@ instance Avoidable t => Liftable (T_U Covariant Covariant t) where
 
 instance Lowerable (T_U Covariant Covariant t) where
 	lower :: t <:.:> u ~> u
-	lower ~(T_U (x :*: y)) = y
+	lower ~(T_U (_ :*: y)) = y
 
 instance Covariant t => Hoistable (T_U Covariant Covariant t) where
 	hoist :: u ~> v -> (t <:.:> u ~> t <:.:> v)
