@@ -16,8 +16,7 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
-import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
+import Pandora.Paradigm.Schemes (TU (TU), T_, type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
@@ -82,6 +81,6 @@ instance Substructure Right (Construction Wye) where
 	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . maybe End Right
 	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . maybe (Left lst) (Both lst)
 
-data Biforked t a = Top | Leftward (t a) a (Biforked t a) | Rightward a (t a) (Biforked t a)
+data Biforked a = Top | Leftward a | Rightward a
 
-type instance Zipper (Construction Wye) = Construction Wye <:.:> Biforked (Construction Wye)
+type instance Zipper (Construction Wye) = Construction Wye <:.:> (Construction Biforked <:.> T_ Covariant (Maybe <:.> Construction Wye))
