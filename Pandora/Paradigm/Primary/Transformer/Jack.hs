@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Transformer.Jack where
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), comap)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -9,6 +9,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), traverse))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -49,6 +50,10 @@ instance Traversable t => Traversable (Jack t) where
 
 instance Distributive t => Distributive (Jack t) where
 	x >>- f = distribute $ f <$> x
+
+instance (Pointable t, Bindable t) => Bindable (Jack t) where
+	It x >>= f = f x
+	Other x >>= f = Other $ x >>= jack point identity . f
 
 instance Extendable t => Extendable (Jack t) where
 	It x =>> f = It . f $ It x
