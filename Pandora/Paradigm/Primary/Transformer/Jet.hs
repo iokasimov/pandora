@@ -10,10 +10,10 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 data Jet t a = Jet a (Jet t (t a))
 
 instance Covariant t => Covariant (Jet t) where
-	f <$> Jet a as = Jet (f a) (f <$$> as)
+	f <$> Jet x xs = Jet (f x) (f <$$> xs)
 
 instance Traversable t => Traversable (Jet t) where
-	Jet a as ->> f = Jet <$> f a <*> as ->>> f
+	Jet x xs ->> f = Jet <$> f x <*> xs ->>> f
 
 instance (forall u . Avoidable u) => Pointable (Jet t) where
 	point x = Jet x empty
