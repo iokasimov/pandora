@@ -22,6 +22,7 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
@@ -34,6 +35,7 @@ import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (bypass))
+import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -89,9 +91,13 @@ instance Monotonic (Construction Maybe a) a where
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
-forward, backward :: Zipper Stack a -> Maybe (Zipper Stack a)
-forward (Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: pop fs) <$> focus @Head ^. fs
-backward (Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: insert x fs) <$> focus @Head ^. bs
+instance Rotatable Left (Tap (Delta <:.> Stack)) where
+	type Rotational Left (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
+	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: pop fs) <$> focus @Head ^. fs
+
+instance Rotatable Right (Tap (Delta <:.> Stack)) where
+	type Rotational Right (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
+	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: insert x fs) <$> focus @Head ^. bs
 
 type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
 
