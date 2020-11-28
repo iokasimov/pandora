@@ -16,13 +16,14 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Schemes (TU (TU), T_, type (<:.>), type (<:.:>))
+import Pandora.Paradigm.Schemes (TU (TU), T_ (T_), T_U (T_U), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
+import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
@@ -83,4 +84,19 @@ instance Substructure Right (Construction Wye) where
 
 data Biforked a = Top | Leftward a | Rightward a
 
-type instance Zipper (Construction Wye) = Construction Wye <:.:> (Construction Biforked <:.> T_ Covariant (Maybe <:.> Construction Wye))
+type instance Zipper (Construction Wye) = Construction Wye <:.:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))
+
+data Direction a = Up a | Down a
+
+instance Rotatable Up (Construction Wye <:.:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Rotational Up (Construction Wye <:.:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) a
+		= Maybe :. (Construction Wye <:.:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) := a
+	rotation (run . extract -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU (Just rst))) next)))) =
+		Just . T_U $ Construct parent (Both focused rst) :*: TU (TU next)
+	rotation (run . extract -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU Nothing)) next)))) =
+		Just . T_U $ Construct parent (Left focused) :*: TU (TU next)
+	rotation (run . extract -> focused :*: TU (TU (Rightward (Construct (T_ (parent :*: TU (Just lst))) next)))) =
+		Just . T_U $ Construct parent (Both lst focused) :*: TU (TU next)
+	rotation (run . extract -> focused :*: TU (TU (Rightward (Construct (T_ (parent :*: TU Nothing)) next)))) =
+		Just . T_U $ Construct parent (Right focused) :*: TU (TU next)
+	rotation (extract -> T_U (_ :*: TU (TU Top))) = Nothing

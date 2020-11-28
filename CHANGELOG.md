@@ -287,3 +287,4 @@
 * Define inductive `Natural` number datatype in `Object` module
 * Add `cardinality` method to `Set` interface
 * Define new functor schemes: `T_`, `T_U`, `U_T`
+* Define `Zipper` instance for `Nonempty Binary`
