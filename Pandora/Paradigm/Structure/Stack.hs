@@ -93,17 +93,21 @@ type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 instance Rotatable Left (Tap (Delta <:.> Stack)) where
 	type Rotational Left (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: pop fs) <$> focus @Head ^. fs
+	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: insert x fs) <$> focus @Head ^. bs
 
 instance Rotatable Right (Tap (Delta <:.> Stack)) where
 	type Rotational Right (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: insert x fs) <$> focus @Head ^. bs
+	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: pop fs) <$> focus @Head ^. fs
 
 type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
 
-forward', backward' :: Zipper (Nonempty Stack) a -> Maybe (Zipper (Nonempty Stack) a)
-forward' (Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
-backward' (Tap x (TU (bs :^: fs))) = Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
+instance Rotatable Left (Tap (Delta <:.> Construction Maybe)) where
+	type Rotational Left (Tap (Delta <:.> Construction Maybe)) a = Maybe :. Zipper (Construction Maybe) := a
+	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
+
+instance Rotatable Right (Tap (Delta <:.> Construction Maybe)) where
+	type Rotational Right (Tap (Delta <:.> Construction Maybe)) a = Maybe :. Zipper (Construction Maybe) := a
+	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
 
 instance Monotonic (Maybe :. Construction Maybe := a) a where
 	bypass f r (Just x) = bypass f r x

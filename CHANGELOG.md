@@ -288,4 +288,4 @@
 * Add `cardinality` method to `Set` interface
 * Define new functor schemes: `T_`, `T_U`, `U_T`
 * Define `Zipper` instance for `Nonempty Binary`
-* Replace `forward` and `backward` methods with `Rotatable` instances
+* Replace `forward`, `forward'`, `backward`, `backward'` methods with `Rotatable` instances
