@@ -289,3 +289,4 @@
 * Define new functor schemes: `T_`, `T_U`, `U_T`
 * Define `Zipper` instance for `Nonempty Binary`
 * Replace `forward`, `forward'`, `backward`, `backward'` methods with `Rotatable` instances
+* Add `>-<` operator to `Invariant` typeclass
