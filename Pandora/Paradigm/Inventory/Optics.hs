@@ -17,6 +17,8 @@ type (:-.) src tgt = Lens src tgt
 
 type Lens src tgt = src |-> Store tgt
 
+type (:~.) t u a = Lens (t a) (u a)
+
 -- | Lens composition infix operator
 (|>) :: Lens src old -> Lens old new -> Lens src new
 from |> to = \x -> ((<$) x . to) . position . from $ x
