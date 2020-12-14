@@ -18,7 +18,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (bypass))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
 import Pandora.Paradigm.Structure.Stack (Stack)
@@ -29,7 +29,7 @@ instance Focusable Root Rose where
 	type Focusing Root Rose a = Maybe a
 	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap (Construct % empty)
 	focusing (run . extract -> Just rose) = Store $ Just (extract rose)
-		:*: Tag . bypass ((lift . Construct % deconstruct rose) .|.. (!)) (TU Nothing)
+		:*: Tag . reduce ((lift . Construct % deconstruct rose) .|.. (!)) (TU Nothing)
 
 instance Substructure Just Rose where
 	type Substructural Just Rose a = Stack :. Construction Stack := a

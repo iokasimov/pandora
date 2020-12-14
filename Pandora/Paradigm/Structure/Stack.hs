@@ -34,7 +34,7 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (bypass))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation))
 
 -- | Linear data structure that serves as a collection of elements
@@ -87,7 +87,7 @@ instance Insertable (Construction Maybe) where
 	insert x = Construct x . Just
 
 instance Monotonic (Construction Maybe a) a where
-	bypass f r ~(Construct x xs) = f x $ bypass f r xs
+	reduce f r ~(Construct x xs) = f x $ reduce f r xs
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
@@ -110,4 +110,4 @@ instance Rotatable Right (Tap (Delta <:.> Construction Maybe)) where
 	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
 
 instance Monotonic (Maybe <:.> Construction Maybe := a) a where
-	bypass f r ~(TU x) = bypass f r x
+	reduce f r ~(TU x) = reduce f r x

@@ -24,7 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (bypass))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
 data Maybe a = Nothing | Just a
 
@@ -97,12 +97,12 @@ instance Monadic Maybe where
 	wrap = TM . UT . point
 
 instance Monotonic (Maybe a) a where
-	bypass f r (Just x) = f x r
-	bypass _ r Nothing = r
+	reduce f r (Just x) = f x r
+	reduce _ r Nothing = r
 
 instance Monotonic (t a) a => Monotonic (Maybe :. t := a) a where
-	bypass f r (Just x) = bypass f r x
-	bypass _ r Nothing = r
+	reduce f r (Just x) = reduce f r x
+	reduce _ r Nothing = r
 
 type Optional = Adaptable Maybe
 
@@ -116,7 +116,7 @@ instance Pointable u => Pointable (Maybe <.:> u) where
 	point = UT . point . point
 
 instance (Pointable u, Bindable u) => Bindable (Maybe <.:> u) where
-	UT x >>= f = UT $ x >>= bypass ((run . f) .|.. (!)) (point Nothing)
+	UT x >>= f = UT $ x >>= reduce ((run . f) .|.. (!)) (point Nothing)
 
 instance Monad u => Monad (Maybe <.:> u) where
 

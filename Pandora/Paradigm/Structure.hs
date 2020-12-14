@@ -21,7 +21,7 @@ import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
 instance Monotonic a s => Monotonic (s :*: a) s where
-	bypass f r x = bypass f (f (attached x) r) $ extract x
+	reduce f r x = reduce f (f (attached x) r) $ extract x
 
 instance Substructure Left (Product s) where
 	type Substructural Left (Product s) a = s

@@ -24,7 +24,7 @@ import Pandora.Core.Morphism ((!))
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Paradigm.Structure.Ability.Monotonic (bypass)
+import Pandora.Paradigm.Structure.Ability.Monotonic (reduce)
 
 instance Adjoint (Product s) ((->) s) where
 	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)
@@ -33,7 +33,7 @@ instance Adjoint (Product s) ((->) s) where
 	~(s :*: x) |- f = f x s
 
 note :: e -> Maybe ~> Conclusion e
-note x = bypass (\y _ -> Success y) (Failure x)
+note x = reduce (\y _ -> Success y) (Failure x)
 
 hush :: Conclusion e ~> Maybe
 hush = conclusion (Nothing !) Just
