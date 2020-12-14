@@ -109,9 +109,5 @@ instance Rotatable Right (Tap (Delta <:.> Construction Maybe)) where
 	type Rotational Right (Tap (Delta <:.> Construction Maybe)) a = Maybe :. Zipper (Construction Maybe) := a
 	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
 
-instance Monotonic (Maybe :. Construction Maybe := a) a where
-	bypass f r (Just x) = bypass f r x
-	bypass _ r Nothing = r
-
 instance Monotonic (Maybe <:.> Construction Maybe := a) a where
 	bypass f r ~(TU x) = bypass f r x

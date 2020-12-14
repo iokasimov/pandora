@@ -1,5 +1,8 @@
 module Pandora.Paradigm.Primary.Functor.Maybe where
 
+import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Morphism ((!))
+import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -21,6 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (bypass))
 
 data Maybe a = Nothing | Just a
 
@@ -83,10 +87,6 @@ instance Supremum a => Supremum (Maybe a) where
 
 instance Lattice a => Lattice (Maybe a) where
 
-maybe :: b -> (a -> b) -> Maybe a -> b
-maybe x _ Nothing = x
-maybe _ f (Just y) = f y
-
 type instance Schematic Monad Maybe = (<.:>) Maybe
 
 instance Interpreted Maybe where
@@ -95,6 +95,14 @@ instance Interpreted Maybe where
 
 instance Monadic Maybe where
 	wrap = TM . UT . point
+
+instance Monotonic (Maybe a) a where
+	bypass f r (Just x) = f x r
+	bypass _ r Nothing = r
+
+instance Monotonic (t a) a => Monotonic (Maybe :. t := a) a where
+	bypass f r (Just x) = bypass f r x
+	bypass _ r Nothing = r
 
 type Optional = Adaptable Maybe
 
@@ -108,7 +116,7 @@ instance Pointable u => Pointable (Maybe <.:> u) where
 	point = UT . point . point
 
 instance (Pointable u, Bindable u) => Bindable (Maybe <.:> u) where
-	UT x >>= f = UT $ x >>= maybe (point Nothing) (run . f)
+	UT x >>= f = UT $ x >>= bypass ((run . f) .|.. (!)) (point Nothing)
 
 instance Monad u => Monad (Maybe <.:> u) where
 

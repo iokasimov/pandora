@@ -291,3 +291,4 @@
 * Replace `forward`, `forward'`, `backward`, `backward'` methods with `Rotatable` instances
 * Add `>-<` operator to `Invariant` typeclass
 * Add `:~.` type synonymous for polymorphic lens
+* Replace `maybe` with more generic `bypass`
