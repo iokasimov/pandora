@@ -1,8 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Maybe where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism ((!))
-import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -24,7 +22,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
 
 data Maybe a = Nothing | Just a
 
@@ -116,7 +114,7 @@ instance Pointable u => Pointable (Maybe <.:> u) where
 	point = UT . point . point
 
 instance (Pointable u, Bindable u) => Bindable (Maybe <.:> u) where
-	UT x >>= f = UT $ x >>= reduce ((run . f) .|.. (!)) (point Nothing)
+	UT x >>= f = UT $ x >>= resolve (run . f) (point Nothing)
 
 instance Monad u => Monad (Maybe <.:> u) where
 

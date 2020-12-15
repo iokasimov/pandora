@@ -5,7 +5,6 @@ module Pandora.Paradigm.Structure.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%), (!))
-import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -23,7 +22,7 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
@@ -45,7 +44,7 @@ instance (forall a . Chain a) => Insertable Binary where
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
 	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap (Construct % End)
-	focusing (run . extract -> Just x) = Store $ Just (extract x) :*: Tag . lift . reduce ((Construct % deconstruct x) .|.. (!)) (rebalance $ deconstruct x)
+	focusing (run . extract -> Just x) = Store $ Just (extract x) :*: Tag . lift . resolve (Construct % deconstruct x) (rebalance $ deconstruct x)
 
 instance Substructure Left Binary where
 	type Substructural Left Binary a = Binary a
@@ -67,22 +66,22 @@ instance Focusable Root (Construction Wye) where
 	focusing (extract -> Construct x xs) = Store $ x :*: Tag . Construct % xs
 
 instance (forall a . Chain a) => Insertable (Construction Wye) where
-	insert x nonempty = let change = Just . reduce (insert x .|.. (!)) (Construct x End) in
+	insert x nonempty = let change = Just . resolve (insert x) (Construct x End) in
 		x <=> extract nonempty & order (sub @Left %~ change $ nonempty) nonempty (sub @Right %~ change $ nonempty)
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
 	substructure empty_tree@(extract -> Construct _ End) = Store $ Nothing :*: (!) empty_tree
-	substructure (extract -> Construct x (Left lst)) = Store $ Just lst :*: Tag . Construct x . reduce (Left .|.. (!)) End
-	substructure (extract -> Construct x (Right rst)) = Store $ Nothing :*: Tag . Construct x . reduce ((Both % rst) .|.. (!)) (Right rst)
-	substructure (extract -> Construct x (Both lst rst)) = Store $ Just lst :*: Tag . Construct x . reduce ((Both % rst) .|.. (!)) (Right rst)
+	substructure (extract -> Construct x (Left lst)) = Store $ Just lst :*: Tag . Construct x . resolve (Left) End
+	substructure (extract -> Construct x (Right rst)) = Store $ Nothing :*: Tag . Construct x . resolve (Both % rst) (Right rst)
+	substructure (extract -> Construct x (Both lst rst)) = Store $ Just lst :*: Tag . Construct x . resolve (Both % rst) (Right rst)
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) a = Maybe :. Construction Wye := a
 	substructure emtpy_tree@(extract -> Construct _ End) = Store $ Nothing :*: (!) emtpy_tree
-	substructure (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . reduce (Both lst .|.. (!)) (Left lst)
-	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . reduce (Right .|.. (!)) End
-	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . reduce (Both lst .|.. (!)) (Left lst)
+	substructure (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . resolve (Both lst) (Left lst)
+	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . resolve (Right) End
+	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . resolve (Both lst) (Left lst)
 
 data Biforked a = Top | Leftward a | Rightward a
 

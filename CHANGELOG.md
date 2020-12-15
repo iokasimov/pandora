@@ -293,3 +293,4 @@
 * Add `:~.` type synonymous for polymorphic lens
 * Replace `maybe` with more generic `bypass`
 * Rename `bypass` method of `Monotonic` to `reduce`
+* Add `resolve` method of `Monotonic` typeclass
