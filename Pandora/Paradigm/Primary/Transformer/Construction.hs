@@ -22,6 +22,8 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Controlflow (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
+infixr 7 .-+
+
 data Construction t a = Construct a (t :. Construction t := a)
 
 instance Covariant t => Covariant (Construction t) where
@@ -69,8 +71,9 @@ instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t) => Mono
 deconstruct :: Construction t a -> (t :. Construction t) a
 deconstruct ~(Construct _ xs) = xs
 
-iterate :: Covariant t => (a |-> t) -> (a |-> Construction t)
-iterate f x = Construct x $ iterate f <$> f x
+-- Generate a construction from seed using effectful computation
+(.-+) :: Covariant t => a |-> t -> a |-> Construction t
+f .-+ x = Construct x $ (f .-+) <$> f x
 
 section :: Comonad t => t ~> Construction t
 section xs = Construct (extract xs) $ xs =>> section

@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, iterate)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
@@ -31,7 +31,8 @@ instance Rotatable Right (Tap (Delta <:.> Stream)) where
 		$ Construct x (point bs) :^: extract (deconstruct fs)
 
 instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stream)) where
-	z =>> f = let move rtt = extract . deconstruct $ iterate (point . rtt) z
+	-- z =>> f = let move rtt = extract . deconstruct $ iterate (point . rtt) z
+	z =>> f = let move rtt = extract . deconstruct $ point . rtt .-+ z
 		in f <$> Tap z (TU $ move (rotate @Left) :^: move (rotate @Right))
 
 repeat :: a -> Stream a

@@ -294,3 +294,4 @@
 * Replace `maybe` with more generic `bypass`
 * Rename `bypass` method of `Monotonic` to `reduce`
 * Add `resolve` method of `Monotonic` typeclass
+* Rename `iterate` method of `Construction` to `.-+`
