@@ -71,16 +71,16 @@ instance (forall a . Chain a) => Insertable (Construction Wye) where
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
-	substructure empty_tree@(extract -> Construct _ End) = Store $ Nothing :*: (!) empty_tree
-	substructure (extract -> Construct x (Left lst)) = Store $ Just lst :*: Tag . Construct x . resolve (Left) End
+	substructure empty_tree@(extract -> Construct _ End) = Store $ Nothing :*: (empty_tree !)
+	substructure (extract -> Construct x (Left lst)) = Store $ Just lst :*: Tag . Construct x . resolve Left End
 	substructure (extract -> Construct x (Right rst)) = Store $ Nothing :*: Tag . Construct x . resolve (Both % rst) (Right rst)
 	substructure (extract -> Construct x (Both lst rst)) = Store $ Just lst :*: Tag . Construct x . resolve (Both % rst) (Right rst)
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) a = Maybe :. Construction Wye := a
-	substructure emtpy_tree@(extract -> Construct _ End) = Store $ Nothing :*: (!) emtpy_tree
+	substructure emtpy_tree@(extract -> Construct _ End) = Store $ Nothing :*: (emtpy_tree !)
 	substructure (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . resolve (Both lst) (Left lst)
-	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . resolve (Right) End
+	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . resolve Right End
 	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . resolve (Both lst) (Left lst)
 
 data Biforked a = Top | Leftward a | Rightward a

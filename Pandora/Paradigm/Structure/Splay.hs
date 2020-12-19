@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Structure.Splay where
 
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -10,7 +11,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Paradigm.Primary.Functor (left, right)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
+import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag), type (:#))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Inventory.Optics ((%~))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
@@ -21,23 +22,30 @@ data Splay a = Zig a | Zag a
 
 instance Rotatable (Left Zig) (Construction Wye) where
 	type Rotational (Left Zig) (Construction Wye) a = Maybe (Construction Wye a)
+	rotation :: forall a . Left Zig :# Construction Wye a -> Maybe :. Construction Wye := a
 	rotation (Tag (Construct parent st)) = Construct % subtree <$> found where
 
-		subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
+		found :: Maybe a
 		found = extract <$> left st
-		a = deconstruct <$> left st >>= left
-		b = deconstruct <$> left st >>= right
-		c = right st
+
+		subtree :: Wye :. Construction Wye := a
+		subtree = maybe_subtree (deconstruct <$> left st >>= left)
+			. Just . Construct parent $ maybe_subtree
+				(deconstruct <$> left st >>= right) (right st)
 
 instance Rotatable (Right Zig) (Construction Wye) where
 	type Rotational (Right Zig) (Construction Wye) a = Maybe (Construction Wye a)
+	rotation :: forall a . Right Zig :# Construction Wye a -> Maybe :. Construction Wye := a
 	rotation (Tag (Construct parent st)) = Construct % subtree <$> found where
 
+		found :: Maybe a
 		found = extract <$> right st
-		subtree = maybe_subtree a . Just . Construct parent $ maybe_subtree b c
-		a = left st
-		b = deconstruct <$> right st >>= left
-		c = deconstruct <$> right st >>= right
+
+		subtree :: Wye :. Construction Wye := a
+		subtree = maybe_subtree (left st)
+			. Just . Construct parent $ maybe_subtree
+				(deconstruct <$> right st >>= left)
+				(deconstruct <$> right st >>= right)
 
 instance Rotatable (Left (Zig Zig)) (Construction Wye) where
 	type Rotational (Left (Zig Zig)) (Construction Wye) a = Maybe (Construction Wye a)

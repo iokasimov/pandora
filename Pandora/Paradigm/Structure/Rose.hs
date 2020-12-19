@@ -43,4 +43,4 @@ instance Focusable Root (Construction Stack) where
 
 instance Substructure Just (Construction Stack) where
 	type Substructural Just (Construction Stack) a = Stack :. Construction Stack := a
-	substructure (Tag (Construct x xs)) = Store $ xs :*: Tag . Construct x
+	substructure (extract -> Construct x xs) = Store $ xs :*: Tag . Construct x
