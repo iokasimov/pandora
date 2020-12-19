@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right, this, that, here, there) where
+module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right, this, that, here, there, branches) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
@@ -69,3 +69,9 @@ there :: Wedge e ~> Maybe
 there Nowhere = Nothing
 there (Here _) = Nothing
 there (There x) = Just x
+
+branches :: Maybe a -> Maybe a -> Wye a
+branches (Just x) (Just y) = Both x y
+branches Nothing (Just y) = Right y
+branches (Just x) Nothing = Left x
+branches Nothing Nothing = End

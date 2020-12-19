@@ -298,3 +298,4 @@
 * Define `via` method to use transformer as wrappers
 
 # 0.3.4
+* Define `branches` to create `Wye a` from two `Maybe a`
