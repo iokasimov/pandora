@@ -296,3 +296,5 @@
 * Add `resolve` method of `Monotonic` typeclass
 * Rename `iterate` method of `Construction` to `.-+`
 * Define `via` method to use transformer as wrappers
+
+# 0.3.4
