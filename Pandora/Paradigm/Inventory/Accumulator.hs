@@ -6,6 +6,7 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -49,6 +50,9 @@ instance Covariant u => Covariant ((:*:) e <.:> u) where
 instance (Semigroup e, Applicative u) => Applicative ((:*:) e <.:> u) where
 	UT f <*> UT x = UT $ k <$> f <*> x where
 		k ~(u :*: g) ~(v :*: y) = u + v :*: g y
+
+instance (Semigroup e, Alternative u) => Alternative ((:*:) e <.:> u) where
+	UT x <+> UT y = UT $ x <+> y
 
 instance (Pointable u, Monoid e) => Pointable ((:*:) e <.:> u) where
 	point = UT . point . (zero :*:)
