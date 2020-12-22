@@ -5,6 +5,9 @@ import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 
 infixl 4 <*>, <*, *>
+infixl 3 <**>
+infixl 2 <***>
+infixl 1 <****>
 
 {- |
 > When providing a new instance, you should ensure it satisfies the three laws:

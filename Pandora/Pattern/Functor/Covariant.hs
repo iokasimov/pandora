@@ -5,6 +5,9 @@ import Pandora.Core.Morphism (fix, (!), (%))
 import Pandora.Pattern.Category (Category ((.)))
 
 infixl 4 <$>, <$, $>
+infixl 3 <$$>
+infixl 2 <$$$>
+infixl 1 <$$$$>
 
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
