@@ -68,7 +68,7 @@ instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant t) =
 instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t) => Monoid (Construction t a) where
 	zero = Construct zero zero
 
-deconstruct :: Construction t a -> (t :. Construction t) a
+deconstruct :: Construction t a -> t :. Construction t := a
 deconstruct ~(Construct _ xs) = xs
 
 -- Generate a construction from seed using effectful computation

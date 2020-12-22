@@ -10,6 +10,7 @@ import Pandora.Paradigm.Inventory.Equipment as Exports
 import Pandora.Paradigm.Inventory.Environment as Exports
 import Pandora.Paradigm.Inventory.Accumulator as Exports
 
+import Pandora.Core.Functor (type (~>))
 import Pandora.Core.Morphism ((!), (%))
 import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor (Adjoint ((-|), (|-)), extract, (<->))
@@ -31,5 +32,5 @@ instance Adjoint (Equipment e) (Environment e) where
 	x -| f = Environment $ x -| f . Equipment
 	x |- g = run x |- run . g
 
-zoom :: Stateful bg t => Lens bg ls -> State ls a -> t a
-zoom lens (State f) = adapt . State $ (\(Store (p :*: g)) -> (g <-> identity) . f $ p) . lens
+zoom :: Stateful bg t => Lens bg ls -> State ls ~> t
+zoom lens lesser = adapt . State $ (\(Store (p :*: g)) -> (g <-> identity) . run lesser $ p) . lens
