@@ -13,23 +13,23 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 
 newtype T_U ct cu t u a = T_U (t a :*: u a)
 
-type (<:.:>) = T_U Covariant Covariant
-type (>:.:>) = T_U Contravariant Covariant
-type (<:.:<) = T_U Covariant Contravariant
-type (>:.:<) = T_U Contravariant Contravariant
+type (<:*:>) = T_U Covariant Covariant
+type (>:*:>) = T_U Contravariant Covariant
+type (<:*:<) = T_U Covariant Contravariant
+type (>:*:<) = T_U Contravariant Contravariant
 
 instance Interpreted (T_U ct cu t u) where
 	type Primary (T_U ct cu t u) a = t a :*: u a
 	run ~(T_U x) = x
 
 instance Avoidable t => Liftable (T_U Covariant Covariant t) where
-	lift :: Covariant u => u ~> t <:.:> u
+	lift :: Covariant u => u ~> t <:*:> u
 	lift x = T_U $ empty :*: x
 
 instance Lowerable (T_U Covariant Covariant t) where
-	lower :: t <:.:> u ~> u
+	lower :: t <:*:> u ~> u
 	lower ~(T_U (_ :*: y)) = y
 
 instance Covariant t => Hoistable (T_U Covariant Covariant t) where
-	hoist :: u ~> v -> (t <:.:> u ~> t <:.:> v)
+	hoist :: u ~> v -> (t <:*:> u ~> t <:*:> v)
 	hoist f (T_U (x :*: y)) = T_U $ x :*: f y
