@@ -86,7 +86,7 @@ instance Focusable Head (Construction Maybe) where
 instance Insertable (Construction Maybe) where
 	insert x = Construct x . Just
 
-instance Monotonic (Construction Maybe a) a where
+instance Monotonic a (Construction Maybe a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
@@ -109,5 +109,5 @@ instance Rotatable Right (Tap (Delta <:.> Construction Maybe)) where
 	type Rotational Right (Tap (Delta <:.> Construction Maybe)) a = Maybe :. Zipper (Construction Maybe) := a
 	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
 
-instance Monotonic (Maybe <:.> Construction Maybe := a) a where
+instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r ~(TU x) = reduce f r x

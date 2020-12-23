@@ -95,11 +95,11 @@ instance Interpreted Maybe where
 instance Monadic Maybe where
 	wrap = TM . UT . point
 
-instance Monotonic (Maybe a) a where
+instance Monotonic a (Maybe a) where
 	reduce f r (Just x) = f x r
 	reduce _ r Nothing = r
 
-instance Monotonic (t a) a => Monotonic (Maybe :. t := a) a where
+instance Monotonic a (t a) => Monotonic a (Maybe :. t := a) where
 	reduce f r (Just x) = reduce f r x
 	reduce _ r Nothing = r
 

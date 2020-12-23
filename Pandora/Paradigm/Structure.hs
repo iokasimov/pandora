@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
-instance Monotonic a s => Monotonic (s :*: a) s where
+instance Monotonic s a => Monotonic s (s :*: a) where
 	reduce f r x = reduce f (f (attached x) r) $ extract x
 
 instance Substructure Left (Product s) where

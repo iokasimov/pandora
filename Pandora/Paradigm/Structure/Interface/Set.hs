@@ -15,10 +15,10 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce), find)
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Controlflow.Effect (run)
 
-member :: forall e a . (Setoid a, Monotonic e a) => a -> e -> Boolean
-member x = reduce @(Maybe a) @a (\_ _ -> True) False . find (equate x)
+member :: forall e a . (Setoid a, Monotonic a e) => a -> e -> Boolean
+member x = reduce @a @(Maybe a) (\_ _ -> True) False . find (equate x)
 
-subset :: (Monotonic (t a) a, Traversable t, Setoid a, Setoid (t a)) => t a -> t a -> Boolean
+subset :: (Monotonic a (t a), Traversable t, Setoid a, Setoid (t a)) => t a -> t a -> Boolean
 subset ss s = Nothing /= (ss ->> find % s . equate)
 
 cardinality :: Traversable t => t a -> Natural
