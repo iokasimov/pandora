@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Core.Morphism ((!), (%))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
@@ -37,6 +37,7 @@ instance Monad (Environment e) where
 instance Interpreted (Environment e) where
 	type Primary (Environment e) a = (->) e a
 	run ~(Environment x) = x
+	unite = Environment
 
 type instance Schematic Monad (Environment e) = (<:.>) ((->) e)
 

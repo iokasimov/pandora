@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Backwards t a = Backwards (t a)
 
@@ -40,6 +40,7 @@ instance Contravariant t => Contravariant (Backwards t) where
 instance Interpreted (Backwards t) where
 	type Primary (Backwards t) a = t a
 	run ~(Backwards x) = x
+	unite = Backwards
 
 instance Liftable Backwards where
 	lift = Backwards

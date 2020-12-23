@@ -9,7 +9,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype T_U ct cu t u a = T_U (t a :*: u a)
 
@@ -21,6 +21,7 @@ type (>:*:<) = T_U Contravariant Contravariant
 instance Interpreted (T_U ct cu t u) where
 	type Primary (T_U ct cu t u) a = t a :*: u a
 	run ~(T_U x) = x
+	unite = T_U
 
 instance Avoidable t => Liftable (T_U Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <:*:> u

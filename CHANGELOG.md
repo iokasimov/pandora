@@ -300,3 +300,4 @@
 # 0.3.4
 * Define `branches` to create `Wye a` from two `Maybe a`
 * Rename `<:.:>`,`>:.:>`,`<:.:<`,`>:.:<` to `<:*:>`,`>:*:>`,`<:*:<`,`>:*:<`
+* Add `unite` method to `Interpreted` typeclass

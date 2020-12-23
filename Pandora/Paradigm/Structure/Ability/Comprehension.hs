@@ -14,13 +14,14 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
 
 instance Interpreted (Comprehension t) where
 	type Primary (Comprehension t) a = t <:.> Construction t := a
 	run ~(Comprehension x) = x
+	unite = Comprehension
 
 instance Covariant (t <:.> Construction t) => Covariant (Comprehension t) where
 	f <$> Comprehension x = Comprehension $ f <$> x

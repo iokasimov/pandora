@@ -18,7 +18,7 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Equal, Greater))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
@@ -90,6 +90,7 @@ type instance Schematic Monad Maybe = (<.:>) Maybe
 instance Interpreted Maybe where
 	type Primary Maybe a = Maybe a
 	run = identity
+	unite = identity
 
 instance Monadic Maybe where
 	wrap = TM . UT . point

@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype TUT ct ct' cu t t' u a = TUT (t :. u :. t' := a)
 
@@ -24,6 +24,7 @@ type (>:>.<:<) = TUT Contravariant Contravariant Contravariant
 instance Interpreted (TUT ct ct' cu t t' u) where
 	type Primary (TUT ct ct' cu t t' u) a = t :. u :. t' := a
 	run ~(TUT x) = x
+	unite = TUT
 
 instance (Adjoint t' t, Distributive t) => Liftable (t <:<.>:> t') where
 	lift :: Covariant u => u ~> t <:<.>:> t' := u

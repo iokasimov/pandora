@@ -16,7 +16,7 @@ import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run), Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), delta)
@@ -40,6 +40,7 @@ instance Monad (State s) where
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
 	run ~(State x) = x
+	unite = State
 
 type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 

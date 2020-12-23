@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Equipment e a = Equipment (e :*: a)
@@ -27,6 +27,7 @@ instance Extendable (Equipment e) where
 instance Interpreted (Equipment e) where
 	type Primary (Equipment e) a = e :*: a
 	run ~(Equipment x) = x
+	unite = Equipment
 
 type instance Schematic Comonad (Equipment e) = (<:.>) ((:*:) e)
 

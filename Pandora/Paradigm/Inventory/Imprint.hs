@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable)
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
@@ -33,6 +33,7 @@ instance Semigroup e => Extendable (Imprint e) where
 instance Interpreted (Imprint e) where
 	type Primary (Imprint e) a = (->) e a
 	run ~(Imprint x) = x
+	unite = Imprint
 
 type instance Schematic Comonad (Imprint e) = (<.:>) ((->) e)
 

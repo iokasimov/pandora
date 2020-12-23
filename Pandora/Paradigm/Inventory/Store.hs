@@ -7,7 +7,7 @@ import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>), (<$$$>)), Extractable (extract), Extendable ((=>>), (<<=$)), Comonad, (-|), (|-))
 import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), attached)
-import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run), Schematic, Comonadic (bring), (:<) (TC))
+import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run, unite), Schematic, Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 
 newtype Store p a = Store ((:*:) p :. (->) p := a)
@@ -26,6 +26,7 @@ instance Comonad (Store p) where
 instance Interpreted (Store p) where
 	type Primary (Store p) a = (:*:) p :. (->) p := a
 	run ~(Store x) = x
+	unite = Store
 
 type instance Schematic Comonad (Store p) = (:*:) p <:<.>:> (->) p
 

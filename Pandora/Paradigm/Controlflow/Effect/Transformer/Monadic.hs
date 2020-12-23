@@ -17,7 +17,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
 class Interpreted t => Monadic t where
 	{-# MINIMAL wrap #-}
@@ -67,3 +67,4 @@ instance Hoistable (Schematic Monad t) => Hoistable ((:>) t) where
 instance (Interpreted (Schematic Monad t u)) => Interpreted (t :> u) where
 	type Primary (t :> u) a = Primary (Schematic Monad t u) a
 	run ~(TM x) = run x
+	unite = TM . unite

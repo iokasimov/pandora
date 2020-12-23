@@ -16,7 +16,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
 class Interpreted t => Comonadic t where
 	{-# MINIMAL bring #-}
@@ -63,3 +63,4 @@ instance Hoistable (Schematic Comonad t) => Hoistable ((:<) t) where
 instance (Interpreted (Schematic Comonad t u)) => Interpreted (t :< u) where
 	type Primary (t :< u) a = Primary (Schematic Comonad t u) a
 	run ~(TC x) = run x
+	unite = TC . unite
