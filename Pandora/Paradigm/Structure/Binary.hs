@@ -87,7 +87,7 @@ data Biforked a = Top | Leftward a | Rightward a
 
 type instance Zipper (Construction Wye) = Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))
 
-data Direction a = Up a | Down a
+data Vertical a = Up a | Down a
 
 instance Rotatable Up (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
 	type Rotational Up (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) a

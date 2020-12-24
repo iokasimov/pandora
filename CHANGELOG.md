@@ -301,3 +301,4 @@
 * Define `branches` to create `Wye a` from two `Maybe a`
 * Rename `<:.:>`,`>:.:>`,`<:.:<`,`>:.:<` to `<:*:>`,`>:*:>`,`<:*:<`,`>:*:<`
 * Add `unite` method to `Interpreted` typeclass
+* Rename `Direction` to `Vertical`
