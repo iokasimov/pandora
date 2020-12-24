@@ -7,6 +7,8 @@ import Pandora.Pattern.Category as Exports
 
 import Pandora.Core.Functor (type (:.), type (:=))
 
+infixr 7 .|.., .|..., .|....
+
 (.|..) :: (Category v, Covariant (v a))
 	=> v c d -> v a :. v b := c -> v a :. v b := d
 f .|.. g = (f .) <$> g
