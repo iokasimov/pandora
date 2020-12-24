@@ -9,6 +9,11 @@ infixl 3 <$$>
 infixl 2 <$$$>
 infixl 1 <$$$$>
 
+infixl 1 <&>
+infixl 2 <&&>
+infixl 3 <&&&>
+infixl 4 <&&&&>
+
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
 > * Identity morphism: comap identity ≡ identity
