@@ -11,7 +11,7 @@ import Pandora.Paradigm.Structure.Stack as Exports
 import Pandora.Paradigm.Structure.Stream as Exports
 
 import Pandora.Pattern (($), (.), extract)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory (Store (Store), (^.), (.~))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
@@ -38,6 +38,14 @@ instance Substructure Left Delta where
 instance Substructure Right Delta where
 	type Substructural Right Delta a = a
 	substructure (extract -> l :^: r) = Store $ r :*: Tag . (l :^:)
+
+instance Substructure Left (Delta <:.> t) where
+	type Substructural Left (Delta <:.> t) a = t a
+	substructure (run . extract -> l :^: r) = Store $ r :*: Tag . unite . (l :^:)
+
+instance Substructure Right (Delta <:.> t) where
+	type Substructural Right (Delta <:.> t) a = t a
+	substructure (run . extract -> l :^: r) = Store $ l :*: Tag . unite . (:^: r)
 
 instance Substructure Left t => Substructure Left (Tap (t <:.> u)) where
 	type Substructural Left (Tap (t <:.> u)) a = Substructural Left t (u a)
