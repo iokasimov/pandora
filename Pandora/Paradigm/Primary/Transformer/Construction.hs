@@ -40,7 +40,7 @@ instance Applicative t => Applicative (Construction t) where
 		$ deconstruct f <**> deconstruct x
 
 instance Traversable t => Traversable (Construction t) where
-	x ->> f = Construct <$> f (extract x) <*> deconstruct x ->>> f
+	x ->> f = Construct <$> f (extract x) <*> (deconstruct x ->>> f)
 
 instance Alternative t => Bindable (Construction t) where
 	x >>= f = Construct (extract . f $ extract x)
@@ -94,4 +94,4 @@ instance (Covariant u, Avoidable t) => Avoidable (t <:.> Construction u) where
 	empty = TU empty
 
 instance (Traversable u, Traversable t) => Traversable (t <:.> Construction u) where
-	g ->> f = TU <$> run g ->>> f
+	g ->> f = TU <$> (run g ->>> f)

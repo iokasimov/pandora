@@ -81,6 +81,6 @@ replace s = adapt . State $ \_ -> s :*: ()
 type Memorable s t = (Pointable t, Applicative t, Stateful s t)
 
 fold :: (Traversable t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = struct ->> modify . op *> current
+fold op struct = (struct ->> modify . op) *> current
 
 type Decisive t = (Pointable t, Avoidable t, Alternative t, Applicative t)

@@ -30,7 +30,7 @@ instance (Avoidable t, Pointable t) => Pointable (Comprehension t) where
 	point = Comprehension . TU . point . Construct % empty
 
 instance Traversable (t <:.> Construction t) => Traversable (Comprehension t) where
-	Comprehension x ->> f = Comprehension <$> x ->> f
+	Comprehension x ->> f = Comprehension <$> (x ->> f)
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t, Pointable t, Avoidable t) => Applicative (Comprehension t) where
 	fs <*> xs = fs >>= \f -> xs >>= Comprehension . TU . point . point . f

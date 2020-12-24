@@ -17,7 +17,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 > * Preserving apply: f (x <*> y) ≡ f x <*> f y
 -}
 
-infixl 5 ->>, ->>>, ->>>>, ->>>>>
+infixl 3 ->>, ->>>, ->>>>, ->>>>>
 
 class Covariant t => Traversable t where
 	{-# MINIMAL (->>) #-}

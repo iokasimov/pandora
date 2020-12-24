@@ -45,7 +45,7 @@ instance Avoidable (Schematic Monad t u) => Avoidable (t :> u) where
 	empty = TM empty
 
 instance Traversable (Schematic Monad t u) => Traversable (t :> u) where
-	TM x ->> f = TM <$> x ->> f
+	TM x ->> f = TM <$> (x ->> f)
 
 instance Distributive (Schematic Monad t u) => Distributive (t :> u) where
 	x >>- f = TM $ x >>- tm . f

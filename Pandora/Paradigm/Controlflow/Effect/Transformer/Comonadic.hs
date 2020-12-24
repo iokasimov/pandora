@@ -41,7 +41,7 @@ instance Alternative (Schematic Comonad t u) => Alternative (t :< u) where
 	TC x <+> TC y = TC $ x <+> y
 
 instance Traversable (Schematic Comonad t u) => Traversable (t :< u) where
-	TC x ->> f = TC <$> x ->> f
+	TC x ->> f = TC <$> (x ->> f)
 
 instance Distributive (Schematic Comonad t u) => Distributive (t :< u) where
 	x >>- f = TC $ x >>- tc . f

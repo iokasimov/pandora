@@ -47,7 +47,7 @@ instance Applicative t => Applicative (Jack t) where
 
 instance Traversable t => Traversable (Jack t) where
 	It x ->> f = It <$> f x
-	Other y ->> f = Other <$> y ->> f
+	Other y ->> f = Other <$> (y ->> f)
 
 instance Distributive t => Distributive (Jack t) where
 	x >>- f = distribute $ f <$> x
