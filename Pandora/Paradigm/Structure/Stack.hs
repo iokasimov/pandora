@@ -16,7 +16,7 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Primary.Object.Boolean ((?))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
@@ -31,6 +31,7 @@ import Pandora.Paradigm.Inventory.Optics ((^.))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
+import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
@@ -59,6 +60,9 @@ instance Focusable Head Stack where
 
 instance Insertable Stack where
 	insert x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
+
+instance Nullable Stack where
+	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct

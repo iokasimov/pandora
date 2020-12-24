@@ -302,3 +302,4 @@
 * Rename `<:.:>`,`>:.:>`,`<:.:<`,`>:.:<` to `<:*:>`,`>:*:>`,`<:*:<`,`>:*:<`
 * Add `unite` method to `Interpreted` typeclass
 * Rename `Direction` to `Vertical`
+* Define `Nullable` typeclass for structures which can be null
