@@ -1,17 +1,21 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (..)) where
+module Pandora.Paradigm.Controlflow.Effect.Adaptable where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Extractable (Extractable)
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower), Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, wrap, bring, (:>), (:<))
+
+infixl 1 >>=:>
+infixr 1 <:=<<
 
 class Adaptable t u where
 	{-# MINIMAL adapt #-}
@@ -488,3 +492,9 @@ instance
 	) => Adaptable (t :> u :> v :> w :> x :> y :> z :> f :> h)
 		(t :> u :> v :> w :> x :> y :> z :> f :> h') where
 	adapt = hoist (hoist (hoist (hoist (hoist (hoist (hoist adapt))))))
+
+(>>=:>) :: (Adaptable t u, Bindable u) => u a -> (a -> t b) -> u b
+x >>=:> f = x >>= adapt . f
+
+(<:=<<) :: (Adaptable t u, Bindable u) => (a -> t b) -> u a -> u b
+f <:=<< x = x >>= adapt . f
