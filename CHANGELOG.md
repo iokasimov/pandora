@@ -304,3 +304,4 @@
 * Rename `Direction` to `Vertical`
 * Define `Nullable` typeclass for structures which can be null
 * Define `>>=:>` and `<:=<<` methods to use `>>=` with `adapt`
+* Define `not` method for `Predicate` inversion

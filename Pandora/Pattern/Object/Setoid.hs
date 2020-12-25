@@ -10,7 +10,7 @@ infix 4 ==, /=
 > * Reflexivity: x == x ≡ True
 > * Symmetry: x == y ≡ y == x
 > * Transitivity: x == y * y == z ≡ True ===> x == z ≡ True
-> * Negation: x /= y ≡ not (x == y)
+> * Negation: x /= y ≡ invert (x == y)
 -}
 
 class Setoid a where
