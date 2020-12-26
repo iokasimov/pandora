@@ -8,8 +8,7 @@ import Pandora.Pattern.Functor.Determinable (Determinable (determine))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True), (?))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool, (?))
 
 newtype Predicate a = Predicate (a -> Boolean)
 
@@ -26,4 +25,4 @@ satisfy :: (Pointable t, Avoidable t) => Predicate a -> a -> t a
 satisfy (Predicate p) x = p x ? point x $ empty
 
 not :: Predicate ~> Predicate
-not (Predicate p) = Predicate $ invert . p
+not (Predicate p) = Predicate $ bool True False . p

@@ -305,3 +305,4 @@
 * Define `Nullable` typeclass for structures which can be null
 * Define `>>=:>` and `<:=<<` methods to use `>>=` with `adapt`
 * Define `not` method for `Predicate` inversion
+* Make `Monoid` a superclass for `Group`

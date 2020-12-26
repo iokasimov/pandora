@@ -32,7 +32,6 @@ instance Rotatable Right (Tap (Delta <:.> Stream)) where
 		$ Construct x (point bs) :^: extract (deconstruct fs)
 
 instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stream)) where
-	-- z =>> f = let move rtt = extract . deconstruct $ iterate (point . rtt) z
 	z =>> f = let move rtt = extract . deconstruct $ point . rtt .-+ z
 		in f <$> Tap z (TU $ move (rotate @Left) :^: move (rotate @Right))
 

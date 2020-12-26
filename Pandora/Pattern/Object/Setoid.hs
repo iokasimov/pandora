@@ -1,7 +1,7 @@
 module Pandora.Pattern.Object.Setoid (Setoid (..)) where
 
-import Pandora.Pattern.Object.Group (invert)
-import Pandora.Paradigm.Primary.Object.Boolean (Boolean)
+import Pandora.Pattern.Category (($))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False, True), bool)
 
 infix 4 ==, /=
 
@@ -18,4 +18,5 @@ class Setoid a where
 	(==) :: a -> a -> Boolean
 
 	(/=) :: a -> a -> Boolean
-	(/=) x y = invert (x == y)
+	-- (/=) x y = (x == y ? False) True
+	(/=) x y = bool True False $ x == y

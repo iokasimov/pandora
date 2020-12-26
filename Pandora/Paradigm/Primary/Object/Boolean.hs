@@ -4,7 +4,6 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
-import Pandora.Pattern.Object.Group (Group (invert))
 
 infixr 1 ?
 
@@ -31,7 +30,3 @@ instance Monoid Boolean where
 
 instance Quasiring Boolean where
 	one = True
-
-instance Group Boolean where
-	invert False = True
-	invert True = False

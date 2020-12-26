@@ -1,13 +1,13 @@
 module Pandora.Pattern.Object.Group (Group (..)) where
 
-import Pandora.Pattern.Object.Quasiring (Quasiring)
+import Pandora.Pattern.Object.Monoid (Monoid)
 
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
-> * Right absorption: x * invert x ≡ zero
-> * Left absorption: invert x * x ≡ zero
+> * Right absorption: x + invert x ≡ zero
+> * Left absorption: invert x + x ≡ zero
 -}
 
-class Quasiring a => Group a where
+class Monoid a => Group a where
 	{-# MINIMAL invert #-}
 	invert :: a -> a

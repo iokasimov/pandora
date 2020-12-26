@@ -114,4 +114,4 @@ instance Rotatable Right (Tap (Delta <:.> Construction Maybe)) where
 	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
-	reduce f r ~(TU x) = reduce f r x
+	reduce f r = reduce f r . run
