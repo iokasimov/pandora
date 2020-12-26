@@ -307,3 +307,4 @@
 * Define `not` method for `Predicate` inversion
 * Make `Monoid` a superclass for `Group`
 * Define `-` method in `Group` typeclass
+* Rename `via` to `-=:` in Interpreted module

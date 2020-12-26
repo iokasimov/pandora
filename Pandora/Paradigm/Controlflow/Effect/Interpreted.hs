@@ -12,6 +12,6 @@ class Interpreted t where
 	run :: t a -> Primary t a
 	unite :: Primary t a -> t a
 
-via :: (Liftable t, Interpreted (t u), Interpreted (t v), Covariant u)
+(-=:) :: (Liftable t, Interpreted (t u), Interpreted (t v), Covariant u)
 	=> (t u a -> t v b) -> u a -> Primary (t v) b
-via f = run . f . lift
+(-=:) f = run . f . lift
