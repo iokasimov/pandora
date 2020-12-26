@@ -4,6 +4,8 @@ import Pandora.Pattern.Object.Setoid (Setoid)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering, order)
 
+infixl 4 <=>, <, <=, >=, >
+
 {- |
 > When providing a new instance, you should ensure it satisfies the three laws:
 > * Reflexivity: x <= x ≡ True

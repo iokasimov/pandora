@@ -3,6 +3,8 @@ module Pandora.Pattern.Object.Group (Group (..)) where
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid)
 
+infixl 6 -
+
 {- |
 > When providing a new instance, you should ensure it satisfies the two laws:
 > * Right absorption: x + invert x ≡ zero
