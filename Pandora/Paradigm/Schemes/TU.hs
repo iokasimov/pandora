@@ -9,6 +9,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
@@ -43,6 +44,9 @@ instance (Pointable t, Pointable u) => Pointable (t <:.> u) where
 
 instance (Extractable t, Extractable u) => Extractable (t <:.> u) where
 	extract = extract . extract . run
+
+instance (Traversable t, Traversable u) => Traversable (t <:.> u) where
+	x ->> f = TU <$> (run x ->>> f)
 
 instance Pointable t => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <:.> u

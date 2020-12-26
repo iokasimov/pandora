@@ -19,8 +19,6 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Controlflow (run)
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 infixr 7 .-+
 
@@ -77,6 +75,3 @@ f .-+ x = Construct x $ (f .-+) <$> f x
 
 section :: Comonad t => t ~> Construction t
 section xs = Construct (extract xs) $ xs =>> section
-
-instance (Traversable u, Traversable t) => Traversable (t <:.> Construction u) where
-	g ->> f = TU <$> (run g ->>> f)

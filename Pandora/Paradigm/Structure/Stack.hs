@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Bindable ((>>=))
+import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -23,7 +24,7 @@ import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
@@ -36,7 +37,7 @@ import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation))
+import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -94,6 +95,10 @@ instance Monotonic a (Construction Maybe a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
+
+instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stack)) where
+	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
+		in f <$> Tap z (TU $ move (rotate @Left) :^: move (rotate @Right))
 
 instance Rotatable Left (Tap (Delta <:.> Stack)) where
 	type Rotational Left (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
