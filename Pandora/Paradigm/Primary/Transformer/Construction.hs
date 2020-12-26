@@ -78,20 +78,5 @@ f .-+ x = Construct x $ (f .-+) <$> f x
 section :: Comonad t => t ~> Construction t
 section xs = Construct (extract xs) $ xs =>> section
 
-instance (Covariant u, Covariant t) => Covariant (t <:.> Construction u) where
-	f <$> g = TU $ f <$$> run g
-
-instance (Avoidable u, Pointable t) => Pointable (t <:.> Construction u) where
-	point x = TU . point . Construct x $ empty
-
-instance (Applicative u, Applicative t) => Applicative (t <:.> Construction u) where
-	f <*> x = TU $ run f <**> run x
-
-instance (Covariant u, Alternative t) => Alternative (t <:.> Construction u) where
-	x <+> y = TU $ run x <+> run y
-
-instance (Covariant u, Avoidable t) => Avoidable (t <:.> Construction u) where
-	empty = TU empty
-
 instance (Traversable u, Traversable t) => Traversable (t <:.> Construction u) where
 	g ->> f = TU <$> (run g ->>> f)

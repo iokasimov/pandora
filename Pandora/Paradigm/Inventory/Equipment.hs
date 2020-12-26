@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
 
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -35,12 +35,6 @@ instance Comonadic (Equipment e) where
 	bring (TC (TU x)) = Equipment $ extract <$> x
 
 type Equipped e t = Adaptable t (Equipment e)
-
-instance Covariant u => Covariant ((:*:) e <:.> u) where
-	f <$> TU x = TU $ f <$$> x
-
-instance Extractable u => Extractable ((:*:) e <:.> u) where
-	extract (TU x) = extract . extract $ x
 
 instance Extendable u => Extendable ((:*:) e <:.> u) where
 	TU (e :*: x) =>> f = TU . (:*:) e $ x =>> f . TU . (:*:) e

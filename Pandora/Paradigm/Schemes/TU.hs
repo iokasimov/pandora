@@ -2,9 +2,12 @@ module Pandora.Paradigm.Schemes.TU where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -22,6 +25,24 @@ instance Interpreted (TU ct cu t u) where
 	type Primary (TU ct cu t u) a = t :. u := a
 	run ~(TU x) = x
 	unite = TU
+
+instance (Covariant t, Covariant u) => Covariant (t <:.> u) where
+	f <$> x = TU $ f <$$> run x
+
+instance (Applicative t, Applicative u) => Applicative (t <:.> u) where
+	TU f <*> TU x = TU $ f <**> x
+
+instance (Covariant u, Alternative t) => Alternative (t <:.> u) where
+	x <+> y = TU $ run x <+> run y
+
+instance (Covariant u, Avoidable t) => Avoidable (t <:.> u) where
+	empty = TU empty
+
+instance (Pointable t, Pointable u) => Pointable (t <:.> u) where
+	point = TU . point . point
+
+instance (Extractable t, Extractable u) => Extractable (t <:.> u) where
+	extract = extract . extract . run
 
 instance Pointable t => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <:.> u

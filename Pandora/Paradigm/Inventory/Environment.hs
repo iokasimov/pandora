@@ -3,9 +3,9 @@
 module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -45,15 +45,6 @@ instance Monadic (Environment e) where
 	wrap x = TM . TU $ point <$> run x
 
 type Configured e = Adaptable (Environment e)
-
-instance Covariant u => Covariant ((->) e <:.> u) where
-	f <$> TU x = TU $ f <$$> x
-
-instance (Covariant u, Pointable u) => Pointable ((->) e <:.> u) where
-	point = TU . point . point
-
-instance Applicative u => Applicative ((->) e <:.> u) where
-	TU f <*> TU x = TU $ f <**> x
 
 instance Bindable u => Bindable ((->) e <:.> u) where
 	TU x >>= f = TU $ \e -> x e >>= ($ e) . run . f
