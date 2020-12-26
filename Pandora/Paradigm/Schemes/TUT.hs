@@ -1,9 +1,15 @@
 module Pandora.Paradigm.Schemes.TUT where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
-import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Pattern.Functor ((<*+>))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
+import Pandora.Pattern.Functor.Applicative (Applicative)
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
+import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -25,6 +31,21 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 	type Primary (TUT ct ct' cu t t' u) a = t :. u :. t' := a
 	run ~(TUT x) = x
 	unite = TUT
+
+instance (Covariant t, Covariant t', Covariant u) => Covariant (t <:<.>:> t' := u) where
+	f <$> TUT x = TUT $ f <$$$> x
+
+instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
+	x <+> y = TUT $ run x <*+> run y
+
+instance (Pointable t, Applicative t, Covariant t', Avoidable u) => Avoidable (t <:<.>:> t' := u) where
+	empty = TUT $ point empty
+
+instance (Pointable u, Adjoint t' t) => Pointable (t <:<.>:> t' := u) where
+	point = unite . (-| point)
+
+instance (Adjoint t t', Extractable u) => Extractable (t <:<.>:> t' := u) where
+	extract = (|- extract) . run
 
 instance (Adjoint t' t, Distributive t) => Liftable (t <:<.>:> t') where
 	lift :: Covariant u => u ~> t <:<.>:> t' := u

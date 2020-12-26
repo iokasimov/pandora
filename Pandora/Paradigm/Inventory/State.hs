@@ -5,16 +5,13 @@ module Pandora.Paradigm.Inventory.State where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), (>=>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Pattern.Functor.Bivariant ((<->))
-import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -49,25 +46,13 @@ instance Monadic (State s) where
 
 type Stateful s = Adaptable (State s)
 
-instance Covariant u => Covariant ((->) s <:<.>:> (:*:) s := u) where
-	f <$> x = TUT $ (<$$>) f . run x
-
-instance Bindable u => Applicative ((->) s <:<.>:> (:*:) s := u) where
+instance {-# OVERLAPS #-} Bindable u => Applicative ((->) s <:<.>:> (:*:) s := u) where
 	f <*> x = TUT $ run f >=> \ ~(new :*: g) -> g <$$> run x new
 
-instance Pointable u => Pointable ((->) s <:<.>:> (:*:) s := u) where
-	point = TUT . (-| point)
-
-instance Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
+instance {-# OVERLAPS #-} Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
 	x >>= f = TUT $ run x >=> \ ~(new :*: y) -> ($ new) . run . f $ y
 
 instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
-
-instance Alternative u => Alternative ((->) s <:<.>:> (:*:) s := u) where
-	x <+> y = TUT $ run x <*+> run y
-
-instance Avoidable u => Avoidable ((->) s <:<.>:> (:*:) s := u) where
-	empty = TUT $ \_ -> empty
 
 current :: Stateful s t => t s
 current = adapt $ State delta
@@ -82,5 +67,3 @@ type Memorable s t = (Pointable t, Applicative t, Stateful s t)
 
 fold :: (Traversable t, Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = (struct ->> modify . op) *> current
-
-type Decisive t = (Pointable t, Avoidable t, Alternative t, Applicative t)

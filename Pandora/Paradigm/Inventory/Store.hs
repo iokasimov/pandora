@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Store where
 import Pandora.Core (type (:.), type (:=), type (<-|), type (~>), (%))
 import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>), (<$$$>)), Extractable (extract), Extendable ((=>>), (<<=$)), Comonad, (-|), (|-))
+import Pandora.Pattern.Functor (Covariant ((<$>), (<$$>)), Extractable (extract), Extendable ((=>>), (<<=$)), Comonad, (-|), (|-))
 import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run, unite), Schematic, Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
@@ -35,13 +35,7 @@ instance Comonadic (Store p) where
 
 type Storable s x = Adaptable x (Store s)
 
-instance Covariant u => Covariant ((:*:) p <:<.>:> (->) p := u) where
-	f <$> TUT x = TUT $ f <$$$> x
-
-instance Extractable u => Extractable ((:*:) p <:<.>:> (->) p := u) where
-	extract = (|- extract) . run
-
-instance Extendable u => Extendable ((:*:) p <:<.>:> (->) p := u) where
+instance {-# OVERLAPS #-} Extendable u => Extendable ((:*:) p <:<.>:> (->) p := u) where
 	TUT x =>> f = TUT $ x <<=$ (\x' -> f . TUT . (x' -| identity))
 
 position :: Storable s t => t a -> s
