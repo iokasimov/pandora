@@ -3,9 +3,8 @@
 module Pandora.Paradigm.Inventory.Imprint (Imprint (..), Traceable) where
 
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -40,16 +39,7 @@ type instance Schematic Comonad (Imprint e) = (<.:>) ((->) e)
 instance Monoid e => Comonadic (Imprint e) where
 	bring (TC (UT x)) = Imprint . extract $ x
 
-instance Covariant u => Covariant ((->) e <.:> u) where
-	f <$> UT x = UT $ f <$$> x
-
-instance Applicative u => Applicative ((->) e <.:> u) where
-	UT f <*> UT x = UT $ f <**> x
-
-instance (Monoid e, Extractable u) => Extractable ((->) e <.:> u) where
-	extract (UT x) = extract . extract $ x
-
-instance (Semigroup e, Extendable u) => Extendable ((->) e <.:> u) where
+instance {-# OVERLAPS #-} (Semigroup e, Extendable u) => Extendable ((->) e <.:> u) where
 	UT x =>> f = UT $ x =>> (\x' e -> f . UT . (<$>) (. (e +)) $ x')
 
 type Traceable e t = Adaptable t (Imprint e)

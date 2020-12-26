@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -87,16 +87,7 @@ instance Monadic (Conclusion e) where
 
 type Failable e = Adaptable (Conclusion e)
 
-instance Covariant u => Covariant (Conclusion e <.:> u) where
-	f <$> UT x = UT $ f <$$> x
-
-instance Applicative u => Applicative (Conclusion e <.:> u) where
-	UT f <*> UT x = UT $ (<*>) <$> f <*> x
-
-instance Pointable u => Pointable (Conclusion e <.:> u) where
-	point = UT . point . point
-
-instance (Pointable u, Bindable u) => Bindable (Conclusion e <.:> u) where
+instance {-# OVERLAPS #-} (Pointable u, Bindable u) => Bindable (Conclusion e <.:> u) where
 	UT x >>= f = UT $ x >>= conclusion (point . Failure) (run . f)
 
 instance Monad u => Monad (Conclusion e <.:> u) where

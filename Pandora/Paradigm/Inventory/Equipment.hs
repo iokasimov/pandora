@@ -36,7 +36,7 @@ instance Comonadic (Equipment e) where
 
 type Equipped e t = Adaptable t (Equipment e)
 
-instance Extendable u => Extendable ((:*:) e <:.> u) where
+instance {-# OVERLAPS #-} Extendable u => Extendable ((:*:) e <:.> u) where
 	TU (e :*: x) =>> f = TU . (:*:) e $ x =>> f . TU . (:*:) e
 
 instance Comonad (Equipment e) where

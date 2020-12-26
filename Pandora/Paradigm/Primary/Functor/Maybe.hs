@@ -2,11 +2,11 @@ module Pandora.Paradigm.Primary.Functor.Maybe where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), apply))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -105,16 +105,7 @@ instance Monotonic a (t a) => Monotonic a (Maybe :. t := a) where
 
 type Optional = Adaptable Maybe
 
-instance Covariant u => Covariant (Maybe <.:> u) where
-	f <$> UT x = UT $ f <$$> x
-
-instance Applicative u => Applicative (Maybe <.:> u) where
-	UT f <*> UT x = UT $ apply <$> f <*> x
-
-instance Pointable u => Pointable (Maybe <.:> u) where
-	point = UT . point . point
-
-instance (Pointable u, Bindable u) => Bindable (Maybe <.:> u) where
+instance {-# OVERLAPS #-} (Pointable u, Bindable u) => Bindable (Maybe <.:> u) where
 	UT x >>= f = UT $ x >>= resolve (run . f) (point Nothing)
 
 instance Monad u => Monad (Maybe <.:> u) where
