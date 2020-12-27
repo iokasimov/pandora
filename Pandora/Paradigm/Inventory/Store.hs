@@ -10,39 +10,43 @@ import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Controlflow (Adaptable (adapt), Interpreted (Primary, run, unite), Schematic, Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 
-newtype Store p a = Store ((:*:) p :. (->) p := a)
+-- | Context based computation on value
+newtype Store s a = Store ((:*:) s :. (->) s := a)
 
-instance Covariant (Store p) where
+instance Covariant (Store s) where
 	f <$> Store x = Store $ f <$$> x
 
-instance Extractable (Store p) where
+instance Extractable (Store s) where
 	extract = (|- ($)) . run
 
-instance Extendable (Store p) where
+instance Extendable (Store s) where
 	Store x =>> f = Store $ f <$$> (Store .|.. (-| identity)) <$> x
 
-instance Comonad (Store p) where
+instance Comonad (Store s) where
 
-instance Interpreted (Store p) where
-	type Primary (Store p) a = (:*:) p :. (->) p := a
+instance Interpreted (Store s) where
+	type Primary (Store s) a = (:*:) s :. (->) s := a
 	run ~(Store x) = x
 	unite = Store
 
-type instance Schematic Comonad (Store p) = (:*:) p <:<.>:> (->) p
+type instance Schematic Comonad (Store s) = (:*:) s <:<.>:> (->) s
 
-instance Comonadic (Store p) where
-	bring (TC (TUT (p :*: f))) = Store $ p :*: extract f
+instance Comonadic (Store s) where
+	bring (TC (TUT (s :*: f))) = Store $ s :*: extract f
 
 type Storable s x = Adaptable x (Store s)
 
-instance {-# OVERLAPS #-} Extendable u => Extendable ((:*:) p <:<.>:> (->) p := u) where
+instance {-# OVERLAPS #-} Extendable u => Extendable ((:*:) s <:<.>:> (->) s := u) where
 	TUT x =>> f = TUT $ x <<=$ (\x' -> f . TUT . (x' -| identity))
 
+-- | Get current index
 position :: Storable s t => t a -> s
 position = attached . run @(Store _) . adapt
 
+-- | Given an index return value
 access :: Storable s t => s -> a <-| t
-access p = extract % p . run @(Store _) . adapt
+access s = extract % s . run @(Store _) . adapt
 
-retrofit :: (p -> p) -> Store p ~> Store p
-retrofit g (Store (p :*: f)) = Store $ g p :*: f
+-- | Change index with function
+retrofit :: (s -> s) -> Store s ~> Store s
+retrofit g (Store (s :*: f)) = Store $ g s :*: f

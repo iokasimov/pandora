@@ -15,8 +15,10 @@ import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrof
 infixr 0 :-.
 type (:-.) src tgt = Lens src tgt
 
+-- Reference to taret within some source
 type Lens src tgt = src |-> Store tgt
 
+-- Lens as natural transformation
 type (:~.) t u a = Lens (t a) (u a)
 
 -- | Lens composition infix operator
@@ -47,5 +49,6 @@ over lens f = extract . retrofit f . lens
 (%~) :: Lens src tgt -> (tgt -> tgt) -> src -> src
 lens %~ f = over lens f
 
+-- | Representable based lens
 represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
 represent r x = Store $ (r <#> x) :*: \new -> tabulate (\r' -> r' == r ? new $ r' <#> x)

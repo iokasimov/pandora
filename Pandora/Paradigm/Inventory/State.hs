@@ -18,6 +18,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), delta)
 
+-- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
 
 instance Covariant (State s) where
@@ -54,12 +55,15 @@ instance {-# OVERLAPS #-} Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) w
 
 instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
 
+-- | Get current value
 current :: Stateful s t => t s
 current = adapt $ State delta
 
+-- | Modify stored value with a function
 modify :: Stateful s t => (s -> s) -> t ()
 modify f = adapt . State $ (:*: ()) . f
 
+-- | Replace current value with another one
 replace :: Stateful s t => s -> t ()
 replace s = adapt . State $ \_ -> s :*: ()
 
