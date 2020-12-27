@@ -87,11 +87,6 @@ instance Monadic (Conclusion e) where
 
 type Failable e = Adaptable (Conclusion e)
 
-instance {-# OVERLAPS #-} (Pointable u, Bindable u) => Bindable (Conclusion e <.:> u) where
-	UT x >>= f = UT $ x >>= conclusion (point . Failure) (run . f)
-
-instance Monad u => Monad (Conclusion e <.:> u) where
-
 failure :: Failable e t => e -> t a
 failure = adapt . Failure
 

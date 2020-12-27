@@ -6,7 +6,10 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), join))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
@@ -31,6 +34,9 @@ instance (Applicative t, Applicative u) => Applicative (t <.:> u) where
 
 instance (Pointable t, Pointable u) => Pointable (t <.:> u) where
 	point = UT . point . point
+
+instance (Traversable t, Bindable t, Applicative u, Monad u) => Bindable (t <.:> u) where
+	UT x >>= f = UT $ x >>= \i -> join <$> (i ->> run . f)
 
 instance (Extractable t, Extractable u) => Extractable (t <.:> u) where
 	extract = extract . extract . run

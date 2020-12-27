@@ -22,7 +22,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
 data Maybe a = Nothing | Just a
 
@@ -104,11 +104,6 @@ instance Monotonic a (t a) => Monotonic a (Maybe :. t := a) where
 	reduce _ r Nothing = r
 
 type Optional = Adaptable Maybe
-
-instance {-# OVERLAPS #-} (Pointable u, Bindable u) => Bindable (Maybe <.:> u) where
-	UT x >>= f = UT $ x >>= resolve (run . f) (point Nothing)
-
-instance Monad u => Monad (Maybe <.:> u) where
 
 nothing :: Optional t => t a
 nothing = adapt Nothing

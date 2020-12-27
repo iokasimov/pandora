@@ -51,7 +51,7 @@ instance {-# OVERLAPS #-} (Semigroup e, Applicative u) => Applicative ((:*:) e <
 instance {-# OVERLAPS #-} (Pointable u, Monoid e) => Pointable ((:*:) e <.:> u) where
 	point = UT . point . (zero :*:)
 
-instance (Semigroup e, Pointable u, Bindable u) => Bindable ((:*:) e <.:> u) where
+instance {-# OVERLAPS #-} (Semigroup e, Pointable u, Bindable u) => Bindable ((:*:) e <.:> u) where
 	UT x >>= f = UT $ x >>= \(acc :*: v) -> (\(acc' :*: y) -> (acc + acc' :*: y)) <$> run (f v)
 
 gather :: Accumulated e t => e -> t ()
