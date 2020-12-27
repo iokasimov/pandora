@@ -46,8 +46,5 @@ instance Monadic (Environment e) where
 
 type Configured e = Adaptable (Environment e)
 
-instance {-# OVERLAPS #-} Bindable u => Bindable ((->) e <:.> u) where
-	TU x >>= f = TU $ \e -> x e >>= ($ e) . run . f
-
 env :: Configured e t => t e
 env = adapt $ Environment identity
