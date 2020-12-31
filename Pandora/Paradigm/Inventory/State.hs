@@ -50,11 +50,6 @@ type Stateful s = Adaptable (State s)
 instance {-# OVERLAPS #-} Bindable u => Applicative ((->) s <:<.>:> (:*:) s := u) where
 	f <*> x = TUT $ run f >=> \ ~(new :*: g) -> g <$$> run x new
 
-instance {-# OVERLAPS #-} Bindable u => Bindable ((->) s <:<.>:> (:*:) s := u) where
-	x >>= f = TUT $ run x >=> \ ~(new :*: y) -> ($ new) . run . f $ y
-
-instance Monad u => Monad ((->) s <:<.>:> (:*:) s := u) where
-
 -- | Get current value
 current :: Stateful s t => t s
 current = adapt $ State delta
