@@ -46,7 +46,7 @@ instance (Pointable u, Adjoint t' t) => Pointable (t <:<.>:> t' := u) where
 	point = unite . (-| point)
 
 instance (Adjoint t' t, Bindable u) => Bindable (t <:<.>:> t' := u) where
-	x >>= f = TUT $ (|- run . f) $>>= run x
+	x >>= f = TUT $ run x $>>= (|- run . f)
 
 instance (Adjoint t t', Extractable u) => Extractable (t <:<.>:> t' := u) where
 	extract = (|- extract) . run
