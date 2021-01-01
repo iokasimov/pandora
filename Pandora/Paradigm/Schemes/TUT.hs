@@ -5,7 +5,7 @@ import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Applicative (Applicative)
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -35,6 +35,9 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 
 instance (Covariant t, Covariant t', Covariant u) => Covariant (t <:<.>:> t' := u) where
 	f <$> TUT x = TUT $ f <$$$> x
+
+instance (Adjoint t' t, Bindable u) => Applicative (t <:<.>:> t' := u) where
+	f <*> x = TUT $ (>>= (|- (<$$$> run x))) <$> run f
 
 instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
 	x <+> y = TUT $ run x <*+> run y
