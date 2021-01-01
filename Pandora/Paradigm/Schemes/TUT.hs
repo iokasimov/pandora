@@ -11,6 +11,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), ($>>=)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), (<<=$)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -50,6 +51,9 @@ instance (Pointable u, Adjoint t' t) => Pointable (t <:<.>:> t' := u) where
 
 instance (Adjoint t' t, Bindable u) => Bindable (t <:<.>:> t' := u) where
 	x >>= f = TUT $ run x $>>= (|- run . f)
+
+instance (Adjoint t' t, Extendable u) => Extendable (t' <:<.>:> t := u) where
+	x =>> f = TUT $ run x <<=$ (-| f . unite)
 
 instance (Adjoint t t', Extractable u) => Extractable (t <:<.>:> t' := u) where
 	extract = (|- extract) . run
