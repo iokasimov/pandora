@@ -36,7 +36,7 @@ class Covariant t => Extendable t where
 	f =>= g = g . extend f
 
 	-- | Experimental methods
-	($=>>) :: Covariant u => (t a -> b) -> u :. t := a -> u :. t := b
-	f $=>> x = (=>> f) <$> x
+	($=>>) :: Covariant u => u :. t := a -> (t a -> b) -> u :. t := b
+	x $=>> f = (=>> f) <$> x
 	(<<=$) :: Covariant u => u :. t := a -> (t a -> b) -> u :. t := b
 	x <<=$ f = (=>> f) <$> x

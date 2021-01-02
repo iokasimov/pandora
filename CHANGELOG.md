@@ -308,3 +308,4 @@
 * Make `Monoid` a superclass for `Group`
 * Define `-` method in `Group` typeclass
 * Rename `via` to `-=:` in Interpreted module
+* Flip arguments for `Bindable` `$>>=` and `Extendable` `$=>>` methods
