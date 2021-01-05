@@ -34,7 +34,6 @@ class Covariant t => Bindable t where
 	(<=<) :: (b -> t c) -> (a -> t b) -> (a -> t c)
 	(<=<) = (%) (>=>)
 
-	-- | Experimental methods
 	($>>=) :: Covariant u => u :. t := a -> (a -> t b) -> u :. t := b
 	x $>>= f = (>>= f) <$> x
 

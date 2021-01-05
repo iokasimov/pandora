@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
+import Pandora.Pattern.Functor.Adjoint ((-|), (|-), ($|-))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite), Schematic)
@@ -31,7 +31,7 @@ instance Pointable (State s) where
 	point = State . (-| identity)
 
 instance Bindable (State s) where
-	x >>= f = State $ (|- run) . (<$>) f . run x
+	x >>= f = State $ run x $|- run . f
 
 instance Monad (State s) where
 

@@ -309,3 +309,4 @@
 * Define `-` method in `Group` typeclass
 * Rename `via` to `-=:` in Interpreted module
 * Flip arguments for `Bindable` `$>>=` and `Extendable` `$=>>` methods
+* Define experimental methods: `-|$`, `$|-`
