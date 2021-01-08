@@ -33,4 +33,5 @@ instance Adjoint (Equipment e) (Environment e) where
 	x |- g = run x |- run . g
 
 zoom :: Stateful bg t => Lens bg ls -> State ls ~> t
-zoom lens lesser = adapt . State $ (\(Store (p :*: g)) -> (g <-> identity) . run lesser $ p) . lens
+zoom lens less = let restruct f v = f <-> identity $ run less v
+	in adapt . State $ (|- restruct) . run . lens
