@@ -310,3 +310,6 @@
 * Rename `via` to `-=:` in Interpreted module
 * Flip arguments for `Bindable` `$>>=` and `Extendable` `$=>>` methods
 * Define experimental methods: `-|$`, `$|-`
+
+# 0.3.5
+* Define inductive `Denumerator` number datatype in `Object` module
