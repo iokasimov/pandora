@@ -11,8 +11,8 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 > Let p :: (Pointable t, Pointable g) => t a -> u a
 
 > When providing a new instance, you should ensure it satisfies the four laws:
-> * Naturality of traversing: g . traverse f ≡ traverse (g . f)
-> * Naturality of sequencing: f . sequence = sequence . comap f
+> * Numeratority of traversing: g . traverse f ≡ traverse (g . f)
+> * Numeratority of sequencing: f . sequence = sequence . comap f
 > * Preserving point: p (point x) ≡ point x
 > * Preserving apply: f (x <*> y) ≡ f x <*> f y
 -}

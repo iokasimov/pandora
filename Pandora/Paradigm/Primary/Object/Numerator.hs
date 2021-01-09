@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Object.Natural where
+module Pandora.Paradigm.Primary.Object.Numerator where
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -10,29 +10,29 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Equal, Greater))
 
-data Natural = Zero | Natural Natural
+data Numerator = Zero | Numerator Numerator
 
-instance Setoid Natural where
+instance Setoid Numerator where
 	Zero == Zero = True
-	Natural n == Natural m = n == m
+	Numerator n == Numerator m = n == m
 	_ == _ = False
 
-instance Chain Natural where
+instance Chain Numerator where
 	Zero <=> Zero = Equal
-	Zero <=> Natural _ = Less
-	Natural _ <=> Zero = Greater
-	Natural n <=> Natural m = n <=> m
+	Zero <=> Numerator _ = Less
+	Numerator _ <=> Zero = Greater
+	Numerator n <=> Numerator m = n <=> m
 
-instance Semigroup Natural where
+instance Semigroup Numerator where
 	Zero + m = m
-	Natural n + m = Natural $ n + m
+	Numerator n + m = Numerator $ n + m
 
-instance Ringoid Natural where
+instance Ringoid Numerator where
 	Zero * _ = Zero
-	Natural n * m = m + n * m
+	Numerator n * m = m + n * m
 
-instance Monoid Natural where
+instance Monoid Numerator where
 	zero = Zero
 
-instance Quasiring Natural where
-	one = Natural Zero
+instance Quasiring Numerator where
+	one = Numerator Zero

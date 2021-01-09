@@ -313,3 +313,4 @@
 
 # 0.3.5
 * Define inductive `Denumerator` number datatype in `Object` module
+* Rename `Natural` datatype to `Numerator`

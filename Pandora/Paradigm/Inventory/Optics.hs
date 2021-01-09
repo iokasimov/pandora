@@ -18,7 +18,7 @@ type (:-.) src tgt = Lens src tgt
 -- Reference to taret within some source
 type Lens src tgt = src |-> Store tgt
 
--- Lens as natural transformation
+-- Lens as Numerator transformation
 type (:~.) t u a = Lens (t a) (u a)
 
 -- | Lens composition infix operator
