@@ -9,9 +9,12 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Transformer.Liftable (lift)
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
+import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
+import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
@@ -25,6 +28,7 @@ import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
+import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation))
@@ -48,6 +52,11 @@ instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
 	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap (Construct % End)
 	focusing (run . extract -> Just x) = Store $ Just (extract x) :*: Tag . lift . resolve (Construct % deconstruct x) (rebalance $ deconstruct x)
+
+instance Measurable Heighth Binary where
+	type Measural Heighth Binary a = Numerator
+	measurement (run . extract -> Just bt) = Numerator $ measure @Heighth bt
+	measurement (run . extract -> Nothing) = Zero
 
 instance Nullable Binary where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
@@ -74,6 +83,15 @@ instance Focusable Root (Construction Wye) where
 instance (forall a . Chain a) => Insertable (Construction Wye) where
 	insert x nonempty = let change = Just . resolve (insert x) (Construct x End) in
 		x <=> extract nonempty & order (sub @Left %~ change $ nonempty) nonempty (sub @Right %~ change $ nonempty)
+
+instance Measurable Heighth (Construction Wye) where
+	type Measural Heighth (Construction Wye) a = Denumerator
+	measurement (extract -> Construct _ End) = One
+	measurement (extract -> Construct _ (Left lst)) = One + measure @Heighth lst
+	measurement (extract -> Construct _ (Right rst)) = One + measure @Heighth rst
+	measurement (extract -> Construct _ (Both lst rst)) = One +
+		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
+		in lm <=> rm & order rm lm lm
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
