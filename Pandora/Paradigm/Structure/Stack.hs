@@ -18,6 +18,8 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
+import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
+import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
@@ -36,6 +38,7 @@ import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
+import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
 
@@ -61,6 +64,11 @@ instance Focusable Head Stack where
 
 instance Insertable Stack where
 	insert x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
+
+instance Measurable Length Stack where
+	type Measural Length Stack a = Numerator
+	measurement (run . extract -> Nothing) = zero
+	measurement (run . extract -> Just xs) = Numerator $ measure @Length xs
 
 instance Nullable Stack where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
@@ -90,6 +98,11 @@ instance Focusable Head (Construction Maybe) where
 
 instance Insertable (Construction Maybe) where
 	insert x = Construct x . Just
+
+instance Measurable Length (Construction Maybe) where
+	type Measural Length (Construction Maybe) a = Denumerator
+	measurement (extract -> Construct _ Nothing) = One
+	measurement (extract -> Construct _ (Just xs)) = One + measure @Length xs
 
 instance Monotonic a (Construction Maybe a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs

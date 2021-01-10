@@ -31,7 +31,7 @@ instance Semigroup Numerator where
 
 instance Ringoid Numerator where
 	Zero * _ = Zero
-	Numerator n * Zero = Zero
+	Numerator _ * Zero = Zero
 	Numerator n * Numerator m = Numerator $ m + n * m
 
 instance Monoid Numerator where
