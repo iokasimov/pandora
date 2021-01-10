@@ -9,8 +9,9 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Equal, Greater))
+import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 
-data Numerator = Zero | Numerator Numerator
+data Numerator = Zero | Numerator Denumerator
 
 instance Setoid Numerator where
 	Zero == Zero = True
@@ -25,14 +26,16 @@ instance Chain Numerator where
 
 instance Semigroup Numerator where
 	Zero + m = m
-	Numerator n + m = Numerator $ n + m
+	Numerator n + Zero = Numerator n
+	Numerator n + Numerator m = Numerator $ n + m
 
 instance Ringoid Numerator where
 	Zero * _ = Zero
-	Numerator n * m = m + n * m
+	Numerator n * Zero = Zero
+	Numerator n * Numerator m = Numerator $ m + n * m
 
 instance Monoid Numerator where
 	zero = Zero
 
 instance Quasiring Numerator where
-	one = Numerator Zero
+	one = Numerator One
