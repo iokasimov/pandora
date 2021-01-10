@@ -22,7 +22,7 @@ instance Chain Denumerator where
 	Denumerator n <=> Denumerator m = n <=> m
 
 instance Semigroup Denumerator where
-	One + m = m
+	One + m = Denumerator m
 	Denumerator n + m = Denumerator $ n + m
 
 instance Ringoid Denumerator where
