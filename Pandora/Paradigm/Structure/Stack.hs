@@ -94,15 +94,15 @@ type instance Nonempty Stack = Construction Maybe
 
 instance Focusable Head (Construction Maybe) where
 	type Focusing Head (Construction Maybe) a = a
-	focusing (Tag stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
+	focusing (extract -> stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
 
 instance Insertable (Construction Maybe) where
 	insert x = Construct x . Just
 
 instance Measurable Length (Construction Maybe) where
 	type Measural Length (Construction Maybe) a = Denumerator
-	measurement (extract -> Construct _ Nothing) = One
-	measurement (extract -> Construct _ (Just xs)) = One + measure @Length xs
+	measurement (deconstruct . extract -> Nothing) = One
+	measurement (deconstruct . extract -> Just xs) = One + measure @Length xs
 
 instance Monotonic a (Construction Maybe a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs

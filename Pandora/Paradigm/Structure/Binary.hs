@@ -86,10 +86,10 @@ instance (forall a . Chain a) => Insertable (Construction Wye) where
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
-	measurement (extract -> Construct _ End) = One
-	measurement (extract -> Construct _ (Left lst)) = One + measure @Heighth lst
-	measurement (extract -> Construct _ (Right rst)) = One + measure @Heighth rst
-	measurement (extract -> Construct _ (Both lst rst)) = One +
+	measurement (deconstruct . extract -> End) = One
+	measurement (deconstruct . extract -> Left lst) = One + measure @Heighth lst
+	measurement (deconstruct . extract -> Right rst) = One + measure @Heighth rst
+	measurement (deconstruct . extract -> Both lst rst) = One +
 		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
 		in lm <=> rm & order rm lm lm
 
