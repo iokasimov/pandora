@@ -7,6 +7,7 @@ import Pandora.Paradigm.Structure.Ability.Rotatable as Exports
 import Pandora.Paradigm.Structure.Ability.Insertable as Exports
 import Pandora.Paradigm.Structure.Ability.Measurable as Exports
 import Pandora.Paradigm.Structure.Ability.Focusable as Exports
+import Pandora.Paradigm.Structure.Ability.Convertible as Exports
 import Pandora.Paradigm.Structure.Ability.Nullable as Exports
 import Pandora.Paradigm.Structure.Ability.Nonempty as Exports
 import Pandora.Paradigm.Structure.Ability.Comprehension as Exports

@@ -102,6 +102,7 @@ library
     Pandora.Paradigm.Structure.Rose
     Pandora.Paradigm.Structure.Ability
     Pandora.Paradigm.Structure.Ability.Comprehension
+    Pandora.Paradigm.Structure.Ability.Convertible
     Pandora.Paradigm.Structure.Ability.Focusable
     Pandora.Paradigm.Structure.Ability.Insertable
     Pandora.Paradigm.Structure.Ability.Measurable

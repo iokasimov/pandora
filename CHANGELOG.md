@@ -315,3 +315,4 @@
 * Define inductive `Denumerator` number datatype in `Object` module
 * Rename `Natural` datatype to `Numerator`
 * Define `Measurable` typeclass to measure datastructures
+* Define `Convertible` typeclass for structure transformation
