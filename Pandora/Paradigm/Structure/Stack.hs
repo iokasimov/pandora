@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Functor.Bindable (Bindable (join))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -40,7 +41,7 @@ import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Command (Delete), Segment (First, Tail), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Command (Delete), Segment (All, First, Tail), sub)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -115,6 +116,15 @@ instance Setoid a => Substructure (Delete First) (Construction Maybe) a where
 		delete :: Setoid a => a -> Nonempty Stack a -> Stack a
 		delete x (Construct y ys) = x == y ? unite ys
 			$ unite $ Construct y . run . delete x <$> ys
+
+instance Setoid a => Substructure (Delete All) (Construction Maybe) a where
+	type Substructural (Delete All) (Construction Maybe) a = a |-> Stack
+	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
+
+		delete :: Setoid a => a -> Nonempty Stack a -> Stack a
+		delete x (Construct y ys) = x == y
+			? (unite . join $ run . delete x <$> ys)
+			$ (unite $ Construct y . run . delete x <$> ys)
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 

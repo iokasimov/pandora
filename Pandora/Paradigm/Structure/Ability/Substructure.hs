@@ -17,4 +17,4 @@ sub = comap extract . substructure . Tag @f
 
 data Command a = Delete a
 
-data Segment a = First a | Tail a
+data Segment a = All a | First a | Tail a
