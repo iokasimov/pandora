@@ -30,36 +30,36 @@ instance Monotonic s a => Monotonic s (s :*: a) where
 instance Nullable Maybe where
 	null = Predicate $ \case { Just _ -> True ; _ -> False }
 
-instance Substructure Left (Product s) where
+instance Substructure Left (Product s) a where
 	type Substructural Left (Product s) a = s
 	substructure (extract -> s :*: x) = Store $ s :*: Tag . (:*: x)
 
-instance Substructure Right (Product s) where
+instance Substructure Right (Product s) a where
 	type Substructural Right (Product s) a = a
 	substructure (extract -> s :*: x) = Store $ x :*: Tag . (s :*:)
 
-instance Substructure Left Delta where
+instance Substructure Left Delta a where
 	type Substructural Left Delta a = a
 	substructure (extract -> l :^: r) = Store $ l :*: Tag . (:^: r)
 
-instance Substructure Right Delta where
+instance Substructure Right Delta a where
 	type Substructural Right Delta a = a
 	substructure (extract -> l :^: r) = Store $ r :*: Tag . (l :^:)
 
-instance Substructure Left (Delta <:.> t) where
+instance Substructure Left (Delta <:.> t) a where
 	type Substructural Left (Delta <:.> t) a = t a
 	substructure (run . extract -> l :^: r) = Store $ r :*: Tag . unite . (l :^:)
 
-instance Substructure Right (Delta <:.> t) where
+instance Substructure Right (Delta <:.> t) a where
 	type Substructural Right (Delta <:.> t) a = t a
 	substructure (run . extract -> l :^: r) = Store $ l :*: Tag . unite . (:^: r)
 
-instance Substructure Left t => Substructure Left (Tap (t <:.> u)) where
+instance Substructure Left t (u a) => Substructure Left (Tap (t <:.> u)) a where
 	type Substructural Left (Tap (t <:.> u)) a = Substructural Left t (u a)
 	substructure (extract -> Tap x xs) = Store $
 		sub @Left ^. run xs :*: Tag . (\new -> sub @Left .~ new $ Tap x xs)
 
-instance Substructure Right t => Substructure Right (Tap (t <:.> u)) where
+instance Substructure Right t (u a) => Substructure Right (Tap (t <:.> u)) a where
 	type Substructural Right (Tap (t <:.> u)) a = Substructural Right t (u a)
 	substructure (extract -> Tap x xs) = Store $
 		sub @Right ^. run xs :*: Tag . (\new -> sub @Right .~ new $ Tap x xs)

@@ -8,11 +8,11 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 
-class Substructure f t where
+class Substructure f t a where
 	type Substructural (f :: * -> k) (t :: * -> *) a
 	substructure :: Tagged f (t a) :-. Substructural f t a
 
-sub :: forall f t a . Substructure f t => t a :-. Substructural f t a
+sub :: forall f t a . Substructure f t a => t a :-. Substructural f t a
 sub = comap extract . substructure . Tag @f
 
 data Command a = Delete a

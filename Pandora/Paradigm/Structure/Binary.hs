@@ -64,12 +64,12 @@ instance Measurable Heighth Binary where
 instance Nullable Binary where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
-instance Substructure Left Binary where
+instance Substructure Left Binary a where
 	type Substructural Left Binary a = Binary a
 	substructure empty_tree@(run . extract -> Nothing) = Store $ extract empty_tree :*: (!) empty_tree
 	substructure (run . extract -> Just tree) = Tag . lift <$> (sub @Left |> can_be_empty) tree
 
-instance Substructure Right Binary where
+instance Substructure Right Binary a where
 	type Substructural Right Binary a = Binary a
 	substructure empty_tree@(run . extract -> Nothing) = Store $ extract empty_tree :*: (!) empty_tree
 	substructure (run . extract -> Just tree) = Tag . lift <$> (sub @Right |> can_be_empty) tree
@@ -104,14 +104,14 @@ instance Measurable Heighth (Construction Wye) where
 		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
 		in lm <=> rm & order rm lm lm
 
-instance Substructure Left (Construction Wye) where
+instance Substructure Left (Construction Wye) a where
 	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
 	substructure empty_tree@(extract -> Construct _ End) = Store $ Nothing :*: (empty_tree !)
 	substructure (extract -> Construct x (Left lst)) = Store $ Just lst :*: Tag . Construct x . resolve Left End
 	substructure (extract -> Construct x (Right rst)) = Store $ Nothing :*: Tag . Construct x . resolve (Both % rst) (Right rst)
 	substructure (extract -> Construct x (Both lst rst)) = Store $ Just lst :*: Tag . Construct x . resolve (Both % rst) (Right rst)
 
-instance Substructure Right (Construction Wye) where
+instance Substructure Right (Construction Wye) a where
 	type Substructural Right (Construction Wye) a = Maybe :. Construction Wye := a
 	substructure emtpy_tree@(extract -> Construct _ End) = Store $ Nothing :*: (emtpy_tree !)
 	substructure (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . resolve (Both lst) (Left lst)

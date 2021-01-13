@@ -73,7 +73,7 @@ instance Measurable Length Stack where
 instance Nullable Stack where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
-instance Substructure Tail Stack where
+instance Substructure Tail Stack a where
 	type Substructural Tail Stack a = Stack a
 	substructure (run . extract -> Just ns) = point . unite . Just <$> sub @Tail ns
 	substructure (run . extract -> Nothing) = Store $ unite Nothing :*: point . identity
@@ -109,11 +109,11 @@ instance Measurable Length (Construction Maybe) where
 instance Monotonic a (Construction Maybe a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
 
-instance Substructure Tail (Construction Maybe) where
+instance Substructure Tail (Construction Maybe) a where
 	type Substructural Tail (Construction Maybe) a = Stack a
 	substructure (extract -> Construct x xs) = Store $ unite xs :*: point . Construct x . run
 
-instance (forall a . Setoid a) => Substructure Delete (Construction Maybe) where
+instance Setoid a => Substructure Delete (Construction Maybe) a where
 	type Substructural Delete (Construction Maybe) a = a |-> Stack
 	substructure (extract -> xs) = Store $ (\x -> delete x . unite $ Just xs) :*: (point xs !)
 
