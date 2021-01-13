@@ -1,4 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+-- {-# LANGUAGE UndecidableInstances #-}
+-- {-# LANGUAGE AllowAmbiguousTypes #-}
 
 module Pandora.Paradigm.Structure (module Exports) where
 
@@ -13,7 +15,7 @@ import Pandora.Paradigm.Structure.Stream as Exports
 import Pandora.Pattern (($), (.), extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics ((^.), (.~))
+-- import Pandora.Paradigm.Inventory.Optics ((^.), (.~))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
@@ -21,7 +23,7 @@ import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
-import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
+-- import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
 instance Monotonic s a => Monotonic s (s :*: a) where
@@ -54,12 +56,13 @@ instance Substructure Right (Delta <:.> t) a where
 	type Substructural Right (Delta <:.> t) a = t a
 	substructure (run . extract -> l :^: r) = Store $ l :*: Tag . unite . (:^: r)
 
-instance Substructure Left t (u a) => Substructure Left (Tap (t <:.> u)) a where
-	type Substructural Left (Tap (t <:.> u)) a = Substructural Left t (u a)
-	substructure (extract -> Tap x xs) = Store $
-		sub @Left ^. run xs :*: Tag . (\new -> sub @Left .~ new $ Tap x xs)
-
-instance Substructure Right t (u a) => Substructure Right (Tap (t <:.> u)) a where
-	type Substructural Right (Tap (t <:.> u)) a = Substructural Right t (u a)
-	substructure (extract -> Tap x xs) = Store $
-		sub @Right ^. run xs :*: Tag . (\new -> sub @Right .~ new $ Tap x xs)
+-- FIXME: compiler can't decide on instance heads
+-- instance Substructure Left t (u a) => Substructure Left (Tap (t <:.> u)) a where
+-- 	type Substructural Left (Tap (t <:.> u)) a = Substructural Left t (u a)
+-- 	substructure (extract -> Tap x xs) = Store $
+-- 		sub @Left ^. run xs :*: Tag . (\new -> sub @Left .~ new $ Tap x xs)
+--
+-- instance Substructure Right t (u a) => Substructure Right (Tap (t <:.> u)) a where
+-- 	type Substructural Right (Tap (t <:.> u)) a = Substructural Right t (u a)
+-- 	substructure (extract -> Tap x xs) = Store $
+-- 		sub @Right ^. run xs :*: Tag . (\new -> sub @Right .~ new $ Tap x xs)

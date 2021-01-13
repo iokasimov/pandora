@@ -40,7 +40,7 @@ import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Command (Delete), Segment (Tail), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Command (Delete), Segment (First, Tail), sub)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -78,11 +78,6 @@ instance Substructure Tail Stack a where
 	substructure (run . extract -> Just ns) = point . unite . Just <$> sub @Tail ns
 	substructure (run . extract -> Nothing) = Store $ unite Nothing :*: point . identity
 
-delete :: Setoid a => a -> Stack a -> Stack a
-delete _ (TU Nothing) = TU Nothing
-delete x (TU (Just (Construct y ys))) = x == y ? TU ys
-	$ lift . Construct y . run . delete x $ TU ys
-
 filter :: forall a . Predicate a -> Stack a -> Stack a
 filter (Predicate p) = TU . extract
 	. run @(State (Maybe :. Nonempty Stack := a)) % Nothing
@@ -113,9 +108,13 @@ instance Substructure Tail (Construction Maybe) a where
 	type Substructural Tail (Construction Maybe) a = Stack a
 	substructure (extract -> Construct x xs) = Store $ unite xs :*: point . Construct x . run
 
-instance Setoid a => Substructure Delete (Construction Maybe) a where
-	type Substructural Delete (Construction Maybe) a = a |-> Stack
-	substructure (extract -> xs) = Store $ (\x -> delete x . unite $ Just xs) :*: (point xs !)
+instance Setoid a => Substructure (Delete First) (Construction Maybe) a where
+	type Substructural (Delete First) (Construction Maybe) a = a |-> Stack
+	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
+
+		delete :: Setoid a => a -> Nonempty Stack a -> Stack a
+		delete x (Construct y ys) = x == y ? unite ys
+			$ unite $ Construct y . run . delete x <$> ys
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
