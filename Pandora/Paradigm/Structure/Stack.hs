@@ -31,7 +31,7 @@ import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics ((^.))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
@@ -41,6 +41,7 @@ import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail))
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -63,7 +64,7 @@ instance Focusable Head Stack where
 		Nothing -> Tag $ pop stack
 
 instance Insertable Stack where
-	insert x (TU stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
+	insert x (run -> stack) = unite $ (Construct x . Just <$> stack) <+> (point . point) x
 
 instance Measurable Length Stack where
 	type Measural Length Stack a = Numerator
@@ -106,6 +107,10 @@ instance Measurable Length (Construction Maybe) where
 
 instance Monotonic a (Construction Maybe a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
+
+instance Substructure Tail (Construction Maybe) where
+	type Substructural Tail (Construction Maybe) a = Stack a
+	substructure (extract -> Construct x xs) = Store $ unite xs :*: point . Construct x . run
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 

@@ -2,7 +2,6 @@
 
 module Pandora.Paradigm.Structure.Ability.Convertible where
 
-import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 

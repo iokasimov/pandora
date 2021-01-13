@@ -14,3 +14,5 @@ class Substructure f t where
 
 sub :: forall f t a . Substructure f t => t a :-. Substructural f t a
 sub = comap extract . substructure . Tag @f
+
+data Segment a = Tail a
