@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Stack where
 
-import Pandora.Core.Functor (type (~>), type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%))
 import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category ((.), ($), identity)
@@ -11,7 +11,6 @@ import Pandora.Pattern.Functor.Alternative ((<+>))
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Traversable (Traversable)
-import Pandora.Pattern.Functor.Bindable ((>>=))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -30,7 +29,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics ((^.))
+import Pandora.Paradigm.Inventory.Optics (view, (^.))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -59,9 +58,9 @@ instance Monoid (Stack a) where
 
 instance Focusable Head Stack where
 	type Focusing Head Stack a = Maybe a
-	focusing (Tag stack) = Store $ extract <$> run stack :*: \case
-		Just x -> stack & pop & insert x & Tag
-		Nothing -> Tag $ pop stack
+	focusing (extract -> stack) = Store $ extract <$> run stack :*: \case
+		Just x -> stack & view (sub @Tail) & insert x & Tag
+		Nothing -> Tag $ sub @Tail ^. stack
 
 instance Insertable Stack where
 	insert x (run -> stack) = unite $ (Construct x . Just <$> stack) <+> (point . point) x
@@ -78,9 +77,6 @@ instance Substructure Tail Stack where
 	type Substructural Tail Stack a = Stack a
 	substructure (run . extract -> Just ns) = point . unite . Just <$> sub @Tail ns
 	substructure (run . extract -> Nothing) = Store $ unite Nothing :*: point . identity
-
-pop :: Stack ~> Stack
-pop (TU stack) = TU $ stack >>= deconstruct
 
 delete :: Setoid a => a -> Stack a -> Stack a
 delete _ (TU Nothing) = TU Nothing
@@ -125,11 +121,11 @@ instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stack)) where
 
 instance Rotatable Left (Tap (Delta <:.> Stack)) where
 	type Rotational Left (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ pop bs :^: insert x fs) <$> focus @Head ^. bs
+	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ sub @Tail ^. bs :^: insert x fs) <$> focus @Head ^. bs
 
 instance Rotatable Right (Tap (Delta <:.> Stack)) where
 	type Rotational Right (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: pop fs) <$> focus @Head ^. fs
+	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: sub @Tail ^. fs) <$> focus @Head ^. fs
 
 type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
 

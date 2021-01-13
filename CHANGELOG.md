@@ -317,3 +317,4 @@
 * Define `Measurable` typeclass to measure datastructures
 * Define `Convertible` typeclass for structure transformation
 * Define `binary` method to construct `Binary` trees from other structures
+* Remove `pop` method of `Stack`, use `Substructure` `Tail` instance instead
