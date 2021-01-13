@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Stack where
 import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%))
 import Pandora.Pattern ((.|..))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative ((<+>))
 import Pandora.Pattern.Functor.Pointable (point)
@@ -41,7 +41,7 @@ import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -73,6 +73,11 @@ instance Measurable Length Stack where
 
 instance Nullable Stack where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
+
+instance Substructure Tail Stack where
+	type Substructural Tail Stack a = Stack a
+	substructure (run . extract -> Just ns) = point . unite . Just <$> sub @Tail ns
+	substructure (run . extract -> Nothing) = Store $ unite Nothing :*: point . identity
 
 pop :: Stack ~> Stack
 pop (TU stack) = TU $ stack >>= deconstruct
