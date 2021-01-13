@@ -6,8 +6,10 @@ module Pandora.Paradigm.Structure.Binary where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap, void))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
+import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -17,14 +19,15 @@ import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), attached)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), T_ (T_), T_U (T_U), type (<:.>), type (<:*:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
+import Pandora.Paradigm.Inventory.Optics (type (:-.), view, (|>), (%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
@@ -73,6 +76,14 @@ instance Substructure Right Binary where
 
 can_be_empty :: Maybe (Construction Wye a) :-. Binary a
 can_be_empty maybe_tree = Store $ TU maybe_tree :*: run
+
+binary :: forall t a . (Traversable t, Chain a) => t a -> Binary a
+binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @(Binary a) . insert' where
+
+	insert' :: a -> Binary a -> Binary a
+	insert' x (run -> Nothing) = lift . Construct x $ End
+	insert' x tree@(run -> Just nonempty) = x <=> extract nonempty & order
+		(sub @Left %~ insert' x $ tree) tree (sub @Right %~ insert' x $ tree)
 
 type instance Nonempty Binary = Construction Wye
 

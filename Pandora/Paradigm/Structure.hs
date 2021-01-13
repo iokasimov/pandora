@@ -10,9 +10,12 @@ import Pandora.Paradigm.Structure.Binary as Exports
 import Pandora.Paradigm.Structure.Stack as Exports
 import Pandora.Paradigm.Structure.Stream as Exports
 
+import Pandora.Core.Morphism ((%))
 import Pandora.Pattern (($), (.), extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
-import Pandora.Paradigm.Inventory (Store (Store), (^.), (.~))
+import Pandora.Paradigm.Inventory.State (State, modify)
+import Pandora.Paradigm.Inventory.Store (Store (Store))
+import Pandora.Paradigm.Inventory.Optics (view, (^.), (.~))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
