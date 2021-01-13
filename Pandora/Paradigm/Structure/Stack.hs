@@ -2,8 +2,8 @@
 
 module Pandora.Paradigm.Structure.Stack where
 
-import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism ((&), (%))
+import Pandora.Core.Functor (type (:.), type (:=), type (|->))
+import Pandora.Core.Morphism ((&), (%), (!))
 import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -40,7 +40,7 @@ import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Command (Delete), Segment (Tail), sub)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -112,6 +112,10 @@ instance Monotonic a (Construction Maybe a) where
 instance Substructure Tail (Construction Maybe) where
 	type Substructural Tail (Construction Maybe) a = Stack a
 	substructure (extract -> Construct x xs) = Store $ unite xs :*: point . Construct x . run
+
+instance (forall a . Setoid a) => Substructure Delete (Construction Maybe) where
+	type Substructural Delete (Construction Maybe) a = a |-> Stack
+	substructure (extract -> xs) = Store $ (\x -> delete x . unite $ Just xs) :*: (point xs !)
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
