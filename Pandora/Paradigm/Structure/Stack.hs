@@ -79,6 +79,15 @@ instance Substructure Tail Stack a where
 	substructure (run . extract -> Just ns) = point . unite . Just <$> sub @Tail ns
 	substructure (run . extract -> Nothing) = Store $ unite Nothing :*: point . identity
 
+instance Setoid a => Substructure (Delete First) Stack a where
+	type Substructural (Delete First) Stack a = a |-> Stack
+	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
+
+		delete :: Setoid a => a -> Stack a -> Stack a
+		delete _ (TU Nothing) = TU Nothing
+		delete x (TU (Just (Construct y ys))) = x == y ? TU ys
+			$ lift . Construct y . run . delete x $ TU ys
+
 filter :: forall a . Predicate a -> Stack a -> Stack a
 filter (Predicate p) = TU . extract
 	. run @(State (Maybe :. Nonempty Stack := a)) % Nothing
