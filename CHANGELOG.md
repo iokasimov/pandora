@@ -322,3 +322,4 @@
 * Define `Divisible` typeclass
 * Define `Function` module to contain instances for function
 * Move `!`, `%`, `&` to `Function` module
+* Remove `Pandora.Core.Morphism` module

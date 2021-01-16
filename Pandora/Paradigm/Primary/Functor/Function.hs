@@ -45,3 +45,6 @@ x ! _ = x
 {-# INLINE (&) #-}
 (&) :: a -> (a -> b) -> b
 x & f = f x
+
+fix :: (a -> a) -> a
+fix f = let x = f x in x
