@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 
 infixr 2 !
 infixr 9 %
+infixl 1 &
 
 instance Covariant ((->) a) where
 	(<$>) = (.)
@@ -40,3 +41,7 @@ x ! _ = x
 {-# INLINE (%) #-}
 (%) :: (a -> b -> c) -> b -> a -> c
 (%) f x y = f y x
+
+{-# INLINE (&) #-}
+(&) :: a -> (a -> b) -> b
+x & f = f x
