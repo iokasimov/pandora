@@ -1,7 +1,6 @@
-module Pandora.Core.Morphism (fix, (&), (!), (%)) where
+module Pandora.Core.Morphism (fix, (&), (%)) where
 
 infixl 1 &
-infixr 2 !
 infixr 9 %
 
 fix :: (a -> a) -> a
@@ -10,10 +9,6 @@ fix f = let x = f x in x
 {-# INLINE (&) #-}
 (&) :: a -> (a -> b) -> b
 x & f = f x
-
-{-# INLINE (!) #-}
-(!) :: a -> b -> a
-x ! _ = x
 
 {-# INLINE (%) #-}
 (%) :: (a -> b -> c) -> b -> a -> c

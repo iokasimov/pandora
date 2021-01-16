@@ -1,11 +1,10 @@
 module Pandora.Paradigm.Structure.Ability.Monotonic where
 
-import Pandora.Core.Morphism ((!))
 import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Functor ((<+>))
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Paradigm.Primary.Functor.Function ()
+import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, satisfy)
 
 class Monotonic a e where

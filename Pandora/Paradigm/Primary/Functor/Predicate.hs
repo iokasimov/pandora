@@ -1,7 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Predicate where
 
 import Pandora.Core.Functor (type (~>), type (|->))
-import Pandora.Core.Morphism ((!))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Divisible (Divisible ((>*<)))
@@ -11,6 +10,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool, (?))
+import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 
 newtype Predicate a = Predicate (a -> Boolean)

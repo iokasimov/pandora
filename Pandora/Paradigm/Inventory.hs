@@ -11,9 +11,10 @@ import Pandora.Paradigm.Inventory.Environment as Exports
 import Pandora.Paradigm.Inventory.Accumulator as Exports
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Core.Morphism ((!), (%))
+import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor (Adjoint ((-|), (|-)), extract, (<->))
+import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)

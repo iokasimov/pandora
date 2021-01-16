@@ -321,3 +321,4 @@
 * Appear additional type parameter in `Substructure` typeclass
 * Define `Divisible` typeclass
 * Define `Function` module to contain instances for function
+* Move `!` to `Function` module

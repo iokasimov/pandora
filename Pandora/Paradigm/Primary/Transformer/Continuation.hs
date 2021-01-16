@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Transformer.Continuation where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
-import Pandora.Core.Morphism ((!), (%))
+import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -10,6 +10,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
+import Pandora.Paradigm.Primary.Functor.Function ((!))
 
 newtype Continuation r t a = Continuation { continue :: (->) ::|:. a :. t := r }
 

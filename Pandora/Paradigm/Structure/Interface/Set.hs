@@ -1,11 +1,12 @@
 module Pandora.Paradigm.Structure.Interface.Set where
 
-import Pandora.Core.Morphism ((!), (%))
+import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Object.Setoid (Setoid ((/=)))
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Pattern.Object.Quasiring (one)
+import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Functor.Product (attached)

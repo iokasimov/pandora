@@ -1,8 +1,9 @@
 module Pandora.Pattern.Functor.Contravariant where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism ((!), (%))
+import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.))
+-- import Pandora.Paradigm.Primary.Functor.Function ((!))
 
 infixl 4 >$<, $<, >$
 
@@ -22,7 +23,12 @@ class Contravariant (t :: * -> *) where
 	contramap f x = f >$< x
 	-- | Replace all locations in the output with the same value
 	(>$) :: b -> t b -> t a
-	(>$) = contramap . (!)
+	(>$) = contramap . (\x _ -> x)
+
+
+	-- (a -> b)
+
+	-- (!) :: a -> b -> a
 	-- | Flipped version of '>$'
 	($<) :: t b -> b -> t a
 	($<) = (%) (>$)

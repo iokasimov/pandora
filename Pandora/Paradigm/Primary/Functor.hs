@@ -19,9 +19,8 @@ import Pandora.Paradigm.Primary.Functor.Product as Exports
 import Pandora.Paradigm.Primary.Functor.Delta as Exports
 import Pandora.Paradigm.Primary.Functor.Constant as Exports
 import Pandora.Paradigm.Primary.Functor.Identity as Exports
-import Pandora.Paradigm.Primary.Functor.Function ()
+import Pandora.Paradigm.Primary.Functor.Function as Exports
 
-import Pandora.Core.Morphism ((!))
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
