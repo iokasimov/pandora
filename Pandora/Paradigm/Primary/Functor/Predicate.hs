@@ -19,8 +19,7 @@ instance Contravariant Predicate where
 	f >$< Predicate g = Predicate $ g . f
 
 instance Divisible Predicate where
-	f >*< Predicate g = \(Predicate h) -> Predicate $ \x -> case f x of
-		b :*: c -> g b * h c
+	Predicate g >*< Predicate h = Predicate $ \(b :*: c) -> g b * h c
 
 instance Determinable Predicate where
 	determine = Predicate (True !)

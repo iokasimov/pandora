@@ -13,6 +13,5 @@ instance Contravariant Equivalence where
 	f >$< Equivalence g = Equivalence $ \x y -> g (f x) (f y)
 
 instance Divisible Equivalence where
-	f >*< Equivalence g = \(Equivalence h) -> Equivalence $ \x y -> case f x of
-		(xl :*: xr) -> case f y of
-			(yl :*: yr) -> g xl yl * h xr yr
+	Equivalence g >*< Equivalence h = Equivalence $
+		\(x :*: x') (y :*: y') -> g x y * h x' y'
