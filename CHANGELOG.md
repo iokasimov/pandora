@@ -320,3 +320,4 @@
 * Remove `pop` method of `Stack`, use `Substructure` `Tail` instance instead
 * Appear additional type parameter in `Substructure` typeclass
 * Define `Divisible` typeclass
+* Define `Function` module to contain instances for function

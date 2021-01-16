@@ -11,6 +11,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
+import Pandora.Paradigm.Primary.Functor.Function ()
 
 newtype Yoneda t a = Yoneda
 	{ yoneda :: forall b . (a -> b) -> t b }

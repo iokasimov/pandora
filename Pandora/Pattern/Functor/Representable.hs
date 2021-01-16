@@ -1,8 +1,6 @@
 module Pandora.Pattern.Functor.Representable where
 
 import Pandora.Core.Functor (type (<-|))
-import Pandora.Core.Morphism ((%))
-import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |
@@ -23,8 +21,3 @@ class Pointable t => Representable t where
 	-- | Prefix and flipped version of '<#>'
 	index :: t a -> Representation t -> a
 	index x r = r <#> x
-
-instance Representable ((->) e) where
-	type Representation ((->) e) = e
-	(<#>) = (identity %)
-	tabulate = identity

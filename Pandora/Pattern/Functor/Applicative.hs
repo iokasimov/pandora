@@ -45,6 +45,3 @@ class Covariant t => Applicative t where
 		-> t :. u :. v :. w := a
 		-> t :. u :. v :. w := b
 	f <****> x = (<***>) <$> f <*> x
-
-instance Applicative ((->) e) where
-	(<*>) f g x = f x (g x)

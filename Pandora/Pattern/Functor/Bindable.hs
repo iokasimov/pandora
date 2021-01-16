@@ -37,8 +37,5 @@ class Covariant t => Bindable t where
 	($>>=) :: Covariant u => u :. t := a -> (a -> t b) -> u :. t := b
 	x $>>= f = (>>= f) <$> x
 
-	(<>>=) :: (t b -> c) -> (a -> t b) -> t a -> c
-	f <>>= g = f <$> (>>= g)
-
-instance Bindable ((->) e) where
-	f >>= g = \x -> g (f x) x
+	-- (<>>=) :: (t b -> c) -> (a -> t b) -> t a -> c
+	-- f <>>= g = f <$> (>>= g)

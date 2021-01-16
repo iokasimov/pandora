@@ -33,6 +33,7 @@ library
     Pandora.Paradigm.Primary.Object.Numerator
     Pandora.Paradigm.Primary.Object.Denumerator
     Pandora.Paradigm.Primary.Functor
+    Pandora.Paradigm.Primary.Functor.Function
     Pandora.Paradigm.Primary.Functor.Conclusion
     Pandora.Paradigm.Primary.Functor.Constant
     Pandora.Paradigm.Primary.Functor.Delta

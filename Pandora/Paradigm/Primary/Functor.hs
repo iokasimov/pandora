@@ -19,6 +19,7 @@ import Pandora.Paradigm.Primary.Functor.Product as Exports
 import Pandora.Paradigm.Primary.Functor.Delta as Exports
 import Pandora.Paradigm.Primary.Functor.Constant as Exports
 import Pandora.Paradigm.Primary.Functor.Identity as Exports
+import Pandora.Paradigm.Primary.Functor.Function ()
 
 import Pandora.Core.Morphism ((!))
 import Pandora.Core.Functor (type (~>))
