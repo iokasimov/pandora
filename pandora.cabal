@@ -130,6 +130,7 @@ library
     Pandora.Pattern.Functor.Determinable
     Pandora.Pattern.Functor.Distributive
     Pandora.Pattern.Functor.Avoidable
+    Pandora.Pattern.Functor.Divisible
     Pandora.Pattern.Functor.Extendable
     Pandora.Pattern.Functor.Extractable
     Pandora.Pattern.Functor.Invariant
