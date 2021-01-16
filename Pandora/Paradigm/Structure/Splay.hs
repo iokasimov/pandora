@@ -3,12 +3,12 @@
 module Pandora.Paradigm.Structure.Splay where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Paradigm.Primary.Functor (left, right, branches)
+import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag), type (:#))

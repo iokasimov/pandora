@@ -3,7 +3,6 @@
 module Pandora.Paradigm.Structure.Ability.Comprehension where
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -12,9 +11,10 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
 

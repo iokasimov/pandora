@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Stack where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (|->))
-import Pandora.Core.Morphism ((&), (%))
+import Pandora.Core.Morphism ((&))
 import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -21,7 +21,7 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
-import Pandora.Paradigm.Primary.Functor.Function ((!))
+import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))

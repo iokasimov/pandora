@@ -4,7 +4,7 @@
 module Pandora.Paradigm.Structure.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism ((&), (%))
+import Pandora.Core.Morphism ((&))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -17,7 +17,7 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
-import Pandora.Paradigm.Primary.Functor.Function ((!))
+import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), attached)

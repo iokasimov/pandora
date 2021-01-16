@@ -1,9 +1,7 @@
 module Pandora.Pattern.Functor.Contravariant where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Core.Morphism ((%))
 import Pandora.Pattern.Category ((.))
--- import Pandora.Paradigm.Primary.Functor.Function ((!))
 
 infixl 4 >$<, $<, >$
 
@@ -31,7 +29,7 @@ class Contravariant (t :: * -> *) where
 	-- (!) :: a -> b -> a
 	-- | Flipped version of '>$'
 	($<) :: t b -> b -> t a
-	($<) = (%) (>$)
+	x $< v = v >$ x
 	-- | Fill the input of evaluation
 	full :: t () -> t a
 	full x = () >$ x

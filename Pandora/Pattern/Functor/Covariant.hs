@@ -1,9 +1,8 @@
 module Pandora.Pattern.Functor.Covariant where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (<-|))
-import Pandora.Core.Morphism (fix, (%))
+import Pandora.Core.Morphism (fix)
 import Pandora.Pattern.Category (Category ((.), ($)))
--- import Pandora.Paradigm.Primary.Functor.Function ((!))
 
 infixl 4 <$>, <$, $>
 infixl 3 <$$>
@@ -34,7 +33,7 @@ class Covariant (t :: * -> *) where
 	(<$) = comap . (\x _ -> x)
 	-- | Flipped version of '<$'
 	($>) :: t a -> b -> t b
-	($>) = (%) (<$)
+	x $> v = v <$ x
 	-- | Discards the result of evaluation
 	void :: t a -> t ()
 	void x = () <$ x
