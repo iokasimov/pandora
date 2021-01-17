@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right, this, that, here, there, branches) where
+module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right, this, that, here, there, branches, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
@@ -24,6 +24,7 @@ import Pandora.Paradigm.Primary.Functor.Function as Exports
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Structure.Ability.Monotonic (reduce)
 
 instance Adjoint (Product s) ((->) s) where
@@ -75,3 +76,6 @@ branches (Just x) (Just y) = Both x y
 branches Nothing (Just y) = Right y
 branches (Just x) Nothing = Left x
 branches Nothing Nothing = End
+
+match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
+match (Predicate p) f x r = p x ? f x :*: x $ r :*: x

@@ -324,3 +324,4 @@
 * Move `!`, `%`, `&` to `Function` module
 * Remove `Pandora.Core.Morphism` module
 * Define `$$|-`, `$$$|-`, `$$$$|-` methods of `Adjoint` typeclass
+* Define `match` method to chain predicates
