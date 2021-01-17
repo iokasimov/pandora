@@ -2,7 +2,7 @@ module Pandora.Pattern.Functor.Adjoint where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>)))
 
 type (-|) = Adjoint
 
@@ -39,5 +39,15 @@ class (Covariant t, Covariant u) => Adjoint t u where
 	(-|$) :: Covariant v => v a -> (t a -> b) -> v (u b)
 	x -|$ f = (-| f) <$> x
 
+	-- | Versions of `|-` with various nesting levels
 	($|-) :: Covariant v => v (t a) -> (a -> u b) -> v b
 	x $|- f = (|- f) <$> x
+	($$|-) :: (Covariant v, Covariant w) =>
+		v :. w :. t := a -> (a -> u b) -> v :. w := b
+	x $$|- f = (|- f) <$$> x
+	($$$|-) :: (Covariant v, Covariant w, Covariant x) =>
+		v :. w :. x :. t := a -> (a -> u b) -> v :. w :. x := b
+	x $$$|- f = (|- f) <$$$> x
+	($$$$|-) :: (Covariant v, Covariant w, Covariant x, Covariant y) =>
+		v :. w :. x :. y :. t := a -> (a -> u b) -> v :. w :. x :. y := b
+	x $$$$|- f = (|- f) <$$$$> x
