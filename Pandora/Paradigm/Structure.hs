@@ -10,16 +10,17 @@ import Pandora.Paradigm.Structure.Binary as Exports
 import Pandora.Paradigm.Structure.Stack as Exports
 import Pandora.Paradigm.Structure.Stream as Exports
 
-import Pandora.Pattern (($), (.), extract)
+import Pandora.Pattern (($), (.), (+), extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
-import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
@@ -56,3 +57,11 @@ instance Substructure Right (Delta <:.> t) a where
 instance Substructure Tail (Tap t) a where
 	type Substructural Tail (Tap t) a = t a
 	substructure (extract -> Tap x xs) = Store $ xs :*: Tag . Tap x
+
+-- TODO: define traversal order
+instance Convertible Just (Construction Wye) (Construction Maybe) where
+	conversion (extract -> Construct x End) = Construct x Nothing
+	conversion (extract -> Construct x (Left lst)) = Construct x . Just . conversion $ Tag @Just lst
+	conversion (extract -> Construct x (Right rst)) = Construct x . Just . conversion $ Tag @Just rst
+	conversion (extract -> Construct x (Both lst rst)) = Construct x . Just
+		$ conversion (Tag @Just lst) + conversion (Tag @Just rst)

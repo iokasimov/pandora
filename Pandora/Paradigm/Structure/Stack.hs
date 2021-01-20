@@ -99,6 +99,10 @@ linearize = TU . extract . run @(State (Maybe :. Nonempty Stack := a)) % Nothing
 
 type instance Nonempty Stack = Construction Maybe
 
+instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
+	Construct x Nothing + ys = Construct x $ Just ys
+	Construct x (Just xs) + ys = Construct x . Just $ xs + ys
+
 instance Focusable Head (Construction Maybe) where
 	type Focusing Head (Construction Maybe) a = a
 	focusing (extract -> stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
