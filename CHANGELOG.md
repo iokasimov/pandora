@@ -327,3 +327,4 @@
 * Define `match` method to chain predicates
 
 # 0.3.6
+* Define `Walk` datatype to define different tree/graph traversals
