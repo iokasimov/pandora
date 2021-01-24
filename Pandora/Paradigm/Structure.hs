@@ -10,7 +10,7 @@ import Pandora.Paradigm.Structure.Binary as Exports
 import Pandora.Paradigm.Structure.Stack as Exports
 import Pandora.Paradigm.Structure.Stream as Exports
 
-import Pandora.Pattern (($), (.), (+), extract)
+import Pandora.Pattern (($), (.), (+), extract, point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
@@ -21,6 +21,7 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), at
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
+-- import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
@@ -64,3 +65,10 @@ instance Convertible Preorder (Construction Wye) where
 	conversion (extract -> Construct x (Left lst)) = Construct x . Just $ convert @Preorder lst
 	conversion (extract -> Construct x (Right rst)) = Construct x . Just $ convert @Preorder rst
 	conversion (extract -> Construct x (Both lst rst)) = Construct x . Just $ convert @Preorder lst + convert @Preorder rst
+
+instance Convertible Inorder (Construction Wye) where
+	type Conversion Inorder (Construction Wye) a = Construction Maybe a
+	conversion (extract -> Construct x End) = Construct x Nothing
+	conversion (extract -> Construct x (Left lst)) = convert @Inorder lst + point x
+	conversion (extract -> Construct x (Right rst)) = point x + convert @Inorder rst
+	conversion (extract -> Construct x (Both lst rst)) = convert @Inorder lst + point x + convert @Inorder rst
