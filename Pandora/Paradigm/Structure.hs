@@ -59,7 +59,7 @@ instance Substructure Tail (Tap t) a where
 	substructure (extract -> Tap x xs) = Store $ xs :*: Tag . Tap x
 
 -- TODO: define traversal order
-instance Convertible Just (Construction Maybe) (Construction Wye) where
+instance Convertible Just (Construction Maybe) (Construction Wye) a where
 	conversion (extract -> Construct x End) = Construct x Nothing
 	conversion (extract -> Construct x (Left lst)) = Construct x . Just . conversion $ Tag @Just lst
 	conversion (extract -> Construct x (Right rst)) = Construct x . Just . conversion $ Tag @Just rst
