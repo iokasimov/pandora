@@ -160,7 +160,7 @@ library
     Pandora.Pattern.Transformer.Lowerable
   default-extensions:
     DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints, InstanceSigs
-    FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms, LambdaCase
+    FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms, LambdaCase, FunctionalDependencies
     MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes, ViewPatterns
     ScopedTypeVariables, TypeApplications, TypeFamilies, TypeFamilyDependencies, TypeOperators
   default-language: Haskell2010
