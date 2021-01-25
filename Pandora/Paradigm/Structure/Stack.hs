@@ -36,6 +36,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
+import Pandora.Paradigm.Structure.Ability.Convertible (Convertible (Conversion, conversion))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
@@ -102,6 +103,10 @@ type instance Nonempty Stack = Construction Maybe
 instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 	Construct x Nothing + ys = Construct x $ Just ys
 	Construct x (Just xs) + ys = Construct x . Just $ xs + ys
+
+instance Convertible Stack (Construction Maybe) where
+	type Conversion Stack (Construction Maybe) = Stack
+	conversion = TU . Just . extract . run
 
 instance Focusable Head (Construction Maybe) where
 	type Focusing Head (Construction Maybe) a = a
