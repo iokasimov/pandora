@@ -60,25 +60,25 @@ instance Substructure Tail (Tap t) a where
 
 instance Convertible Preorder (Construction Wye) where
 	type Conversion Preorder (Construction Wye) = Construction Maybe
-	conversion (extract -> Construct x End) = Construct x Nothing
-	conversion (extract -> Construct x (Left lst)) = Construct x . Just $ convert @Preorder lst
-	conversion (extract -> Construct x (Right rst)) = Construct x . Just $ convert @Preorder rst
-	conversion (extract -> Construct x (Both lst rst)) = Construct x . Just $ convert @Preorder lst + convert @Preorder rst
+	conversion (extract . run -> Construct x End) = Construct x Nothing
+	conversion (extract . run -> Construct x (Left lst)) = Construct x . Just $ convert @Preorder lst
+	conversion (extract . run -> Construct x (Right rst)) = Construct x . Just $ convert @Preorder rst
+	conversion (extract . run -> Construct x (Both lst rst)) = Construct x . Just $ convert @Preorder lst + convert @Preorder rst
 
 instance Convertible Inorder (Construction Wye) where
 	type Conversion Inorder (Construction Wye) = Construction Maybe
-	conversion (extract -> Construct x End) = Construct x Nothing
-	conversion (extract -> Construct x (Left lst)) = convert @Inorder lst + point x
-	conversion (extract -> Construct x (Right rst)) = point x + convert @Inorder rst
-	conversion (extract -> Construct x (Both lst rst)) = convert @Inorder lst + point x + convert @Inorder rst
+	conversion (extract . run -> Construct x End) = Construct x Nothing
+	conversion (extract . run -> Construct x (Left lst)) = convert @Inorder lst + point x
+	conversion (extract . run -> Construct x (Right rst)) = point x + convert @Inorder rst
+	conversion (extract . run -> Construct x (Both lst rst)) = convert @Inorder lst + point x + convert @Inorder rst
 
 instance Convertible Postorder (Construction Wye) where
 	type Conversion Postorder (Construction Wye) = Construction Maybe
-	conversion (extract -> Construct x End) = Construct x Nothing
-	conversion (extract -> Construct x (Left lst)) = convert @Postorder lst + point x
-	conversion (extract -> Construct x (Right rst)) = convert @Postorder rst + point x
-	conversion (extract -> Construct x (Both lst rst)) = convert @Postorder lst + convert @Postorder rst + point x
+	conversion (extract . run -> Construct x End) = Construct x Nothing
+	conversion (extract . run -> Construct x (Left lst)) = convert @Postorder lst + point x
+	conversion (extract . run -> Construct x (Right rst)) = convert @Postorder rst + point x
+	conversion (extract . run -> Construct x (Both lst rst)) = convert @Postorder lst + convert @Postorder rst + point x
 
 instance Convertible o (Construction Wye) => Convertible o Binary where
-	type Conversion o Binary = Maybe <:.> (Conversion o (Construction Wye))
-	conversion = unite . comap (convert @o) . run . extract
+	type Conversion o Binary = Maybe <:.> Conversion o (Construction Wye)
+	conversion = unite . comap (convert @o) . run . extract . run
