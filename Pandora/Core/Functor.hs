@@ -1,6 +1,6 @@
 module Pandora.Core.Functor where
 
-infixr 0 :=, <-|, |->, ~>
+infixr 0 :=, <:=, :=>, ~>
 infixr 1 .:, :.
 infixr 2 ::|:., ::|.:, ::|::
 
@@ -14,10 +14,10 @@ type (:.) t u a = t (u a)
 type (.:) t u a = u (t a)
 
 -- | Coalgebra's type operator
-type (|->) a t = a -> t a
+type (:=>) a t = a -> t a
 
 -- | Algebra's type operator
-type (<-|) a t = t a -> a
+type (<:=) a t = t a -> a
 
 -- | Numerator transformation
 type (~>) t u = forall a . t a -> u a

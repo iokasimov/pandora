@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Inventory.Store where
 
-import Pandora.Core (type (:.), type (:=), type (<-|), type (~>))
+import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
@@ -49,7 +49,7 @@ position :: Storable s t => t a -> s
 position = attached . run @(Store _) . adapt
 
 -- | Given an index return value
-access :: Storable s t => s -> a <-| t
+access :: Storable s t => s -> a <:= t
 access s = extract % s . run @(Store _) . adapt
 
 -- | Change index with function

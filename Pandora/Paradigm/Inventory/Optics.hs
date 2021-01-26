@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Inventory.Optics where
 
-import Pandora.Core.Functor (type (|->))
+import Pandora.Core.Functor (type (:=>))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant ((<$))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -16,7 +16,7 @@ infixr 0 :-.
 type (:-.) src tgt = Lens src tgt
 
 -- Reference to taret within some source
-type Lens src tgt = src |-> Store tgt
+type Lens src tgt = src :=> Store tgt
 
 -- Lens as natural transformation
 type (:~.) src tgt = forall a . Lens (src a) (tgt a)

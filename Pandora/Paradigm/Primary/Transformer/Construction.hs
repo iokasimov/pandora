@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (|->), type (~>))
+import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -70,7 +70,7 @@ deconstruct :: Construction t a -> t :. Construction t := a
 deconstruct ~(Construct _ xs) = xs
 
 -- Generate a construction from seed using effectful computation
-(.-+) :: Covariant t => a |-> t -> a |-> Construction t
+(.-+) :: Covariant t => a :=> t -> a :=> Construction t
 f .-+ x = Construct x $ (f .-+) <$> f x
 
 section :: Comonad t => t ~> Construction t

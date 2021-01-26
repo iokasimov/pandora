@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Representable where
 
-import Pandora.Core.Functor (type (<-|))
+import Pandora.Core.Functor (type (<:=))
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |
@@ -15,7 +15,7 @@ class Pointable t => Representable t where
 	{-# MINIMAL (<#>), tabulate #-}
 	type Representation t :: *
 	-- | Infix and flipped version of 'index'
-	(<#>) :: Representation t -> a <-| t
+	(<#>) :: Representation t -> a <:= t
 	-- Build with a function which describes value
 	tabulate :: (Representation t -> a) -> t a
 	-- | Prefix and flipped version of '<#>'

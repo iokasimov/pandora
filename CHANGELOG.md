@@ -329,3 +329,4 @@
 # 0.3.6
 * Define `Walk` datatype to define different tree/graph traversals
 * Make `a` paremeter in `:~.` to be existentially qualified
+* Rename type operators: `|->` to `:=>` and `<-|` to `<:=`

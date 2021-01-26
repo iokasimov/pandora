@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Predicate where
 
-import Pandora.Core.Functor (type (~>), type (|->))
+import Pandora.Core.Functor (type (~>), type (:=>))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Divisible (Divisible ((>*<)))
@@ -24,7 +24,7 @@ instance Divisible Predicate where
 instance Determinable Predicate where
 	determine = Predicate (True !)
 
-equate :: Setoid a => a |-> Predicate
+equate :: Setoid a => a :=> Predicate
 equate x = Predicate (== x)
 
 satisfy :: (Pointable t, Avoidable t) => Predicate a -> a -> t a

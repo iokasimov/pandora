@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Stack where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (|->))
+import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
 import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -81,7 +81,7 @@ instance Substructure Tail Stack a where
 	substructure (run . extract -> Nothing) = Store $ unite Nothing :*: point . identity
 
 instance Setoid a => Substructure (Delete First) Stack a where
-	type Substructural (Delete First) Stack a = a |-> Stack
+	type Substructural (Delete First) Stack a = a :=> Stack
 	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
 
 		delete :: Setoid a => a -> Stack a -> Stack a
@@ -128,7 +128,7 @@ instance Substructure Tail (Construction Maybe) a where
 	substructure (extract -> Construct x xs) = Store $ unite xs :*: point . Construct x . run
 
 instance Setoid a => Substructure (Delete First) (Construction Maybe) a where
-	type Substructural (Delete First) (Construction Maybe) a = a |-> Stack
+	type Substructural (Delete First) (Construction Maybe) a = a :=> Stack
 	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
 
 		delete :: Setoid a => a -> Nonempty Stack a -> Stack a
@@ -136,7 +136,7 @@ instance Setoid a => Substructure (Delete First) (Construction Maybe) a where
 			$ unite $ Construct y . run . delete x <$> ys
 
 instance Setoid a => Substructure (Delete All) (Construction Maybe) a where
-	type Substructural (Delete All) (Construction Maybe) a = a |-> Stack
+	type Substructural (Delete All) (Construction Maybe) a = a :=> Stack
 	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
 
 		delete :: Setoid a => a -> Nonempty Stack a -> Stack a

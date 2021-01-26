@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Tagged where
 
-import Pandora.Core.Functor (type (|->), type (~>))
+import Pandora.Core.Functor (type (:=>), type (~>))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -91,5 +91,5 @@ instance Group a => Group (Tagged tag a) where
 retag :: forall new old . Tagged old ~> Tagged new
 retag (Tag x) = Tag x
 
-tagself :: a |-> Tagged a
+tagself :: a :=> Tagged a
 tagself = Tag
