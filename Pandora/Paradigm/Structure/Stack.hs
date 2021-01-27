@@ -127,22 +127,24 @@ instance Substructure Tail (Construction Maybe) a where
 	type Substructural Tail (Construction Maybe) a = Stack a
 	substructure (extract -> Construct x xs) = Store $ unite xs :*: point . Construct x . run
 
-instance Setoid a => Substructure (Delete First) (Construction Maybe) a where
-	type Substructural (Delete First) (Construction Maybe) a = a :=> Stack
-	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
+-- FIXME: you can only get value with this lens
+instance Substructure (Delete First) (Construction Maybe) a where
+	type Substructural (Delete First) (Construction Maybe) a = Predicate a -> Stack a
+	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
 
-		delete :: Setoid a => a -> Nonempty Stack a -> Stack a
-		delete x (Construct y ys) = x == y ? unite ys
-			$ unite $ Construct y . run . delete x <$> ys
+		delete :: Predicate a -> Nonempty Stack a -> Stack a
+		delete (Predicate p) (Construct x xs) = p x ? unite xs
+			$ unite $ Construct x . run . delete (Predicate p) <$> xs
 
-instance Setoid a => Substructure (Delete All) (Construction Maybe) a where
-	type Substructural (Delete All) (Construction Maybe) a = a :=> Stack
-	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
+-- FIXME: you can only get value with this lens
+instance Substructure (Delete All) (Construction Maybe) a where
+	type Substructural (Delete All) (Construction Maybe) a = Predicate a -> Stack a
+	substructure (extract -> ns) = Store $ delete % ns :*: (point ns !) where
 
-		delete :: Setoid a => a -> Nonempty Stack a -> Stack a
-		delete x (Construct y ys) = x == y
-			? (unite . join $ run . delete x <$> ys)
-			$ (unite $ Construct y . run . delete x <$> ys)
+		delete :: Predicate a -> Nonempty Stack a -> Stack a
+		delete (Predicate p) (Construct x xs) = p x
+			? (unite . join $ run . delete (Predicate p) <$> xs)
+			$ (unite $ Construct x . run . delete (Predicate p) <$> xs)
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
