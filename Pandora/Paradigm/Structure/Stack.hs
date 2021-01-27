@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Stack where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -80,14 +80,24 @@ instance Substructure Tail Stack a where
 	substructure (run . extract -> Just ns) = point . unite . Just <$> sub @Tail ns
 	substructure (run . extract -> Nothing) = Store $ unite Nothing :*: point . identity
 
-instance Setoid a => Substructure (Delete First) Stack a where
-	type Substructural (Delete First) Stack a = a :=> Stack
-	substructure (extract -> xs) = Store $ delete % xs :*: (point xs !) where
+instance Substructure (Delete First) Stack a where
+	type Substructural (Delete First) Stack a = Predicate a -> Stack a
+	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
 
-		delete :: Setoid a => a -> Stack a -> Stack a
+		delete :: Predicate a -> Stack a -> Stack a
 		delete _ (TU Nothing) = TU Nothing
-		delete x (TU (Just (Construct y ys))) = x == y ? TU ys
-			$ lift . Construct y . run . delete x $ TU ys
+		delete (Predicate p) (TU (Just (Construct y ys))) = p y ? TU ys
+			$ lift . Construct y . run . delete (Predicate p) $ TU ys
+
+instance Substructure (Delete All) Stack a where
+	type Substructural (Delete All) Stack a = Predicate a -> Stack a
+	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
+
+		delete :: Predicate a -> Stack a -> Stack a
+		delete _ (TU Nothing) = TU Nothing
+		delete (Predicate p) (TU (Just (Construct x xs))) = p x
+			? delete (Predicate p) (TU xs)
+			$ lift . Construct x . run . delete (Predicate p) $ TU xs
 
 filter :: forall a . Predicate a -> Stack a -> Stack a
 filter (Predicate p) = TU . extract
