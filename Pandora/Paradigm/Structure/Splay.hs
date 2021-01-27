@@ -13,7 +13,9 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag), type (:#))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Optics ((%~))
+import Pandora.Paradigm.Schemes (TU (TU))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (sub)
 import Pandora.Paradigm.Structure.Binary ()
@@ -42,10 +44,8 @@ instance Rotatable (Right Zig) (Construction Wye) where
 		found = extract <$> right st
 
 		subtree :: Wye :. Construction Wye := a
-		subtree = branches (left st)
-			. Just . Construct parent $ branches
-				(deconstruct <$> right st >>= left)
-				(deconstruct <$> right st >>= right)
+		subtree = branches (left st) . Just . Construct parent $ branches
+			(deconstruct <$> right st >>= left) (deconstruct <$> right st >>= right)
 
 instance Rotatable (Left (Zig Zig)) (Construction Wye) where
 	type Rotational (Left (Zig Zig)) (Construction Wye) a = Maybe (Construction Wye a)
@@ -57,8 +57,8 @@ instance Rotatable (Right (Zig Zig)) (Construction Wye) where
 
 instance Rotatable (Left (Zig Zag)) (Construction Wye) where
 	type Rotational (Left (Zig Zag)) (Construction Wye) a = Maybe (Construction Wye a)
-	rotation (Tag tree) = rotate @(Left Zig) $ sub @Left %~ (>>= rotate @(Right Zig)) $ tree
+	rotation (Tag tree) = rotate @(Left Zig) $ sub @Left %~ (TU . (>>= rotate @(Right Zig)) . run) $ tree
 
 instance Rotatable (Right (Zig Zag)) (Construction Wye) where
 	type Rotational (Right (Zig Zag)) (Construction Wye) a = Maybe (Construction Wye a)
-	rotation (Tag tree) = rotate @(Right Zig) $ sub @Right %~ (>>= rotate @(Left Zig)) $ tree
+	rotation (Tag tree) = rotate @(Right Zig) $ sub @Right %~ (TU . (>>= rotate @(Left Zig)) . run) $ tree

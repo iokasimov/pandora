@@ -27,7 +27,7 @@ import Pandora.Paradigm.Schemes (TU (TU), T_ (T_), T_U (T_U), type (<:.>), type 
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (type (:-.), (|>), (%~))
+import Pandora.Paradigm.Inventory.Optics ((%~))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
@@ -64,18 +64,15 @@ instance Measurable Heighth Binary where
 instance Nullable Binary where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
-instance Substructure Left Binary a where
-	type Substructural Left Binary a = Binary a
-	substructure empty_tree@(run . extract -> Nothing) = Store $ extract empty_tree :*: (!) empty_tree
-	substructure (run . extract -> Just tree) = Tag . lift <$> (sub @Left |> can_be_empty) tree
+instance Substructure Left Binary where
+	type Substructural Left Binary = Binary
+	substructure empty_tree@(run . extract . run -> Nothing) = Store $ extract (run empty_tree) :*: (!) empty_tree
+	substructure (run . extract . run -> Just tree) = lift . lift <$> sub @Left tree
 
-instance Substructure Right Binary a where
-	type Substructural Right Binary a = Binary a
-	substructure empty_tree@(run . extract -> Nothing) = Store $ extract empty_tree :*: (!) empty_tree
-	substructure (run . extract -> Just tree) = Tag . lift <$> (sub @Right |> can_be_empty) tree
-
-can_be_empty :: Maybe (Construction Wye a) :-. Binary a
-can_be_empty maybe_tree = Store $ TU maybe_tree :*: run
+instance Substructure Right Binary where
+	type Substructural Right Binary = Binary
+	substructure empty_tree@(run . extract . run -> Nothing) = Store $ extract (run empty_tree) :*: (!) empty_tree
+	substructure (run . extract . run -> Just tree) = lift . lift <$> sub @Right tree
 
 binary :: forall t a . (Traversable t, Chain a) => t a -> Binary a
 binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @(Binary a) . insert' where
@@ -92,8 +89,8 @@ instance Focusable Root (Construction Wye) where
 	focusing (extract -> Construct x xs) = Store $ x :*: Tag . Construct % xs
 
 instance (forall a . Chain a) => Insertable (Construction Wye) where
-	insert x nonempty = let change = Just . resolve (insert x) (Construct x End) in
-		x <=> extract nonempty & order (sub @Left %~ change $ nonempty) nonempty (sub @Right %~ change $ nonempty)
+	insert x b = let change = lift . resolve (insert x) (Construct x End) . run in
+		x <=> extract b & order (sub @Left %~ change $ b) b (sub @Right %~ change $ b)
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
@@ -104,19 +101,27 @@ instance Measurable Heighth (Construction Wye) where
 		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
 		in lm <=> rm & order rm lm lm
 
-instance Substructure Left (Construction Wye) a where
-	type Substructural Left (Construction Wye) a = Maybe :. Construction Wye := a
-	substructure empty_tree@(extract -> Construct _ End) = Store $ Nothing :*: (empty_tree !)
-	substructure (extract -> Construct x (Left lst)) = Store $ Just lst :*: Tag . Construct x . resolve Left End
-	substructure (extract -> Construct x (Right rst)) = Store $ Nothing :*: Tag . Construct x . resolve (Both % rst) (Right rst)
-	substructure (extract -> Construct x (Both lst rst)) = Store $ Just lst :*: Tag . Construct x . resolve (Both % rst) (Right rst)
+instance Substructure Left (Construction Wye) where
+	type Substructural Left (Construction Wye) = Binary
+	substructure empty_tree@(extract . run -> Construct _ End) =
+		Store $ TU Nothing :*: (empty_tree !)
+	substructure (extract . run -> Construct x (Left lst)) =
+		Store $ lift lst :*: lift . Construct x . resolve Left End . run
+	substructure (extract . run -> Construct x (Right rst)) =
+		Store $ empty :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
+	substructure (extract . run -> Construct x (Both lst rst)) =
+		Store $ lift lst :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
 
-instance Substructure Right (Construction Wye) a where
-	type Substructural Right (Construction Wye) a = Maybe :. Construction Wye := a
-	substructure emtpy_tree@(extract -> Construct _ End) = Store $ Nothing :*: (emtpy_tree !)
-	substructure (extract -> Construct x (Left lst)) = Store $ Nothing :*: Tag . Construct x . resolve (Both lst) (Left lst)
-	substructure (extract -> Construct x (Right rst)) = Store $ Just rst :*: Tag . Construct x . resolve Right End
-	substructure (extract -> Construct x (Both lst rst)) = Store $ Just rst :*: Tag . Construct x . resolve (Both lst) (Left lst)
+instance Substructure Right (Construction Wye) where
+	type Substructural Right (Construction Wye) = Binary
+	substructure emtpy_tree@(extract . run -> Construct _ End) =
+		Store $ empty :*: (emtpy_tree !)
+	substructure (extract . run -> Construct x (Left lst)) =
+		Store $ empty :*: lift . Construct x . resolve (Both lst) (Left lst) . run
+	substructure (extract . run -> Construct x (Right rst)) =
+		Store $ lift rst :*: lift . Construct x . resolve Right End . run
+	substructure (extract . run -> Construct x (Both lst rst)) =
+		 Store $ lift rst :*: lift . Construct x . resolve (Both lst) (Left lst) . run
 
 data Biforked a = Top | Leftward a | Rightward a
 

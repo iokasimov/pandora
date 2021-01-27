@@ -9,9 +9,9 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative ((<+>))
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
+import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
-import Pandora.Pattern.Functor.Bindable (Bindable (join))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%), (&))
+import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
@@ -31,7 +31,7 @@ import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (view, (^.))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
@@ -42,7 +42,7 @@ import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Command (Delete), Segment (All, First, Tail), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -56,7 +56,7 @@ instance Semigroup (Stack a) where
 		$ TU @Covariant @Covariant xs + TU @Covariant @Covariant ys
 
 instance Monoid (Stack a) where
-	zero = TU Nothing
+	zero = empty
 
 instance Focusable Head Stack where
 	type Focusing Head Stack a = Maybe a
@@ -65,7 +65,7 @@ instance Focusable Head Stack where
 		Nothing -> Tag $ sub @Tail ^. stack
 
 instance Insertable Stack where
-	insert x (run -> stack) = unite $ (Construct x . Just <$> stack) <+> (point . point) x
+	insert x (run -> stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 
 instance Measurable Length Stack where
 	type Measural Length Stack a = Numerator
@@ -75,29 +75,31 @@ instance Measurable Length Stack where
 instance Nullable Stack where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
-instance Substructure Tail Stack a where
-	type Substructural Tail Stack a = Stack a
-	substructure (run . extract -> Just ns) = point . unite . Just <$> sub @Tail ns
-	substructure (run . extract -> Nothing) = Store $ unite Nothing :*: point . identity
+instance Substructure Tail Stack where
+	type Substructural Tail Stack = Stack
+	substructure (run . extract . run -> Just ns) = TU . Tag . TU . Just <$> sub @Tail ns
+	substructure (run . extract . run -> Nothing) = Store $ TU Nothing :*: TU . Tag . identity
 
-instance Substructure (Delete First) Stack a where
-	type Substructural (Delete First) Stack a = Predicate a -> Stack a
-	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
+-- TODO: how to provide focused substructure with * -> * kind?
+-- instance Substructure (Delete First) Stack where
+-- 	type Substructural (Delete First) Stack = Predicate ~> Stack
+-- 	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
+--
+-- 		delete :: Predicate a -> Stack a -> Stack a
+-- 		delete _ (TU Nothing) = TU Nothing
+-- 		delete (Predicate p) (TU (Just (Construct y ys))) = p y ? TU ys
+-- 			$ lift . Construct y . run . delete (Predicate p) $ TU ys
 
-		delete :: Predicate a -> Stack a -> Stack a
-		delete _ (TU Nothing) = TU Nothing
-		delete (Predicate p) (TU (Just (Construct y ys))) = p y ? TU ys
-			$ lift . Construct y . run . delete (Predicate p) $ TU ys
-
-instance Substructure (Delete All) Stack a where
-	type Substructural (Delete All) Stack a = Predicate a -> Stack a
-	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
-
-		delete :: Predicate a -> Stack a -> Stack a
-		delete _ (TU Nothing) = TU Nothing
-		delete (Predicate p) (TU (Just (Construct x xs))) = p x
-			? delete (Predicate p) (TU xs)
-			$ lift . Construct x . run . delete (Predicate p) $ TU xs
+-- TODO: how to provide focused substructure with * -> * kind?
+-- instance Substructure (Delete All) Stack where
+-- 	type Substructural (Delete All) Stack = Predicate ~> Stack
+-- 	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
+--
+-- 		delete :: Predicate a -> Stack a -> Stack a
+-- 		delete _ (TU Nothing) = TU Nothing
+-- 		delete (Predicate p) (TU (Just (Construct x xs))) = p x
+-- 			? delete (Predicate p) (TU xs)
+-- 			$ lift . Construct x . run . delete (Predicate p) $ TU xs
 
 filter :: forall a . Predicate a -> Stack a -> Stack a
 filter (Predicate p) = TU . extract
@@ -116,7 +118,7 @@ instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 
 instance Convertible Stack (Construction Maybe) where
 	type Conversion Stack (Construction Maybe) = Stack
-	conversion = TU . Just . extract . run
+	conversion = lift . extract . run
 
 instance Focusable Head (Construction Maybe) where
 	type Focusing Head (Construction Maybe) a = a
@@ -133,28 +135,31 @@ instance Measurable Length (Construction Maybe) where
 instance Monotonic a (Construction Maybe a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
 
-instance Substructure Tail (Construction Maybe) a where
-	type Substructural Tail (Construction Maybe) a = Stack a
-	substructure (extract -> Construct x xs) = Store $ unite xs :*: point . Construct x . run
+instance Substructure Tail (Construction Maybe) where
+	type Substructural Tail (Construction Maybe) = Stack
+	substructure (extract . run -> Construct x xs) =
+		Store $ TU xs :*: lift . Construct x . run
 
+-- TODO: how to provide focused substructure with * -> * kind?
 -- FIXME: you can only get value with this lens
-instance Substructure (Delete First) (Construction Maybe) a where
-	type Substructural (Delete First) (Construction Maybe) a = Predicate a -> Stack a
-	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
+-- instance Substructure (Delete First) (Construction Maybe) a where
+-- 	type Substructural (Delete First) (Construction Maybe) a = Predicate a -> Stack a
+-- 	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
+--
+-- 		delete :: Predicate a -> Nonempty Stack a -> Stack a
+-- 		delete (Predicate p) (Construct x xs) = p x ? unite xs
+-- 			$ unite $ Construct x . run . delete (Predicate p) <$> xs
 
-		delete :: Predicate a -> Nonempty Stack a -> Stack a
-		delete (Predicate p) (Construct x xs) = p x ? unite xs
-			$ unite $ Construct x . run . delete (Predicate p) <$> xs
-
+-- TODO: how to provide focused substructure with * -> * kind?
 -- FIXME: you can only get value with this lens
-instance Substructure (Delete All) (Construction Maybe) a where
-	type Substructural (Delete All) (Construction Maybe) a = Predicate a -> Stack a
-	substructure (extract -> ns) = Store $ delete % ns :*: (point ns !) where
+-- instance Substructure (Delete All) (Construction Maybe) a where
+-- 	type Substructural (Delete All) (Construction Maybe) a = Predicate a -> Stack a
+-- 	substructure (extract -> ns) = Store $ delete % ns :*: (point ns !) where
 
-		delete :: Predicate a -> Nonempty Stack a -> Stack a
-		delete (Predicate p) (Construct x xs) = p x
-			? (unite . join $ run . delete (Predicate p) <$> xs)
-			$ (unite $ Construct x . run . delete (Predicate p) <$> xs)
+-- 		delete :: Predicate a -> Nonempty Stack a -> Stack a
+-- 		delete (Predicate p) (Construct x xs) = p x
+-- 			? (unite . join $ run . delete (Predicate p) <$> xs)
+-- 			$ (unite $ Construct x . run . delete (Predicate p) <$> xs)
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 

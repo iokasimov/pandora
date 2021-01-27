@@ -2,7 +2,6 @@
 
 module Pandora.Paradigm.Structure.Rose where
 
-import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant (comap))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -36,10 +35,12 @@ instance Focusable Root Rose where
 instance Nullable Rose where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
-instance Substructure Just Rose a where
-	type Substructural Just Rose a = Stack :. Construction Stack := a
-	substructure (run . extract -> Nothing) = Store $ TU Nothing :*: (Tag (TU Nothing) !)
-	substructure (run . extract -> Just (Construct x xs)) = Store $ xs :*: Tag . lift . Construct x
+instance Substructure Just Rose where
+	type Substructural Just Rose = Stack <:.> Construction Stack
+	substructure (run . extract . run -> Nothing) =
+		Store $ empty :*: (lift empty !)
+	substructure (run . extract . run -> Just (Construct x xs)) =
+		Store $ TU xs :*: lift . lift . Construct x . run
 
 type instance Nonempty Rose = Construction Stack
 
@@ -47,6 +48,6 @@ instance Focusable Root (Construction Stack) where
 	type Focusing Root (Construction Stack) a = a
 	focusing (Tag rose) = Store $ extract rose :*: Tag . Construct % deconstruct rose
 
-instance Substructure Just (Construction Stack) a where
-	type Substructural Just (Construction Stack) a = Stack :. Construction Stack := a
-	substructure (extract -> Construct x xs) = Store $ xs :*: Tag . Construct x
+instance Substructure Just (Construction Stack) where
+	type Substructural Just (Construction Stack) = Stack <:.> Construction Stack
+	substructure (extract . run -> Construct x xs) = Store $ TU xs :*: lift . Construct x . run

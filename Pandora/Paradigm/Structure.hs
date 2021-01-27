@@ -10,15 +10,20 @@ import Pandora.Paradigm.Structure.Binary as Exports
 import Pandora.Paradigm.Structure.Stack as Exports
 import Pandora.Paradigm.Structure.Stream as Exports
 
-import Pandora.Pattern (($), (.), (+), comap, extract, point)
+import Pandora.Pattern.Category (($), (.))
+import Pandora.Pattern.Functor.Covariant (Covariant (comap))
+import Pandora.Pattern.Functor.Extractable (extract)
+import Pandora.Pattern.Functor.Pointable (point)
+import Pandora.Pattern.Transformer.Liftable (lift)
+import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
+import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
@@ -30,33 +35,35 @@ instance Monotonic s a => Monotonic s (s :*: a) where
 instance Nullable Maybe where
 	null = Predicate $ \case { Just _ -> True ; _ -> False }
 
-instance Substructure Left (Product s) a where
-	type Substructural Left (Product s) a = s
-	substructure (extract -> s :*: x) = Store $ s :*: Tag . (:*: x)
+instance Substructure Right (Product s) where
+	type Substructural Right (Product s) = Identity
+	substructure (extract . run -> s :*: x) =
+		Store $ Identity x :*: lift . (s :*:) . extract
 
-instance Substructure Right (Product s) a where
-	type Substructural Right (Product s) a = a
-	substructure (extract -> s :*: x) = Store $ x :*: Tag . (s :*:)
+instance Substructure Left Delta where
+	type Substructural Left Delta = Identity
+	substructure (extract . run -> l :^: r) =
+		Store $ Identity l :*: lift . (:^: r) . extract
 
-instance Substructure Left Delta a where
-	type Substructural Left Delta a = a
-	substructure (extract -> l :^: r) = Store $ l :*: Tag . (:^: r)
+instance Substructure Right Delta where
+	type Substructural Right Delta = Identity
+	substructure (extract . run -> l :^: r) =
+		Store $ Identity r :*: lift . (l :^:) . extract
 
-instance Substructure Right Delta a where
-	type Substructural Right Delta a = a
-	substructure (extract -> l :^: r) = Store $ r :*: Tag . (l :^:)
+instance Covariant t => Substructure Left (Delta <:.> t) where
+	type Substructural Left (Delta <:.> t) = t
+	substructure (run . extract . run -> l :^: r) =
+		Store $ r :*: lift . unite . (l :^:)
 
-instance Substructure Left (Delta <:.> t) a where
-	type Substructural Left (Delta <:.> t) a = t a
-	substructure (run . extract -> l :^: r) = Store $ r :*: Tag . unite . (l :^:)
+instance Covariant t => Substructure Right (Delta <:.> t) where
+	type Substructural Right (Delta <:.> t) = t
+	substructure (run . extract . run -> l :^: r) =
+		Store $ l :*: lift . unite . (:^: r)
 
-instance Substructure Right (Delta <:.> t) a where
-	type Substructural Right (Delta <:.> t) a = t a
-	substructure (run . extract -> l :^: r) = Store $ l :*: Tag . unite . (:^: r)
-
-instance Substructure Tail (Tap t) a where
-	type Substructural Tail (Tap t) a = t a
-	substructure (extract -> Tap x xs) = Store $ xs :*: Tag . Tap x
+instance Covariant t => Substructure Tail (Tap t) where
+	type Substructural Tail (Tap t) = t
+	substructure (extract . run -> Tap x xs) =
+		Store $ xs :*: lift . Tap x
 
 instance Convertible Preorder (Construction Wye) where
 	type Conversion Preorder (Construction Wye) = Construction Maybe
