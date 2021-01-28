@@ -42,7 +42,7 @@ import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 
 -- | Linear data structure that serves as a collection of elements
 type Stack = Maybe <:.> Construction Maybe
@@ -61,8 +61,8 @@ instance Monoid (Stack a) where
 instance Focusable Head Stack where
 	type Focusing Head Stack a = Maybe a
 	focusing (extract -> stack) = Store $ extract <$> run stack :*: \case
-		Just x -> stack & view (sub @Tail) & insert x & Tag
-		Nothing -> Tag $ sub @Tail ^. stack
+		Just x -> stack & subview @Tail & insert x & Tag
+		Nothing -> stack & subview @Tail & Tag
 
 instance Insertable Stack where
 	insert x (run -> stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
@@ -169,11 +169,11 @@ instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stack)) where
 
 instance Rotatable Left (Tap (Delta <:.> Stack)) where
 	type Rotational Left (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ sub @Tail ^. bs :^: insert x fs) <$> focus @Head ^. bs
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ subview @Tail bs :^: insert x fs) <$> focus @Head ^. bs
 
 instance Rotatable Right (Tap (Delta <:.> Stack)) where
 	type Rotational Right (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: sub @Tail ^. fs) <$> focus @Head ^. fs
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: subview @Tail fs) <$> focus @Head ^. fs
 
 type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
 

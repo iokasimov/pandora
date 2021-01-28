@@ -2,11 +2,12 @@
 
 module Pandora.Paradigm.Structure.Ability.Substructure where
 
+import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (comap)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
-import Pandora.Paradigm.Inventory.Optics (type (:~.))
+import Pandora.Paradigm.Inventory.Optics (type (:~.), type (:-.), view)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
@@ -16,6 +17,9 @@ class Substructure f t where
 
 sub :: forall f t . Substructure f t => t :~. Substructural f t
 sub = comap (extract . run) . substructure . TU . Tag @f
+
+subview :: forall f t . Substructure f t => t ~> Substructural f t
+subview = view (sub @f)
 
 data Command a = Delete a
 

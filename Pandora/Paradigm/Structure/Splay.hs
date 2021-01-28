@@ -44,10 +44,8 @@ instance Rotatable (Right (Zig Zig)) (Construction Wye) where
 
 instance Rotatable (Left (Zig Zag)) (Construction Wye) where
 	type Rotational (Left (Zig Zag)) (Construction Wye) = Maybe <:.> Construction Wye
-	rotation (extract . run -> tree) = rotate @(Left Zig)
-		$ sub @Left %~ ((>>= run . rotate @(Right Zig)) ||=) $ tree
+	rotation = rotate @(Left Zig) . sub @Left %~ ((>>= run . rotate @(Right Zig)) ||=) . extract . run
 
 instance Rotatable (Right (Zig Zag)) (Construction Wye) where
 	type Rotational (Right (Zig Zag)) (Construction Wye) = Maybe <:.> Construction Wye
-	rotation (extract . run -> tree) = rotate @(Right Zig)
-		$ sub @Right %~ ((>>= run . rotate @(Left Zig)) ||=) $ tree
+	rotation = rotate @(Right Zig) . sub @Right %~ ((>>= run . rotate @(Left Zig)) ||=) . extract . run
