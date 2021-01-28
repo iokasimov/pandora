@@ -11,7 +11,7 @@ import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (-=-))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Inventory.Optics ((%~))
 import Pandora.Paradigm.Schemes (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
@@ -47,9 +47,9 @@ instance Rotatable (Right (Zig Zig)) (Construction Wye) where
 instance Rotatable (Left (Zig Zag)) (Construction Wye) where
 	type Rotational (Left (Zig Zag)) (Construction Wye) = Maybe <:.> Construction Wye
 	rotation (extract . run -> tree) = rotate @(Left Zig)
-		$ sub @Left %~ ((>>= run . rotate @(Right Zig)) -=-) $ tree
+		$ sub @Left %~ ((>>= run . rotate @(Right Zig)) ||=) $ tree
 
 instance Rotatable (Right (Zig Zag)) (Construction Wye) where
 	type Rotational (Right (Zig Zag)) (Construction Wye) = Maybe <:.> Construction Wye
 	rotation (extract . run -> tree) = rotate @(Right Zig)
-		$ sub @Right %~ ((>>= run . rotate @(Left Zig)) -=-) $ tree
+		$ sub @Right %~ ((>>= run . rotate @(Left Zig)) ||=) $ tree

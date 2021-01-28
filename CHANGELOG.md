@@ -330,4 +330,4 @@
 * Define `Walk` datatype to define different tree/graph traversals
 * Make `a` paremeter in `:~.` to be existentially qualified
 * Rename type operators: `|->` to `:=>` and `<-|` to `<:=`
-* Define experimental `-=-` method to apply a function inside transformer
+* Define experimental `||=` method to apply a function inside transformer
