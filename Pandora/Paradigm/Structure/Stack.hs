@@ -165,25 +165,25 @@ type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stack)) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
-		in f <$> Tap z (TU $ move (rotate @Left) :^: move (rotate @Right))
+		in f <$> Tap z (TU $ move (run . rotate @Left) :^: move (run . rotate @Right))
 
 instance Rotatable Left (Tap (Delta <:.> Stack)) where
-	type Rotational Left (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ sub @Tail ^. bs :^: insert x fs) <$> focus @Head ^. bs
+	type Rotational Left (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ sub @Tail ^. bs :^: insert x fs) <$> focus @Head ^. bs
 
 instance Rotatable Right (Tap (Delta <:.> Stack)) where
-	type Rotational Right (Tap (Delta <:.> Stack)) a = Maybe :. Zipper Stack := a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap % (TU $ insert x bs :^: sub @Tail ^. fs) <$> focus @Head ^. fs
+	type Rotational Right (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: sub @Tail ^. fs) <$> focus @Head ^. fs
 
 type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
 
 instance Rotatable Left (Tap (Delta <:.> Construction Maybe)) where
-	type Rotational Left (Tap (Delta <:.> Construction Maybe)) a = Maybe :. Zipper (Construction Maybe) := a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
+	type Rotational Left (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
 
 instance Rotatable Right (Tap (Delta <:.> Construction Maybe)) where
-	type Rotational Right (Tap (Delta <:.> Construction Maybe)) a = Maybe :. Zipper (Construction Maybe) := a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
+	type Rotational Right (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run

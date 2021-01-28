@@ -8,6 +8,7 @@ import Pandora.Pattern.Functor.Covariant ((<$>))
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
@@ -22,13 +23,13 @@ type Stream = Construction Identity
 type instance Zipper Stream = Tap (Delta <:.> Stream)
 
 instance Rotatable Left (Tap (Delta <:.> Stream)) where
-	type Rotational Left (Tap (Delta <:.> Stream)) a = Tap (Delta <:.> Stream) a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract bs) . TU
+	type Rotational Left (Tap (Delta <:.> Stream)) = Tap (Delta <:.> Stream)
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = Tap (extract bs) . TU
 		$ extract (deconstruct bs) :^: Construct x (point fs)
 
 instance Rotatable Right (Tap (Delta <:.> Stream)) where
-	type Rotational Right (Tap (Delta <:.> Stream)) a = Tap (Delta <:.> Stream) a
-	rotation (extract -> Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU
+	type Rotational Right (Tap (Delta <:.> Stream)) = Tap (Delta <:.> Stream)
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = Tap (extract fs) . TU
 		$ Construct x (point bs) :^: extract (deconstruct fs)
 
 instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stream)) where
