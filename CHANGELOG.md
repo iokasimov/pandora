@@ -331,4 +331,4 @@
 * Make `a` paremeter in `:~.` to be existentially qualified
 * Rename type operators: `|->` to `:=>` and `<-|` to `<:=`
 * Define experimental `||=` method to apply a function inside transformer
-* Define `subview` and `substitute` methods in `Substructure` typeclass
+* Define `subview`, `subplace` and `substitute` methods in `Substructure` typeclass
