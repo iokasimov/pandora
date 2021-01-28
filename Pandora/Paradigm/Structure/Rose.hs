@@ -30,7 +30,7 @@ instance Focusable Root Rose where
 	type Focusing Root Rose a = Maybe a
 	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap (Construct % empty)
 	focusing (run . extract -> Just rose) = Store $ Just (extract rose)
-		:*: Tag . resolve (lift . Construct % deconstruct rose) (TU Nothing)
+		:*: Tag . resolve (lift . Construct % deconstruct rose) empty
 
 instance Nullable Rose where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }

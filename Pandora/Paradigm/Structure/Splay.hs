@@ -22,19 +22,17 @@ data Splay a = Zig a | Zag a
 
 instance Rotatable (Left Zig) (Construction Wye) where
 	type Rotational (Left Zig) (Construction Wye) = Maybe <:.> Construction Wye
-	rotation (extract . run -> Construct parent st) =
-		TU $ Construct % subtree <$> (extract <$> left st) where
+	rotation (extract . run -> Construct parent st) = TU $ Construct % subtree . extract <$> left st where
 
-		subtree = branches (deconstruct <$> left st >>= left)
-			. Just . Construct parent $ branches
-				(deconstruct <$> left st >>= right) (right st)
+		subtree = branches (deconstruct <$> left st >>= left) . Just . Construct parent
+			$ branches (deconstruct <$> left st >>= right) (right st)
 
 instance Rotatable (Right Zig) (Construction Wye) where
 	type Rotational (Right Zig) (Construction Wye) = Maybe <:.> Construction Wye
-	rotation (extract . run -> Construct parent st) = TU $ Construct % subtree <$> (extract <$> right st) where
+	rotation (extract . run -> Construct parent st) = TU $ Construct % subtree . extract <$> right st where
 
-		subtree = branches (left st) . Just . Construct parent $ branches
-			(deconstruct <$> right st >>= left) (deconstruct <$> right st >>= right)
+		subtree = branches (left st) . Just . Construct parent
+			$ branches (deconstruct <$> right st >>= left) (deconstruct <$> right st >>= right)
 
 instance Rotatable (Left (Zig Zig)) (Construction Wye) where
 	type Rotational (Left (Zig Zig)) (Construction Wye) = Maybe <:.> Construction Wye

@@ -77,8 +77,8 @@ instance Nullable Stack where
 
 instance Substructure Tail Stack where
 	type Substructural Tail Stack = Stack
-	substructure (run . extract . run -> Just ns) = TU . Tag . TU . Just <$> sub @Tail ns
-	substructure (run . extract . run -> Nothing) = Store $ TU Nothing :*: TU . Tag . identity
+	substructure (run . extract . run -> Just ns) = lift . lift <$> sub @Tail ns
+	substructure (run . extract . run -> Nothing) = Store $ empty :*: lift . identity
 
 -- TODO: how to provide focused substructure with * -> * kind?
 -- instance Substructure (Delete First) Stack where
