@@ -15,19 +15,17 @@ class Substructure f t where
 	type Substructural (f :: k) (t :: * -> *) :: * -> *
 	substructure :: Tagged f <:.> t :~. Substructural f t
 
-sub :: forall f t . Substructure f t => t :~. Substructural f t
-sub = comap (extract . run) . substructure . TU . Tag @f
+	sub :: t :~. Substructural f t
+	sub = comap (extract . run) . substructure . TU . Tag @f
 
-subview :: forall f t . Substructure f t => t ~> Substructural f t
-subview = view (sub @f)
+	subview :: t ~> Substructural f t
+	subview = view (sub @f)
 
-substitute :: forall f t . Substructure f t
-	=> (Substructural f t ~> Substructural f t) -> t ~> t
-substitute = over (sub @f)
+	substitute :: (Substructural f t ~> Substructural f t) -> t ~> t
+	substitute = over (sub @f)
 
-subplace :: forall f t a . Substructure f t
-	=> (Substructural f t) a -> t a -> t a
-subplace = set (sub @f)
+	subplace :: (Substructural f t) a -> t a -> t a
+	subplace = set (sub @f)
 
 data Command a = Delete a
 

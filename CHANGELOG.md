@@ -332,3 +332,4 @@
 * Rename type operators: `|->` to `:=>` and `<-|` to `<:=`
 * Define experimental `||=` method to apply a function inside transformer
 * Define `subview`, `subplace` and `substitute` methods in `Substructure` typeclass
+* Put `sub` method into `Substructure` typeclass
