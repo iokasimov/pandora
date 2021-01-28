@@ -30,7 +30,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (view, (^.))
+import Pandora.Paradigm.Inventory.Optics (view)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -169,11 +169,11 @@ instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stack)) where
 
 instance Rotatable Left (Tap (Delta <:.> Stack)) where
 	type Rotational Left (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ subview @Tail bs :^: insert x fs) <$> focus @Head ^. bs
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ subview @Tail bs :^: insert x fs) <$> view (focus @Head) bs
 
 instance Rotatable Right (Tap (Delta <:.> Stack)) where
 	type Rotational Right (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: subview @Tail fs) <$> focus @Head ^. fs
+	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: subview @Tail fs) <$> view (focus @Head) fs
 
 type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
 

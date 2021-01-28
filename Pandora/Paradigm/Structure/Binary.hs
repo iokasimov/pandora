@@ -27,7 +27,7 @@ import Pandora.Paradigm.Schemes (TU (TU), T_ (T_), T_U (T_U), type (<:.>), type 
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics ((%~))
+import Pandora.Paradigm.Inventory.Optics (over)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
@@ -49,7 +49,7 @@ rebalance (Both x y) = extract x <=> extract y & order
 instance (forall a . Chain a) => Insertable Binary where
 	insert x (run -> Nothing) = lift . Construct x $ End
 	insert x tree@(run -> Just nonempty) = x <=> extract nonempty & order
-		(sub @Left %~ insert x $ tree) tree (sub @Right %~ insert x $ tree)
+		(over (sub @Left) (insert x) $ tree) tree (over (sub @Right) (insert x) $ tree)
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
@@ -80,7 +80,7 @@ binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @
 	insert' :: a -> Binary a -> Binary a
 	insert' x (run -> Nothing) = lift . Construct x $ End
 	insert' x tree@(run -> Just nonempty) = x <=> extract nonempty & order
-		(sub @Left %~ insert' x $ tree) tree (sub @Right %~ insert' x $ tree)
+		(over (sub @Left) (insert' x) $ tree) tree (over (sub @Right) (insert' x) $ tree)
 
 type instance Nonempty Binary = Construction Wye
 
@@ -90,7 +90,7 @@ instance Focusable Root (Construction Wye) where
 
 instance (forall a . Chain a) => Insertable (Construction Wye) where
 	insert x b = let change = lift . resolve (insert x) (Construct x End) . run in
-		x <=> extract b & order (sub @Left %~ change $ b) b (sub @Right %~ change $ b)
+		x <=> extract b & order (over (sub @Left) change $ b) b (over (sub @Right) change $ b)
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator

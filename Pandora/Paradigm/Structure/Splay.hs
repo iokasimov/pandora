@@ -12,10 +12,10 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
-import Pandora.Paradigm.Inventory.Optics ((%~))
+-- import Pandora.Paradigm.Inventory.Optics ((%~))
 import Pandora.Paradigm.Schemes (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
-import Pandora.Paradigm.Structure.Ability.Substructure (sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (substitute)
 import Pandora.Paradigm.Structure.Binary ()
 
 data Splay a = Zig a | Zag a
@@ -44,8 +44,8 @@ instance Rotatable (Right (Zig Zig)) (Construction Wye) where
 
 instance Rotatable (Left (Zig Zag)) (Construction Wye) where
 	type Rotational (Left (Zig Zag)) (Construction Wye) = Maybe <:.> Construction Wye
-	rotation = rotate @(Left Zig) . sub @Left %~ ((>>= run . rotate @(Right Zig)) ||=) . extract . run
+	rotation = rotate @(Left Zig) . substitute @Left ((>>= run . rotate @(Right Zig)) ||=) . extract . run
 
 instance Rotatable (Right (Zig Zag)) (Construction Wye) where
 	type Rotational (Right (Zig Zag)) (Construction Wye) = Maybe <:.> Construction Wye
-	rotation = rotate @(Right Zig) . sub @Right %~ ((>>= run . rotate @(Left Zig)) ||=) . extract . run
+	rotation = rotate @(Right Zig) . substitute @Right ((>>= run . rotate @(Left Zig)) ||=) . extract . run

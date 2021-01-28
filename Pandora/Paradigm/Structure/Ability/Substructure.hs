@@ -7,7 +7,7 @@ import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (comap)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
-import Pandora.Paradigm.Inventory.Optics (type (:~.), type (:-.), view)
+import Pandora.Paradigm.Inventory.Optics (type (:~.), view, over)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
@@ -20,6 +20,10 @@ sub = comap (extract . run) . substructure . TU . Tag @f
 
 subview :: forall f t . Substructure f t => t ~> Substructural f t
 subview = view (sub @f)
+
+substitute :: forall f t . Substructure f t
+	=> (Substructural f t ~> Substructural f t) -> t ~> t
+substitute = over (sub @f)
 
 data Command a = Delete a
 
