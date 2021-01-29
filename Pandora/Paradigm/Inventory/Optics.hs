@@ -29,25 +29,13 @@ from |> to = \x -> ((<$) x . to) . position . from $ x
 view :: Lens src tgt -> src -> tgt
 view lens = position . lens
 
--- | Infix version of `view`
-(^.) :: Lens src tgt -> src -> tgt
-(^.) = view
-
 -- | Replace the target of a lens
 set :: Lens src tgt -> tgt -> src -> src
 set lens new = access new . lens
 
--- | Infix version of `set`
-(.~) :: Lens src tgt -> tgt -> src -> src
-lens .~ new = set lens new
-
 -- | Modify the target of a lens
 over :: Lens src tgt -> (tgt -> tgt) -> src -> src
 over lens f = extract . retrofit f . lens
-
--- | Infix version of `over`
-(%~) :: Lens src tgt -> (tgt -> tgt) -> src -> src
-lens %~ f = over lens f
 
 -- | Representable based lens
 represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
