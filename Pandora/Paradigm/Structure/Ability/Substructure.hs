@@ -21,7 +21,7 @@ class Substructure f t where
 	subview :: t ~> Substructural f t
 	subview = view (sub @f)
 
-	substitute :: (Substructural f t ~> Substructural f t) -> t ~> t
+	substitute :: (Substructural f t a -> Substructural f t a) -> t a -> t a
 	substitute = over (sub @f)
 
 	subplace :: (Substructural f t) a -> t a -> t a

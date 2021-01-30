@@ -35,7 +35,7 @@ import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, meas
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation))
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
 type Binary = Maybe <:.> Construction Wye
@@ -49,7 +49,7 @@ rebalance (Both x y) = extract x <=> extract y & order
 instance (forall a . Chain a) => Insertable Binary where
 	insert x (run -> Nothing) = lift . Construct x $ End
 	insert x tree@(run -> Just nonempty) = x <=> extract nonempty & order
-		(over (sub @Left) (insert x) $ tree) tree (over (sub @Right) (insert x) $ tree)
+		(tree & substitute @Left (insert x) ) tree (tree & substitute @Right (insert x))
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
@@ -80,7 +80,7 @@ binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @
 	insert' :: a -> Binary a -> Binary a
 	insert' x (run -> Nothing) = lift . Construct x $ End
 	insert' x tree@(run -> Just nonempty) = x <=> extract nonempty & order
-		(over (sub @Left) (insert' x) $ tree) tree (over (sub @Right) (insert' x) $ tree)
+		(tree & substitute @Left (insert' x)) tree (tree & substitute @Right (insert' x))
 
 type instance Nonempty Binary = Construction Wye
 
