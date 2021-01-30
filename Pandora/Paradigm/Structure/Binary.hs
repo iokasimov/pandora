@@ -19,11 +19,11 @@ import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor.Function ((!), (%), (&))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), attached)
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Schemes (TU (TU), T_ (T_), T_U (T_U), type (<:.>), type (<:*:>))
+import Pandora.Paradigm.Schemes (TU (TU), T_ (T_), T_U (T_U), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
@@ -125,13 +125,14 @@ instance Substructure Right (Construction Wye) where
 
 data Biforked a = Top | Leftward a | Rightward a
 
-type instance Zipper (Construction Wye) = Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))
+type instance Zipper (Construction Wye) = T_U Covariant Covariant (Construction Wye) (:*:)
+	((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))
 
 data Vertical a = Up a | Down a
 
-instance Rotatable Up (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Rotational Up (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
-		= Maybe <:.> (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Rotatable Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Rotational Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 	rotation (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU (Just rst))) next)))) =
 		TU . Just . T_U $ Construct parent (Both focused rst) :*: TU (TU next)
 	rotation (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU Nothing)) next)))) =
@@ -142,9 +143,9 @@ instance Rotatable Up (Construction Wye <:*:> ((Biforked <:.> Construction Bifor
 		TU . Just . T_U $ Construct parent (Right focused) :*: TU (TU next)
 	rotation (extract . run -> T_U (_ :*: TU (TU Top))) = TU Nothing
 
-instance Rotatable (Down Left) (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Rotational (Down Left) (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
-		= Maybe <:.> (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Rotatable (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Rotational (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 	rotation (run . extract . run -> Construct x (Left lst) :*: TU (TU next)) =
 		TU . Just . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_ $ x :*: TU Nothing) $ next
 	rotation (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) =
@@ -152,9 +153,9 @@ instance Rotatable (Down Left) (Construction Wye <:*:> ((Biforked <:.> Construct
 	rotation (run . extract . run -> Construct _ (Right _) :*: _) = TU Nothing
 	rotation (run . extract . run -> Construct _ End :*: _) = TU Nothing
 
-instance Rotatable (Down Right) (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Rotational (Down Right) (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
-		= Maybe <:.> (Construction Wye <:*:> ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Rotatable (Down Right) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Rotational (Down Right) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 	rotation (run . extract . run -> Construct x (Right rst) :*: TU (TU next)) = TU . Just . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_ $ x :*: TU Nothing) $ next
 	rotation (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) = TU . Just . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_ $ x :*: TU (Just lst)) $ next
 	rotation (run . extract . run -> Construct _ (Left _) :*: _) = TU Nothing
