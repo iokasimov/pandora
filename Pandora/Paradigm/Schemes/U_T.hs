@@ -1,36 +1,10 @@
 module Pandora.Paradigm.Schemes.U_T where
 
-import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant)
-import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
-newtype U_T ct cu t u a = U_T (u a :*: t a)
+newtype U_T ct cu t p u a = U_T (p (u a) (t a))
 
-type (<.:.>) = U_T Covariant Covariant
-type (>.:.>) = U_T Contravariant Covariant
-type (<.:.<) = U_T Covariant Contravariant
-type (>.:.<) = U_T Contravariant Contravariant
-
-instance Interpreted (U_T ct cu t u) where
-	type Primary (U_T ct cu t u) a = u a :*: t a
+instance Interpreted (U_T ct cu t p u) where
+	type Primary (U_T ct cu t p u) a = p (u a) (t a)
 	run ~(U_T x) = x
 	unite = U_T
-
-instance Avoidable t => Liftable (U_T Covariant Covariant t) where
-	lift :: Covariant u => u ~> t <.:.> u
-	lift x = U_T $ x :*: empty
-
-instance Lowerable (U_T Covariant Covariant t) where
-	lower :: t <.:.> u ~> u
-	lower (U_T (x :*: _)) = x
-
-instance Covariant t => Hoistable (U_T Covariant Covariant t) where
-	hoist :: u ~> v -> (t <.:.> u ~> t <.:.> v)
-	hoist f (U_T (x :*: y)) = U_T $ f x :*: y

@@ -334,4 +334,4 @@
 * Define `subview`, `subplace` and `substitute` methods in `Substructure` typeclass
 * Put `sub` method into `Substructure` typeclass
 * Remove `^.`, `.~` and `%~` infix optics methods
-* Generalize `T_U` scheme over some `p` (`Bifunctor`/`Profunctor`)
+* Generalize `T_U` and `U_T` schemes over some `p` (`Bifunctor`/`Profunctor`)
