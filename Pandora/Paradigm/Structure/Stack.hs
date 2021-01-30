@@ -38,6 +38,7 @@ import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Convertible (Convertible (Conversion, conversion))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
+import Pandora.Paradigm.Structure.Ability.Deletable (Deletable (delete))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
@@ -80,26 +81,10 @@ instance Substructure Tail Stack where
 	substructure (run . extract . run -> Just ns) = lift . lift <$> sub @Tail ns
 	substructure (run . extract . run -> Nothing) = Store $ empty :*: lift . identity
 
--- TODO: how to provide focused substructure with * -> * kind?
--- instance Substructure (Delete First) Stack where
--- 	type Substructural (Delete First) Stack = Predicate ~> Stack
--- 	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
---
--- 		delete :: Predicate a -> Stack a -> Stack a
--- 		delete _ (TU Nothing) = TU Nothing
--- 		delete (Predicate p) (TU (Just (Construct y ys))) = p y ? TU ys
--- 			$ lift . Construct y . run . delete (Predicate p) $ TU ys
-
--- TODO: how to provide focused substructure with * -> * kind?
--- instance Substructure (Delete All) Stack where
--- 	type Substructural (Delete All) Stack = Predicate ~> Stack
--- 	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
---
--- 		delete :: Predicate a -> Stack a -> Stack a
--- 		delete _ (TU Nothing) = TU Nothing
--- 		delete (Predicate p) (TU (Just (Construct x xs))) = p x
--- 			? delete (Predicate p) (TU xs)
--- 			$ lift . Construct x . run . delete (Predicate p) $ TU xs
+instance Deletable Stack where
+	delete _ (TU Nothing) = TU Nothing
+	delete (Predicate p) (TU (Just (Construct y ys))) = p y ? TU ys
+		$ lift . Construct y . run . delete @Stack (Predicate p) $ TU ys
 
 filter :: forall a . Predicate a -> Stack a -> Stack a
 filter (Predicate p) = TU . extract
@@ -139,27 +124,6 @@ instance Substructure Tail (Construction Maybe) where
 	type Substructural Tail (Construction Maybe) = Stack
 	substructure (extract . run -> Construct x xs) =
 		Store $ TU xs :*: lift . Construct x . run
-
--- TODO: how to provide focused substructure with * -> * kind?
--- FIXME: you can only get value with this lens
--- instance Substructure (Delete First) (Construction Maybe) a where
--- 	type Substructural (Delete First) (Construction Maybe) a = Predicate a -> Stack a
--- 	substructure (extract -> s) = Store $ delete % s :*: (point s !) where
---
--- 		delete :: Predicate a -> Nonempty Stack a -> Stack a
--- 		delete (Predicate p) (Construct x xs) = p x ? unite xs
--- 			$ unite $ Construct x . run . delete (Predicate p) <$> xs
-
--- TODO: how to provide focused substructure with * -> * kind?
--- FIXME: you can only get value with this lens
--- instance Substructure (Delete All) (Construction Maybe) a where
--- 	type Substructural (Delete All) (Construction Maybe) a = Predicate a -> Stack a
--- 	substructure (extract -> ns) = Store $ delete % ns :*: (point ns !) where
-
--- 		delete :: Predicate a -> Nonempty Stack a -> Stack a
--- 		delete (Predicate p) (Construct x xs) = p x
--- 			? (unite . join $ run . delete (Predicate p) <$> xs)
--- 			$ (unite $ Construct x . run . delete (Predicate p) <$> xs)
 
 type instance Zipper Stack = Tap (Delta <:.> Stack)
 
