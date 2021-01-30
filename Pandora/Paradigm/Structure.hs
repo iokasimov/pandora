@@ -22,6 +22,7 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
+import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
@@ -89,3 +90,11 @@ instance Convertible Postorder (Construction Wye) where
 instance Convertible o (Construction Wye) => Convertible o Binary where
 	type Conversion o Binary = Maybe <:.> Conversion o (Construction Wye)
 	conversion = unite . comap (convert @o) . run . extract . run
+
+instance Focusable Left (Product s) where
+	type Focusing Left (Product s) a = s
+	focusing (extract -> s :*: x) = Store $ s :*: Tag . (:*: x)
+
+instance Focusable Right (Product s) where
+	type Focusing Right (Product s) a = a
+	focusing (extract -> s :*: x) = Store $ x :*: Tag . (s :*:)
