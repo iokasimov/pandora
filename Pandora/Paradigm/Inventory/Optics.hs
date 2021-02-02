@@ -13,6 +13,8 @@ import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
 
 infixr 0 :-.
+infixr 0 :~.
+
 type (:-.) src tgt = Lens src tgt
 
 -- Reference to taret within some source

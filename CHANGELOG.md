@@ -336,3 +336,4 @@
 * Remove `^.`, `.~` and `%~` infix optics methods
 * Generalize `T_U` and `U_T` schemes over some `p` (`Bifunctor`/`Profunctor`)
 * Define experimental `Deletable` typeclass
+* Define experimental `magnify`, `=<>`, `~<>`
