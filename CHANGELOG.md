@@ -336,6 +336,6 @@
 * Remove `^.`, `.~` and `%~` infix optics methods
 * Generalize `T_U` and `U_T` schemes over some `p` (`Bifunctor`/`Profunctor`)
 * Define experimental `Deletable` typeclass
-* Define experimental `magnify`, `=<>`, `~<>`
+* Define experimental `adjust`, `magnify`, `=<>`, `~<>`
 * Define experimental `Accessible` type class
 * Rename `access` method to `look` in `Optics` module

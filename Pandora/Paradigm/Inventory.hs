@@ -1,6 +1,7 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory (module Exports, zoom, magnify, (=<>), (~<>)) where
+module Pandora.Paradigm.Inventory (module Exports, zoom, magnify, (=<>), (~<>), adjust) where
 
 import Pandora.Paradigm.Inventory.Optics as Exports
 import Pandora.Paradigm.Inventory.Store as Exports
@@ -20,6 +21,7 @@ import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
+import Pandora.Paradigm.Structure.Ability.Accessible (Accessible (access))
 
 instance Adjoint (Store s) (State s) where
 	(-|) :: a -> (Store s a -> b) -> State s b
@@ -47,3 +49,6 @@ lens =<> new = modify $ set lens new
 
 (~<>) :: Stateful src t => src :-. tgt -> (tgt -> tgt) -> t ()
 lens ~<> f = modify $ over lens f
+
+adjust :: forall bg ls t . (Accessible ls bg, Stateful bg t) => (ls -> ls) -> t ()
+adjust = zoom @bg (access @ls @bg) . modify
