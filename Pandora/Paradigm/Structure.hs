@@ -98,3 +98,9 @@ instance Focusable Left (Product s) where
 instance Focusable Right (Product s) where
 	type Focusing Right (Product s) a = a
 	focusing (extract -> s :*: x) = Store $ x :*: Tag . (s :*:)
+
+instance Accessible s (s :*: a) where
+	access ~(s :*: x) = Store $ s :*: (:*: x)
+
+instance Accessible a (s :*: a) where
+	access ~(s :*: x) = Store $ x :*: (s :*:)

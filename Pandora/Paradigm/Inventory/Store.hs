@@ -49,8 +49,8 @@ position :: Storable s t => t a -> s
 position = attached . run @(Store _) . adapt
 
 -- | Given an index return value
-access :: Storable s t => s -> a <:= t
-access s = extract % s . run @(Store _) . adapt
+look :: Storable s t => s -> a <:= t
+look s = extract % s . run @(Store _) . adapt
 
 -- | Change index with function
 retrofit :: (s -> s) -> Store s ~> Store s

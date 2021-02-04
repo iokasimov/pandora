@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
-import Pandora.Paradigm.Inventory.Store (Store (Store), access, position, retrofit)
+import Pandora.Paradigm.Inventory.Store (Store (Store), position, look, retrofit)
 
 infixr 0 :-.
 infixr 0 :~.
@@ -33,7 +33,7 @@ view lens = position . lens
 
 -- | Replace the target of a lens
 set :: Lens src tgt -> tgt -> src -> src
-set lens new = access new . lens
+set lens new = look new . lens
 
 -- | Modify the target of a lens
 over :: Lens src tgt -> (tgt -> tgt) -> src -> src

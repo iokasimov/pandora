@@ -338,3 +338,4 @@
 * Define experimental `Deletable` typeclass
 * Define experimental `magnify`, `=<>`, `~<>`
 * Define experimental `Accessible` type class
+* Rename `access` method to `look` in `Optics` module
