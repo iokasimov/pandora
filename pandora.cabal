@@ -104,6 +104,7 @@ library
     Pandora.Paradigm.Structure.Ability.Comprehension
     Pandora.Paradigm.Structure.Ability.Convertible
     Pandora.Paradigm.Structure.Ability.Deletable
+    Pandora.Paradigm.Structure.Ability.Accessible
     Pandora.Paradigm.Structure.Ability.Focusable
     Pandora.Paradigm.Structure.Ability.Insertable
     Pandora.Paradigm.Structure.Ability.Measurable

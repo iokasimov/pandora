@@ -337,3 +337,4 @@
 * Generalize `T_U` and `U_T` schemes over some `p` (`Bifunctor`/`Profunctor`)
 * Define experimental `Deletable` typeclass
 * Define experimental `magnify`, `=<>`, `~<>`
+* Define experimental `Accessible` type class
