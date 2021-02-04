@@ -39,7 +39,7 @@ zoom :: Stateful bg t => Lens bg ls -> State ls ~> t
 zoom lens less = let restruct f v = f <-> identity $ run less v
 	in adapt . State $ (|- restruct) . run . lens
 
-magnify :: (Covariant t, Stateful src t) => src :-. tgt -> t tgt
+magnify :: (Stateful src t, Covariant t) => Lens src ~> t
 magnify lens = view lens <$> current
 
 (=<>) :: Stateful src t => src :-. tgt -> tgt -> t ()

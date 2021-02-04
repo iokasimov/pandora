@@ -75,14 +75,14 @@ instance Convertible Preorder (Construction Wye) where
 
 instance Convertible Inorder (Construction Wye) where
 	type Conversion Inorder (Construction Wye) = Construction Maybe
-	conversion (extract . run -> Construct x End) = Construct x Nothing
+	conversion (extract . run -> Construct x End) = point x
 	conversion (extract . run -> Construct x (Left lst)) = convert @Inorder lst + point x
 	conversion (extract . run -> Construct x (Right rst)) = point x + convert @Inorder rst
 	conversion (extract . run -> Construct x (Both lst rst)) = convert @Inorder lst + point x + convert @Inorder rst
 
 instance Convertible Postorder (Construction Wye) where
 	type Conversion Postorder (Construction Wye) = Construction Maybe
-	conversion (extract . run -> Construct x End) = Construct x Nothing
+	conversion (extract . run -> Construct x End) = point x
 	conversion (extract . run -> Construct x (Left lst)) = convert @Postorder lst + point x
 	conversion (extract . run -> Construct x (Right rst)) = convert @Postorder rst + point x
 	conversion (extract . run -> Construct x (Both lst rst)) = convert @Postorder lst + convert @Postorder rst + point x
