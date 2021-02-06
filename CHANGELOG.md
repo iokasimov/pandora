@@ -342,3 +342,4 @@
 * Rename `Convertible` type class to `Morphable`
 * Remove `Rotatable` type class in favor of `Morphable`
 * Define `<:.:>`, `>:.:>`, `<:.:<`, `>:.:<` type synonyms
+* Delete `Delta` datatype in favor of `(:*:) <:.:> t`

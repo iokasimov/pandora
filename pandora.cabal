@@ -35,7 +35,6 @@ library
     Pandora.Paradigm.Primary.Functor.Function
     Pandora.Paradigm.Primary.Functor.Conclusion
     Pandora.Paradigm.Primary.Functor.Constant
-    Pandora.Paradigm.Primary.Functor.Delta
     Pandora.Paradigm.Primary.Functor.Edges
     Pandora.Paradigm.Primary.Functor.Endo
     Pandora.Paradigm.Primary.Functor.Fix
