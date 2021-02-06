@@ -41,7 +41,7 @@ import Pandora.Paradigm.Structure.Ability.Deletable (Deletable (delete))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), morph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 
 -- | Linear data structure that serves as a collection of elements
@@ -128,27 +128,27 @@ type instance Zipper Stack = Tap ((:*:) <:.:> Stack)
 
 instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> Stack)) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
-		in f <$> Tap z (T_U $ move (run . morph @Left) :*: move (run . morph @Right))
+		in f <$> Tap z (T_U $ move (run . morph @(Rotate Left)) :*: move (run . morph @(Rotate Right)))
 
-instance Morphable Left (Tap ((:*:) <:.:> Stack)) where
-	type Morphing Left (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
+instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Stack)) where
+	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap % (T_U $ subview @Tail bs :*: insert x fs) <$> view (focus @Head) bs
 
-instance Morphable Right (Tap ((:*:) <:.:> Stack)) where
-	type Morphing Right (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
+instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Stack)) where
+	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap % (T_U $ insert x bs :*: subview @Tail fs) <$> view (focus @Head) fs
 
 type instance Zipper (Construction Maybe) = Tap ((:*:) <:.:> Construction Maybe)
 
-instance Morphable Left (Tap ((:*:) <:.:> Construction Maybe)) where
-	type Morphing Left (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Construction Maybe)) where
+	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap (extract bs) . T_U . (:*: insert x fs) <$> deconstruct bs
 
-instance Morphable Right (Tap ((:*:) <:.:> Construction Maybe)) where
-	type Morphing Right (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Construction Maybe)) where
+	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap (extract fs) . T_U . (insert x bs :*:) <$> deconstruct fs
 
