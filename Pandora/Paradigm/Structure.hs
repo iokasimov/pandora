@@ -17,6 +17,7 @@ import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
+import Pandora.Paradigm.Inventory.Optics ((|>))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
@@ -104,3 +105,6 @@ instance Accessible s (s :*: a) where
 
 instance Accessible a (s :*: a) where
 	access ~(s :*: x) = Store $ x :*: (s :*:)
+
+instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
+	access = access @a |> access @b
