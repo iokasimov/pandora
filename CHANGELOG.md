@@ -341,3 +341,4 @@
 * Rename `access` method to `look` in `Optics` module
 * Rename `Convertible` type class to `Morphable`
 * Remove `Rotatable` type class in favor of `Morphable`
+* Define `<:.:>`, `>:.:>`, `<:.:<`, `>:.:<` type synonyms
