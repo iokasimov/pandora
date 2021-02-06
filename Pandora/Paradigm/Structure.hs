@@ -67,30 +67,30 @@ instance Covariant t => Substructure Tail (Tap t) where
 	substructure (extract . run -> Tap x xs) =
 		Store $ xs :*: lift . Tap x
 
-instance Convertible Preorder (Construction Wye) where
-	type Conversion Preorder (Construction Wye) = Construction Maybe
-	conversion (extract . run -> Construct x End) = Construct x Nothing
-	conversion (extract . run -> Construct x (Left lst)) = Construct x . Just $ convert @Preorder lst
-	conversion (extract . run -> Construct x (Right rst)) = Construct x . Just $ convert @Preorder rst
-	conversion (extract . run -> Construct x (Both lst rst)) = Construct x . Just $ convert @Preorder lst + convert @Preorder rst
+instance Morphable Preorder (Construction Wye) where
+	type Morphing Preorder (Construction Wye) = Construction Maybe
+	morphing (extract . run -> Construct x End) = Construct x Nothing
+	morphing (extract . run -> Construct x (Left lst)) = Construct x . Just $ morph @Preorder lst
+	morphing (extract . run -> Construct x (Right rst)) = Construct x . Just $ morph @Preorder rst
+	morphing (extract . run -> Construct x (Both lst rst)) = Construct x . Just $ morph @Preorder lst + morph @Preorder rst
 
-instance Convertible Inorder (Construction Wye) where
-	type Conversion Inorder (Construction Wye) = Construction Maybe
-	conversion (extract . run -> Construct x End) = point x
-	conversion (extract . run -> Construct x (Left lst)) = convert @Inorder lst + point x
-	conversion (extract . run -> Construct x (Right rst)) = point x + convert @Inorder rst
-	conversion (extract . run -> Construct x (Both lst rst)) = convert @Inorder lst + point x + convert @Inorder rst
+instance Morphable Inorder (Construction Wye) where
+	type Morphing Inorder (Construction Wye) = Construction Maybe
+	morphing (extract . run -> Construct x End) = point x
+	morphing (extract . run -> Construct x (Left lst)) = morph @Inorder lst + point x
+	morphing (extract . run -> Construct x (Right rst)) = point x + morph @Inorder rst
+	morphing (extract . run -> Construct x (Both lst rst)) = morph @Inorder lst + point x + morph @Inorder rst
 
-instance Convertible Postorder (Construction Wye) where
-	type Conversion Postorder (Construction Wye) = Construction Maybe
-	conversion (extract . run -> Construct x End) = point x
-	conversion (extract . run -> Construct x (Left lst)) = convert @Postorder lst + point x
-	conversion (extract . run -> Construct x (Right rst)) = convert @Postorder rst + point x
-	conversion (extract . run -> Construct x (Both lst rst)) = convert @Postorder lst + convert @Postorder rst + point x
+instance Morphable Postorder (Construction Wye) where
+	type Morphing Postorder (Construction Wye) = Construction Maybe
+	morphing (extract . run -> Construct x End) = point x
+	morphing (extract . run -> Construct x (Left lst)) = morph @Postorder lst + point x
+	morphing (extract . run -> Construct x (Right rst)) = morph @Postorder rst + point x
+	morphing (extract . run -> Construct x (Both lst rst)) = morph @Postorder lst + morph @Postorder rst + point x
 
-instance Convertible o (Construction Wye) => Convertible o Binary where
-	type Conversion o Binary = Maybe <:.> Conversion o (Construction Wye)
-	conversion = unite . comap (convert @o) . run . extract . run
+instance Morphable o (Construction Wye) => Morphable o Binary where
+	type Morphing o Binary = Maybe <:.> Morphing o (Construction Wye)
+	morphing = unite . comap (morph @o) . run . extract . run
 
 instance Focusable Left (Product s) where
 	type Focusing Left (Product s) a = s

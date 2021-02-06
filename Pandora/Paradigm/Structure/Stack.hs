@@ -41,7 +41,7 @@ import Pandora.Paradigm.Structure.Ability.Deletable (Deletable (delete))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Structure.Ability.Convertible (Convertible (Conversion, conversion), convert)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 
 -- | Linear data structure that serves as a collection of elements
@@ -100,9 +100,9 @@ instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 	Construct x Nothing + ys = Construct x $ Just ys
 	Construct x (Just xs) + ys = Construct x . Just $ xs + ys
 
-instance Convertible Stack (Construction Maybe) where
-	type Conversion Stack (Construction Maybe) = Stack
-	conversion = lift . extract . run
+instance Morphable Stack (Construction Maybe) where
+	type Morphing Stack (Construction Maybe) = Stack
+	morphing = lift . extract . run
 
 instance Focusable Head (Construction Maybe) where
 	type Focusing Head (Construction Maybe) a = a
@@ -128,25 +128,25 @@ type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stack)) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
-		in f <$> Tap z (TU $ move (run . convert @Left) :^: move (run . convert @Right))
+		in f <$> Tap z (TU $ move (run . morph @Left) :^: move (run . morph @Right))
 
-instance Convertible Left (Tap (Delta <:.> Stack)) where
-	type Conversion Left (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	conversion (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ subview @Tail bs :^: insert x fs) <$> view (focus @Head) bs
+instance Morphable Left (Tap (Delta <:.> Stack)) where
+	type Morphing Left (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
+	morphing (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ subview @Tail bs :^: insert x fs) <$> view (focus @Head) bs
 
-instance Convertible Right (Tap (Delta <:.> Stack)) where
-	type Conversion Right (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	conversion (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: subview @Tail fs) <$> view (focus @Head) fs
+instance Morphable Right (Tap (Delta <:.> Stack)) where
+	type Morphing Right (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
+	morphing (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: subview @Tail fs) <$> view (focus @Head) fs
 
 type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
 
-instance Convertible Left (Tap (Delta <:.> Construction Maybe)) where
-	type Conversion Left (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
-	conversion (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
+instance Morphable Left (Tap (Delta <:.> Construction Maybe)) where
+	type Morphing Left (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+	morphing (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
 
-instance Convertible Right (Tap (Delta <:.> Construction Maybe)) where
-	type Conversion Right (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
-	conversion (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
+instance Morphable Right (Tap (Delta <:.> Construction Maybe)) where
+	type Morphing Right (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+	morphing (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run

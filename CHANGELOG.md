@@ -339,4 +339,5 @@
 * Define experimental `adjust`, `magnify`, `=<>`, `~<>`
 * Define experimental `Accessible` type class
 * Rename `access` method to `look` in `Optics` module
-* Remove `Rotatable` type class in favor of `Convertible`
+* Rename `Convertible` type class to `Morphable`
+* Remove `Rotatable` type class in favor of `Morphable`
