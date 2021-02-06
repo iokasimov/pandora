@@ -36,13 +36,12 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
-import Pandora.Paradigm.Structure.Ability.Convertible (Convertible (Conversion, conversion))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Deletable (Deletable (delete))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation), rotate)
+import Pandora.Paradigm.Structure.Ability.Convertible (Convertible (Conversion, conversion), convert)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 
 -- | Linear data structure that serves as a collection of elements
@@ -129,25 +128,25 @@ type instance Zipper Stack = Tap (Delta <:.> Stack)
 
 instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stack)) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
-		in f <$> Tap z (TU $ move (run . rotate @Left) :^: move (run . rotate @Right))
+		in f <$> Tap z (TU $ move (run . convert @Left) :^: move (run . convert @Right))
 
-instance Rotatable Left (Tap (Delta <:.> Stack)) where
-	type Rotational Left (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ subview @Tail bs :^: insert x fs) <$> view (focus @Head) bs
+instance Convertible Left (Tap (Delta <:.> Stack)) where
+	type Conversion Left (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
+	conversion (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ subview @Tail bs :^: insert x fs) <$> view (focus @Head) bs
 
-instance Rotatable Right (Tap (Delta <:.> Stack)) where
-	type Rotational Right (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: subview @Tail fs) <$> view (focus @Head) fs
+instance Convertible Right (Tap (Delta <:.> Stack)) where
+	type Conversion Right (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
+	conversion (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: subview @Tail fs) <$> view (focus @Head) fs
 
 type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
 
-instance Rotatable Left (Tap (Delta <:.> Construction Maybe)) where
-	type Rotational Left (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
-	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
+instance Convertible Left (Tap (Delta <:.> Construction Maybe)) where
+	type Conversion Left (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+	conversion (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
 
-instance Rotatable Right (Tap (Delta <:.> Construction Maybe)) where
-	type Rotational Right (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
-	rotation (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
+instance Convertible Right (Tap (Delta <:.> Construction Maybe)) where
+	type Conversion Right (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+	conversion (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run

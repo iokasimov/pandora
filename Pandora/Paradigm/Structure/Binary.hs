@@ -34,7 +34,7 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusi
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
-import Pandora.Paradigm.Structure.Ability.Rotatable (Rotatable (Rotational, rotation))
+import Pandora.Paradigm.Structure.Ability.Convertible (Convertible (Conversion, conversion))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
@@ -130,33 +130,33 @@ type instance Zipper (Construction Wye) = T_U Covariant Covariant (Construction 
 
 data Vertical a = Up a | Down a
 
-instance Rotatable Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Rotational Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Convertible Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Conversion Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
-	rotation (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU (Just rst))) next)))) =
+	conversion (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU (Just rst))) next)))) =
 		TU . Just . T_U $ Construct parent (Both focused rst) :*: TU (TU next)
-	rotation (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU Nothing)) next)))) =
+	conversion (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU Nothing)) next)))) =
 		TU . Just . T_U $ Construct parent (Left focused) :*: TU (TU next)
-	rotation (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_ (parent :*: TU (Just lst))) next)))) =
+	conversion (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_ (parent :*: TU (Just lst))) next)))) =
 		TU . Just . T_U $ Construct parent (Both lst focused) :*: TU (TU next)
-	rotation (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_ (parent :*: TU Nothing)) next)))) =
+	conversion (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_ (parent :*: TU Nothing)) next)))) =
 		TU . Just . T_U $ Construct parent (Right focused) :*: TU (TU next)
-	rotation (extract . run -> T_U (_ :*: TU (TU Top))) = TU Nothing
+	conversion (extract . run -> T_U (_ :*: TU (TU Top))) = TU Nothing
 
-instance Rotatable (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Rotational (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Convertible (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Conversion (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
-	rotation (run . extract . run -> Construct x (Left lst) :*: TU (TU next)) =
+	conversion (run . extract . run -> Construct x (Left lst) :*: TU (TU next)) =
 		TU . Just . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_ $ x :*: TU Nothing) $ next
-	rotation (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) =
+	conversion (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) =
 		TU . Just . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_ $ x :*: TU (Just rst)) $ next
-	rotation (run . extract . run -> Construct _ (Right _) :*: _) = TU Nothing
-	rotation (run . extract . run -> Construct _ End :*: _) = TU Nothing
+	conversion (run . extract . run -> Construct _ (Right _) :*: _) = TU Nothing
+	conversion (run . extract . run -> Construct _ End :*: _) = TU Nothing
 
-instance Rotatable (Down Right) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Rotational (Down Right) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Convertible (Down Right) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Conversion (Down Right) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
-	rotation (run . extract . run -> Construct x (Right rst) :*: TU (TU next)) = TU . Just . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_ $ x :*: TU Nothing) $ next
-	rotation (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) = TU . Just . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_ $ x :*: TU (Just lst)) $ next
-	rotation (run . extract . run -> Construct _ (Left _) :*: _) = TU Nothing
-	rotation (run . extract . run -> Construct _ End :*: _) = TU Nothing
+	conversion (run . extract . run -> Construct x (Right rst) :*: TU (TU next)) = TU . Just . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_ $ x :*: TU Nothing) $ next
+	conversion (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) = TU . Just . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_ $ x :*: TU (Just lst)) $ next
+	conversion (run . extract . run -> Construct _ (Left _) :*: _) = TU Nothing
+	conversion (run . extract . run -> Construct _ End :*: _) = TU Nothing

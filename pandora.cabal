@@ -108,7 +108,6 @@ library
     Pandora.Paradigm.Structure.Ability.Focusable
     Pandora.Paradigm.Structure.Ability.Insertable
     Pandora.Paradigm.Structure.Ability.Measurable
-    Pandora.Paradigm.Structure.Ability.Rotatable
     Pandora.Paradigm.Structure.Ability.Substructure
     Pandora.Paradigm.Structure.Ability.Nonempty
     Pandora.Paradigm.Structure.Ability.Nullable

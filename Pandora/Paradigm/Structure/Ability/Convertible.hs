@@ -12,6 +12,6 @@ class Convertible f t where
 	conversion :: Tagged f <:.> t ~> Conversion f t
 
 convert :: forall f t . Convertible f t => t ~> Conversion f t
-convert = conversion @f @t . TU . Tag @f
+convert = conversion . TU . Tag @f
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
