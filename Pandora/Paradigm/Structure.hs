@@ -20,7 +20,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory.Optics ((|>))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
-import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
+-- import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
@@ -42,25 +42,25 @@ instance Substructure Right (Product s) where
 	substructure (extract . run -> s :*: x) =
 		Store $ Identity x :*: lift . (s :*:) . extract
 
-instance Substructure Left Delta where
-	type Substructural Left Delta = Identity
-	substructure (extract . run -> l :^: r) =
-		Store $ Identity l :*: lift . (:^: r) . extract
-
-instance Substructure Right Delta where
-	type Substructural Right Delta = Identity
-	substructure (extract . run -> l :^: r) =
-		Store $ Identity r :*: lift . (l :^:) . extract
-
-instance Covariant t => Substructure Left (Delta <:.> t) where
-	type Substructural Left (Delta <:.> t) = t
-	substructure (run . extract . run -> l :^: r) =
-		Store $ r :*: lift . unite . (l :^:)
-
-instance Covariant t => Substructure Right (Delta <:.> t) where
-	type Substructural Right (Delta <:.> t) = t
-	substructure (run . extract . run -> l :^: r) =
-		Store $ l :*: lift . unite . (:^: r)
+-- instance Substructure Left Delta where
+-- 	type Substructural Left Delta = Identity
+-- 	substructure (extract . run -> l :^: r) =
+-- 		Store $ Identity l :*: lift . (:^: r) . extract
+--
+-- instance Substructure Right Delta where
+-- 	type Substructural Right Delta = Identity
+-- 	substructure (extract . run -> l :^: r) =
+-- 		Store $ Identity r :*: lift . (l :^:) . extract
+--
+-- instance Covariant t => Substructure Left (Delta <:.> t) where
+-- 	type Substructural Left (Delta <:.> t) = t
+-- 	substructure (run . extract . run -> l :^: r) =
+-- 		Store $ r :*: lift . unite . (l :^:)
+--
+-- instance Covariant t => Substructure Right (Delta <:.> t) where
+-- 	type Substructural Right (Delta <:.> t) = t
+-- 	substructure (run . extract . run -> l :^: r) =
+-- 		Store $ l :*: lift . unite . (:^: r)
 
 instance Covariant t => Substructure Tail (Tap t) where
 	type Substructural Tail (Tap t) = t

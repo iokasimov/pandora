@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
@@ -33,6 +33,7 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (view)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
@@ -124,29 +125,33 @@ instance Substructure Tail (Construction Maybe) where
 	substructure (extract . run -> Construct x xs) =
 		Store $ TU xs :*: lift . Construct x . run
 
-type instance Zipper Stack = Tap (Delta <:.> Stack)
+type instance Zipper Stack = Tap ((:*:) <:.:> Stack)
 
-instance {-# OVERLAPS #-} Extendable (Tap (Delta <:.> Stack)) where
+instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> Stack)) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
-		in f <$> Tap z (TU $ move (run . morph @Left) :^: move (run . morph @Right))
+		in f <$> Tap z (T_U $ move (run . morph @Left) :*: move (run . morph @Right))
 
-instance Morphable Left (Tap (Delta <:.> Stack)) where
-	type Morphing Left (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	morphing (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ subview @Tail bs :^: insert x fs) <$> view (focus @Head) bs
+instance Morphable Left (Tap ((:*:) <:.:> Stack)) where
+	type Morphing Left (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
+	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
+		$ Tap % (T_U $ subview @Tail bs :*: insert x fs) <$> view (focus @Head) bs
 
-instance Morphable Right (Tap (Delta <:.> Stack)) where
-	type Morphing Right (Tap (Delta <:.> Stack)) = Maybe <:.> Zipper Stack
-	morphing (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap % (TU $ insert x bs :^: subview @Tail fs) <$> view (focus @Head) fs
+instance Morphable Right (Tap ((:*:) <:.:> Stack)) where
+	type Morphing Right (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
+	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
+		$ Tap % (T_U $ insert x bs :*: subview @Tail fs) <$> view (focus @Head) fs
 
-type instance Zipper (Construction Maybe) = Tap (Delta <:.> Construction Maybe)
+type instance Zipper (Construction Maybe) = Tap ((:*:) <:.:> Construction Maybe)
 
-instance Morphable Left (Tap (Delta <:.> Construction Maybe)) where
-	type Morphing Left (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
-	morphing (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract bs) . TU . (:^: insert x fs) <$> deconstruct bs
+instance Morphable Left (Tap ((:*:) <:.:> Construction Maybe)) where
+	type Morphing Left (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
+		$ Tap (extract bs) . T_U . (:*: insert x fs) <$> deconstruct bs
 
-instance Morphable Right (Tap (Delta <:.> Construction Maybe)) where
-	type Morphing Right (Tap (Delta <:.> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
-	morphing (extract . run -> Tap x (TU (bs :^: fs))) = TU $ Tap (extract fs) . TU . (insert x bs :^:) <$> deconstruct fs
+instance Morphable Right (Tap ((:*:) <:.:> Construction Maybe)) where
+	type Morphing Right (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
+		$ Tap (extract fs) . T_U . (insert x bs :*:) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
