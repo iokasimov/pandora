@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Rose where
+module Pandora.Paradigm.Structure.Some.Rose where
 
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant (comap))
@@ -22,7 +22,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
-import Pandora.Paradigm.Structure.Stack (Stack)
+import Pandora.Paradigm.Structure.Some.Stack (Stack)
 
 type Rose = Maybe <:.> Construction Stack
 

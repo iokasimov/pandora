@@ -94,11 +94,6 @@ library
     Pandora.Paradigm.Inventory.Store
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
-    Pandora.Paradigm.Structure.Stream
-    Pandora.Paradigm.Structure.Stack
-    Pandora.Paradigm.Structure.Binary
-    Pandora.Paradigm.Structure.Splay
-    Pandora.Paradigm.Structure.Rose
     Pandora.Paradigm.Structure.Ability
     Pandora.Paradigm.Structure.Ability.Comprehension
     Pandora.Paradigm.Structure.Ability.Morphable
@@ -114,6 +109,12 @@ library
     Pandora.Paradigm.Structure.Ability.Monotonic
     Pandora.Paradigm.Structure.Interface
     Pandora.Paradigm.Structure.Interface.Set
+    Pandora.Paradigm.Structure.Some
+    Pandora.Paradigm.Structure.Some.Stream
+    Pandora.Paradigm.Structure.Some.Stack
+    Pandora.Paradigm.Structure.Some.Binary
+    Pandora.Paradigm.Structure.Some.Splay
+    Pandora.Paradigm.Structure.Some.Rose
 
     Pandora.Pattern
     -- Category typeclass

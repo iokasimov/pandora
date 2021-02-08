@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Stack where
+module Pandora.Paradigm.Structure.Some.Stack where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern ((.|..))

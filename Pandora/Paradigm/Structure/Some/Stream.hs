@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Stream where
+module Pandora.Paradigm.Structure.Some.Stream where
 
 import Pandora.Core.Functor (type (:=>))
 import Pandora.Pattern.Category ((.), ($))

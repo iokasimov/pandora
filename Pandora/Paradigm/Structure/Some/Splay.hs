@@ -1,7 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Splay where
+module Pandora.Paradigm.Structure.Some.Splay where
 
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -16,7 +16,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes (TU (TU))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph)
 import Pandora.Paradigm.Structure.Ability.Substructure (substitute)
-import Pandora.Paradigm.Structure.Binary (Binary)
+import Pandora.Paradigm.Structure.Some.Binary (Binary)
 
 data Splay a = Zig a | Zag a
 

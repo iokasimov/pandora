@@ -4,11 +4,7 @@ module Pandora.Paradigm.Structure (module Exports) where
 
 import Pandora.Paradigm.Structure.Ability as Exports
 import Pandora.Paradigm.Structure.Interface as Exports
-import Pandora.Paradigm.Structure.Rose as Exports
-import Pandora.Paradigm.Structure.Splay as Exports
-import Pandora.Paradigm.Structure.Binary as Exports
-import Pandora.Paradigm.Structure.Stack as Exports
-import Pandora.Paradigm.Structure.Stream as Exports
+import Pandora.Paradigm.Structure.Some as Exports
 
 import Pandora.Pattern.Category (($), (.))
 import Pandora.Pattern.Functor.Covariant (Covariant (comap))
@@ -20,7 +16,6 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory.Optics ((|>))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
--- import Pandora.Paradigm.Primary.Functor.Delta (Delta ((:^:)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))

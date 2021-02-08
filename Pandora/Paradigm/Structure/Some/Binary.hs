@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pandora.Paradigm.Structure.Binary where
+module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.), ($))
