@@ -343,3 +343,5 @@
 * Remove `Rotatable` type class in favor of `Morphable`
 * Define `<:.:>`, `>:.:>`, `<:.:<`, `>:.:<` type synonyms
 * Delete `Delta` datatype in favor of `(:*:) <:.:> t`
+
+# 0.3.7
