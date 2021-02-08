@@ -82,8 +82,8 @@ instance Substructure Tail Stack where
 
 instance Deletable Stack where
 	delete _ (TU Nothing) = TU Nothing
-	delete (Predicate p) (TU (Just (Construct y ys))) = p y ? TU ys
-		$ lift . Construct y . run . delete @Stack (Predicate p) $ TU ys
+	delete x (TU (Just (Construct y ys))) = x == y ? TU ys
+		$ lift . Construct y . run . delete @Stack x $ TU ys
 
 filter :: forall a . Predicate a -> Stack a -> Stack a
 filter (Predicate p) = TU . extract

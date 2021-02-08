@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Structure.Ability.Deletable where
 
-import Pandora.Paradigm.Primary.Functor.Predicate (Predicate)
+import Pandora.Pattern.Object.Setoid (Setoid)
 
 class Deletable t where
-	delete :: Predicate a -> t a -> t a
+	delete :: Setoid a => a -> t a -> t a
