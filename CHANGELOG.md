@@ -345,3 +345,4 @@
 * Delete `Delta` datatype in favor of `(:*:) <:.:> t`
 
 # 0.3.7
+* Rename `insert` method to `+=` in `Insertable` typeclass

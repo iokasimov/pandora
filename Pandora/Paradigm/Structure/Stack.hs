@@ -38,7 +38,7 @@ import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Deletable (Deletable (delete))
-import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
+import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), morph)
@@ -61,11 +61,11 @@ instance Monoid (Stack a) where
 instance Focusable Head Stack where
 	type Focusing Head Stack a = Maybe a
 	focusing (extract -> stack) = Store $ extract <$> run stack :*: \case
-		Just x -> stack & subview @Tail & insert x & Tag
+		Just x -> stack & subview @Tail & (x +=) & Tag
 		Nothing -> stack & subview @Tail & Tag
 
 instance Insertable Stack where
-	insert x (run -> stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
+	x += (run -> stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 
 instance Measurable Length Stack where
 	type Measural Length Stack a = Numerator
@@ -109,7 +109,7 @@ instance Focusable Head (Construction Maybe) where
 	focusing (extract -> stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
 
 instance Insertable (Construction Maybe) where
-	insert x = Construct x . Just
+	(+=) x = Construct x . Just
 
 instance Measurable Length (Construction Maybe) where
 	type Measural Length (Construction Maybe) a = Denumerator
@@ -133,24 +133,24 @@ instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> Stack)) where
 instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Stack)) where
 	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap % (T_U $ subview @Tail bs :*: insert x fs) <$> view (focus @Head) bs
+		$ Tap % (T_U $ subview @Tail bs :*: x += fs) <$> view (focus @Head) bs
 
 instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Stack)) where
 	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap % (T_U $ insert x bs :*: subview @Tail fs) <$> view (focus @Head) fs
+		$ Tap % (T_U $ x += bs :*: subview @Tail fs) <$> view (focus @Head) fs
 
 type instance Zipper (Construction Maybe) = Tap ((:*:) <:.:> Construction Maybe)
 
 instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Construction Maybe)) where
 	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap (extract bs) . T_U . (:*: insert x fs) <$> deconstruct bs
+		$ Tap (extract bs) . T_U . (:*: x += fs) <$> deconstruct bs
 
 instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Construction Maybe)) where
 	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap (extract fs) . T_U . (insert x bs :*:) <$> deconstruct fs
+		$ Tap (extract fs) . T_U . (x += bs :*:) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run

@@ -33,7 +33,7 @@ import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
-import Pandora.Paradigm.Structure.Ability.Insertable (Insertable (insert))
+import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
@@ -47,9 +47,9 @@ rebalance (Both x y) = extract x <=> extract y & order
 	(Construct (extract x) $ Both (rebalance $ deconstruct x) y)
 
 instance (forall a . Chain a) => Insertable Binary where
-	insert x (run -> Nothing) = lift . Construct x $ End
-	insert x tree@(run -> Just nonempty) = x <=> extract nonempty & order
-		(tree & substitute @Left (insert x) ) tree (tree & substitute @Right (insert x))
+	x += (run -> Nothing) = lift . Construct x $ End
+	x += tree@(run -> Just nonempty) = x <=> extract nonempty & order
+		(tree & substitute @Left (x +=)) tree (tree & substitute @Right (x +=))
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
@@ -89,7 +89,7 @@ instance Focusable Root (Construction Wye) where
 	focusing (extract -> Construct x xs) = Store $ x :*: Tag . Construct % xs
 
 instance (forall a . Chain a) => Insertable (Construction Wye) where
-	insert x b = let change = lift . resolve (insert x) (Construct x End) . run in
+	x += b = let change = lift . resolve (x +=) (Construct x End) . run in
 		x <=> extract b & order (over (sub @Left) change $ b) b (over (sub @Right) change $ b)
 
 instance Measurable Heighth (Construction Wye) where
