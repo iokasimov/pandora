@@ -348,3 +348,4 @@
 * Rename `insert` method to `+=` in `Insertable` typeclass
 * Rename `delete` method to `-=` in `Deletable` typeclass
 * Create `Some` umbrella module for certain data structures
+* Define experimental `~~>` type synonyms

@@ -19,8 +19,10 @@ type (:=>) a t = a -> t a
 -- | Algebra's type operator
 type (<:=) a t = t a -> a
 
--- | Numerator transformation
-type (~>) t u = forall a . t a -> u a
+-- | Natural transformation
+type t ~> u = forall a . t a -> u a
+
+type t ~~> u = forall a b . t a b -> u a b
 
 type (::|:.) p a b = p (p a b) b
 type (::|.:) p a b = p a (p a b)
