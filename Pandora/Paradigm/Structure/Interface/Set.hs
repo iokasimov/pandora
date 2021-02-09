@@ -2,7 +2,7 @@ module Pandora.Paradigm.Structure.Interface.Set where
 
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Object.Setoid (Setoid ((/=)))
+import Pandora.Pattern.Object.Setoid (Setoid ((!=)))
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Pattern.Object.Quasiring (one)
 import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
@@ -19,7 +19,7 @@ member :: forall e a . (Setoid a, Monotonic a e) => a -> e -> Boolean
 member x = reduce @a @(Maybe a) (\_ _ -> True) False . find (equate x)
 
 subset :: (Monotonic a (t a), Traversable t, Setoid a, Setoid (t a)) => t a -> t a -> Boolean
-subset ss s = Nothing /= (ss ->> find % s . equate)
+subset ss s = Nothing != (ss ->> find % s . equate)
 
 cardinality :: Traversable t => t a -> Numerator
 cardinality s = attached . run @(State _) % Zero $ s ->> (!) (modify @Numerator (+ one))

@@ -349,3 +349,4 @@
 * Rename `delete` method to `-=` in `Deletable` typeclass
 * Create `Some` umbrella module for certain data structures
 * Define experimental `~~>` type synonyms
+* Rename `/=` method of `Setoid` typeclass to `!=`
