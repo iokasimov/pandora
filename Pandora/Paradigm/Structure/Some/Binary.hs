@@ -84,6 +84,10 @@ binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @
 
 type instance Nonempty Binary = Construction Wye
 
+instance Morphable Binary (Construction Wye) where
+	type Morphing Binary (Construction Wye) = Binary
+	morphing = lift . extract . run
+
 instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a
 	focusing (extract -> Construct x xs) = Store $ x :*: Tag . Construct % xs
