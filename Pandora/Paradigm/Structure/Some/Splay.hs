@@ -14,7 +14,7 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes (TU (TU))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), morph)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), morph, rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (substitute)
 import Pandora.Paradigm.Structure.Some.Binary (Binary)
 
@@ -36,16 +36,16 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zig))) (Construction Wye) = Binary
-	morphing (extract . run -> tree) = TU $ run (morph @(Rotate (Left Zig)) tree) >>= run . morph @(Rotate (Left Zig))
+	morphing (extract . run -> tree) = TU $ run (rotate @(Left Zig) tree) >>= run . rotate @(Left Zig)
 
 instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zig))) (Construction Wye) = Binary
-	morphing (extract . run -> tree) = TU $ run (morph @(Rotate (Right Zig)) tree) >>= run . morph @(Rotate (Right Zig))
+	morphing (extract . run -> tree) = TU $ run (rotate @(Right Zig) tree) >>= run . rotate @(Right Zig)
 
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Binary
-	morphing = morph @(Rotate (Left Zig)) . substitute @Left ((>>= run . morph @(Rotate (Right Zig))) ||=) . extract . run
+	morphing = rotate @(Left Zig) . substitute @Left ((>>= run . rotate @(Right Zig)) ||=) . extract . run
 
 instance Morphable (Rotate (Right (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Binary
-	morphing = morph @(Rotate (Right Zig)) . substitute @Right ((>>= run . morph @(Rotate (Left Zig))) ||=) . extract . run
+	morphing = rotate @(Right Zig) . substitute @Right ((>>= run . rotate @(Left Zig)) ||=) . extract . run
