@@ -34,7 +34,7 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusi
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
@@ -134,8 +134,8 @@ type instance Zipper (Construction Wye) = T_U Covariant Covariant (Construction 
 
 data Vertical a = Up a | Down a
 
-instance Morphable Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Morphing Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Morphable (Rotate Up) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Morphing (Rotate Up) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 	morphing (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_ (parent :*: TU (Just rst))) next)))) =
 		TU . Just . T_U $ Construct parent (Both focused rst) :*: TU (TU next)
@@ -147,8 +147,8 @@ instance Morphable Up (T_U Covariant Covariant (Construction Wye) (:*:) ((Bifork
 		TU . Just . T_U $ Construct parent (Right focused) :*: TU (TU next)
 	morphing (extract . run -> T_U (_ :*: TU (TU Top))) = TU Nothing
 
-instance Morphable (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Morphing (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Morphable (Rotate (Down Left)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Morphing (Rotate (Down Left)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 	morphing (run . extract . run -> Construct x (Left lst) :*: TU (TU next)) =
 		TU . Just . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_ $ x :*: TU Nothing) $ next
@@ -157,8 +157,8 @@ instance Morphable (Down Left) (T_U Covariant Covariant (Construction Wye) (:*:)
 	morphing (run . extract . run -> Construct _ (Right _) :*: _) = TU Nothing
 	morphing (run . extract . run -> Construct _ End :*: _) = TU Nothing
 
-instance Morphable (Down Right) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
-	type Morphing (Down Right) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
+instance Morphable (Rotate (Down Right)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye))) where
+	type Morphing (Rotate (Down Right)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_ Covariant (Maybe <:.> Construction Wye)))
 	morphing (run . extract . run -> Construct x (Right rst) :*: TU (TU next)) = TU . Just . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_ $ x :*: TU Nothing) $ next
 	morphing (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) = TU . Just . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_ $ x :*: TU (Just lst)) $ next
