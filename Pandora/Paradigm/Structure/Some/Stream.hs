@@ -14,7 +14,7 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), morph)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), rotate)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
@@ -34,7 +34,7 @@ instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Stream)) where
 
 instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> Stream)) where
 	z =>> f = let move rtt = extract . deconstruct $ point . rtt .-+ z
-		in f <$> Tap z (T_U $ move (morph @(Rotate Left)) :*: move (morph @(Rotate Right)))
+		in f <$> Tap z (T_U $ move (rotate @Left) :*: move (rotate @Right))
 
 repeat :: a :=> Stream
 repeat x = Construct x . Identity $ repeat x

@@ -41,7 +41,7 @@ import Pandora.Paradigm.Structure.Ability.Deletable (Deletable ((-=)))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), morph)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 
 -- | Linear data structure that serves as a collection of elements
@@ -128,7 +128,7 @@ type instance Zipper Stack = Tap ((:*:) <:.:> Stack)
 
 instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> Stack)) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
-		in f <$> Tap z (T_U $ move (run . morph @(Rotate Left)) :*: move (run . morph @(Rotate Right)))
+		in f <$> Tap z (T_U $ move (run . rotate @Left) :*: move (run . rotate @Right))
 
 instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Stack)) where
 	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
