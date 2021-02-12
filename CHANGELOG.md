@@ -351,3 +351,4 @@
 * Define experimental `~~>` type synonyms
 * Rename `/=` method of `Setoid` typeclass to `!=`
 * Define `rotate` method of `Morphable` typeclass
+* Remove `T_` joint scheme in favor of `T_U`
