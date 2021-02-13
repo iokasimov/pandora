@@ -11,4 +11,5 @@ import Pandora.Paradigm.Structure.Ability.Morphable as Exports
 import Pandora.Paradigm.Structure.Ability.Accessible as Exports
 import Pandora.Paradigm.Structure.Ability.Nullable as Exports
 import Pandora.Paradigm.Structure.Ability.Nonempty as Exports
+import Pandora.Paradigm.Structure.Ability.Prefixed as Exports
 import Pandora.Paradigm.Structure.Ability.Comprehension as Exports
