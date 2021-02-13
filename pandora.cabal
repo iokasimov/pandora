@@ -108,6 +108,7 @@ library
     Pandora.Paradigm.Structure.Ability.Monotonic
     Pandora.Paradigm.Structure.Interface
     Pandora.Paradigm.Structure.Interface.Set
+    Pandora.Paradigm.Structure.Interface.Dictionary
     Pandora.Paradigm.Structure.Some
     Pandora.Paradigm.Structure.Some.Stream
     Pandora.Paradigm.Structure.Some.Stack
