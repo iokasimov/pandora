@@ -37,55 +37,35 @@ instance Substructure Right (Product s) where
 	substructure (extract . run -> s :*: x) =
 		Store $ Identity x :*: lift . (s :*:) . extract
 
--- instance Substructure Left Delta where
--- 	type Substructural Left Delta = Identity
--- 	substructure (extract . run -> l :^: r) =
--- 		Store $ Identity l :*: lift . (:^: r) . extract
---
--- instance Substructure Right Delta where
--- 	type Substructural Right Delta = Identity
--- 	substructure (extract . run -> l :^: r) =
--- 		Store $ Identity r :*: lift . (l :^:) . extract
---
--- instance Covariant t => Substructure Left (Delta <:.> t) where
--- 	type Substructural Left (Delta <:.> t) = t
--- 	substructure (run . extract . run -> l :^: r) =
--- 		Store $ r :*: lift . unite . (l :^:)
---
--- instance Covariant t => Substructure Right (Delta <:.> t) where
--- 	type Substructural Right (Delta <:.> t) = t
--- 	substructure (run . extract . run -> l :^: r) =
--- 		Store $ l :*: lift . unite . (:^: r)
-
 instance Covariant t => Substructure Tail (Tap t) where
 	type Substructural Tail (Tap t) = t
 	substructure (extract . run -> Tap x xs) =
 		Store $ xs :*: lift . Tap x
 
-instance Morphable Preorder (Construction Wye) where
-	type Morphing Preorder (Construction Wye) = Construction Maybe
+instance Morphable (Preorder (Construction Maybe)) (Construction Wye) where
+	type Morphing (Preorder (Construction Maybe)) (Construction Wye) = Construction Maybe
 	morphing (extract . run -> Construct x End) = Construct x Nothing
-	morphing (extract . run -> Construct x (Left lst)) = Construct x . Just $ morph @Preorder lst
-	morphing (extract . run -> Construct x (Right rst)) = Construct x . Just $ morph @Preorder rst
-	morphing (extract . run -> Construct x (Both lst rst)) = Construct x . Just $ morph @Preorder lst + morph @Preorder rst
+	morphing (extract . run -> Construct x (Left lst)) = Construct x . Just $ morph @(Preorder (Nonempty Stack)) lst
+	morphing (extract . run -> Construct x (Right rst)) = Construct x . Just $ morph @(Preorder (Nonempty Stack)) rst
+	morphing (extract . run -> Construct x (Both lst rst)) = Construct x . Just $ morph @(Preorder (Nonempty Stack)) lst + morph @(Preorder (Nonempty Stack)) rst
 
-instance Morphable Inorder (Construction Wye) where
-	type Morphing Inorder (Construction Wye) = Construction Maybe
+instance Morphable (Inorder (Construction Maybe)) (Construction Wye) where
+	type Morphing (Inorder (Construction Maybe)) (Construction Wye) = Construction Maybe
 	morphing (extract . run -> Construct x End) = point x
-	morphing (extract . run -> Construct x (Left lst)) = morph @Inorder lst + point x
-	morphing (extract . run -> Construct x (Right rst)) = point x + morph @Inorder rst
-	morphing (extract . run -> Construct x (Both lst rst)) = morph @Inorder lst + point x + morph @Inorder rst
+	morphing (extract . run -> Construct x (Left lst)) = morph @(Inorder (Nonempty Stack)) lst + point x
+	morphing (extract . run -> Construct x (Right rst)) = point x + morph @(Inorder (Nonempty Stack)) rst
+	morphing (extract . run -> Construct x (Both lst rst)) = morph @(Inorder (Nonempty Stack)) lst + point x + morph @(Inorder (Nonempty Stack)) rst
 
-instance Morphable Postorder (Construction Wye) where
-	type Morphing Postorder (Construction Wye) = Construction Maybe
+instance Morphable (Postorder (Construction Maybe)) (Construction Wye) where
+	type Morphing (Postorder (Construction Maybe)) (Construction Wye) = Construction Maybe
 	morphing (extract . run -> Construct x End) = point x
-	morphing (extract . run -> Construct x (Left lst)) = morph @Postorder lst + point x
-	morphing (extract . run -> Construct x (Right rst)) = morph @Postorder rst + point x
-	morphing (extract . run -> Construct x (Both lst rst)) = morph @Postorder lst + morph @Postorder rst + point x
+	morphing (extract . run -> Construct x (Left lst)) = morph @(Postorder (Nonempty Stack)) lst + point x
+	morphing (extract . run -> Construct x (Right rst)) = morph @(Postorder (Nonempty Stack)) rst + point x
+	morphing (extract . run -> Construct x (Both lst rst)) = morph @(Postorder (Nonempty Stack)) lst + morph @(Postorder (Nonempty Stack)) rst + point x
 
-instance Morphable o (Construction Wye) => Morphable o Binary where
-	type Morphing o Binary = Maybe <:.> Morphing o (Construction Wye)
-	morphing = unite . comap (morph @o) . run . extract . run
+instance Morphable (o ds) (Construction Wye) => Morphable (o ds) Binary where
+	type Morphing (o ds) Binary = Maybe <:.> Morphing (o ds) (Construction Wye)
+	morphing = unite . comap (morph @(o ds)) . run . extract . run
 
 instance Focusable Left (Product s) where
 	type Focusing Left (Product s) a = s
