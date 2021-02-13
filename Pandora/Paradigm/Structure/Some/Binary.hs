@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-{-# LANGUAGE UndecidableInstances #-}
 
 module Pandora.Paradigm.Structure.Some.Binary where
 
@@ -143,14 +142,10 @@ data Vertical a = Up a | Down a
 instance Morphable (Rotate Up) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye))) where
 	type Morphing (Rotate Up) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
-	morphing (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_U (Identity parent :*: TU (Just rst))) next)))) =
-		lift . T_U $ Construct parent (Both focused rst) :*: TU (TU next)
-	morphing (run . extract . run -> focused :*: TU (TU (Leftward (Construct (T_U (Identity parent :*: _)) next)))) =
-		lift . T_U $ Construct parent (Left focused) :*: TU (TU next)
-	morphing (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: TU (Just lst))) next)))) =
-		lift . T_U $ Construct parent (Both lst focused) :*: TU (TU next)
-	morphing (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: _)) next)))) =
-		lift . T_U $ Construct parent (Right focused) :*: TU (TU next)
+	morphing (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
+		lift . T_U $ Construct parent (resolve (Both focused) (Left focused) $ run rest) :*: TU (TU next)
+	morphing (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
+		lift . T_U $ Construct parent (resolve (Both % focused) (Right focused) $ run rest) :*: TU (TU next)
 	morphing (extract . run -> T_U (_ :*: TU (TU Top))) = empty
 
 instance Morphable (Rotate (Down Left)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye))) where
@@ -159,7 +154,7 @@ instance Morphable (Rotate (Down Left)) (T_U Covariant Covariant (Construction W
 	morphing (run . extract . run -> Construct x (Left lst) :*: TU (TU next)) =
 		lift . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_U $ Identity x :*: empty) $ next
 	morphing (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_U $ Identity x :*: TU (Just rst)) $ next
+		lift . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_U $ Identity x :*: lift rst) $ next
 	morphing (run . extract . run -> Construct _ (Right _) :*: _) = empty
 	morphing (run . extract . run -> Construct _ End :*: _) = empty
 
@@ -167,6 +162,6 @@ instance Morphable (Rotate (Down Right)) (T_U Covariant Covariant (Construction 
 	type Morphing (Rotate (Down Right)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
 	morphing (run . extract . run -> Construct x (Right rst) :*: TU (TU next)) = lift . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_U $ Identity x :*: empty) $ next
-	morphing (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) = lift . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_U $ Identity x :*: TU (Just lst)) $ next
+	morphing (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) = lift . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_U $ Identity x :*: lift lst) $ next
 	morphing (run . extract . run -> Construct _ (Left _) :*: _) = empty
 	morphing (run . extract . run -> Construct _ End :*: _) = empty
