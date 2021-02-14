@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Inventory.Optics where
 
 import Pandora.Core.Functor (type (:=>))
@@ -24,8 +22,8 @@ type Lens src tgt = src :=> Store tgt
 type (:~.) src tgt = forall a . Lens (src a) (tgt a)
 
 -- | Lens composition infix operator
-(|>) :: Lens src old -> Lens old new -> Lens src new
-from |> to = \x -> ((<$) x . to) . position . from $ x
+(|>) :: Lens src tgt -> Lens tgt new -> Lens src new
+(|>) from to src = src <$ (to . position $ from src)
 
 -- | Get the target of a lens
 view :: Lens src tgt -> src -> tgt
