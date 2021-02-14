@@ -5,6 +5,7 @@ module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
@@ -20,6 +21,9 @@ instance Covariant (Equipment e) where
 
 instance Extractable (Equipment e) where
 	extract = extract . run
+
+instance Traversable (Equipment e) where
+	Equipment x ->> f = Equipment <$> (x ->> f)
 
 instance Extendable (Equipment e) where
 	Equipment (e :*: x) =>> f = Equipment . (:*:) e . f . Equipment $ e :*: x
