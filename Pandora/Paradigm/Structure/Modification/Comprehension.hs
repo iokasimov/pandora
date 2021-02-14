@@ -1,6 +1,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pandora.Paradigm.Structure.Ability.Comprehension where
+module Pandora.Paradigm.Structure.Modification.Comprehension where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category ((.), ($))

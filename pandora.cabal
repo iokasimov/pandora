@@ -94,8 +94,6 @@ library
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
     Pandora.Paradigm.Structure.Ability
-    Pandora.Paradigm.Structure.Ability.Comprehension
-    Pandora.Paradigm.Structure.Ability.Prefixed
     Pandora.Paradigm.Structure.Ability.Morphable
     Pandora.Paradigm.Structure.Ability.Deletable
     Pandora.Paradigm.Structure.Ability.Accessible
@@ -107,6 +105,9 @@ library
     Pandora.Paradigm.Structure.Ability.Nullable
     Pandora.Paradigm.Structure.Ability.Zipper
     Pandora.Paradigm.Structure.Ability.Monotonic
+    Pandora.Paradigm.Structure.Modification
+    Pandora.Paradigm.Structure.Modification.Comprehension
+    Pandora.Paradigm.Structure.Modification.Prefixed
     Pandora.Paradigm.Structure.Interface
     Pandora.Paradigm.Structure.Interface.Set
     Pandora.Paradigm.Structure.Interface.Dictionary

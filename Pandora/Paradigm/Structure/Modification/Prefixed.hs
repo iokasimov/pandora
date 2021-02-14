@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Ability.Prefixed where
+module Pandora.Paradigm.Structure.Modification.Prefixed where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
