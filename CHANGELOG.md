@@ -354,3 +354,4 @@
 * Remove `T_` joint scheme in favor of `T_U`
 * Define `Prefixed` wrapper for data structures whose values can be prefixed
 * Move `Comprehension` and `Prefixed` modules from `Ability` to `Modification`
+* Define experimental `Dictionary` typeclass
