@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, note, hush, left, right, this, that, here, there, branches, match) where
+module Pandora.Paradigm.Primary.Functor (module Exports, note, left, right, this, that, here, there, branches, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
@@ -21,10 +21,13 @@ import Pandora.Paradigm.Primary.Functor.Identity as Exports
 import Pandora.Paradigm.Primary.Functor.Function as Exports
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Structure.Ability.Monotonic (reduce)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing))
 
 instance Adjoint (Product s) ((->) s) where
 	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)
@@ -32,11 +35,12 @@ instance Adjoint (Product s) ((->) s) where
 	(|-) :: (s :*: a) -> (a -> s -> b) -> b
 	~(s :*: x) |- f = f x s
 
+instance Morphable Maybe (Conclusion e) where
+	type Morphing Maybe (Conclusion e) = Maybe
+	morphing = conclusion (Nothing !) Just . extract . run
+
 note :: e -> Maybe ~> Conclusion e
 note x = reduce (\y _ -> Success y) (Failure x)
-
-hush :: Conclusion e ~> Maybe
-hush = conclusion (Nothing !) Just
 
 left :: Wye ~> Maybe
 left (Both ls _) = Just ls
