@@ -27,7 +27,7 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Structure.Ability.Monotonic (reduce)
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Convert))
 
 instance Adjoint (Product s) ((->) s) where
 	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)
@@ -35,8 +35,8 @@ instance Adjoint (Product s) ((->) s) where
 	(|-) :: (s :*: a) -> (a -> s -> b) -> b
 	~(s :*: x) |- f = f x s
 
-instance Morphable Maybe (Conclusion e) where
-	type Morphing Maybe (Conclusion e) = Maybe
+instance Morphable (Convert Maybe) (Conclusion e) where
+	type Morphing (Convert Maybe) (Conclusion e) = Maybe
 	morphing = conclusion (Nothing !) Just . extract . run
 
 note :: e -> Maybe ~> Conclusion e

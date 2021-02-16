@@ -34,7 +34,7 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusi
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Convert))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
@@ -84,8 +84,8 @@ binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @
 
 type instance Nonempty Binary = Construction Wye
 
-instance Morphable Binary (Construction Wye) where
-	type Morphing Binary (Construction Wye) = Binary
+instance Morphable (Convert Binary) (Construction Wye) where
+	type Morphing (Convert Binary) (Construction Wye) = Binary
 	morphing = lift . extract . run
 
 instance Focusable Root (Construction Wye) where
