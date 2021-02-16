@@ -355,3 +355,4 @@
 * Define `Prefixed` wrapper for data structures whose values can be prefixed
 * Move `Comprehension` and `Prefixed` modules from `Ability` to `Modification`
 * Define experimental `Dictionary` typeclass
+* Add `=||` method to `Interpreted` typeclass
