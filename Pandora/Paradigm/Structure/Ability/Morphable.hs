@@ -16,7 +16,10 @@ morph = morphing . TU . Tag @f
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
 
-data Morph a = Rotate a
+data Morph a = Rotate a | Convert a
 
 rotate :: forall f t . Morphable (Rotate f) t => t ~> Morphing (Rotate f) t
 rotate = morphing . TU . Tag @(Rotate f)
+
+convert :: forall f t . Morphable (Convert f) t => t ~> Morphing (Convert f) t
+convert = morphing . TU . Tag @(Convert f)

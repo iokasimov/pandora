@@ -350,7 +350,7 @@
 * Create `Some` umbrella module for certain data structures
 * Define experimental `~~>` type synonyms
 * Rename `/=` method of `Setoid` typeclass to `!=`
-* Define `rotate` method of `Morphable` typeclass
+* Define `rotate` and `convert` method of `Morphable` typeclass
 * Remove `T_` joint scheme in favor of `T_U`
 * Define `Prefixed` wrapper for data structures whose values can be prefixed
 * Move `Comprehension` and `Prefixed` modules from `Ability` to `Modification`

@@ -42,30 +42,30 @@ instance Covariant t => Substructure Tail (Tap t) where
 	substructure (extract . run -> Tap x xs) =
 		Store $ xs :*: lift . Tap x
 
-instance Morphable (Preorder (Construction Maybe)) (Construction Wye) where
-	type Morphing (Preorder (Construction Maybe)) (Construction Wye) = Construction Maybe
+instance Morphable (Convert (Preorder (Construction Maybe))) (Construction Wye) where
+	type Morphing (Convert (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
 	morphing (extract . run -> Construct x End) = Construct x Nothing
-	morphing (extract . run -> Construct x (Left lst)) = Construct x . Just $ morph @(Preorder (Nonempty Stack)) lst
-	morphing (extract . run -> Construct x (Right rst)) = Construct x . Just $ morph @(Preorder (Nonempty Stack)) rst
-	morphing (extract . run -> Construct x (Both lst rst)) = Construct x . Just $ morph @(Preorder (Nonempty Stack)) lst + morph @(Preorder (Nonempty Stack)) rst
+	morphing (extract . run -> Construct x (Left lst)) = Construct x . Just $ convert @(Preorder (Nonempty Stack)) lst
+	morphing (extract . run -> Construct x (Right rst)) = Construct x . Just $ convert @(Preorder (Nonempty Stack)) rst
+	morphing (extract . run -> Construct x (Both lst rst)) = Construct x . Just $ convert @(Preorder (Nonempty Stack)) lst + convert @(Preorder (Nonempty Stack)) rst
 
-instance Morphable (Inorder (Construction Maybe)) (Construction Wye) where
-	type Morphing (Inorder (Construction Maybe)) (Construction Wye) = Construction Maybe
+instance Morphable (Convert (Inorder (Construction Maybe))) (Construction Wye) where
+	type Morphing (Convert (Inorder (Construction Maybe))) (Construction Wye) = Construction Maybe
 	morphing (extract . run -> Construct x End) = point x
-	morphing (extract . run -> Construct x (Left lst)) = morph @(Inorder (Nonempty Stack)) lst + point x
-	morphing (extract . run -> Construct x (Right rst)) = point x + morph @(Inorder (Nonempty Stack)) rst
-	morphing (extract . run -> Construct x (Both lst rst)) = morph @(Inorder (Nonempty Stack)) lst + point x + morph @(Inorder (Nonempty Stack)) rst
+	morphing (extract . run -> Construct x (Left lst)) = convert @(Inorder (Nonempty Stack)) lst + point x
+	morphing (extract . run -> Construct x (Right rst)) = point x + convert @(Inorder (Nonempty Stack)) rst
+	morphing (extract . run -> Construct x (Both lst rst)) = convert @(Inorder (Nonempty Stack)) lst + point x + convert @(Inorder (Nonempty Stack)) rst
 
-instance Morphable (Postorder (Construction Maybe)) (Construction Wye) where
-	type Morphing (Postorder (Construction Maybe)) (Construction Wye) = Construction Maybe
+instance Morphable (Convert (Postorder (Construction Maybe))) (Construction Wye) where
+	type Morphing (Convert (Postorder (Construction Maybe))) (Construction Wye) = Construction Maybe
 	morphing (extract . run -> Construct x End) = point x
-	morphing (extract . run -> Construct x (Left lst)) = morph @(Postorder (Nonempty Stack)) lst + point x
-	morphing (extract . run -> Construct x (Right rst)) = morph @(Postorder (Nonempty Stack)) rst + point x
-	morphing (extract . run -> Construct x (Both lst rst)) = morph @(Postorder (Nonempty Stack)) lst + morph @(Postorder (Nonempty Stack)) rst + point x
+	morphing (extract . run -> Construct x (Left lst)) = convert @(Postorder (Nonempty Stack)) lst + point x
+	morphing (extract . run -> Construct x (Right rst)) = convert @(Postorder (Nonempty Stack)) rst + point x
+	morphing (extract . run -> Construct x (Both lst rst)) = convert @(Postorder (Nonempty Stack)) lst + convert @(Postorder (Nonempty Stack)) rst + point x
 
-instance Morphable (o ds) (Construction Wye) => Morphable (o ds) Binary where
-	type Morphing (o ds) Binary = Maybe <:.> Morphing (o ds) (Construction Wye)
-	morphing = unite . comap (morph @(o ds)) . run . extract . run
+instance Morphable (Convert (o ds)) (Construction Wye) => Morphable (Convert (o ds)) Binary where
+	type Morphing (Convert (o ds)) Binary = Maybe <:.> Morphing (Convert (o ds)) (Construction Wye)
+	morphing = unite . comap (convert @(o ds)) . run . extract . run
 
 instance Focusable Left (Product s) where
 	type Focusing Left (Product s) a = s
