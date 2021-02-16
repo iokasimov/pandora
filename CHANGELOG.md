@@ -356,4 +356,4 @@
 * Move `Comprehension` and `Prefixed` modules from `Ability` to `Modification`
 * Define experimental `Dictionary` typeclass
 * Add `=||` method to `Interpreted` typeclass
-* Remove `hush` method in favor of `Morphable` instance
+* Remove `hush`, `left`, `right` methods in favor of `Morphable` instance

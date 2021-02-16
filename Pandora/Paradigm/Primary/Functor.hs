@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, note, left, right, this, that, here, there, branches, match) where
+module Pandora.Paradigm.Primary.Functor (module Exports, note, this, that, here, there, branches, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
@@ -42,17 +42,19 @@ instance Morphable (Into Maybe) (Conclusion e) where
 note :: e -> Maybe ~> Conclusion e
 note x = reduce (\y _ -> Success y) (Failure x)
 
-left :: Wye ~> Maybe
-left (Both ls _) = Just ls
-left (Left ls) = Just ls
-left (Right _) = Nothing
-left End = Nothing
+instance Morphable (Into (Left Maybe)) Wye where
+	type Morphing (Into (Left Maybe)) Wye = Maybe
+	morphing (extract . run -> Both ls _) = Just ls
+	morphing (extract . run -> Left ls) = Just ls
+	morphing (extract . run -> Right _) = Nothing
+	morphing (extract . run -> End) = Nothing
 
-right :: Wye ~> Maybe
-right (Both _ rs) = Just rs
-right (Left _) = Nothing
-right (Right rs) = Just rs
-right End = Nothing
+instance Morphable (Into (Right Maybe)) Wye where
+	type Morphing (Into (Right Maybe)) Wye = Maybe
+	morphing (extract . run -> Both _ rs) = Just rs
+	morphing (extract . run -> Left _) = Nothing
+	morphing (extract . run -> Right rs) = Just rs
+	morphing (extract . run -> End) = Nothing
 
 this :: These e ~> Maybe
 this (This x) = Just x
