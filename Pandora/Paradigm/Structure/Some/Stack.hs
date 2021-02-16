@@ -41,7 +41,7 @@ import Pandora.Paradigm.Structure.Ability.Deletable (Deletable ((-=)))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Convert), rotate)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 
 -- | Linear data structure that serves as a collection of elements
@@ -100,8 +100,8 @@ instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 	Construct x Nothing + ys = Construct x $ Just ys
 	Construct x (Just xs) + ys = Construct x . Just $ xs + ys
 
-instance Morphable (Convert Stack) (Construction Maybe) where
-	type Morphing (Convert Stack) (Construction Maybe) = Stack
+instance Morphable (Into Stack) (Construction Maybe) where
+	type Morphing (Into Stack) (Construction Maybe) = Stack
 	morphing = lift . extract . run
 
 instance Focusable Head (Construction Maybe) where
