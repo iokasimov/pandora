@@ -357,3 +357,4 @@
 * Define experimental `Dictionary` typeclass
 * Add `=||` method to `Interpreted` typeclass
 * Remove `hush`, `left`, `right`, `this`, `there` methods in favor of `Morphable` instance
+* Define `Flip` for flipping type arguments

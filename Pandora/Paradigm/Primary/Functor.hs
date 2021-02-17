@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Primary.Functor (module Exports, note, here, branches, match) where
 
+import Pandora.Paradigm.Primary.Functor.Flip as Exports
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
 import Pandora.Paradigm.Primary.Functor.Predicate as Exports

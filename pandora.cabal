@@ -49,6 +49,7 @@ library
     Pandora.Paradigm.Primary.Functor.Wedge
     Pandora.Paradigm.Primary.Functor.Predicate
     Pandora.Paradigm.Primary.Functor.Equivalence
+    Pandora.Paradigm.Primary.Functor.Flip
     Pandora.Paradigm.Primary.Transformer
     Pandora.Paradigm.Primary.Transformer.Backwards
     Pandora.Paradigm.Primary.Transformer.Reverse
