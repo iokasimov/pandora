@@ -12,3 +12,4 @@ import Pandora.Paradigm.Primary.Transformer.Instruction as Exports
 import Pandora.Paradigm.Primary.Transformer.Construction as Exports
 import Pandora.Paradigm.Primary.Transformer.Reverse as Exports
 import Pandora.Paradigm.Primary.Transformer.Backwards as Exports
+import Pandora.Paradigm.Primary.Transformer.Flip as Exports
