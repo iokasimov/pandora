@@ -4,6 +4,7 @@ module Pandora.Paradigm.Structure (module Exports) where
 
 import Pandora.Paradigm.Structure.Ability as Exports
 import Pandora.Paradigm.Structure.Interface as Exports
+import Pandora.Paradigm.Structure.Modification as Exports
 import Pandora.Paradigm.Structure.Some as Exports
 
 import Pandora.Pattern.Category (($), (.))
@@ -62,6 +63,15 @@ instance Morphable (Into (Postorder (Construction Maybe))) (Construction Wye) wh
 	morphing (extract . run -> Construct x (Left lst)) = into @(Postorder (Nonempty Stack)) lst + point x
 	morphing (extract . run -> Construct x (Right rst)) = into @(Postorder (Nonempty Stack)) rst + point x
 	morphing (extract . run -> Construct x (Both lst rst)) = into @(Postorder (Nonempty Stack)) lst + into @(Postorder (Nonempty Stack)) rst + point x
+
+-- instance Morphable (Into (Levelorder (Construction Maybe))) (Construction Wye) where
+-- 	type Morphing (Into (Levelorder (Construction Maybe))) (Construction Wye) = Construction Maybe
+-- 	morphing (extract . run -> Construct x End) = point x
+-- 	morphing (extract . run -> Construct x (Left lst)) = point x + into @(Levelorder (Nonempty Stack)) lst
+-- 	morphing (extract . run -> Construct x (Right rst)) = point x + into @(Levelorder (Nonempty Stack)) lst
+-- 	morphing (extract . run -> Construct x (Both lst rst)) = point x + extract lst + extract rst +
+
+		-- (deconstruct lst :: )
 
 instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
 	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
