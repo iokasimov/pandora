@@ -1,11 +1,10 @@
 module Pandora.Paradigm.Schemes.T_U where
 
-import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 
 newtype T_U ct cu t p u a = T_U (p (t a) (u a))
 
@@ -21,8 +20,8 @@ instance Interpreted (T_U ct cu t p u) where
 
 instance (Bivariant p, Covariant t, Covariant u)
 	=> Covariant (T_U Covariant Covariant t p u) where
-		f <$> x = T_U $ (f <$>) <-> (f <$>) $ run x
+		f <$> x = ((f <$>) <-> (f <$>)) ||= x
 
 instance (Divariant p, Contravariant t, Covariant u)
 	=> Covariant (T_U Contravariant Covariant t p u) where
-		f <$> x = T_U $ (f >$<) >-> (f <$>) $ run x
+		f <$> x = ((f >$<) >-> (f <$>)) ||= x
