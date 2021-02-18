@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, note, here, branches, match) where
+module Pandora.Paradigm.Primary.Functor (module Exports, note, branches, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
@@ -35,17 +35,8 @@ instance Adjoint (Product s) ((->) s) where
 	(|-) :: (s :*: a) -> (a -> s -> b) -> b
 	~(s :*: x) |- f = f x s
 
-instance Morphable (Into Maybe) (Conclusion e) where
-	type Morphing (Into Maybe) (Conclusion e) = Maybe
-	morphing = conclusion (Nothing !) Just . extract . run
-
 note :: e -> Maybe ~> Conclusion e
 note x = reduce (\y _ -> Success y) (Failure x)
-
-here :: Wedge e a -> Maybe e
-here Nowhere = Nothing
-here (Here x) = Just x
-here (There _) = Nothing
 
 branches :: Maybe a -> Maybe a -> Wye a
 branches (Just x) (Just y) = Both x y

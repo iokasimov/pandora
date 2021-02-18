@@ -11,6 +11,10 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into))
 
+instance Morphable (Into Maybe) (Conclusion e) where
+	type Morphing (Into Maybe) (Conclusion e) = Maybe
+	morphing = conclusion (Nothing !) Just . extract . run
+
 instance Morphable (Into (Left Maybe)) Wye where
 	type Morphing (Into (Left Maybe)) Wye = Maybe
 	morphing (extract . run -> Both ls _) = Just ls
@@ -30,6 +34,18 @@ instance Morphable (Into (This Maybe)) (These e) where
 	morphing (extract . run -> This x) = Just x
 	morphing (extract . run -> That _) = Nothing
 	morphing (extract . run -> These _ x) = Just x
+
+instance Morphable (Into (That Maybe)) (Flip These a) where
+	type Morphing (Into (That Maybe)) (Flip These a) = Maybe
+	morphing (run . extract . run -> This _) = Nothing
+	morphing (run . extract . run -> That x) = Just x
+	morphing (run . extract . run -> These y _) = Just y
+
+instance Morphable (Into (Here Maybe)) (Flip Wedge a) where
+	type Morphing (Into (Here Maybe)) (Flip Wedge a) = Maybe
+	morphing (run . extract . run -> Nowhere) = Nothing
+	morphing (run . extract . run -> Here x) = Just x
+	morphing (run . extract . run -> There _) = Nothing
 
 instance Morphable (Into (There Maybe)) (Wedge e) where
 	type Morphing (Into (There Maybe)) (Wedge e) = Maybe
