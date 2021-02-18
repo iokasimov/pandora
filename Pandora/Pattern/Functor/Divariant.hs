@@ -12,9 +12,9 @@ infixl 4 >->
 
 class Divariant (v :: * -> * -> *) where
 	{-# MINIMAL (>->) #-}
-	(>->) :: v a b -> v c d -> v b c -> v a d
+	(>->) :: (a -> b) -> (c -> d) -> v b c -> v a d
 	-- | Prefix version of '>->'
-	dimap :: v a b -> v c d -> v b c -> v a d
+	dimap :: (a -> b) -> (c -> d) -> v b c -> v a d
 	dimap f g x = f >-> g $ x
 
 instance Divariant ((->)) where
