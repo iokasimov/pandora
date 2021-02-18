@@ -42,41 +42,10 @@ instance Morphable (Into Maybe) (Conclusion e) where
 note :: e -> Maybe ~> Conclusion e
 note x = reduce (\y _ -> Success y) (Failure x)
 
-instance Morphable (Into (Left Maybe)) Wye where
-	type Morphing (Into (Left Maybe)) Wye = Maybe
-	morphing (extract . run -> Both ls _) = Just ls
-	morphing (extract . run -> Left ls) = Just ls
-	morphing (extract . run -> Right _) = Nothing
-	morphing (extract . run -> End) = Nothing
-
-instance Morphable (Into (Right Maybe)) Wye where
-	type Morphing (Into (Right Maybe)) Wye = Maybe
-	morphing (extract . run -> Both _ rs) = Just rs
-	morphing (extract . run -> Left _) = Nothing
-	morphing (extract . run -> Right rs) = Just rs
-	morphing (extract . run -> End) = Nothing
-
-instance Morphable (Into (This Maybe)) (These e) where
-	type Morphing (Into (This Maybe)) (These e) = Maybe
-	morphing (extract . run -> This x) = Just x
-	morphing (extract . run -> That _) = Nothing
-	morphing (extract . run -> These _ x) = Just x
-
-that :: These e a -> Maybe e
-that (This _) = Nothing
-that (That x) = Just x
-that (These y _) = Just y
-
 here :: Wedge e a -> Maybe e
 here Nowhere = Nothing
 here (Here x) = Just x
 here (There _) = Nothing
-
-instance Morphable (Into (There Maybe)) (Wedge e) where
-	type Morphing (Into (There Maybe)) (Wedge e) = Maybe
-	morphing (extract . run -> Nowhere) = Nothing
-	morphing (extract . run -> Here _) = Nothing
-	morphing (extract . run -> There x) = Just x
 
 branches :: Maybe a -> Maybe a -> Wye a
 branches (Just x) (Just y) = Both x y
