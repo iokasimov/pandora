@@ -10,6 +10,7 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into))
 
 instance Morphable (Into Maybe) (Conclusion e) where
@@ -58,3 +59,10 @@ instance Morphable (Into (There Maybe)) (Wedge e) where
 	morphing (extract . run -> Nowhere) = Nothing
 	morphing (extract . run -> Here _) = Nothing
 	morphing (extract . run -> There x) = Just x
+
+instance Morphable (Into Wye) ((<:.:>) (:*:) Maybe) where
+	type Morphing (Into Wye) ((<:.:>) (:*:) Maybe) = Wye
+	morphing (run . extract . run -> Just x :*: Just y) = Both x y
+	morphing (run . extract . run -> Nothing :*: Just y) = Right y
+	morphing (run . extract . run -> Just x :*: Nothing) = Left x
+	morphing (run . extract . run -> Nothing :*: Nothing) = End
