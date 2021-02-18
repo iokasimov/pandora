@@ -1,10 +1,15 @@
 module Pandora.Paradigm.Primary.Transformer.Flip where
 
+import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
-newtype Flip (t :: * -> * -> *) a e = Flip (t e a)
+newtype Flip (v :: * -> * -> *) a e = Flip (v e a)
 
-instance Interpreted (Flip t a) where
-	type Primary (Flip t a) e = t e a
+instance Interpreted (Flip v a) where
+	type Primary (Flip v a) e = v e a
 	run ~(Flip x) = x
 	unite = Flip
+
+instance Bivariant v => Bivariant (Flip v) where
+	f <-> g = \x -> unite $ g <-> f $ run x
