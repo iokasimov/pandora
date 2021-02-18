@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, note, branches, match) where
+module Pandora.Paradigm.Primary.Functor (module Exports, branches, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
@@ -20,23 +20,15 @@ import Pandora.Paradigm.Primary.Functor.Constant as Exports
 import Pandora.Paradigm.Primary.Functor.Identity as Exports
 import Pandora.Paradigm.Primary.Functor.Function as Exports
 
-import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Extractable (extract)
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
-import Pandora.Paradigm.Structure.Ability.Monotonic (reduce)
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into))
 
 instance Adjoint (Product s) ((->) s) where
 	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)
 	x -| f = \s -> f $ s :*: x
 	(|-) :: (s :*: a) -> (a -> s -> b) -> b
 	~(s :*: x) |- f = f x s
-
-note :: e -> Maybe ~> Conclusion e
-note x = reduce (\y _ -> Success y) (Failure x)
 
 branches :: Maybe a -> Maybe a -> Wye a
 branches (Just x) (Just y) = Both x y

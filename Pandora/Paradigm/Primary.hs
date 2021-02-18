@@ -6,14 +6,20 @@ import Pandora.Paradigm.Primary.Transformer as Exports
 import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
 
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into))
 
 instance Morphable (Into Maybe) (Conclusion e) where
 	type Morphing (Into Maybe) (Conclusion e) = Maybe
 	morphing = conclusion (Nothing !) Just . extract . run
+
+instance Morphable (Into (Conclusion e)) Maybe where
+	type Morphing (Into (Conclusion e)) Maybe = (->) e <:.> Conclusion e
+	morphing (extract . run -> Just x) = TU $ \_ -> Success x
+	morphing (extract . run -> Nothing) = TU $ \e -> Failure e
 
 instance Morphable (Into (Left Maybe)) Wye where
 	type Morphing (Into (Left Maybe)) Wye = Maybe
