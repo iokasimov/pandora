@@ -7,11 +7,20 @@ import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
 
 import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into))
+
+instance Contravariant (Flip (->) r) where
+	f >$< (run -> g) = Flip $ g . f
+
+instance Covariant (Flip Conclusion a) where
+	f <$> (run -> Failure e) = Flip . Failure $ f e
+	_ <$> (run -> Success x) = Flip $ Success x
 
 instance Morphable (Into Maybe) (Conclusion e) where
 	type Morphing (Into Maybe) (Conclusion e) = Maybe
