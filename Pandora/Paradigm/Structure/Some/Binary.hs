@@ -19,7 +19,7 @@ import Pandora.Paradigm.Primary.Functor.Function ((!), (%), (&))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
@@ -143,25 +143,27 @@ instance Morphable (Rotate Up) (T_U Covariant Covariant (Construction Wye) (:*:)
 	type Morphing (Rotate Up) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
 	morphing (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
-		lift . T_U $ Construct parent (resolve (Both focused) (Left focused) $ run rest) :*: TU (TU next)
+		lift $ twosome (Construct parent . resolve (Both focused) (Left focused) $ run rest) (TU $ TU next)
 	morphing (run . extract . run -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
-		lift . T_U $ Construct parent (resolve (Both % focused) (Right focused) $ run rest) :*: TU (TU next)
+		lift $ twosome (Construct parent . resolve (Both % focused) (Right focused) $ run rest) (TU $ TU next)
 	morphing (extract . run -> T_U (_ :*: TU (TU Top))) = empty
 
 instance Morphable (Rotate (Down Left)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye))) where
 	type Morphing (Rotate (Down Left)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
 	morphing (run . extract . run -> Construct x (Left lst) :*: TU (TU next)) =
-		lift . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_U $ Identity x :*: empty) $ next
+		lift $ twosome lst . TU . TU . Leftward . Construct (twosome (Identity x) empty) $ next
 	morphing (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . T_U . (:*:) lst . TU . TU . Leftward . Construct (T_U $ Identity x :*: lift rst) $ next
+		lift $ twosome lst . TU . TU . Leftward . Construct (twosome (Identity x) $ lift rst) $ next
 	morphing (run . extract . run -> Construct _ (Right _) :*: _) = empty
 	morphing (run . extract . run -> Construct _ End :*: _) = empty
 
 instance Morphable (Rotate (Down Right)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye))) where
 	type Morphing (Rotate (Down Right)) (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (Construction Wye) (:*:) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant Identity (:*:) (Maybe <:.> Construction Wye)))
-	morphing (run . extract . run -> Construct x (Right rst) :*: TU (TU next)) = lift . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_U $ Identity x :*: empty) $ next
-	morphing (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) = lift . T_U . (:*:) rst . TU . TU . Rightward . Construct (T_U $ Identity x :*: lift lst) $ next
+	morphing (run . extract . run -> Construct x (Right rst) :*: TU (TU next)) =
+		lift $ twosome rst . TU . TU . Rightward . Construct (twosome (Identity x) empty) $ next
+	morphing (run . extract . run -> Construct x (Both lst rst) :*: TU (TU next)) =
+		lift $ twosome rst . TU . TU . Rightward . Construct (twosome (Identity x) $ lift lst) $ next
 	morphing (run . extract . run -> Construct _ (Left _) :*: _) = empty
 	morphing (run . extract . run -> Construct _ End :*: _) = empty
