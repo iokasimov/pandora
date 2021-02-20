@@ -22,7 +22,7 @@ import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), twosome)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
@@ -128,29 +128,29 @@ type instance Zipper Stack = Tap ((:*:) <:.:> Stack)
 
 instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> Stack)) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
-		in f <$> Tap z (T_U $ move (run . rotate @Left) :*: move (run . rotate @Right))
+		in f <$> Tap z (twosome (move $ run . rotate @Left) (move $ run . rotate @Right))
 
 instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Stack)) where
 	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap % (T_U $ subview @Tail bs :*: x += fs) <$> view (focus @Head) bs
+		$ Tap % twosome (subview @Tail bs) (x += fs) <$> view (focus @Head) bs
 
 instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Stack)) where
 	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap % (T_U $ x += bs :*: subview @Tail fs) <$> view (focus @Head) fs
+		$ Tap % twosome (x += bs) (subview @Tail fs) <$> view (focus @Head) fs
 
 type instance Zipper (Construction Maybe) = Tap ((:*:) <:.:> Construction Maybe)
 
 instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Construction Maybe)) where
 	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap (extract bs) . T_U . (:*: x += fs) <$> deconstruct bs
+		$ Tap (extract bs) . twosome % (x += fs) <$> deconstruct bs
 
 instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Construction Maybe)) where
 	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap (extract fs) . T_U . (x += bs :*:) <$> deconstruct fs
+		$ Tap (extract fs) . twosome (x += bs) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
