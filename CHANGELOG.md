@@ -359,3 +359,5 @@
 * Remove `hush`, `left`, `right`, `this`, `there`, `here`, `note` methods in favor of `Morphable` instance
 * Define `Flip` transformer for flipping type arguments
 * Replace two parementers in `>->` method of `Divariant` with usual functions
+
+# 0.3.8
