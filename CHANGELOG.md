@@ -361,3 +361,4 @@
 * Replace two parementers in `>->` method of `Divariant` with usual functions
 
 # 0.3.8
+* Define `twosome` method to lift two parts to `<:.:> (:*:)` scheme

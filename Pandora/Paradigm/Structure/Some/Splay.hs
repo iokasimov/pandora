@@ -10,9 +10,8 @@ import Pandora.Pattern.Functor.Applicative ((<*>))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Paradigm.Primary ()
-import Pandora.Paradigm.Primary.Functor (branches)
-import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
+import Pandora.Paradigm.Primary.Functor.Product (twosome)
 import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
@@ -31,8 +30,8 @@ instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 	morphing (extract . run -> Construct x xs) = TU $ Construct <$> parent <*> Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
-		nodes = branches (branch @Left xs) . Just . Construct x
-			$ branches (deconstruct <$> branch @Right xs >>= branch @Left)
+		nodes = into @Wye . twosome (branch @Left xs) . Just . Construct x
+			. into @Wye $ twosome (deconstruct <$> branch @Right xs >>= branch @Left)
 				(deconstruct <$> branch @Right xs >>= branch @Right)
 
 		parent :: Maybe a
@@ -44,8 +43,8 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	morphing (extract . run -> Construct x xs) = TU $ Construct <$> parent <*> Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
-		nodes = branches (deconstruct <$> branch @Left xs >>= branch @Left) . Just . Construct x
-			$ branches (deconstruct <$> branch @Left xs >>= branch @Right) (branch @Right xs)
+		nodes = into @Wye . twosome (deconstruct <$> branch @Left xs >>= branch @Left) . Just . Construct x
+			. into @Wye $ twosome (deconstruct <$> branch @Left xs >>= branch @Right) (branch @Right xs)
 
 		parent :: Maybe a
 		parent = extract <$> branch @Left xs
