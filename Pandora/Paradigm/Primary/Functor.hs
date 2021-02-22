@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, branches, match) where
+module Pandora.Paradigm.Primary.Functor (module Exports, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
@@ -29,12 +29,6 @@ instance Adjoint (Product s) ((->) s) where
 	x -| f = \s -> f $ s :*: x
 	(|-) :: (s :*: a) -> (a -> s -> b) -> b
 	~(s :*: x) |- f = f x s
-
-branches :: Maybe a -> Maybe a -> Wye a
-branches (Just x) (Just y) = Both x y
-branches Nothing (Just y) = Right y
-branches (Just x) Nothing = Left x
-branches Nothing Nothing = End
 
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
 match (Predicate p) f x r = p x ? f x :*: x $ r :*: x
