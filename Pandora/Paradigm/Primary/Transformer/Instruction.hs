@@ -1,3 +1,5 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Primary.Transformer.Instruction where
 
 import Pandora.Core.Functor (type (:.), type (:=))
@@ -9,7 +11,9 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
+import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
@@ -45,6 +49,10 @@ instance Traversable t => Traversable (Instruction t) where
 instance Liftable Instruction where
 	lift x = Instruct $ Enter <$> x
 
+instance (forall t . Monad t) => Lowerable Instruction where
+	lower (Enter x) = point x
+	lower (Instruct xs) = xs >>= lower
+
 instance (forall v . Covariant v) => Hoistable Instruction where
-	hoist f (Enter x) = Enter x
+	hoist _ (Enter x) = Enter x
 	hoist f (Instruct xs) = Instruct $ hoist f <$> f xs
