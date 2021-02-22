@@ -25,3 +25,7 @@ instance (Bivariant p, Covariant t, Covariant u)
 instance (Divariant p, Contravariant t, Covariant u)
 	=> Covariant (T_U Contravariant Covariant t p u) where
 		f <$> x = ((f >$<) >-> (f <$>)) ||= x
+
+instance (Bivariant p, Contravariant t, Contravariant u)
+	=> Contravariant (T_U Contravariant Contravariant t p u) where
+		f >$< x = ((f >$<) <-> (f >$<)) ||= x
