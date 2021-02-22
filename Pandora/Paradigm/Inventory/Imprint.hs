@@ -8,6 +8,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Functor.Function ()
@@ -26,6 +27,9 @@ instance Distributive (Imprint e) where
 
 instance Monoid e => Extractable (Imprint e) where
 	extract (Imprint x) = x zero
+
+instance Divariant Imprint where
+	(>->) ab cd bc = Imprint $ ab >-> cd $ run bc
 
 instance Semigroup e => Extendable (Imprint e) where
 	Imprint x =>> f = Imprint $ \e -> f $ Imprint $ x . (e +)
