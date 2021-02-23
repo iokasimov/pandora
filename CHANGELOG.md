@@ -363,3 +363,4 @@
 # 0.3.8
 * Define `twosome` method to lift two parts to `<:.:> (:*:)` scheme
 * Remove `branches` method in favor of `Morphable` instance
+* Change order of type arguments in `T_U` scheme

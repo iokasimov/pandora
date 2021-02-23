@@ -74,5 +74,5 @@ swap ~(x :*: y) = y :*: x
 attached :: a :*: b -> a
 attached ~(x :*: _) = x
 
-twosome :: t a -> u a -> T_U Covariant Covariant t (:*:) u a
+twosome :: t a -> u a -> T_U Covariant Covariant (:*:) t u a
 twosome x y = T_U (x :*: y)
