@@ -17,6 +17,11 @@ instance Interpreted (Producer i t) where
 
 newtype Consumer o t r = Consumer { consume :: o -> Producer o t r -> t r }
 
+instance Interpreted (Consumer o t) where
+	type Primary (Consumer o t) a = o -> Producer o t a -> t a
+	run ~(Consumer f) = f
+	unite = Consumer
+
 newtype Pipe i o r t a = Pipe { pipe :: Producer i t r -> Consumer o t r -> t r }
 
 instance Covariant (Pipe i o r t) where
@@ -39,7 +44,7 @@ await = Continuation $ \next -> Pipe $ \(Producer i) o -> i (suspend next o)
 
 -- | Give a value to the future consuming
 yield :: o -> Pipeline i o t () r
-yield v = Continuation $ \next -> Pipe $ \i o -> consume o v (pause next i)
+yield v = Continuation $ \next -> Pipe $ \i (Consumer o) -> o v (pause next i)
 
 -- | Pipeline that does nothing
 finish :: Pointable t => Pipeline i o t () ()
