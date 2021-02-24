@@ -5,9 +5,15 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation, continue))
 
 newtype Producer i t r = Producer { produce :: Consumer i t r -> t r }
+
+instance Interpreted (Producer i t) where
+	type Primary (Producer i t) a = Consumer i t a -> t a
+	run ~(Producer f) = f
+	unite = Producer
 
 newtype Consumer o t r = Consumer { consume :: o -> Producer o t r -> t r }
 
@@ -29,7 +35,7 @@ suspend next ok = Consumer $ \v ik -> pipe (next v) ik ok
 
 -- | Take incoming value from pipeline
 await :: Pipeline i o t i r
-await = Continuation $ \next -> Pipe $ \i o -> produce i (suspend next o)
+await = Continuation $ \next -> Pipe $ \(Producer i) o -> i (suspend next o)
 
 -- | Give a value to the future consuming
 yield :: o -> Pipeline i o t () r
