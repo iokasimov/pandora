@@ -1,10 +1,9 @@
 module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, impact, (=*=), pipeline) where
 
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation, continue))
 
@@ -23,12 +22,6 @@ instance Interpreted (Consumer o t) where
 	unite = Consumer
 
 newtype Pipe i o r t a = Pipe { pipe :: Producer i t r -> Consumer o t r -> t r }
-
-instance Covariant (Pipe i o r t) where
-	_ <$> Pipe p = Pipe p
-
-instance Contravariant (Pipe i o r t) where
-	_ >$< Pipe p = Pipe p
 
 type Pipeline i o t a r = Continuation r (Pipe i o r t) a
 
@@ -55,18 +48,18 @@ impact :: Bindable t => t a -> Pipeline i o t a a
 impact action = Continuation $ \next -> Pipe $ \i o -> action >>= \x -> pipe (next x) i o
 
 -- | Compose two pipelines into one
-(=*=) :: forall i e a o t . Pointable t => Pipeline i e t () () -> Pipeline e o t () () -> Pipeline i o t a ()
-p =*= q = Continuation $ \_ -> Pipe $ \i o -> pipe (continue q end) (pause (\() -> continue p end) i) o where
+(=*=) :: forall i e o t . Pointable t => Pipeline i e t () () -> Pipeline e o t () () -> Pipeline i o t () ()
+p =*= q = Continuation $ \_ -> Pipe $ \i o -> pipe (continue q end) (pause (continue p end !) i) o where
 
 	end :: b -> Pipe c d () t ()
 	end _ = Pipe $ \_ _ -> point ()
 
 -- | Run pipeline and get result
-pipeline :: Pointable t => Pipeline i o t r r -> t r
+pipeline :: Pointable t => Pipeline i o t () () -> t ()
 pipeline p = pipe (continue p (\r -> Pipe $ \_ _ -> point r)) i o where
 
-	i :: Producer i t r
+	i :: Producer i t ()
 	i = Producer $ \o' -> produce i o'
 
-	o :: Consumer o t r
+	o :: Consumer o t ()
 	o = Consumer $ \v i' -> consume o v i'
