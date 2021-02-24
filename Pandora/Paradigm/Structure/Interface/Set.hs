@@ -5,7 +5,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Object.Setoid (Setoid ((!=)))
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Pattern.Object.Quasiring (one)
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Function ((!), (!!), (%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Functor.Product (attached)
@@ -16,7 +16,7 @@ import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Controlflow.Effect (run)
 
 member :: forall e a . (Setoid a, Monotonic a e) => a -> e -> Boolean
-member x = reduce @a @(Maybe a) (\_ _ -> True) False . find (equate x)
+member x = reduce @a @(Maybe a) (True !!) False . find (equate x)
 
 subset :: (Monotonic a (t a), Traversable t, Setoid a, Setoid (t a)) => t a -> t a -> Boolean
 subset ss s = Nothing != (ss ->> find % s . equate)

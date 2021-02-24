@@ -3,7 +3,7 @@ module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, im
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
-import Pandora.Paradigm.Primary.Functor.Function ((!))
+import Pandora.Paradigm.Primary.Functor.Function ((!), (!!))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 
@@ -52,7 +52,7 @@ impact action = Continuation $ \next -> Pipe $ \i o -> action >>= \x -> pipe (ne
 p =*= q = Continuation $ \_ -> Pipe $ \i o -> pipe (run q end) (pause (run p end !) i) o where
 
 	end :: b -> Pipe c d () t ()
-	end _ = Pipe $ \_ _ -> point ()
+	end _ = Pipe (point () !!)
 
 -- | Run pipeline and get result
 pipeline :: Pointable t => Pipeline i o t () () -> t ()

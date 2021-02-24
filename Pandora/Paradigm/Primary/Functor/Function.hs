@@ -38,6 +38,14 @@ instance Representable ((->) e) where
 (!) :: a -> b -> a
 x ! _ = x
 
+{-# INLINE (!!) #-}
+(!!) :: a -> b -> c -> a
+(!!) x _ _ = x
+
+{-# INLINE (!!!) #-}
+(!!!) :: a -> b -> c -> d -> a
+(!!!) x _ _ _ = x
+
 {-# INLINE (%) #-}
 (%) :: (a -> b -> c) -> b -> a -> c
 (%) f x y = f y x
