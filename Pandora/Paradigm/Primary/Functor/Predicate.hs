@@ -12,8 +12,14 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool, (?))
 import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Predicate a = Predicate (a -> Boolean)
+
+instance Interpreted Predicate where
+	type Primary Predicate a = a -> Boolean
+	run ~(Predicate f) = f
+	unite = Predicate
 
 instance Contravariant Predicate where
 	f >$< Predicate g = Predicate $ g . f
@@ -28,7 +34,7 @@ equate :: Setoid a => a :=> Predicate
 equate x = Predicate (== x)
 
 satisfy :: (Pointable t, Avoidable t) => Predicate a -> a -> t a
-satisfy (Predicate p) x = p x ? point x $ empty
+satisfy p x = run p x ? point x $ empty
 
 not :: Predicate ~> Predicate
 not (Predicate p) = Predicate $ bool True False . p
