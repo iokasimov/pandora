@@ -5,7 +5,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation, continue))
+import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 
 newtype Producer i t r = Producer { produce :: Consumer i t r -> t r }
 
@@ -49,14 +49,14 @@ impact action = Continuation $ \next -> Pipe $ \i o -> action >>= \x -> pipe (ne
 
 -- | Compose two pipelines into one
 (=*=) :: forall i e o t . Pointable t => Pipeline i e t () () -> Pipeline e o t () () -> Pipeline i o t () ()
-p =*= q = Continuation $ \_ -> Pipe $ \i o -> pipe (continue q end) (pause (continue p end !) i) o where
+p =*= q = Continuation $ \_ -> Pipe $ \i o -> pipe (run q end) (pause (run p end !) i) o where
 
 	end :: b -> Pipe c d () t ()
 	end _ = Pipe $ \_ _ -> point ()
 
 -- | Run pipeline and get result
 pipeline :: Pointable t => Pipeline i o t () () -> t ()
-pipeline p = pipe (continue p (\r -> Pipe $ \_ _ -> point r)) i o where
+pipeline p = pipe (run p (\r -> Pipe $ \_ _ -> point r)) i o where
 
 	i :: Producer i t ()
 	i = Producer $ \o' -> produce i o'
