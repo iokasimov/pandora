@@ -9,65 +9,64 @@ import Pandora.Paradigm.Primary.Object as Exports
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
-import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 
 instance Contravariant (Flip (->) r) where
 	f >$< g = (<$> f) ||= g
 
 instance Morphable (Into Maybe) (Conclusion e) where
 	type Morphing (Into Maybe) (Conclusion e) = Maybe
-	morphing = conclusion (Nothing !) Just . extract . run
+	morphing = conclusion (Nothing !) Just . premorph
 
 instance Morphable (Into (Conclusion e)) Maybe where
 	type Morphing (Into (Conclusion e)) Maybe = (->) e <:.> Conclusion e
-	morphing (extract . run -> Just x) = TU $ \_ -> Success x
-	morphing (extract . run -> Nothing) = TU $ \e -> Failure e
+	morphing (premorph -> Just x) = TU $ \_ -> Success x
+	morphing (premorph -> Nothing) = TU $ \e -> Failure e
 
 instance Morphable (Into (Left Maybe)) Wye where
 	type Morphing (Into (Left Maybe)) Wye = Maybe
-	morphing (extract . run -> Both ls _) = Just ls
-	morphing (extract . run -> Left ls) = Just ls
-	morphing (extract . run -> Right _) = Nothing
-	morphing (extract . run -> End) = Nothing
+	morphing (premorph -> Both ls _) = Just ls
+	morphing (premorph -> Left ls) = Just ls
+	morphing (premorph -> Right _) = Nothing
+	morphing (premorph -> End) = Nothing
 
 instance Morphable (Into (Right Maybe)) Wye where
 	type Morphing (Into (Right Maybe)) Wye = Maybe
-	morphing (extract . run -> Both _ rs) = Just rs
-	morphing (extract . run -> Left _) = Nothing
-	morphing (extract . run -> Right rs) = Just rs
-	morphing (extract . run -> End) = Nothing
+	morphing (premorph -> Both _ rs) = Just rs
+	morphing (premorph -> Left _) = Nothing
+	morphing (premorph -> Right rs) = Just rs
+	morphing (premorph -> End) = Nothing
 
 instance Morphable (Into (This Maybe)) (These e) where
 	type Morphing (Into (This Maybe)) (These e) = Maybe
-	morphing (extract . run -> This x) = Just x
-	morphing (extract . run -> That _) = Nothing
-	morphing (extract . run -> These _ x) = Just x
+	morphing (premorph -> This x) = Just x
+	morphing (premorph -> That _) = Nothing
+	morphing (premorph -> These _ x) = Just x
 
 instance Morphable (Into (That Maybe)) (Flip These a) where
 	type Morphing (Into (That Maybe)) (Flip These a) = Maybe
-	morphing (run . extract . run -> This _) = Nothing
-	morphing (run . extract . run -> That x) = Just x
-	morphing (run . extract . run -> These y _) = Just y
+	morphing (run . premorph -> This _) = Nothing
+	morphing (run . premorph -> That x) = Just x
+	morphing (run . premorph -> These y _) = Just y
 
 instance Morphable (Into (Here Maybe)) (Flip Wedge a) where
 	type Morphing (Into (Here Maybe)) (Flip Wedge a) = Maybe
-	morphing (run . extract . run -> Nowhere) = Nothing
-	morphing (run . extract . run -> Here x) = Just x
-	morphing (run . extract . run -> There _) = Nothing
+	morphing (run . premorph -> Nowhere) = Nothing
+	morphing (run . premorph -> Here x) = Just x
+	morphing (run . premorph -> There _) = Nothing
 
 instance Morphable (Into (There Maybe)) (Wedge e) where
 	type Morphing (Into (There Maybe)) (Wedge e) = Maybe
-	morphing (extract . run -> Nowhere) = Nothing
-	morphing (extract . run -> Here _) = Nothing
-	morphing (extract . run -> There x) = Just x
+	morphing (premorph -> Nowhere) = Nothing
+	morphing (premorph -> Here _) = Nothing
+	morphing (premorph -> There x) = Just x
 
 instance Morphable (Into Wye) ((<:.:>) (:*:) Maybe) where
 	type Morphing (Into Wye) ((<:.:>) (:*:) Maybe) = Wye
-	morphing (run . extract . run -> Just x :*: Just y) = Both x y
-	morphing (run . extract . run -> Nothing :*: Just y) = Right y
-	morphing (run . extract . run -> Just x :*: Nothing) = Left x
-	morphing (run . extract . run -> Nothing :*: Nothing) = End
+	morphing (run . premorph -> Just x :*: Just y) = Both x y
+	morphing (run . premorph -> Nothing :*: Just y) = Right y
+	morphing (run . premorph -> Just x :*: Nothing) = Left x
+	morphing (run . premorph -> Nothing :*: Nothing) = End

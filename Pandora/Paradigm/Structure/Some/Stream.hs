@@ -8,13 +8,12 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), twosome)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), rotate)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), premorph, rotate)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
@@ -24,12 +23,12 @@ type instance Zipper Stream = Tap ((:*:) <:.:> Stream)
 
 instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Stream)) where
 	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Stream)) = Tap ((:*:) <:.:> Stream)
-	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = Tap (extract bs)
+	morphing (premorph -> Tap x (T_U (bs :*: fs))) = Tap (extract bs)
 		$ twosome (extract $ deconstruct bs) (Construct x $ point fs)
 
 instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Stream)) where
 	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Stream)) = Tap ((:*:) <:.:> Stream)
-	morphing (extract . run -> Tap x (T_U (bs :*: fs))) = Tap (extract fs)
+	morphing (premorph -> Tap x (T_U (bs :*: fs))) = Tap (extract fs)
 		$ twosome (Construct x $ point bs) (extract $ deconstruct fs)
 
 instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> Stream)) where

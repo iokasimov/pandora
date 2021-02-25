@@ -2,9 +2,11 @@
 
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
-import Pandora.Core.Functor (type (~>))
+import Pandora.Core.Functor (type (~>), type (:=))
 import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 class Morphable f t where
@@ -13,6 +15,9 @@ class Morphable f t where
 
 morph :: forall f t . Morphable f t => t ~> Morphing f t
 morph = morphing . TU . Tag @f
+
+premorph :: Morphable f t => (Tagged f <:.> t := a) -> t a
+premorph = extract . run
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
 

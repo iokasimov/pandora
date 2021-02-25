@@ -365,3 +365,4 @@
 * Remove `branches` method in favor of `Morphable` instance
 * Change order of type arguments in `T_U` scheme
 * Define `!!` and `!!!` infix operators
+* Define `premorph` to replace `extract . run` expressions for `Morphable` instances

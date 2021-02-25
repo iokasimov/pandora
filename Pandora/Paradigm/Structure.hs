@@ -45,37 +45,28 @@ instance Covariant t => Substructure Tail (Tap t) where
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
-	morphing (extract . run -> Construct x End) = Construct x Nothing
-	morphing (extract . run -> Construct x (Left lst)) = Construct x . Just $ into @(Preorder (Nonempty Stack)) lst
-	morphing (extract . run -> Construct x (Right rst)) = Construct x . Just $ into @(Preorder (Nonempty Stack)) rst
-	morphing (extract . run -> Construct x (Both lst rst)) = Construct x . Just $ into @(Preorder (Nonempty Stack)) lst + into @(Preorder (Nonempty Stack)) rst
+	morphing (premorph -> Construct x End) = Construct x Nothing
+	morphing (premorph -> Construct x (Left lst)) = Construct x . Just $ into @(Preorder (Nonempty Stack)) lst
+	morphing (premorph -> Construct x (Right rst)) = Construct x . Just $ into @(Preorder (Nonempty Stack)) rst
+	morphing (premorph -> Construct x (Both lst rst)) = Construct x . Just $ into @(Preorder (Nonempty Stack)) lst + into @(Preorder (Nonempty Stack)) rst
 
 instance Morphable (Into (Inorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Inorder (Construction Maybe))) (Construction Wye) = Construction Maybe
-	morphing (extract . run -> Construct x End) = point x
-	morphing (extract . run -> Construct x (Left lst)) = into @(Inorder (Nonempty Stack)) lst + point x
-	morphing (extract . run -> Construct x (Right rst)) = point x + into @(Inorder (Nonempty Stack)) rst
-	morphing (extract . run -> Construct x (Both lst rst)) = into @(Inorder (Nonempty Stack)) lst + point x + into @(Inorder (Nonempty Stack)) rst
+	morphing (premorph -> Construct x End) = point x
+	morphing (premorph -> Construct x (Left lst)) = into @(Inorder (Nonempty Stack)) lst + point x
+	morphing (premorph -> Construct x (Right rst)) = point x + into @(Inorder (Nonempty Stack)) rst
+	morphing (premorph -> Construct x (Both lst rst)) = into @(Inorder (Nonempty Stack)) lst + point x + into @(Inorder (Nonempty Stack)) rst
 
 instance Morphable (Into (Postorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Postorder (Construction Maybe))) (Construction Wye) = Construction Maybe
-	morphing (extract . run -> Construct x End) = point x
-	morphing (extract . run -> Construct x (Left lst)) = into @(Postorder (Nonempty Stack)) lst + point x
-	morphing (extract . run -> Construct x (Right rst)) = into @(Postorder (Nonempty Stack)) rst + point x
-	morphing (extract . run -> Construct x (Both lst rst)) = into @(Postorder (Nonempty Stack)) lst + into @(Postorder (Nonempty Stack)) rst + point x
-
--- instance Morphable (Into (Levelorder (Construction Maybe))) (Construction Wye) where
--- 	type Morphing (Into (Levelorder (Construction Maybe))) (Construction Wye) = Construction Maybe
--- 	morphing (extract . run -> Construct x End) = point x
--- 	morphing (extract . run -> Construct x (Left lst)) = point x + into @(Levelorder (Nonempty Stack)) lst
--- 	morphing (extract . run -> Construct x (Right rst)) = point x + into @(Levelorder (Nonempty Stack)) lst
--- 	morphing (extract . run -> Construct x (Both lst rst)) = point x + extract lst + extract rst +
-
-		-- (deconstruct lst :: )
+	morphing (premorph -> Construct x End) = point x
+	morphing (premorph -> Construct x (Left lst)) = into @(Postorder (Nonempty Stack)) lst + point x
+	morphing (premorph -> Construct x (Right rst)) = into @(Postorder (Nonempty Stack)) rst + point x
+	morphing (premorph -> Construct x (Both lst rst)) = into @(Postorder (Nonempty Stack)) lst + into @(Postorder (Nonempty Stack)) rst + point x
 
 instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
 	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
-	morphing = unite . comap (into @(o ds)) . run . extract . run
+	morphing = unite . comap (into @(o ds)) . run . premorph
 
 instance Focusable Left (Product s) where
 	type Focusing Left (Product s) a = s
