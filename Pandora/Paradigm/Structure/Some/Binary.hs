@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -42,9 +42,9 @@ type Binary = Maybe <:.> Construction Wye
 
 rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
 rebalance (Both x y) = extract x <=> extract y & order
-	(Construct (extract y) $ Both x (rebalance $ deconstruct y))
-	(Construct (extract x) $ Both (rebalance $ deconstruct x) (rebalance $ deconstruct y))
-	(Construct (extract x) $ Both (rebalance $ deconstruct x) y)
+	(Construct / extract y $ Both / x / rebalance (deconstruct y))
+	(Construct / extract x $ Both / rebalance (deconstruct x) / rebalance (deconstruct y))
+	(Construct / extract x $ Both / rebalance (deconstruct x) / y)
 
 instance (forall a . Chain a) => Insertable Binary where
 	x += (run -> Nothing) = lift . Construct x $ End
@@ -94,7 +94,7 @@ instance Focusable Root (Construction Wye) where
 
 instance (forall a . Chain a) => Insertable (Construction Wye) where
 	x += b = let change = lift . resolve (x +=) (Construct x End) . run in
-		x <=> extract b & order (over (sub @Left) change $ b) b (over (sub @Right) change $ b)
+		x <=> extract b & order (over / sub @Left / change / b) b (over / sub @Right / change / b)
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
@@ -152,16 +152,16 @@ instance Morphable (Rotate (Down Left)) (T_U Covariant Covariant (:*:) (Construc
 	type Morphing (Rotate (Down Left)) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
 	morphing (run . premorph -> Construct x (Left lst) :*: TU (TU next)) =
-		lift $ twosome lst . TU . TU . Leftward . Construct (twosome (Identity x) empty) $ next
+		lift . twosome lst . TU . TU . Leftward . Construct (twosome / Identity x / empty) $ next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift $ twosome lst . TU . TU . Leftward . Construct (twosome (Identity x) $ lift rst) $ next
+		lift . twosome lst . TU . TU . Leftward . Construct (twosome / Identity x / lift rst) $ next
 	morphing (run . premorph -> Construct _ (Right _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
 
 instance Morphable (Rotate (Down Right)) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye))) where
 	type Morphing (Rotate (Down Right)) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
-	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) = lift $ twosome rst . TU . TU . Rightward . Construct (twosome (Identity x) empty) $ next
-	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) = lift $ twosome rst . TU . TU . Rightward . Construct (twosome (Identity x) $ lift lst) $ next
+	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) = lift . twosome rst . TU . TU . Rightward . Construct (twosome / Identity x / empty) $ next
+	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) = lift . twosome rst . TU . TU . Rightward . Construct (twosome / Identity x / lift lst) $ next
 	morphing (run . premorph -> Construct _ (Left _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
