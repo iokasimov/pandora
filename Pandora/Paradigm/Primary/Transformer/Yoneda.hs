@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Transformer.Yoneda where
 
-import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Pattern.Category (identity, (.), ($), (/))
 import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (/))
+import Pandora.Paradigm.Primary.Functor.Function ((!))
 
 newtype Yoneda t a = Yoneda
 	{ yoneda :: forall b . (a -> b) -> t b }

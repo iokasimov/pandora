@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Transformer.Outline where
 
-import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Pattern.Category (identity, (.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Functor.Function ((%), (/))
+import Pandora.Paradigm.Primary.Functor.Function ((%))
 
 data Outline t a where
 	Line :: a -> Outline t a
