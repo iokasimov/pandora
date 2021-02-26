@@ -93,8 +93,8 @@ instance Focusable Root (Construction Wye) where
 	focusing (extract -> Construct x xs) = Store $ x :*: Tag . Construct % xs
 
 instance (forall a . Chain a) => Insertable (Construction Wye) where
-	x += b = let change = lift . resolve (x +=) (Construct x End) . run in
-		x <=> extract b & order (over / sub @Left / change / b) b (over / sub @Right / change / b)
+	x += tree = let change = lift . resolve (x +=) (Construct x End) . run in
+		x <=> extract tree & order (over / sub @Left / change / tree) tree (over / sub @Right / change / tree)
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
@@ -143,9 +143,9 @@ instance Morphable (Rotate Up) (T_U Covariant Covariant (:*:) (Construction Wye)
 	type Morphing (Rotate Up) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
 		= Maybe <:.> (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
 	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
-		lift $ twosome (Construct parent . resolve (Both focused) (Left focused) $ run rest) (TU $ TU next)
+		lift $ twosome / Construct parent (resolve / Both focused / Left focused $ run rest) / TU (TU next)
 	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
-		lift $ twosome (Construct parent . resolve (Both % focused) (Right focused) $ run rest) (TU $ TU next)
+		lift $ twosome / Construct parent (resolve / Both % focused / Right focused $ run rest) / TU (TU next)
 	morphing (premorph -> T_U (_ :*: TU (TU Top))) = empty
 
 instance Morphable (Rotate (Down Left)) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye))) where

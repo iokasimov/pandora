@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, gather) where
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -22,14 +22,14 @@ instance Covariant (Accumulator e) where
 	f <$> Accumulator x = Accumulator $ f <$> x
 
 instance Semigroup e => Applicative (Accumulator e) where
-	f <*> v = Accumulator $ k (run f) (run v) where
+	f <*> v = Accumulator $ k / run f / run v where
 		k ~(e :*: g) ~(e' :*: w) = e + e' :*: g w
 
 instance Monoid e => Pointable (Accumulator e) where
 	point = Accumulator . (zero :*:)
 
 instance Semigroup e => Bindable (Accumulator e) where
-	Accumulator (e :*: x) >>= f = let (e' :*: b) = run $ f x in
+	Accumulator (e :*: x) >>= f = let e' :*: b = run $ f x in
 		Accumulator $ e + e':*: b
 
 type instance Schematic Monad (Accumulator e) = (<.:>) ((:*:) e)
