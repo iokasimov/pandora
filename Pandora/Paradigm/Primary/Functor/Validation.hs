@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Validation where
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -37,7 +37,7 @@ instance Traversable (Validation e) where
 	Flaws e ->> _ = point $ Flaws e
 
 instance Bivariant Validation where
-	f <-> g = validation (Flaws . f) (Validated . g)
+	f <-> g = validation / Flaws . f / Validated . g
 
 instance (Setoid e, Setoid a) => Setoid (Validation e a) where
 	Validated x == Validated y = x == y

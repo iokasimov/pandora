@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Conclusion where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Pattern.Category (identity, (.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -48,7 +48,7 @@ instance Bindable (Conclusion e) where
 instance Monad (Conclusion e) where
 
 instance Bivariant Conclusion where
-	f <-> g = conclusion (Failure . f) (Success . g)
+	f <-> g = conclusion / Failure . f / Success . g
 
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where
 	Success x == Success y = x == y
