@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -25,7 +25,7 @@ infixr 7 .-+
 data Construction t a = Construct a (t :. Construction t := a)
 
 instance Covariant t => Covariant (Construction t) where
-	f <$> x = Construct (f $ extract x) $ f <$$> deconstruct x
+	f <$> x = Construct / f (extract x) / f <$$> deconstruct x
 
 instance Avoidable t => Pointable (Construction t) where
 	point x = Construct x empty
@@ -45,7 +45,7 @@ instance Alternative t => Bindable (Construction t) where
 		$ (deconstruct . f $ extract x) <+> (>>= f) <$> deconstruct x
 
 instance Covariant t => Extendable (Construction t) where
-	x =>> f = Construct (f x) $ extend f <$> deconstruct x
+	x =>> f = Construct / f x / extend f <$> deconstruct x
 
 instance (Avoidable t, Alternative t) => Monad (Construction t) where
 
@@ -55,13 +55,13 @@ instance Lowerable Construction where
 	lower x = extract <$> deconstruct x
 
 instance Hoistable Construction where
-	hoist f x = Construct (extract x) . f $ hoist f <$> deconstruct x
+	hoist f x = Construct / extract x $ f / hoist f <$> deconstruct x
 
 instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant t) => Setoid (Construction t a) where
 	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)
 
 instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant t) => Semigroup (Construction t a) where
-	x + y = Construct (extract x + extract y) $ deconstruct x + deconstruct y
+	x + y = Construct / extract x + extract y / deconstruct x + deconstruct y
 
 instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t) => Monoid (Construction t a) where
 	zero = Construct zero zero
@@ -74,4 +74,4 @@ deconstruct ~(Construct _ xs) = xs
 f .-+ x = Construct x $ (f .-+) <$> f x
 
 section :: Comonad t => t ~> Construction t
-section xs = Construct (extract xs) $ xs =>> section
+section xs = Construct / extract xs / (xs =>> section)

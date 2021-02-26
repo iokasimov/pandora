@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Transformer.Backwards where
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -26,7 +26,7 @@ instance Extractable t => Extractable (Backwards t) where
 	extract (Backwards x) = extract x
 
 instance Applicative t => Applicative (Backwards t) where
-	Backwards f <*> Backwards x = Backwards ((&) <$> x <*> f)
+	Backwards f <*> Backwards x = Backwards / (&) <$> x <*> f
 
 instance Traversable t => Traversable (Backwards t) where
 	Backwards x ->> f = Backwards <$> (x ->> f)
