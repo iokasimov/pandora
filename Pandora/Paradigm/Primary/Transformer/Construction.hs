@@ -34,7 +34,7 @@ instance Covariant t => Extractable (Construction t) where
 	extract ~(Construct x _) = x
 
 instance Applicative t => Applicative (Construction t) where
-	f <*> x = Construct (extract f $ extract x)
+	f <*> x = Construct / extract f (extract x)
 		$ deconstruct f <**> deconstruct x
 
 instance Traversable t => Traversable (Construction t) where
