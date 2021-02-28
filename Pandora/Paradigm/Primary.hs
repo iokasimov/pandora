@@ -6,13 +6,17 @@ import Pandora.Paradigm.Primary.Transformer as Exports
 import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category (Category ((.), ($), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
+
+instance Category (Flip (->)) where
+	identity = Flip identity
+	Flip f . Flip g = Flip $ \x -> g (f x)
 
 instance Contravariant (Flip (->) r) where
 	f >$< g = (<$> f) ||= g
