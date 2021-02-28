@@ -15,7 +15,3 @@ class Category (m :: * -> * -> *) where
 
 	(/) :: m ~~> m
 	(/) f = identity . f
-
-instance Category (->) where
-	identity x = x
-	f . g = \x -> f (g x)

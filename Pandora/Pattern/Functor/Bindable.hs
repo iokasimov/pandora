@@ -1,7 +1,6 @@
 module Pandora.Pattern.Functor.Bindable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 
 infixl 1 >>=
@@ -25,7 +24,7 @@ class Covariant t => Bindable t where
 	bind f t = t >>= f
 	-- | Merge effects/contexts, the dual of 'duplicate'
 	join :: t :. t := a -> t a
-	join t = t >>= identity
+	join t = t >>= \x -> x
 	-- | Left-to-right Kleisli composition
 	(>=>) :: (a -> t b) -> (b -> t c) -> (a -> t c)
 	f >=> g = \x -> f x >>= g

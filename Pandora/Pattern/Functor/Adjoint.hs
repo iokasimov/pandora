@@ -1,7 +1,6 @@
 module Pandora.Pattern.Functor.Adjoint where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>)))
 
 type (-|) = Adjoint
@@ -31,10 +30,10 @@ class (Covariant t, Covariant u) => Adjoint t u where
 	psi g x = x |- g
 	-- | Also known as 'unit'
 	eta :: a -> u :. t := a
-	eta = phi identity
+	eta = phi (\x -> x)
 	-- | Also known as 'counit'
 	epsilon :: t :. u := a -> a
-	epsilon = psi identity
+	epsilon = psi (\x -> x)
 
 	(-|$) :: Covariant v => v a -> (t a -> b) -> v (u b)
 	x -|$ f = (-| f) <$> x

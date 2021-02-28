@@ -2,17 +2,22 @@
 
 module Pandora.Paradigm.Primary.Functor.Function where
 
-import Pandora.Pattern.Category ((.), (/), identity)
+import Pandora.Pattern.Category (Category ((.), (/), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
+import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 
 infixr 2 !
 infixr 9 %
 infixl 1 &
+
+instance Category (->) where
+	identity x = x
+	f . g = \x -> f (g x)
 
 instance Covariant ((->) a) where
 	(<$>) = (.)
@@ -33,6 +38,9 @@ instance Representable ((->) e) where
 	type Representation ((->) e) = e
 	(<#>) = (identity %)
 	tabulate = identity
+
+instance Divariant ((->)) where
+	(>->) ab cd bc = cd . bc . ab
 
 {-# INLINE (!) #-}
 (!) :: a -> b -> a

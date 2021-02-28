@@ -22,6 +22,7 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
+import Pandora.Paradigm.Primary.Functor.Function ()
 
 newtype Identity a = Identity a
 

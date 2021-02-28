@@ -15,6 +15,7 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Paradigm.Primary.Functor.Function ()
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 

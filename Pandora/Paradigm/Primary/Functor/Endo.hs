@@ -4,6 +4,7 @@ import Pandora.Pattern.Category (identity, (.), (/))
 import Pandora.Pattern.Functor.Invariant (Invariant ((>-<)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
+import Pandora.Paradigm.Primary.Functor.Function ()
 
 newtype Endo a = Endo { endo :: a -> a }
 

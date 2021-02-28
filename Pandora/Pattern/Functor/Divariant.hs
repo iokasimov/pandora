@@ -1,7 +1,5 @@
 module Pandora.Pattern.Functor.Divariant where
 
-import Pandora.Pattern.Category ((.), ($))
-
 infixl 4 >->
 
 {- |
@@ -15,7 +13,4 @@ class Divariant (v :: * -> * -> *) where
 	(>->) :: (a -> b) -> (c -> d) -> v b c -> v a d
 	-- | Prefix version of '>->'
 	dimap :: (a -> b) -> (c -> d) -> v b c -> v a d
-	dimap f g x = f >-> g $ x
-
-instance Divariant ((->)) where
-	(>->) ab cd bc = cd . bc . ab
+	dimap f g x = (f >-> g) x

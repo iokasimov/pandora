@@ -1,7 +1,6 @@
 module Pandora.Pattern.Functor.Applicative where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 
 infixl 4 <*>, <*, *>
@@ -26,7 +25,7 @@ class Covariant t => Applicative t where
 	apply f x = f <*> x
 	-- | Sequence actions, discarding the value of the first argument
 	(*>) :: t a -> t b -> t b
-	x *> y = (identity <$ x) <*> y
+	x *> y = ((\z -> z) <$ x) <*> y
 	-- | Sequence actions, discarding the value of the second argument
 	(<*) :: t a -> t b -> t a
 	x <* y = y *> x

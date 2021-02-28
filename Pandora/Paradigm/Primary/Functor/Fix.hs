@@ -3,6 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Fix where
 import Pandora.Core.Functor (type (<:=), type (:=>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant (comap))
+import Pandora.Paradigm.Primary.Functor.Function ()
 
 newtype Fix t = Fix { unfix :: t (Fix t) }
 

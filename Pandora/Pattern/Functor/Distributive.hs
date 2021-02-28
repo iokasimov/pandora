@@ -2,7 +2,6 @@ module Pandora.Pattern.Functor.Distributive where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant)
-import Pandora.Pattern.Category (identity, (.))
 
 {- |
 > Let f :: Distributive g => (a -> g b)
@@ -24,15 +23,15 @@ class Covariant t => Distributive t where
 	collect f t = t >>- f
 	-- | The dual of 'sequence'
 	distribute :: Covariant u => u :. t := a -> t :. u := a
-	distribute t = t >>- identity
+	distribute t = t >>- (\x -> x)
 
 	-- | Infix versions of `collect` with various nesting levels
 	(>>>-) :: (Covariant u, Covariant v)
 		=> u :. v := a -> (a -> t b) -> t :. u :. v := b
-	x >>>- f = (collect . collect) f x
+	x >>>- f = x >>- (>>- f)
 	(>>>>-) :: (Covariant u, Covariant v, Covariant w)
 		=> u :. v :. w := a -> (a -> t b) -> t :. u :. v :. w := b
-	x >>>>- f = (collect . collect . collect) f x
+	x >>>>- f = x >>- (>>- (>>- f))
 	(>>>>>-) :: (Covariant u, Covariant v, Covariant w, Covariant j)
 		=> u :. v :. w :. j := a -> (a -> t b) -> t :. u :. v :. w :. j := b
-	x >>>>>- f = (collect . collect . collect . collect) f x
+	x >>>>>- f = x >>- (>>- (>>- (>>- f)))

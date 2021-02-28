@@ -19,6 +19,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
+import Pandora.Paradigm.Primary.Functor.Function ()
 
 infixr 7 .-+
 

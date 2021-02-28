@@ -1,7 +1,6 @@
 module Pandora.Pattern.Functor.Extendable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category (identity, (.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 
 infixl 1 =>>
@@ -26,13 +25,14 @@ class Covariant t => Extendable t where
 	extend f t = t =>> f
 	-- | Clone existing structure, the dual of 'join'
 	duplicate :: t a -> t :. t := a
-	duplicate t = t =>> identity
+	duplicate t = t =>> (\x -> x)
 	-- | Right-to-left Cokleisli composition
 	(=<=) :: (t b -> c) -> (t a -> b) -> t a -> c
-	f =<= g = f . extend g
+	f =<= g = \x -> f (extend g x)
+
 	-- | Left-to-right Cokleisli composition
 	(=>=) :: (t a -> b) -> (t b -> c) -> t a -> c
-	f =>= g = g . extend f
+	f =>= g = \x -> g (extend f x)
 
 	-- | Experimental methods
 	($=>>) :: Covariant u => u :. t := a -> (t a -> b) -> u :. t := b

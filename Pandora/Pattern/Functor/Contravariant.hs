@@ -1,7 +1,6 @@
 module Pandora.Pattern.Functor.Contravariant where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category ((.))
 
 infixl 4 >$<, $<, >$
 
@@ -21,12 +20,7 @@ class Contravariant (t :: * -> *) where
 	contramap f x = f >$< x
 	-- | Replace all locations in the output with the same value
 	(>$) :: b -> t b -> t a
-	(>$) = contramap . (\x _ -> x)
-
-
-	-- (a -> b)
-
-	-- (!) :: a -> b -> a
+	x >$ z = (\_ -> x) >$< z
 	-- | Flipped version of '>$'
 	($<) :: t b -> b -> t a
 	x $< v = v >$ x
@@ -39,13 +33,13 @@ class Contravariant (t :: * -> *) where
 
 	-- | Infix versions of `contramap` with various nesting levels
 	(>$$<) :: Contravariant u => (a -> b) -> t :. u := a -> t :. u := b
-	(>$$<) = (>$<) . (>$<)
+	f >$$< x = ((f >$<) >$<) x
 	(>$$$<) :: (Contravariant u, Contravariant v)
 		=> (a -> b) -> t :. u :. v := b -> t :. u :. v := a
-	(>$$$<) = (>$<) . (>$<) . (>$<)
+	f >$$$< x = (((f >$<) >$<) >$<) x
 	(>$$$$<) :: (Contravariant u, Contravariant v, Contravariant w)
 		=> (a -> b) -> t :. u :. v :. w := a -> t :. u :. v :. w := b
-	(>$$$$<) = (>$<) . (>$<) . (>$<) . (>$<)
+	f >$$$$< x = ((((f >$<) >$<) >$<) >$<) x
 
 	-- | Infix flipped versions of `contramap` with various nesting levels
 	(>&&<) :: Contravariant u => t :. u := a -> (a -> b) -> t :. u := b

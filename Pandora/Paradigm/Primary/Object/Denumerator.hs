@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Primary.Object.Denumerator where
 
-import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -23,7 +22,7 @@ instance Chain Denumerator where
 
 instance Semigroup Denumerator where
 	One + m = Denumerator m
-	Denumerator n + m = Denumerator $ n + m
+	Denumerator n + m = Denumerator (n + m)
 
 instance Ringoid Denumerator where
 	One * n = n

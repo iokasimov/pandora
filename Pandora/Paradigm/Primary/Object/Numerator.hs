@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Primary.Object.Numerator where
 
-import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -27,12 +26,12 @@ instance Chain Numerator where
 instance Semigroup Numerator where
 	Zero + m = m
 	Numerator n + Zero = Numerator n
-	Numerator n + Numerator m = Numerator $ n + m
+	Numerator n + Numerator m = Numerator (n + m)
 
 instance Ringoid Numerator where
 	Zero * _ = Zero
 	Numerator _ * Zero = Zero
-	Numerator n * Numerator m = Numerator $ m + n * m
+	Numerator n * Numerator m = Numerator (m + n * m)
 
 instance Monoid Numerator where
 	zero = Zero

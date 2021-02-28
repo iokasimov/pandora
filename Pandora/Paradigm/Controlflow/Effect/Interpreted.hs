@@ -3,6 +3,7 @@ module Pandora.Paradigm.Controlflow.Effect.Interpreted where
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
+import Pandora.Paradigm.Primary.Functor.Function ()
 
 type family Schematic (c :: (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 

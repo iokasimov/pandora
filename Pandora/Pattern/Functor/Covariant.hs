@@ -1,7 +1,6 @@
 module Pandora.Pattern.Functor.Covariant where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (<:=))
-import Pandora.Pattern.Category (Category ((.), ($)))
 
 infixl 4 <$>, <$, $>
 infixl 3 <$$>
@@ -29,7 +28,7 @@ class Covariant (t :: * -> *) where
 	comap f x = f <$> x
 	-- | Replace all locations in the input with the same value
 	(<$) :: a -> t b -> t a
-	(<$) = comap . (\x _ -> x)
+	x <$ z = (\_-> x) <$> z
 	-- | Flipped version of '<$'
 	($>) :: t a -> b -> t b
 	x $> v = v <$ x
@@ -38,20 +37,20 @@ class Covariant (t :: * -> *) where
 	void x = () <$ x
 	-- | Computing a value from a structure of values
 	loeb :: t (a <:= t) -> t a
-	loeb tt = let fix f = let x = f x in x in fix (\f -> ($ f) <$> tt)
+	loeb tt = let fix f = let x = f x in x in fix (\f -> (\g -> g f) <$> tt)
 	-- | Flipped infix version of 'comap'
 	(<&>) :: t a -> (a -> b) -> t b
 	x <&> f = f <$> x
 
 	-- | Infix versions of `comap` with various nesting levels
 	(<$$>) :: Covariant u => (a -> b) -> t :. u := a -> t :. u := b
-	(<$$>) = (<$>) . (<$>)
+	f <$$> x = ((f <$>) <$>) x
 	(<$$$>) :: (Covariant u, Covariant v)
 		=> (a -> b) -> t :. u :. v := a -> t :. u :. v := b
-	(<$$$>) = (<$>) . (<$>) . (<$>)
+	f <$$$> x = (((f <$>) <$>) <$>) x
 	(<$$$$>) :: (Covariant u, Covariant v, Covariant w)
 		=> (a -> b) -> t :. u :. v :. w := a -> t :. u :. v :. w := b
-	(<$$$$>) = (<$>) . (<$>) . (<$>) . (<$>)
+	f <$$$$> x = ((((f <$>) <$>) <$>) <$>) x
 
 	-- | Infix flipped versions of `comap` with various nesting levels
 	(<&&>) :: Covariant u => t :. u := a -> (a -> b) -> t :. u := b
