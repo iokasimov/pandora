@@ -367,3 +367,4 @@
 * Define `!!` and `!!!` infix operators
 * Define `premorph` to replace `extract . run` expressions for `Morphable` instances
 * Define experimental `/` for providing arguments to function
+* `modify` method of `State` effect returns result of an applied function

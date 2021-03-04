@@ -40,14 +40,14 @@ zoom :: Stateful bg t => Lens bg ls -> State ls ~> t
 zoom lens less = let restruct f v = f <-> identity $ run less v
 	in adapt . State $ (|- restruct) . run . lens
 
-(=<>) :: Stateful src t => src :-. tgt -> tgt -> t ()
+(=<>) :: Stateful src t => src :-. tgt -> tgt -> t src
 lens =<> new = modify $ set lens new
 
-(~<>) :: Stateful src t => src :-. tgt -> (tgt -> tgt) -> t ()
+(~<>) :: Stateful src t => src :-. tgt -> (tgt -> tgt) -> t src
 lens ~<> f = modify $ over lens f
 
 magnify :: forall bg ls t . (Accessible ls bg, Stateful bg t) => t ls
 magnify = zoom @bg / access @ls @bg / current
 
-adjust :: forall bg ls t . (Accessible ls bg, Stateful bg t) => (ls -> ls) -> t ()
+adjust :: forall bg ls t . (Accessible ls bg, Stateful bg t) => (ls -> ls) -> t ls
 adjust = zoom @bg (access @ls @bg) . modify
