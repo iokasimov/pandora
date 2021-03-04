@@ -56,8 +56,8 @@ modify :: Stateful s t => (s -> s) -> t s
 modify f = adapt . State $ \s -> let r = f s in r :*: r
 
 -- | Replace current value with another one
-replace :: Stateful s t => s -> t ()
-replace s = adapt . State $ \_ -> s :*: ()
+replace :: Stateful s t => s -> t s
+replace s = adapt . State $ \_ -> s :*: s
 
 type Memorable s t = (Pointable t, Applicative t, Stateful s t)
 
