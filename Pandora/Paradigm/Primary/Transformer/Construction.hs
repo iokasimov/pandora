@@ -39,7 +39,7 @@ instance Applicative t => Applicative (Construction t) where
 		$ deconstruct f <**> deconstruct x
 
 instance Traversable t => Traversable (Construction t) where
-	x ->> f = Construct <$> f (extract x) <*> (deconstruct x ->>> f)
+	x ->> f = Construct <$> f (extract x) <*> deconstruct x ->>> f
 
 instance Alternative t => Bindable (Construction t) where
 	x >>= f = Construct (extract . f $ extract x)

@@ -23,7 +23,7 @@ instance Extractable (Equipment e) where
 	extract = extract . run
 
 instance Traversable (Equipment e) where
-	Equipment x ->> f = Equipment <$> (x ->> f)
+	Equipment x ->> f = Equipment <$> x ->> f
 
 instance Extendable (Equipment e) where
 	Equipment (e :*: x) =>> f = Equipment . (:*:) e . f . Equipment $ e :*: x

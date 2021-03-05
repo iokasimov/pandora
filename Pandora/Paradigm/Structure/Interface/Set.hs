@@ -19,7 +19,7 @@ member :: forall e a . (Setoid a, Monotonic a e) => a -> e -> Boolean
 member x = reduce @a @(Maybe a) (True !!) False . find (equate x)
 
 subset :: (Monotonic a (t a), Traversable t, Setoid a, Setoid (t a)) => t a -> t a -> Boolean
-subset ss s = Nothing != (ss ->> find % s . equate)
+subset ss s = Nothing != ss ->> find % s . equate
 
 cardinality :: Traversable t => t a -> Numerator
-cardinality s = attached . run @(State _) % Zero $ s ->> (!) (modify @Numerator (+ one))
+cardinality s = attached . run @(State _) % Zero $ s ->> (modify @Numerator (+ one) !)

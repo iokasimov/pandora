@@ -368,3 +368,4 @@
 * Define `premorph` to replace `extract . run` expressions for `Morphable` instances
 * Define experimental `/` for providing arguments to function
 * `modify` and `replaces` methods of `State` effect returns result of an applied function
+* Change precedence of `->>` method of `Traversable` - from 3 to 5

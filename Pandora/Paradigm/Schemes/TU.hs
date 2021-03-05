@@ -48,7 +48,7 @@ instance (Extractable t, Extractable u) => Extractable (t <:.> u) where
 	extract = extract . extract . run
 
 instance (Traversable t, Traversable u) => Traversable (t <:.> u) where
-	x ->> f = TU <$> (run x ->>> f)
+	x ->> f = TU <$> run x ->>> f
 
 instance (Bindable t, Distributive t, Bindable u) => Bindable (t <:.> u) where
 	TU x >>= f = TU $ x >>= \i -> join <$> i >>- run . f

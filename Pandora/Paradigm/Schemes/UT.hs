@@ -36,7 +36,7 @@ instance (Pointable t, Pointable u) => Pointable (t <.:> u) where
 	point = UT . point . point
 
 instance (Traversable t, Bindable t, Applicative u, Monad u) => Bindable (t <.:> u) where
-	UT x >>= f = UT $ x >>= \i -> join <$> (i ->> run . f)
+	UT x >>= f = UT $ x >>= \i -> join <$> i ->> run . f
 
 instance (Extractable t, Extractable u) => Extractable (t <.:> u) where
 	extract = extract . extract . run

@@ -29,7 +29,7 @@ instance Applicative t => Applicative (Backwards t) where
 	Backwards f <*> Backwards x = Backwards / (&) <$> x <*> f
 
 instance Traversable t => Traversable (Backwards t) where
-	Backwards x ->> f = Backwards <$> (x ->> f)
+	Backwards x ->> f = Backwards <$> x ->> f
 
 instance Distributive t => Distributive (Backwards t) where
 	x >>- f = Backwards $ x >>- run . f

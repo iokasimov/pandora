@@ -34,7 +34,7 @@ instance Covariant t => Covariant (Prefixed t k) where
 	f <$> Prefixed x = Prefixed $ f <$> x
 
 instance Traversable t => Traversable (Prefixed t k) where
-	Prefixed x ->> f = Prefixed <$> (x ->> f)
+	Prefixed x ->> f = Prefixed <$> x ->> f
 
 instance (Monoid k, Pointable t) => Pointable (Prefixed t k) where
 	point = Prefixed . lift . TU . (:*:) zero . Just
