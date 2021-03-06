@@ -10,7 +10,7 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
-import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
+import Pandora.Paradigm.Schemes.T_U (T_U)
 
 class Morphable f t where
 	type Morphing (f :: k) (t :: * -> *) :: * -> *
@@ -33,4 +33,4 @@ into :: forall f t . Morphable (Into f) t => t ~> Morphing (Into f) t
 into = morphing . TU . Tag @(Into f)
 
 prepend :: forall f t a . (Morphable (Prepend f) t, Morphing (Prepend f) t ~ T_U Covariant Covariant (->) Identity t) => t a -> a -> t a
-prepend xs = run (morphing . TU $ Tag @(Insert f) xs) . Identity
+prepend xs = run (morphing . TU $ Tag @(Prepend f) xs) . Identity
