@@ -21,6 +21,7 @@ import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
+import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), twosome)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
@@ -41,7 +42,7 @@ import Pandora.Paradigm.Structure.Ability.Deletable (Deletable ((-=)))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Prepend), premorph, rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (push, pop))
 
@@ -62,6 +63,10 @@ instance Monoid (List a) where
 instance Stack List where
 	push x = lift . Construct x . run
 	pop xs = resolve deconstruct Nothing ||= xs
+
+instance Morphable (Prepend Left) List where
+	type Morphing (Prepend Left) List = T_U Covariant Covariant (->) Identity List
+	morphing (premorph -> xs) = T_U $ \(Identity x) -> lift . Construct x . run $ xs
 
 instance Focusable Head List where
 	type Focusing Head List a = Maybe a
