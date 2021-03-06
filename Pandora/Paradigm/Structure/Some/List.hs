@@ -43,6 +43,7 @@ import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, meas
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (push, pop))
 
 -- | Linear data structure that serves as a collection of elements
 type List = Maybe <:.> Construction Maybe
@@ -57,6 +58,12 @@ instance Semigroup (List a) where
 
 instance Monoid (List a) where
 	zero = empty
+
+instance Stack List where
+	push x (TU Nothing) = lift $ Construct x Nothing
+	push x (TU (Just xs)) = lift . Construct x $ Just xs
+	pop (TU Nothing) = TU Nothing
+	pop (TU (Just xs)) = TU $ deconstruct xs
 
 instance Focusable Head List where
 	type Focusing Head List a = Maybe a
