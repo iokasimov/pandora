@@ -1,6 +1,6 @@
 module Pandora.Core.Functor where
 
-infixr 0 :=, <:=, :=>, ~>
+infixr 0 :=, <:=, :=>, :=:=>, ~>
 infixr 1 .:, :.
 infixr 2 ::|:., ::|.:, ::|::
 

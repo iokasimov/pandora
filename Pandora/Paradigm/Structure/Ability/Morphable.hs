@@ -2,8 +2,8 @@
 
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
-import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Core.Functor (type (~>), type (:=:=>))
+import Pandora.Pattern.Category ((.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
@@ -32,5 +32,5 @@ rotate = morphing . TU . Tag @(Rotate f)
 into :: forall f t . Morphable (Into f) t => t ~> Morphing (Into f) t
 into = morphing . TU . Tag @(Into f)
 
-prepend :: forall f t a . (Morphable (Prepend f) t, Morphing (Prepend f) t ~ T_U Covariant Covariant (->) Identity t) => t a -> a -> t a
-prepend xs = run (morphing . TU $ Tag @(Prepend f) xs) . Identity
+prepend :: forall f t a . (Morphable (Prepend f) t, Morphing (Prepend f) t ~ T_U Covariant Covariant (->) Identity t) => a :=:=> t
+prepend new xs = run / morphing (TU $ Tag @(Prepend f) xs) / Identity new
