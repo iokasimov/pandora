@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Structure.Some.Stack where
+module Pandora.Paradigm.Structure.Some.List where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern ((.|..))
@@ -45,63 +45,63 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 
 -- | Linear data structure that serves as a collection of elements
-type Stack = Maybe <:.> Construction Maybe
+type List = Maybe <:.> Construction Maybe
 
-instance Setoid a => Setoid (Stack a) where
+instance Setoid a => Setoid (List a) where
 	TU ls == TU rs = ls == rs
 
-instance Semigroup (Stack a) where
+instance Semigroup (List a) where
 	TU Nothing + TU ys = TU ys
 	TU (Just (Construct x xs)) + TU ys = lift . Construct x . run
 		$ TU @Covariant @Covariant xs + TU @Covariant @Covariant ys
 
-instance Monoid (Stack a) where
+instance Monoid (List a) where
 	zero = empty
 
-instance Focusable Head Stack where
-	type Focusing Head Stack a = Maybe a
+instance Focusable Head List where
+	type Focusing Head List a = Maybe a
 	focusing (extract -> stack) = Store $ extract <$> run stack :*: \case
 		Just x -> stack & subview @Tail & (x +=) & Tag
 		Nothing -> stack & subview @Tail & Tag
 
-instance Insertable Stack where
+instance Insertable List where
 	x += (run -> stack) = TU $ (Construct x . Just <$> stack) <+> (point . point) x
 
-instance Measurable Length Stack where
-	type Measural Length Stack a = Numerator
+instance Measurable Length List where
+	type Measural Length List a = Numerator
 	measurement (run . extract -> Nothing) = zero
 	measurement (run . extract -> Just xs) = Numerator $ measure @Length xs
 
-instance Nullable Stack where
+instance Nullable List where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
-instance Substructure Tail Stack where
-	type Substructural Tail Stack = Stack
+instance Substructure Tail List where
+	type Substructural Tail List = List
 	substructure (run . extract . run -> Just ns) = lift . lift <$> sub @Tail ns
 	substructure (run . extract . run -> Nothing) = Store $ empty :*: lift . identity
 
-instance Deletable Stack where
+instance Deletable List where
 	_ -= TU Nothing = TU Nothing
 	x -= TU (Just (Construct y ys)) = x == y ? TU ys
-		$ lift . Construct y . run . (-=) @Stack x $ TU ys
+		$ lift . Construct y . run . (-=) @List x $ TU ys
 
-filter :: forall a . Predicate a -> Stack a -> Stack a
+filter :: forall a . Predicate a -> List a -> List a
 filter (Predicate p) = TU . extract
-	. run @(State (Maybe :. Nonempty Stack := a)) % Nothing
+	. run @(State (Maybe :. Nonempty List := a)) % Nothing
 	. fold (\now new -> p now ? Just (Construct now new) $ new)
 
 -- | Transform any traversable structure into a stack
-linearize :: forall t a . Traversable t => t a -> Stack a
-linearize = TU . extract . run @(State (Maybe :. Nonempty Stack := a)) % Nothing . fold (Just .|.. Construct)
+linearize :: forall t a . Traversable t => t a -> List a
+linearize = TU . extract . run @(State (Maybe :. Nonempty List := a)) % Nothing . fold (Just .|.. Construct)
 
-type instance Nonempty Stack = Construction Maybe
+type instance Nonempty List = Construction Maybe
 
 instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 	Construct x Nothing + ys = Construct x $ Just ys
 	Construct x (Just xs) + ys = Construct x . Just $ xs + ys
 
-instance Morphable (Into Stack) (Construction Maybe) where
-	type Morphing (Into Stack) (Construction Maybe) = Stack
+instance Morphable (Into List) (Construction Maybe) where
+	type Morphing (Into List) (Construction Maybe) = List
 	morphing = lift . premorph
 
 instance Focusable Head (Construction Maybe) where
@@ -120,23 +120,23 @@ instance Monotonic a (Construction Maybe a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
 
 instance Substructure Tail (Construction Maybe) where
-	type Substructural Tail (Construction Maybe) = Stack
+	type Substructural Tail (Construction Maybe) = List
 	substructure (extract . run -> Construct x xs) =
 		Store $ TU xs :*: lift . Construct x . run
 
-type instance Zipper Stack = Tap ((:*:) <:.:> Stack)
+type instance Zipper List = Tap ((:*:) <:.:> List)
 
-instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> Stack)) where
+instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> List)) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
 		in f <$> Tap z (twosome (move $ run . rotate @Left) (move $ run . rotate @Right))
 
-instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Stack)) where
-	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
+instance Morphable (Rotate Left) (Tap ((:*:) <:.:> List)) where
+	type Morphing (Rotate Left) (Tap ((:*:) <:.:> List)) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap % twosome (subview @Tail bs) (x += fs) <$> view (focus @Head) bs
 
-instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Stack)) where
-	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Stack)) = Maybe <:.> Zipper Stack
+instance Morphable (Rotate Right) (Tap ((:*:) <:.:> List)) where
+	type Morphing (Rotate Right) (Tap ((:*:) <:.:> List)) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap % twosome (x += bs) (subview @Tail fs) <$> view (focus @Head) fs
 

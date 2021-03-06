@@ -114,7 +114,7 @@ library
     Pandora.Paradigm.Structure.Interface.Dictionary
     Pandora.Paradigm.Structure.Some
     Pandora.Paradigm.Structure.Some.Stream
-    Pandora.Paradigm.Structure.Some.Stack
+    Pandora.Paradigm.Structure.Some.List
     Pandora.Paradigm.Structure.Some.Binary
     Pandora.Paradigm.Structure.Some.Splay
     Pandora.Paradigm.Structure.Some.Rose

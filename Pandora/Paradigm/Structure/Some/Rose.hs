@@ -22,9 +22,9 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
-import Pandora.Paradigm.Structure.Some.Stack (Stack)
+import Pandora.Paradigm.Structure.Some.List (List)
 
-type Rose = Maybe <:.> Construction Stack
+type Rose = Maybe <:.> Construction List
 
 instance Focusable Root Rose where
 	type Focusing Root Rose a = Maybe a
@@ -36,18 +36,18 @@ instance Nullable Rose where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
 instance Substructure Just Rose where
-	type Substructural Just Rose = Stack <:.> Construction Stack
+	type Substructural Just Rose = List <:.> Construction List
 	substructure (run . extract . run -> Nothing) =
 		Store $ empty :*: (lift empty !)
 	substructure (run . extract . run -> Just (Construct x xs)) =
 		Store $ TU xs :*: lift . lift . Construct x . run
 
-type instance Nonempty Rose = Construction Stack
+type instance Nonempty Rose = Construction List
 
-instance Focusable Root (Construction Stack) where
-	type Focusing Root (Construction Stack) a = a
+instance Focusable Root (Construction List) where
+	type Focusing Root (Construction List) a = a
 	focusing (Tag rose) = Store $ extract rose :*: Tag . Construct % deconstruct rose
 
-instance Substructure Just (Construction Stack) where
-	type Substructural Just (Construction Stack) = Stack <:.> Construction Stack
+instance Substructure Just (Construction List) where
+	type Substructural Just (Construction List) = List <:.> Construction List
 	substructure (extract . run -> Construct x xs) = Store $ TU xs :*: lift . Construct x . run
