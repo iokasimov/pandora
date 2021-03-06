@@ -371,3 +371,4 @@
 * Change precedence of `->>` method of `Traversable` - from 3 to 5
 * Rename `Stack` datastructure to `List`
 * Define `Stack` interface with `push` and `pop` methods
+* Define new type synonymous: `:=:=>`

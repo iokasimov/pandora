@@ -16,6 +16,8 @@ type (.:) t u a = u (t a)
 -- | Coalgebra's type operator
 type (:=>) a t = a -> t a
 
+type (:=:=>) a t = a -> t a -> t a
+
 -- | Algebra's type operator
 type (<:=) a t = t a -> a
 

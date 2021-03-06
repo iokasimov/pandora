@@ -30,7 +30,7 @@ import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (view)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -40,7 +40,7 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusi
 import Pandora.Paradigm.Structure.Ability.Deletable (Deletable ((-=)))
 import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (push, pop))
@@ -60,10 +60,8 @@ instance Monoid (List a) where
 	zero = empty
 
 instance Stack List where
-	push x (TU Nothing) = lift $ Construct x Nothing
-	push x (TU (Just xs)) = lift . Construct x $ Just xs
-	pop (TU Nothing) = TU Nothing
-	pop (TU (Just xs)) = TU $ deconstruct xs
+	push x = lift . Construct x . run
+	pop xs = resolve deconstruct Nothing ||= xs
 
 instance Focusable Head List where
 	type Focusing Head List a = Maybe a
