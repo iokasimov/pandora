@@ -24,7 +24,7 @@ premorph = extract . run
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
 
-data Morph a = Rotate a | Into a | Prepend a
+data Morph a = Rotate a | Into a | Insert a
 
 rotate :: forall f t . Morphable (Rotate f) t => t ~> Morphing (Rotate f) t
 rotate = morphing . TU . Tag @(Rotate f)
@@ -32,5 +32,5 @@ rotate = morphing . TU . Tag @(Rotate f)
 into :: forall f t . Morphable (Into f) t => t ~> Morphing (Into f) t
 into = morphing . TU . Tag @(Into f)
 
-prepend :: forall f t a . (Morphable (Prepend f) t, Morphing (Prepend f) t ~ T_U Covariant Covariant (->) Identity t) => a :=:=> t
-prepend new xs = run / morphing (TU $ Tag @(Prepend f) xs) / Identity new
+insert :: forall f t a . (Morphable (Insert f) t, Morphing (Insert f) t ~ T_U Covariant Covariant (->) Identity t) => a :=:=> t
+insert new xs = run / morphing (TU $ Tag @(Insert f) xs) / Identity new

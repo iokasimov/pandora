@@ -372,5 +372,5 @@
 * Rename `Stack` datastructure to `List`
 * Define `Stack` interface with `push` and `pop` methods
 * Define new type synonymous: `:=:=>`
-* Define experimental `Prepend` verb for `Morphable` ability
+* Define experimental `Insert` verb for `Morphable` ability
 * Remove `Insertable` ability for datastructures
