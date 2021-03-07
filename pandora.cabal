@@ -99,7 +99,6 @@ library
     Pandora.Paradigm.Structure.Ability.Deletable
     Pandora.Paradigm.Structure.Ability.Accessible
     Pandora.Paradigm.Structure.Ability.Focusable
-    Pandora.Paradigm.Structure.Ability.Insertable
     Pandora.Paradigm.Structure.Ability.Measurable
     Pandora.Paradigm.Structure.Ability.Substructure
     Pandora.Paradigm.Structure.Ability.Nonempty

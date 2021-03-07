@@ -27,13 +27,11 @@ import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (over)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
-import Pandora.Paradigm.Structure.Ability.Insertable (Insertable ((+=)))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
@@ -45,11 +43,6 @@ rebalance (Both x y) = extract x <=> extract y & order
 	(Construct / extract y $ Both / x / rebalance (deconstruct y))
 	(Construct / extract x $ Both / rebalance (deconstruct x) / rebalance (deconstruct y))
 	(Construct / extract x $ Both / rebalance (deconstruct x) / y)
-
-instance (forall a . Chain a) => Insertable Binary where
-	x += (run -> Nothing) = lift . Construct x $ End
-	x += tree@(run -> Just nonempty) = x <=> extract nonempty & order
-		(tree & substitute @Left (x +=)) tree (tree & substitute @Right (x +=))
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
@@ -91,10 +84,6 @@ instance Morphable (Into Binary) (Construction Wye) where
 instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a
 	focusing (extract -> Construct x xs) = Store $ x :*: Tag . Construct % xs
-
-instance (forall a . Chain a) => Insertable (Construction Wye) where
-	x += tree = let change = lift . resolve (x +=) (Construct x End) . run in
-		x <=> extract tree & order (over / sub @Left / change / tree) tree (over / sub @Right / change / tree)
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
