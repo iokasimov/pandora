@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
 import Pandora.Core.Functor (type (~>), type (:=:=>))
-import Pandora.Pattern.Category ((.), ($), (/))
+import Pandora.Pattern.Category ((.), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
@@ -12,7 +12,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U)
 
-class Morphable f t where
+class Morphable f t | f t -> t where
 	type Morphing (f :: k) (t :: * -> *) :: * -> *
 	morphing :: Tagged f <:.> t ~> Morphing f t
 
@@ -33,4 +33,4 @@ into :: forall f t . Morphable (Into f) t => t ~> Morphing (Into f) t
 into = morphing . TU . Tag @(Into f)
 
 insert :: forall f t a . (Morphable (Insert f) t, Morphing (Insert f) t ~ T_U Covariant Covariant (->) Identity t) => a :=:=> t
-insert new xs = run / morphing (TU $ Tag @(Insert f) xs) / Identity new
+insert new xs = run / morph @(Insert f) xs / Identity new

@@ -129,31 +129,31 @@ instance Substructure Tail (Construction Maybe) where
 	substructure (extract . run -> Construct x xs) =
 		Store $ TU xs :*: lift . Construct x . run
 
-type instance Zipper List = Tap ((:*:) <:.:> List)
+type instance Zipper List = Tap (List <:.:> List := (:*:))
 
-instance {-# OVERLAPS #-} Extendable (Tap ((:*:) <:.:> List)) where
+instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
 		in f <$> Tap z (twosome (move $ run . rotate @Left) (move $ run . rotate @Right))
 
-instance Morphable (Rotate Left) (Tap ((:*:) <:.:> List)) where
-	type Morphing (Rotate Left) (Tap ((:*:) <:.:> List)) = Maybe <:.> Zipper List
+instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
+	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap % twosome (subview @Tail bs) (insert @Left x fs) <$> view (focus @Head) bs
 
-instance Morphable (Rotate Right) (Tap ((:*:) <:.:> List)) where
-	type Morphing (Rotate Right) (Tap ((:*:) <:.:> List)) = Maybe <:.> Zipper List
+instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
+	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap % twosome (insert @Left x bs) (subview @Tail fs) <$> view (focus @Head) fs
 
-type instance Zipper (Construction Maybe) = Tap ((:*:) <:.:> Construction Maybe)
+type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
-instance Morphable (Rotate Left) (Tap ((:*:) <:.:> Construction Maybe)) where
-	type Morphing (Rotate Left) (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap (extract bs) . twosome % (insert @Left x fs) <$> deconstruct bs
 
-instance Morphable (Rotate Right) (Tap ((:*:) <:.:> Construction Maybe)) where
-	type Morphing (Rotate Right) (Tap ((:*:) <:.:> Construction Maybe)) = Maybe <:.> Zipper (Construction Maybe)
+instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Morphing (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap (extract fs) . twosome (insert @Left x bs) <$> deconstruct fs
 

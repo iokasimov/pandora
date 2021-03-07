@@ -6,6 +6,7 @@ import Pandora.Paradigm.Primary.Transformer as Exports
 import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
 
+import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (Category ((.), ($), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
@@ -68,8 +69,8 @@ instance Morphable (Into (There Maybe)) (Wedge e) where
 	morphing (premorph -> Here _) = Nothing
 	morphing (premorph -> There x) = Just x
 
-instance Morphable (Into Wye) ((<:.:>) (:*:) Maybe) where
-	type Morphing (Into Wye) ((<:.:>) (:*:) Maybe) = Wye
+instance Morphable (Into Wye) (Maybe <:.:> Maybe := (:*:)) where
+	type Morphing (Into Wye) (Maybe <:.:> Maybe := (:*:)) = Wye
 	morphing (run . premorph -> Just x :*: Just y) = Both x y
 	morphing (run . premorph -> Nothing :*: Just y) = Right y
 	morphing (run . premorph -> Just x :*: Nothing) = Left x

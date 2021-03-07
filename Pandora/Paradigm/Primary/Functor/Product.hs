@@ -14,7 +14,7 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
 infixr 1 :*:
 
@@ -74,5 +74,5 @@ swap ~(x :*: y) = y :*: x
 attached :: a :*: b -> a
 attached ~(x :*: _) = x
 
-twosome :: t a -> u a -> T_U Covariant Covariant (:*:) t u a
+twosome :: t a -> u a -> (<:.:>) t u (:*:) a
 twosome x y = T_U (x :*: y)

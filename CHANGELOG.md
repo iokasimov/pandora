@@ -374,3 +374,4 @@
 * Define new type synonymous: `:=:=>`
 * Define experimental `Insert` verb for `Morphable` ability
 * Remove `Insertable` ability for datastructures
+* Change order of arguments in `<:.:>`, `>:.:>`, `<:.:<`, `>:.:<` type synonyms
