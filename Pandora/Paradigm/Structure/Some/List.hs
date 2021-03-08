@@ -29,7 +29,7 @@ import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (view)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -38,10 +38,9 @@ import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Deletable (Deletable ((-=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert), premorph, rotate, insert)
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push), premorph, rotate, item)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
-import Pandora.Paradigm.Structure.Interface.Stack (Stack (push, pop))
 
 -- | Linear data structure that serves as a collection of elements
 type List = Maybe <:.> Construction Maybe
@@ -57,18 +56,14 @@ instance Semigroup (List a) where
 instance Monoid (List a) where
 	zero = empty
 
-instance Stack List where
-	push x = lift . Construct x . run
-	pop xs = resolve deconstruct Nothing ||= xs
-
-instance Morphable (Insert Left) List where
-	type Morphing (Insert Left) List = Identity <:.:> List := (->)
+instance Morphable Push List where
+	type Morphing Push List = Identity <:.:> List := (->)
 	morphing (premorph -> xs) = T_U $ \(Identity x) -> lift . Construct x . run $ xs
 
 instance Focusable Head List where
 	type Focusing Head List a = Maybe a
 	focusing (extract -> stack) = Store $ extract <$> run stack :*: \case
-		Just x -> stack & subview @Tail & insert @Left x & Tag
+		Just x -> stack & subview @Tail & item @Push x & Tag
 		Nothing -> stack & subview @Tail & Tag
 
 instance Measurable Length List where
@@ -112,8 +107,8 @@ instance Focusable Head (Construction Maybe) where
 	type Focusing Head (Construction Maybe) a = a
 	focusing (extract -> stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
 
-instance Morphable (Insert Left) (Construction Maybe) where
-	type Morphing (Insert Left) (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
+instance Morphable Push (Construction Maybe) where
+	type Morphing Push (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
 	morphing (premorph -> xs) = T_U $ \(Identity x) -> Construct x $ Just xs
 
 instance Measurable Length (Construction Maybe) where
@@ -138,23 +133,23 @@ instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap % twosome (subview @Tail bs) (insert @Left x fs) <$> view (focus @Head) bs
+		$ Tap % twosome (subview @Tail bs) (item @Push x fs) <$> view (focus @Head) bs
 
 instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap % twosome (insert @Left x bs) (subview @Tail fs) <$> view (focus @Head) fs
+		$ Tap % twosome (item @Push x bs) (subview @Tail fs) <$> view (focus @Head) fs
 
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap (extract bs) . twosome % (insert @Left x fs) <$> deconstruct bs
+		$ Tap (extract bs) . twosome % (item @Push x fs) <$> deconstruct bs
 
 instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU $ Tap (extract fs) . twosome (insert @Left x bs) <$> deconstruct fs
+	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU $ Tap (extract fs) . twosome (item @Push x bs) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
