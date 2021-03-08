@@ -29,7 +29,7 @@ import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Inventory.State (State, fold)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (view)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -38,8 +38,8 @@ import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Deletable (Deletable ((-=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push), premorph, rotate, item)
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push, Pop), premorph, rotate, item)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 
 -- | Linear data structure that serves as a collection of elements
@@ -59,6 +59,10 @@ instance Monoid (List a) where
 instance Morphable Push List where
 	type Morphing Push List = Identity <:.:> List := (->)
 	morphing (premorph -> xs) = T_U $ \(Identity x) -> lift . Construct x . run $ xs
+
+instance Morphable Pop List where
+	type Morphing Pop List = List
+	morphing (premorph -> xs) = resolve deconstruct Nothing ||= xs
 
 instance Focusable Head List where
 	type Focusing Head List a = Maybe a

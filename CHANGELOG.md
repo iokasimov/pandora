@@ -371,7 +371,7 @@
 * Change precedence of `->>` method of `Traversable` - from 3 to 5
 * Rename `Stack` datastructure to `List`
 * Define new type synonymous: `:=:=>`
-* Define experimental `Insert` and `Push` verbs for `Morphable` ability
+* Define experimental `Insert`, `Push`, `Pop` verbs for `Morphable` ability
 * Remove `Insertable` ability for datastructures
 * Change order of arguments in `<:.:>`, `>:.:>`, `<:.:<`, `>:.:<` type synonyms
 * Define fixity and precedence for `TU`, `UT`, `TUT` and `T_U` type synonyms
