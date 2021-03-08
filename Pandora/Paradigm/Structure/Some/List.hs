@@ -154,8 +154,7 @@ instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction May
 
 instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap (extract fs) . twosome (insert @Left x bs) <$> deconstruct fs
+	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU $ Tap (extract fs) . twosome (insert @Left x bs) <$> deconstruct fs
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run

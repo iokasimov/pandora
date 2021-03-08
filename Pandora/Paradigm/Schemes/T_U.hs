@@ -9,6 +9,8 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 
 newtype T_U ct cu p t u a = T_U (p (t a) (u a))
 
+infixr 2 <:.:>, >:.:>, <:.:<, >:.:<
+
 type (<:.:>) t u p = T_U Covariant Covariant p t u
 type (>:.:>) t u p = T_U Contravariant Covariant p t u
 type (<:.:<) t u p = T_U Covariant Contravariant p t u

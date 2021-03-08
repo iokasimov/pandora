@@ -19,6 +19,8 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 
 newtype TU ct cu t u a = TU (t :. u := a)
 
+infixr 3 <:.>, >:.>, <:.<, >:.<
+
 type (<:.>) = TU Covariant Covariant
 type (>:.>) = TU Contravariant Covariant
 type (<:.<) = TU Covariant Contravariant

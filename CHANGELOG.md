@@ -375,3 +375,4 @@
 * Define experimental `Insert` verb for `Morphable` ability
 * Remove `Insertable` ability for datastructures
 * Change order of arguments in `<:.:>`, `>:.:>`, `<:.:<`, `>:.:<` type synonyms
+* Define fixity and precedence for `TU`, `UT`, `TUT` and `T_U` type synonyms

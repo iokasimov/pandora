@@ -20,6 +20,8 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 
 newtype TUT ct ct' cu t t' u a = TUT (t :. u :. t' := a)
 
+infix 3 <:<.>:>, >:<.>:>, <:<.>:<, >:<.>:<, <:>.<:>, >:>.<:>, <:>.<:<, >:>.<:<
+
 type (<:<.>:>) = TUT Covariant Covariant Covariant
 type (>:<.>:>) = TUT Contravariant Covariant Covariant
 type (<:<.>:<) = TUT Covariant Covariant Contravariant
