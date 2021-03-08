@@ -1,7 +1,10 @@
 module Pandora.Paradigm.Structure.Interface.Stack where
 
-import Pandora.Core.Functor (type (~>), type (:=:=>))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Push, Pop))
 
-class Stack t where
-	push :: a :=:=> t
-	pop :: t ~> t
+{- |
+> When providing a new instance, you should ensure it satisfies this one law:
+> * Idempotency: item @Push x . morph @Pop ≡ identity
+-}
+
+class (Morphable Push t, Morphable Pop t) => Stack t where

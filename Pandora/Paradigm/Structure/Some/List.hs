@@ -41,6 +41,7 @@ import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, meas
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push, Pop), premorph, rotate, item)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
+import Pandora.Paradigm.Structure.Interface.Stack (Stack)
 
 -- | Linear data structure that serves as a collection of elements
 type List = Maybe <:.> Construction Maybe
@@ -63,6 +64,8 @@ instance Morphable Push List where
 instance Morphable Pop List where
 	type Morphing Pop List = List
 	morphing (premorph -> xs) = resolve deconstruct Nothing ||= xs
+
+instance Stack List where
 
 instance Focusable Head List where
 	type Focusing Head List a = Maybe a
