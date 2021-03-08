@@ -1,5 +1,6 @@
 module Pandora.Paradigm.Schemes.T_U where
 
+import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
@@ -18,14 +19,11 @@ instance Interpreted (T_U ct cu p t u) where
 	run ~(T_U x) = x
 	unite = T_U
 
-instance (Bivariant p, Covariant t, Covariant u)
-	=> Covariant (T_U Covariant Covariant p t u) where
-		f <$> x = ((f <$>) <-> (f <$>)) ||= x
+instance (Bivariant p, Covariant t, Covariant u) => Covariant (t <:.:> u := p) where
+	f <$> x = ((f <$>) <-> (f <$>)) ||= x
 
-instance (Divariant p, Contravariant t, Covariant u)
-	=> Covariant (T_U Contravariant Covariant p t u) where
-		f <$> x = ((f >$<) >-> (f <$>)) ||= x
+instance (Divariant p, Contravariant t, Covariant u) => Covariant (t >:.:> u := p) where
+	f <$> x = ((f >$<) >-> (f <$>)) ||= x
 
-instance (Bivariant p, Contravariant t, Contravariant u)
-	=> Contravariant (T_U Contravariant Contravariant p t u) where
-		f >$< x = ((f >$<) <-> (f >$<)) ||= x
+instance (Bivariant p, Contravariant t, Contravariant u) => Contravariant (t >:.:< u := p) where
+	f >$< x = ((f >$<) <-> (f >$<)) ||= x

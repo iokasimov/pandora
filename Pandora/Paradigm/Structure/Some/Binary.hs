@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), at
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), type (<:.>))
+import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
@@ -123,23 +123,26 @@ instance Covariant Biforked where
 	f <$> Leftward l = Leftward $ f l
 	f <$> Rightward r = Rightward $ f r
 
-type instance Zipper (Construction Wye) = T_U Covariant Covariant (:*:) (Construction Wye)
-	((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye))
+type Bifurcation = Biforked <:.> Construction Biforked
+
+type Bicursor = Identity <:.:> (Maybe <:.> Construction Wye) := (:*:)
+
+type instance Zipper (Construction Wye) = Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:)
 
 data Vertical a = Up a | Down a
 
-instance Morphable (Rotate Up) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye))) where
-	type Morphing (Rotate Up) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
-		= Maybe <:.> (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
+instance Morphable (Rotate Up) (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:)) where
+	type Morphing (Rotate Up) (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:))
+		= Maybe <:.> (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:))
 	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
 		lift $ twosome / Construct parent (resolve / Both focused / Left focused $ run rest) / TU (TU next)
 	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
 		lift $ twosome / Construct parent (resolve / Both % focused / Right focused $ run rest) / TU (TU next)
 	morphing (premorph -> T_U (_ :*: TU (TU Top))) = empty
 
-instance Morphable (Rotate (Down Left)) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye))) where
-	type Morphing (Rotate (Down Left)) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
-		= Maybe <:.> (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
+instance Morphable (Rotate (Down Left)) (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:)) where
+	type Morphing (Rotate (Down Left)) (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:))
+		= Maybe <:.> (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:))
 	morphing (run . premorph -> Construct x (Left lst) :*: TU (TU next)) =
 		lift . twosome lst . TU . TU . Leftward . Construct (twosome / Identity x / empty) $ next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
@@ -147,9 +150,9 @@ instance Morphable (Rotate (Down Left)) (T_U Covariant Covariant (:*:) (Construc
 	morphing (run . premorph -> Construct _ (Right _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
 
-instance Morphable (Rotate (Down Right)) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye))) where
-	type Morphing (Rotate (Down Right)) (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
-		= Maybe <:.> (T_U Covariant Covariant (:*:) (Construction Wye) ((Biforked <:.> Construction Biforked) <:.> T_U Covariant Covariant (:*:) Identity (Maybe <:.> Construction Wye)))
+instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:)) where
+	type Morphing (Rotate (Down Right)) (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:))
+		= Maybe <:.> (Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:))
 	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) = lift . twosome rst . TU . TU . Rightward . Construct (twosome / Identity x / empty) $ next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) = lift . twosome rst . TU . TU . Rightward . Construct (twosome / Identity x / lift lst) $ next
 	morphing (run . premorph -> Construct _ (Left _) :*: _) = empty

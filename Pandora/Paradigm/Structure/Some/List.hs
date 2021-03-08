@@ -62,7 +62,7 @@ instance Stack List where
 	pop xs = resolve deconstruct Nothing ||= xs
 
 instance Morphable (Insert Left) List where
-	type Morphing (Insert Left) List = T_U Covariant Covariant (->) Identity List
+	type Morphing (Insert Left) List = Identity <:.:> List := (->)
 	morphing (premorph -> xs) = T_U $ \(Identity x) -> lift . Construct x . run $ xs
 
 instance Focusable Head List where
@@ -113,7 +113,7 @@ instance Focusable Head (Construction Maybe) where
 	focusing (extract -> stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
 
 instance Morphable (Insert Left) (Construction Maybe) where
-	type Morphing (Insert Left) (Construction Maybe) = T_U Covariant Covariant (->) Identity (Construction Maybe)
+	type Morphing (Insert Left) (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
 	morphing (premorph -> xs) = T_U $ \(Identity x) -> Construct x $ Just xs
 
 instance Measurable Length (Construction Maybe) where
