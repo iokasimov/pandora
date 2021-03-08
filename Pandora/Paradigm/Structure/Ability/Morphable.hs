@@ -5,6 +5,7 @@ module Pandora.Paradigm.Structure.Ability.Morphable where
 import Pandora.Core.Functor (type (:=), type (~>), type (:=:=>))
 import Pandora.Pattern.Category ((.), (/))
 import Pandora.Pattern.Functor.Extractable (extract)
+import Pandora.Pattern.Object.Chain (Chain)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
@@ -36,3 +37,6 @@ insert new xs = run / morph @(Insert f) xs / Identity new
 
 item :: forall f t a . (Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))) => a :=:=> t
 item new xs = run / morph @f xs / Identity new
+
+collate :: forall f t a . (Chain a, Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))) => a :=:=> t
+collate new xs = run / morph @f xs / Identity new
