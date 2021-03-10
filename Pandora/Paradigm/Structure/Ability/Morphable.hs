@@ -38,5 +38,6 @@ insert new xs = run / morph @(Insert f) xs / Identity new
 item :: forall f t a . (Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))) => a :=:=> t
 item new xs = run / morph @f xs / Identity new
 
+-- FIXME: doesn't work right now, quantified constraints in instances for Binary have ambigous variables
 collate :: forall f t a . (Chain a, Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))) => a :=:=> t
 collate new xs = run / morph @f xs / Identity new

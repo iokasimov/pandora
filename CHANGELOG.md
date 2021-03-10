@@ -376,3 +376,5 @@
 * Change order of arguments in `<:.:>`, `>:.:>`, `<:.:<`, `>:.:<` type synonyms
 * Define fixity and precedence for `TU`, `UT`, `TUT` and `T_U` type synonyms
 * Define `Stack` typeclass with no methods but with `Push` and `Pop` constraints
+
+# 0.3.9
