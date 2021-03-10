@@ -96,7 +96,6 @@ library
     Pandora.Paradigm.Structure
     Pandora.Paradigm.Structure.Ability
     Pandora.Paradigm.Structure.Ability.Morphable
-    Pandora.Paradigm.Structure.Ability.Deletable
     Pandora.Paradigm.Structure.Ability.Accessible
     Pandora.Paradigm.Structure.Ability.Focusable
     Pandora.Paradigm.Structure.Ability.Measurable

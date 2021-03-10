@@ -378,3 +378,4 @@
 * Define `Stack` typeclass with no methods but with `Push` and `Pop` constraints
 
 # 0.3.9
+* Remove `Deletable` ability for datastructures in favor of `Morphable Delete First` instance

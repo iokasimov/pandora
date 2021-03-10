@@ -36,7 +36,6 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
-import Pandora.Paradigm.Structure.Ability.Deletable (Deletable ((-=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
@@ -92,11 +91,6 @@ instance Substructure Tail List where
 	type Substructural Tail List = List
 	substructure (run . extract . run -> Just ns) = lift . lift <$> sub @Tail ns
 	substructure (run . extract . run -> Nothing) = Store $ empty :*: lift . identity
-
-instance Deletable List where
-	_ -= TU Nothing = TU Nothing
-	x -= TU (Just (Construct y ys)) = x == y ? TU ys
-		$ lift . Construct y . run . (-=) @List x $ TU ys
 
 filter :: forall a . Predicate a -> List a -> List a
 filter (Predicate p) = TU . extract
