@@ -6,8 +6,9 @@ import Pandora.Core.Functor (type (:=), type (~>), type (:=:=>))
 import Pandora.Pattern.Category ((.), (/))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Object.Chain (Chain)
+import Pandora.Pattern.Object.Setoid (Setoid)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
-import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
+import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Object (Boolean)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
@@ -46,5 +47,8 @@ item new xs = run / morph @f xs / Identity new
 collate :: forall f t a . (Chain a, Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))) => a :=:=> t
 collate new xs = run / morph @f xs / Identity new
 
-delete :: forall f t a . (Morphable (Delete f) t, Morphing (Delete f) t ~ (Predicate <:.:> t := (->))) => (a -> Boolean) -> t a -> t a
-delete p xs = run / morph @(Delete f) xs / Predicate p
+delete :: forall f t a . (Setoid a, Morphable (Delete f) t, Morphing (Delete f) t ~ (Predicate <:.:> t := (->))) => a :=:=> t
+delete x xs = run / morph @(Delete f) xs / equate x
+
+filter :: forall f t a . (Morphable (Delete f) t, Morphing (Delete f) t ~ (Predicate <:.:> t := (->))) => Predicate a -> t a -> t a
+filter p xs = run / morph @(Delete f) xs / p
