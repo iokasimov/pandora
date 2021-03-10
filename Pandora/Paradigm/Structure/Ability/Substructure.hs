@@ -27,6 +27,4 @@ class Substructure f t where
 	subplace :: (Substructural f t) a -> t a -> t a
 	subplace = set (sub @f)
 
-data Command a = Delete a
-
-data Segment a = All a | First a | Tail a
+data Segment a = Tail a

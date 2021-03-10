@@ -39,7 +39,8 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusi
 import Pandora.Paradigm.Structure.Ability.Deletable (Deletable ((-=)))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push, Pop), premorph, rotate, item)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
+	, Morph (Rotate, Into, Push, Pop, Delete), Occurrence (First), premorph, rotate, item, delete)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
 
@@ -64,6 +65,12 @@ instance Morphable Push List where
 instance Morphable Pop List where
 	type Morphing Pop List = List
 	morphing (premorph -> xs) = resolve deconstruct Nothing ||= xs
+
+instance Morphable (Delete First) List where
+	type Morphing (Delete First) List = Predicate <:.:> List := (->)
+	morphing (premorph -> TU Nothing) = T_U $ \_ -> TU Nothing
+	morphing (premorph -> TU (Just (Construct x xs))) = T_U $ \(Predicate p) ->
+		p x ? TU xs $ lift . Construct x . run . delete @First @List p $ TU xs
 
 instance Stack List where
 
