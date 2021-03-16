@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Primary.Functor (module Exports, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
-import Pandora.Paradigm.Primary.Functor.Equivalence as Exports
+import Pandora.Paradigm.Primary.Functor.Convergence as Exports
 import Pandora.Paradigm.Primary.Functor.Predicate as Exports
 import Pandora.Paradigm.Primary.Functor.These as Exports
 import Pandora.Paradigm.Primary.Functor.Validation as Exports
@@ -23,6 +23,9 @@ import Pandora.Paradigm.Primary.Functor.Function as Exports
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
+
+type Equivalence = Convergence Boolean
+type Comparison = Convergence Ordering
 
 instance Adjoint (Product s) ((->) s) where
 	(-|) :: a -> ((s :*: a) -> b) -> (s -> b)

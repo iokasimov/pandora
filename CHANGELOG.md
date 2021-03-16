@@ -382,3 +382,4 @@
 * Generalize `filter` and move it from `List` to `Morphable` module
 * Define `Set` interface as constraint
 * Generalize `Equivalence` and rename it to `Convergence`
+* Define `Equivalence` and `Comparison` as type synonyms for `Convergence`
