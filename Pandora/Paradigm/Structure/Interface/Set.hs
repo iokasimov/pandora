@@ -15,6 +15,8 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce), find)
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Controlflow.Effect (run)
 
+type Set t a = (Monotonic a (t a), Traversable t, Setoid a, Setoid (t a))
+
 member :: forall e a . (Setoid a, Monotonic a e) => a -> e -> Boolean
 member x = reduce @a @(Maybe a) (True !!) False . find (equate x)
 

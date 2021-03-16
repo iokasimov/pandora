@@ -380,3 +380,4 @@
 # 0.3.9
 * Remove `Deletable` ability for datastructures in favor of `Morphable Delete First` instance
 * Generalize `filter` and move it from `List` to `Morphable` module
+* Define `Set` interface as constraint
