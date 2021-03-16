@@ -5,15 +5,18 @@ module Pandora.Paradigm.Structure.Ability.Morphable where
 import Pandora.Core.Functor (type (:=), type (~>), type (:=:=>))
 import Pandora.Pattern.Category ((.), (/))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Object.Chain (Chain)
+import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Setoid (Setoid)
+import Pandora.Paradigm.Primary.Functor (Comparison)
+import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Object (Boolean)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
-import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
 class Morphable f t | f t -> t where
 	type Morphing (f :: k) (t :: * -> *) :: * -> *
@@ -44,8 +47,8 @@ item :: forall f t a . (Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))
 item new xs = run / morph @f xs / Identity new
 
 -- FIXME: doesn't work right now, quantified constraints in instances for Binary have ambigous variables
-collate :: forall f t a . (Chain a, Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))) => a :=:=> t
-collate new xs = run / morph @f xs / Identity new
+collate :: forall f t a . (Chain a, Morphable f t, Morphing f t ~ ((Identity <:.:> Comparison := (:*:)) <:.:> t := (->))) => a :=:=> t
+collate new xs = run / morph @f xs / T_U (Identity new :*: Convergence (<=>))
 
 delete :: forall f t a . (Setoid a, Morphable (Delete f) t, Morphing (Delete f) t ~ (Predicate <:.:> t := (->))) => a :=:=> t
 delete x xs = run / morph @(Delete f) xs / equate x

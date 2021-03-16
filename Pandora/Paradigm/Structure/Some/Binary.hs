@@ -15,6 +15,8 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
+import Pandora.Paradigm.Primary.Functor (Comparison)
+import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Function ((!), (%), (&))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -33,7 +35,7 @@ import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert), premorph, collate)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert), morph, premorph, collate)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
@@ -45,11 +47,12 @@ rebalance (Both x y) = extract x <=> extract y & order
 	(Construct / extract x $ Both / rebalance (deconstruct x) / rebalance (deconstruct y))
 	(Construct / extract x $ Both / rebalance (deconstruct x) / y)
 
-instance (forall a . Chain a) => Morphable Insert Binary where
-	type Morphing Insert Binary = Identity <:.:> Binary := (->)
-	morphing (run . premorph -> Nothing) = T_U $ \(Identity x) -> lift . Construct x $ End
-	morphing (run . premorph -> Just ne) = T_U $ \(Identity x) -> lift $ x <=> extract ne
-		& order (ne & substitute @Left (collate @Insert x)) ne (ne & substitute @Right (collate @Insert x))
+instance Morphable Insert Binary where
+	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
+	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift . Construct x $ End
+	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
+		let continue xs = run / morph @Insert xs / T_U (Identity x :*: Convergence f)
+		in lift $ f x (extract ne) & order (ne & substitute @Left continue) ne (ne & substitute @Right continue)
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
@@ -88,10 +91,12 @@ instance Morphable (Into Binary) (Construction Wye) where
 	type Morphing (Into Binary) (Construction Wye) = Binary
 	morphing = lift . premorph
 
-instance (forall a . Chain a) => Morphable Insert (Construction Wye) where
-	type Morphing Insert (Construction Wye) = Identity <:.:> Construction Wye := (->)
-	morphing (premorph -> xs) = T_U $ \(Identity x) -> let change = lift . resolve (collate @Insert x) (Construct x End) . run in
-		x <=> extract xs & order (over / sub @Left / change / xs) xs (over / sub @Right / change / xs)
+instance Morphable Insert (Construction Wye) where
+	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
+	morphing (premorph -> ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
+		let continue xs = run / morph @Insert @(Nonempty Binary) xs / T_U (Identity x :*: Convergence f) in
+		let change = lift . resolve continue (Construct x End) . run in
+		f x (extract ne) & order (over / sub @Left / change / ne) ne (over / sub @Right / change / ne)
 
 instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a

@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, match) where
+module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Convergence as Exports
@@ -22,7 +22,8 @@ import Pandora.Paradigm.Primary.Functor.Function as Exports
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Paradigm.Primary.Object.Boolean ((?))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
+import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
 
 type Equivalence = Convergence Boolean
 type Comparison = Convergence Ordering
