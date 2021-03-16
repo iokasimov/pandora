@@ -381,3 +381,4 @@
 * Remove `Deletable` ability for datastructures in favor of `Morphable Delete First` instance
 * Generalize `filter` and move it from `List` to `Morphable` module
 * Define `Set` interface as constraint
+* Generalize `Equivalence` and rename it to `Convergence`
