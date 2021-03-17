@@ -39,7 +39,7 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusi
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
-	, Morph (Rotate, Into, Push, Pop, Delete), Occurrence (All, First), premorph, rotate, item, delete, filter)
+	, Morph (Rotate, Into, Push, Pop, Delete), Occurrence (All, First), premorph, rotate, item, filter)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
 

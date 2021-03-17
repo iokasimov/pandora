@@ -17,7 +17,7 @@ import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
 import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%), (&))
+import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
@@ -35,7 +35,7 @@ import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert), morph, premorph, collate)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert), morph, premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
@@ -113,7 +113,7 @@ instance Measurable Heighth (Construction Wye) where
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) = Binary
-	substructure empty_tree@(extract . run -> Construct x End) =
+	substructure (extract . run -> Construct x End) =
 		Store $ empty :*: lift . resolve (Construct x . Left) (Construct x End) . run
 	substructure (extract . run -> Construct x (Left lst)) =
 		Store $ lift lst :*: lift . Construct x . resolve Left End . run
@@ -124,7 +124,7 @@ instance Substructure Left (Construction Wye) where
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) = Binary
-	substructure emtpy_tree@(extract . run -> Construct x End) =
+	substructure (extract . run -> Construct x End) =
 		Store $ empty :*: lift . resolve (Construct x . Right) (Construct x End) . run
 	substructure (extract . run -> Construct x (Left lst)) =
 		Store $ empty :*: lift . Construct x . resolve (Both lst) (Left lst) . run
