@@ -113,8 +113,8 @@ instance Measurable Heighth (Construction Wye) where
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) = Binary
-	substructure empty_tree@(extract . run -> Construct _ End) =
-		Store $ empty :*: (empty_tree !)
+	substructure empty_tree@(extract . run -> Construct x End) =
+		Store $ empty :*: lift . resolve (Construct x . Left) (Construct x End) . run
 	substructure (extract . run -> Construct x (Left lst)) =
 		Store $ lift lst :*: lift . Construct x . resolve Left End . run
 	substructure (extract . run -> Construct x (Right rst)) =
@@ -124,8 +124,8 @@ instance Substructure Left (Construction Wye) where
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) = Binary
-	substructure emtpy_tree@(extract . run -> Construct _ End) =
-		Store $ empty :*: (emtpy_tree !)
+	substructure emtpy_tree@(extract . run -> Construct x End) =
+		Store $ empty :*: lift . resolve (Construct x . Right) (Construct x End) . run
 	substructure (extract . run -> Construct x (Left lst)) =
 		Store $ empty :*: lift . Construct x . resolve (Both lst) (Left lst) . run
 	substructure (extract . run -> Construct x (Right rst)) =
