@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category ((.), ($), (/))
+import Pandora.Pattern.Category (identity, (.), ($), (/))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -69,12 +69,12 @@ instance Nullable Binary where
 
 instance Substructure Left Binary where
 	type Substructural Left Binary = Binary
-	substructure empty_tree@(run . extract . run -> Nothing) = Store $ extract (run empty_tree) :*: (!) empty_tree
+	substructure (run . extract . run -> Nothing) = Store $ empty :*: lift . identity
 	substructure (run . extract . run -> Just tree) = lift . lift <$> sub @Left tree
 
 instance Substructure Right Binary where
 	type Substructural Right Binary = Binary
-	substructure empty_tree@(run . extract . run -> Nothing) = Store $ extract (run empty_tree) :*: (!) empty_tree
+	substructure (run . extract . run -> Nothing) = Store $ empty :*: lift . identity
 	substructure (run . extract . run -> Just tree) = lift . lift <$> sub @Right tree
 
 binary :: forall t a . (Traversable t, Chain a) => t a -> Binary a
