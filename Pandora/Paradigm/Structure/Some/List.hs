@@ -136,6 +136,9 @@ instance Substructure Tail (Construction Maybe) where
 
 type instance Zipper List = Tap (List <:.:> List := (:*:))
 
+instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) where
+	Tap x (T_U (bs :*: fs)) ->> f = Tap <$> f x <*> (twosome <$> (run <$> Reverse bs ->> f) <*> fs ->> f)
+
 instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
 		in f <$> Tap z (twosome (move $ run . rotate @Left) (move $ run . rotate @Right))
