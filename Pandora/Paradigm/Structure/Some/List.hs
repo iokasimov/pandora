@@ -38,8 +38,7 @@ import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
-	, Morph (Rotate, Into, Push, Pop, Delete), Occurrence (All, First), premorph, rotate, item, filter)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push, Pop, Delete), Occurrence (All, First), premorph, rotate, item, filter, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
 
@@ -149,6 +148,10 @@ instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
 		$ Tap % twosome (item @Push x bs) (subview @Tail fs) <$> view (focus @Head) fs
 
+instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
+	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Zipper List
+	morphing (premorph -> list) = TU $ into @(Zipper List) <$> run list
+
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
@@ -162,7 +165,7 @@ instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Ma
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Tap (List <:.:> List := (:*:))
-	morphing (premorph -> nl) = Tap / extract nl $ twosome / empty / TU (deconstruct nl)
+	morphing (premorph -> ne) = Tap / extract ne $ twosome / empty / TU (deconstruct ne)
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
