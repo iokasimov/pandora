@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Liftable (lift)
+import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -142,6 +143,10 @@ instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) where
 instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
 		in f <$> Tap z (twosome (move $ run . rotate @Left) (move $ run . rotate @Right))
+
+instance Focusable Head (Tap (List <:.:> List := (:*:))) where
+	type Focusing Head (Tap (List <:.:> List := (:*:))) a = a
+	focusing (extract -> zipper) = Store $ extract zipper :*: Tag . Tap % lower zipper
 
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
