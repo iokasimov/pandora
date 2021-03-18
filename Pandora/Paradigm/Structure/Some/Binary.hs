@@ -51,7 +51,7 @@ instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
 	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift . Construct x $ End
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
-		let continue xs = run / morph @Insert xs / T_U (Identity x :*: Convergence f)
+		let continue xs = run / morph @Insert xs $ twosome / Identity x / Convergence f
 		in lift $ f x (extract ne) & order (ne & substitute @Left continue) ne (ne & substitute @Right continue)
 
 instance (forall a . Chain a) => Focusable Root Binary where
@@ -94,7 +94,7 @@ instance Morphable (Into Binary) (Construction Wye) where
 instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
 	morphing (premorph -> ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
-		let continue xs = run / morph @Insert @(Nonempty Binary) xs / T_U (Identity x :*: Convergence f) in
+		let continue xs = run / morph @Insert @(Nonempty Binary) xs $ twosome / Identity x / Convergence f in
 		let change = lift . resolve continue (Construct x End) . run in
 		f x (extract ne) & order (over / sub @Left / change / ne) ne (over / sub @Right / change / ne)
 

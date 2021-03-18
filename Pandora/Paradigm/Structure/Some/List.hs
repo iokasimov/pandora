@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.List where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern ((.|..))
-import Pandora.Pattern.Category ((.), ($), identity)
+import Pandora.Pattern.Category ((.), (/), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
@@ -159,6 +159,10 @@ instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction May
 instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU $ Tap (extract fs) . twosome (item @Push x bs) <$> deconstruct fs
+
+instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
+	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Tap (List <:.:> List := (:*:))
+	morphing (premorph -> nl) = Tap / extract nl $ twosome / empty / TU (deconstruct nl)
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
