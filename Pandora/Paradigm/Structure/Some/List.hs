@@ -11,6 +11,7 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -183,6 +184,10 @@ instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Ma
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Tap (List <:.:> List := (:*:))
 	morphing (premorph -> ne) = Tap / extract ne $ twosome / empty / TU (deconstruct ne)
+
+instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Tap (List <:.:> List := (:*:))
+	morphing (premorph -> zipper) = Tap / extract zipper $ T_U . (lift <-> lift) . run . lower $ zipper
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
