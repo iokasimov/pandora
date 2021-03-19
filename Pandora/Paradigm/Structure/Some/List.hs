@@ -167,6 +167,10 @@ type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Constr
 instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	Tap x (T_U (bs :*: fs)) ->> f = Tap <$> f x <*> (twosome <$> (run <$> Reverse bs ->> f) <*> fs ->> f)
 
+instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Focusing Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) a = a
+	focusing (extract -> zipper) = Store $ extract zipper :*: Tag . Tap % lower zipper
+
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
