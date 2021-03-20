@@ -383,3 +383,4 @@
 * Define `Set` interface as constraint
 * Generalize `Equivalence` and rename it to `Convergence`
 * Define `Equivalence` and `Comparison` as type synonyms for `Convergence`
+* Define version of `<*>` with flipped arguments - `<%>`

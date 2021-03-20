@@ -33,6 +33,9 @@ class Covariant t => Applicative t where
 	forever :: t a -> t b
 	forever x = x *> forever x
 
+	(<%>) :: t a -> t (a -> b) -> t b
+	x <%> f = (\x' f' -> f' x') <$> x <*> f
+
 	-- | Infix versions of `apply` with various nesting levels
 	(<**>) :: Applicative u => t :. u := (a -> b) -> t :. u := a -> t :. u := b
 	f <**> x = (<*>) <$> f <*> x
