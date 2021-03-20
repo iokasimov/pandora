@@ -19,7 +19,6 @@ class Covariant t => Applicative t where
 	{-# MINIMAL (<*>) #-}
 	-- | Infix version of 'apply'
 	(<*>) :: t (a -> b) -> t a -> t b
-
 	-- | Prefix version of '<*>'
 	apply :: t (a -> b) -> t a -> t b
 	apply f x = f <*> x
@@ -32,10 +31,9 @@ class Covariant t => Applicative t where
 	-- | Repeat an action indefinitely
 	forever :: t a -> t b
 	forever x = x *> forever x
-
+	-- | Flipped version of '<*>'
 	(<%>) :: t a -> t (a -> b) -> t b
 	x <%> f = (\x' f' -> f' x') <$> x <*> f
-
 	-- | Infix versions of `apply` with various nesting levels
 	(<**>) :: Applicative u => t :. u := (a -> b) -> t :. u := a -> t :. u := b
 	f <**> x = (<*>) <$> f <*> x

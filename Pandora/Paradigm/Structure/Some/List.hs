@@ -166,7 +166,8 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	Tap x (T_U (bs :*: fs)) ->> f = Tap <$> f x <*> (twosome <$> (run <$> Reverse bs ->> f) <*> fs ->> f)
+	Tap x (T_U (bs :*: fs)) ->> f = (\bs' x' fs' -> Tap x' $ twosome / run bs' / fs')
+		<$> (Reverse bs ->> f) <*> f x <*> fs ->> f
 
 instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Focusing Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) a = a
