@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Pandora.Paradigm.Structure.Modification.Comprehension where
@@ -10,11 +11,15 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
 
 newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
 
@@ -37,3 +42,7 @@ instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t, Pointab
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (Comprehension t) where
 	Comprehension (TU t) >>= f = Comprehension . TU $ t >>= \(Construct x xs) -> run $ run (f x) + run (Comprehension (TU xs) >>= f)
+
+instance Pointable t => Morphable Push (Comprehension t) where
+	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
+	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
