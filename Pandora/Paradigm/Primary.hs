@@ -31,6 +31,11 @@ instance Morphable (Into (Conclusion e)) Maybe where
 	morphing (premorph -> Just x) = TU $ \_ -> Success x
 	morphing (premorph -> Nothing) = TU $ \e -> Failure e
 
+instance Morphable (Into (Flip Conclusion e)) Maybe where
+	type Morphing (Into (Flip Conclusion e)) Maybe = (->) e <:.> Flip Conclusion e
+	morphing (run . premorph -> Just x) = TU $ \_ -> Flip $ Failure x
+	morphing (run . premorph -> Nothing) = TU $ Flip . Success
+
 instance Morphable (Into (Left Maybe)) Wye where
 	type Morphing (Into (Left Maybe)) Wye = Maybe
 	morphing (premorph -> Both ls _) = Just ls
