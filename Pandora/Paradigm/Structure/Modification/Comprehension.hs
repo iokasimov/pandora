@@ -8,6 +8,7 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
@@ -33,6 +34,12 @@ instance Covariant (t <:.> Construction t) => Covariant (Comprehension t) where
 
 instance (Avoidable t, Pointable t) => Pointable (Comprehension t) where
 	point = Comprehension . TU . point . Construct % empty
+
+instance Alternative t => Alternative (Comprehension t) where
+	Comprehension x <+> Comprehension y = Comprehension $ x <+> y
+
+instance (Avoidable t, Alternative t) => Avoidable (Comprehension t) where
+	empty = Comprehension empty
 
 instance Traversable (t <:.> Construction t) => Traversable (Comprehension t) where
 	Comprehension x ->> f = Comprehension <$> x ->> f
