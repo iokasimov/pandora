@@ -14,6 +14,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
@@ -49,6 +50,9 @@ instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t, Pointab
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (Comprehension t) where
 	Comprehension (TU t) >>= f = Comprehension . TU $ t >>= \(Construct x xs) -> run $ run (f x) + run (Comprehension (TU xs) >>= f)
+
+instance Setoid (t <:.> Construction t := a) => Setoid (Comprehension t a) where
+	Comprehension ls == Comprehension rs = ls == rs
 
 instance Pointable t => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
