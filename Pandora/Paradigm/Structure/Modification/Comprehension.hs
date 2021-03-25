@@ -6,6 +6,7 @@ module Pandora.Paradigm.Structure.Modification.Comprehension where
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -23,6 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
+import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 
 newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
 
@@ -52,6 +54,8 @@ instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t, Pointab
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (Comprehension t) where
 	Comprehension (TU t) >>= f = Comprehension . TU $ t >>= \(Construct x xs) -> run $ run (f x) + run (Comprehension (TU xs) >>= f)
 
+instance (forall a . Semigroup (t <:.> Construction t := a), Pointable t, Avoidable t, Bindable t) => Monad (Comprehension t) where
+
 instance Setoid (t <:.> Construction t := a) => Setoid (Comprehension t a) where
 	Comprehension ls == Comprehension rs = ls == rs
 
@@ -59,4 +63,5 @@ instance Pointable t => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 
-instance (forall a . Semigroup (t <:.> Construction t := a), Pointable t, Avoidable t, Bindable t) => Monad (Comprehension t) where
+instance Nullable (t <:.> Construction t) => Nullable (Comprehension t) where
+	null = run >$< null
