@@ -13,10 +13,10 @@ class Interpreted t where
 	run :: t a -> Primary t a
 	unite :: Primary t a -> t a
 
-	(||=) :: (Primary t a -> Primary t b) -> t a -> t b
+	(||=) :: Interpreted u => (Primary t a -> Primary u b) -> t a -> u b
 	(||=) f = unite . f . run
 
-	(=||) :: (t a -> t b) -> Primary t a -> Primary t b
+	(=||) :: Interpreted u => (t a -> u b) -> Primary t a -> Primary u b
 	(=||) f = run . f . unite
 
 (-=:) :: (Liftable t, Interpreted (t u), Interpreted (t v), Covariant u)

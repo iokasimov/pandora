@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Functor.Function ()
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (||=)))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable)
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
@@ -29,7 +29,7 @@ instance Monoid e => Extractable (Imprint e) where
 	extract (Imprint x) = x zero
 
 instance Divariant Imprint where
-	(>->) ab cd bc = Imprint $ ab >-> cd $ run bc
+	(>->) ab cd bc = (ab >-> cd) ||= bc
 
 instance Semigroup e => Extendable (Imprint e) where
 	Imprint x =>> f = Imprint $ \e -> f $ Imprint $ x . (e +)

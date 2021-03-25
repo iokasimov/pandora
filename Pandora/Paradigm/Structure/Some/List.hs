@@ -161,7 +161,8 @@ instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Zipper List
-	morphing (premorph -> list) = TU $ into @(Zipper List) <$> run list
+	-- morphing (premorph -> list) = TU $ into @(Zipper List) <$> run list
+	morphing (premorph -> list) = (into @(Zipper List) <$>) ||= list
 
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
@@ -183,12 +184,12 @@ instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Ma
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU $ Tap (extract fs) . twosome (item @Push x bs) <$> deconstruct fs
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
-	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Tap (List <:.:> List := (:*:))
+	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Zipper List
 	morphing (premorph -> ne) = Tap / extract ne $ twosome / empty / TU (deconstruct ne)
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Tap (List <:.:> List := (:*:))
-	morphing (premorph -> zipper) = Tap / extract zipper $ T_U . (lift <-> lift) . run . lower $ zipper
+	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Zipper List
+	morphing (premorph -> zipper) = Tap / extract zipper $ (lift <-> lift) ||= lower zipper
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run

@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup ((+))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Inventory.Optics ((|>))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
@@ -66,7 +66,7 @@ instance Morphable (Into (Postorder (Construction Maybe))) (Construction Wye) wh
 
 instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
 	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
-	morphing = unite . comap (into @(o ds)) . run . premorph
+	morphing (premorph -> xs) = comap (into @(o ds)) ||= xs
 
 instance Focusable Left (Product s) where
 	type Focusing Left (Product s) a = s
