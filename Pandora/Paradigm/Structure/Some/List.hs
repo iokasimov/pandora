@@ -141,7 +141,8 @@ instance Substructure Tail (Construction Maybe) where
 type instance Zipper List = Tap (List <:.:> List := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) where
-	Tap x (T_U (bs :*: fs)) ->> f = Tap <$> f x <*> (twosome <$> (run <$> Reverse bs ->> f) <*> fs ->> f)
+	Tap x (T_U (bs :*: fs)) ->> f = (\fs' x' bs' -> Tap x' $ twosome / bs' / run fs')
+		<$> (Reverse fs ->> f) <*> f x <*> bs ->> f
 
 instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
@@ -168,8 +169,8 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	Tap x (T_U (bs :*: fs)) ->> f = (\bs' x' fs' -> Tap x' $ twosome / run bs' / fs')
-		<$> (Reverse bs ->> f) <*> f x <*> fs ->> f
+	Tap x (T_U (bs :*: fs)) ->> f = (\fs' x' bs' -> Tap x' $ twosome / bs' / run fs')
+		<$> (Reverse fs ->> f) <*> f x <*> bs ->> f
 
 instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Focusing Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) a = a
@@ -186,7 +187,7 @@ instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Ma
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Zipper List
-	morphing (premorph -> ne) = Tap / extract ne $ twosome / empty / TU (deconstruct ne)
+	morphing (premorph -> ne) = Tap / extract ne $ twosome / view (sub @Tail) ne / empty
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Zipper List
