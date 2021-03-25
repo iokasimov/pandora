@@ -12,6 +12,8 @@ import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Bivariant ((<->))
+import Pandora.Pattern.Functor.Adjoint ((|-))
+import Pandora.Pattern.Functor ()
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -161,7 +163,6 @@ instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Zipper List
-	-- morphing (premorph -> list) = TU $ into @(Zipper List) <$> run list
 	morphing (premorph -> list) = (into @(Zipper List) <$>) ||= list
 
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
@@ -190,6 +191,10 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Zipper List
 	morphing (premorph -> zipper) = Tap / extract zipper $ (lift <-> lift) ||= lower zipper
+
+instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
+	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
+	morphing (premorph -> zipper) = let spread x y = (:*:) <$> x <*> y in TU $ Tap (extract zipper) . T_U <$> ((|- spread) . (run <-> run) . run $ lower zipper)
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
