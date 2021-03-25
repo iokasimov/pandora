@@ -16,6 +16,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
+import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
@@ -52,12 +53,18 @@ instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t, Pointab
 	fs <*> xs = fs >>= \f -> xs >>= Comprehension . TU . point . point . f
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (Comprehension t) where
-	Comprehension (TU t) >>= f = Comprehension . TU $ t >>= \(Construct x xs) -> run $ run (f x) + run (Comprehension (TU xs) >>= f)
+	Comprehension (TU t) >>= f = Comprehension . TU $ t >>= \(Construct x xs) -> run . run $ f x + (Comprehension (TU xs) >>= f)
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Pointable t, Avoidable t, Bindable t) => Monad (Comprehension t) where
 
 instance Setoid (t <:.> Construction t := a) => Setoid (Comprehension t a) where
 	Comprehension ls == Comprehension rs = ls == rs
+
+instance Semigroup (t <:.> Construction t := a) => Semigroup (Comprehension t a) where
+	Comprehension x + Comprehension y = Comprehension $ x + y
+
+instance Monoid (t <:.> Construction t := a) => Monoid (Comprehension t a) where
+	zero = Comprehension zero
 
 instance Pointable t => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
