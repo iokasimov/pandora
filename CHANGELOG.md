@@ -385,3 +385,4 @@
 * Define `Equivalence` and `Comparison` as type synonyms for `Convergence`
 * Define version of `<*>` with flipped arguments - `<%>`
 * Generalize `||=` and `=||` methods of `Interpreted` on another `Interpeted` functor
+* Define `pass` method in `Pointable` typeclass

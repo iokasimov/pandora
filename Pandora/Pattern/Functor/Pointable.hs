@@ -6,3 +6,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 class Covariant t => Pointable t where
 	{-# MINIMAL point #-}
 	point :: a :=> t
+
+	pass :: t ()
+	pass = point ()
