@@ -166,6 +166,11 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Zipper List
 	morphing (premorph -> list) = (into @(Zipper List) <$>) ||= list
 
+instance Morphable (Into List) (Tap (List <:.:> List := (:*:))) where
+	type Morphing (Into List) (Tap (List <:.:> List := (:*:))) = List
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _)
+		% item @Push x future $ past ->> modify . item @Push @List
+
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
@@ -198,7 +203,8 @@ instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:
 
 instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
-	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _) % item @Push x future $ past ->> modify . item @Push @(Nonempty List)
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _)
+		% item @Push x future $ past ->> modify . item @Push @(Nonempty List)
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
