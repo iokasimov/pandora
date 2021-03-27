@@ -386,3 +386,4 @@
 * Define version of `<*>` with flipped arguments - `<%>`
 * Generalize `||=` and `=||` methods of `Interpreted` on another `Interpeted` functor
 * Define `pass` method in `Pointable` typeclass
+* Define experimental `reconcile` method in `State` module

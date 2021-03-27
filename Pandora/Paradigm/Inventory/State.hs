@@ -59,6 +59,9 @@ modify f = adapt . State $ \s -> let r = f s in r :*: r
 replace :: Stateful s t => s -> t s
 replace s = adapt . State $ \_ -> s :*: s
 
+reconcile :: (Bindable t, Stateful s t, Adaptable u t) => (s -> u s) -> t s
+reconcile f = current >>= adapt . f >>= replace
+
 type Memorable s t = (Pointable t, Applicative t, Stateful s t)
 
 fold :: (Traversable t, Memorable s u) => (a -> s -> s) -> t a -> u s
