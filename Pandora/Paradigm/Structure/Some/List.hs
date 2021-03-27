@@ -142,11 +142,11 @@ type instance Zipper List = Tap (List <:.:> List := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) where
 	Tap x (T_U (bs :*: fs)) ->> f = (\fs' x' bs' -> Tap x' $ twosome / bs' / run fs')
-		<$> (Reverse fs ->> f) <*> f x <*> bs ->> f
+		<$> Reverse fs ->> f <*> f x <*> bs ->> f
 
 instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
-	z =>> f = let move rtt = TU . deconstruct $ rtt .-+ z
-		in f <$> Tap z (twosome (move $ run . rotate @Left) (move $ run . rotate @Right))
+	z =>> f = let move rtt = TU . deconstruct $ run . rtt .-+ z in
+		Tap / f z $ twosome / f <$> move (rotate @Left) / f <$> move (rotate @Right)
 
 instance Focusable Head (Tap (List <:.:> List := (:*:))) where
 	type Focusing Head (Tap (List <:.:> List := (:*:))) a = a
@@ -170,7 +170,7 @@ type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Constr
 
 instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	Tap x (T_U (bs :*: fs)) ->> f = (\fs' x' bs' -> Tap x' $ twosome / bs' / run fs')
-		<$> (Reverse fs ->> f) <*> f x <*> bs ->> f
+		<$> Reverse fs ->> f <*> f x <*> bs ->> f
 
 instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Focusing Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) a = a
@@ -178,8 +178,7 @@ instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*
 
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap (extract bs) . twosome % (item @Push x fs) <$> deconstruct bs
+	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU $ Tap (extract bs) . twosome % item @Push x fs <$> deconstruct bs
 
 instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)

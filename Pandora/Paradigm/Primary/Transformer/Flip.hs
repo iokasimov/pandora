@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Primary.Transformer.Flip where
 
-import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 
