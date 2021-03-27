@@ -26,13 +26,13 @@ import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), twosome)
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
-import Pandora.Paradigm.Inventory.State (State, fold)
+import Pandora.Paradigm.Inventory.State (State, fold, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (view)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
@@ -195,6 +195,10 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Ma
 instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
 	morphing (premorph -> zipper) = let spread x y = (:*:) <$> x <*> y in TU $ Tap (extract zipper) . T_U <$> ((|- spread) . (run <-> run) . run $ lower zipper)
+
+instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Morphing (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
+	morphing (premorph -> Tap x (T_U (bs :*: fs))) = attached . run @(State _) % item @Push x bs $ fs ->> modify . item @Push @(Nonempty List)
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
