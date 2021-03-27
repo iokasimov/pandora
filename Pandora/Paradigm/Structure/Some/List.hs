@@ -141,8 +141,8 @@ instance Substructure Tail (Construction Maybe) where
 type instance Zipper List = Tap (List <:.:> List := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) where
-	Tap x (T_U (bs :*: fs)) ->> f = (\fs' x' bs' -> Tap x' $ twosome / bs' / run fs')
-		<$> Reverse fs ->> f <*> f x <*> bs ->> f
+	Tap x (T_U (future :*: past)) ->> f = (\past' x' future' -> Tap x' $ twosome / future' / run past')
+		<$> Reverse past ->> f <*> f x <*> future ->> f
 
 instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 	z =>> f = let move rtt = TU . deconstruct $ run . rtt .-+ z in
@@ -154,13 +154,13 @@ instance Focusable Head (Tap (List <:.:> List := (:*:))) where
 
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap % twosome (subview @Tail bs) (item @Push x fs) <$> view (focus @Head) bs
+	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
+		$ Tap % twosome (subview @Tail future) (item @Push x past) <$> view (focus @Head) future
 
 instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU
-		$ Tap % twosome (item @Push x bs) (subview @Tail fs) <$> view (focus @Head) fs
+	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
+		$ Tap % twosome (item @Push x future) (subview @Tail past) <$> view (focus @Head) past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Zipper List
@@ -169,8 +169,8 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	Tap x (T_U (bs :*: fs)) ->> f = (\fs' x' bs' -> Tap x' $ twosome / bs' / run fs')
-		<$> Reverse fs ->> f <*> f x <*> bs ->> f
+	Tap x (T_U (future :*: past)) ->> f = (\past' x' future' -> Tap x' $ twosome / future' / run past')
+		<$> Reverse past ->> f <*> f x <*> future ->> f
 
 instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Focusing Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) a = a
@@ -178,11 +178,11 @@ instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*
 
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU $ Tap (extract bs) . twosome % item @Push x fs <$> deconstruct bs
+	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract future) . twosome % item @Push x past <$> deconstruct future
 
 instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = TU $ Tap (extract fs) . twosome (item @Push x bs) <$> deconstruct fs
+	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract past) . twosome (item @Push x future) <$> deconstruct past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Zipper List
@@ -198,7 +198,7 @@ instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:
 
 instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = attached . run @(State _) % item @Push x bs $ fs ->> modify . item @Push @(Nonempty List)
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _) % item @Push x future $ past ->> modify . item @Push @(Nonempty List)
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
