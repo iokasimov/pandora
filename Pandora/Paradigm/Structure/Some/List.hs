@@ -206,5 +206,10 @@ instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Co
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _)
 		% item @Push x future $ past ->> modify . item @Push @(Nonempty List)
 
+instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Morphing (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = List
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _)
+		% item @Push x (lift future) $ past ->> modify . item @Push @List
+
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
