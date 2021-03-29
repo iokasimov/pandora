@@ -21,12 +21,10 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic, find)
 import Pandora.Paradigm.Structure.Interface.Dictionary (Dictionary ((?=)))
 
-type Keyed k = Product k <:.> Maybe
-
-newtype Prefixed t k a = Prefixed (t <:.> Keyed k := a)
+newtype Prefixed t k a = Prefixed (t <:.> Product k := a)
 
 instance Interpreted (Prefixed t k) where
-	type Primary (Prefixed t k) a = t <:.> Keyed k := a
+	type Primary (Prefixed t k) a = t <:.> Product k := a
 	run ~(Prefixed x) = x
 	unite = Prefixed
 
@@ -37,7 +35,4 @@ instance Traversable t => Traversable (Prefixed t k) where
 	Prefixed x ->> f = Prefixed <$> x ->> f
 
 instance (Monoid k, Pointable t) => Pointable (Prefixed t k) where
-	point = Prefixed . lift . TU . (:*:) zero . Just
-
-instance (Monotonic (Keyed k a) (t (Keyed k a)), Setoid k) => Dictionary a k (Prefixed t k) where
-	k ?= Prefixed x = find @(Keyed k a) (attached . run >$< equate k) (run x) >>= extract . run
+	point = Prefixed . lift . (:*:) zero

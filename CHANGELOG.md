@@ -387,3 +387,4 @@
 * Generalize `||=` and `=||` methods of `Interpreted` on another `Interpeted` functor
 * Define `pass` method in `Pointable` typeclass
 * Define experimental `reconcile` method in `State` module
+* Remove `Maybe` from `Prefixed` type synonymous
