@@ -22,7 +22,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
-import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
+import Pandora.Paradigm.Primary.Functor.Function ((%), (&), (!))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
@@ -44,7 +44,8 @@ import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push, Pop, Delete), Occurrence (All, First), premorph, rotate, item, filter, into)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push, Pop, Delete, Find)
+	, Element (Value), Occurrence (All, First), premorph, morph, rotate, item, filter, find, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
 
@@ -69,6 +70,12 @@ instance Morphable Push List where
 instance Morphable Pop List where
 	type Morphing Pop List = List
 	morphing (premorph -> xs) = resolve deconstruct Nothing ||= xs
+
+instance Morphable (Find Value) List where
+	type Morphing (Find Value) List = Predicate <:.:> Maybe := (->)
+	morphing (premorph -> TU Nothing) = T_U $ \_ -> Nothing
+	morphing (premorph -> TU (Just (Construct x xs))) = T_U $ \p ->
+		run p x ? Just x $ (find @Value @List @Maybe / p / TU xs)
 
 instance Morphable (Delete First) List where
 	type Morphing (Delete First) List = Predicate <:.:> List := (->)

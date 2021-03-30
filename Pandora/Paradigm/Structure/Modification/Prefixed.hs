@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), attached)
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic, find)
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic)
 import Pandora.Paradigm.Structure.Interface.Dictionary (Dictionary ((?=)))
 
 newtype Prefixed t k a = Prefixed (t <:.> Product k := a)

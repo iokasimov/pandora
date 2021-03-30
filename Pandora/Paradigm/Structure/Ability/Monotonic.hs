@@ -19,5 +19,6 @@ class Monotonic a e where
 instance Monotonic a a where
 	reduce f r x = f x r
 
-find :: (Monotonic a e, Pointable t, Avoidable t) => Predicate a -> e -> t a
-find p struct = reduce (\x r -> r <+> satisfy p x) empty struct
+-- Replace it with Morphable instance
+-- find :: (Monotonic a e, Pointable t, Avoidable t) => Predicate a -> e -> t a
+-- find p struct = reduce (\x r -> r <+> satisfy p x) empty struct
