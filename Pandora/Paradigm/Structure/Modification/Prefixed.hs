@@ -33,6 +33,6 @@ instance Covariant t => Covariant (Prefixed t k) where
 
 instance Traversable t => Traversable (Prefixed t k) where
 	Prefixed x ->> f = Prefixed <$> x ->>> f
---
+
 instance (Monoid k, Pointable t) => Pointable (Prefixed t k) where
 	point = Prefixed . point . (:*:) zero

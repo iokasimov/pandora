@@ -2,16 +2,16 @@
 
 module Pandora.Paradigm.Structure.Some.Rose where
 
-import Pandora.Core.Functor (type (:=))
-import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Pattern.Category ((.), ($), (/))
+import Pandora.Pattern.Functor.Covariant (Covariant (comap))
+import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
-import Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (Failure, Success))
 import Pandora.Paradigm.Primary.Functor.Function ((!), (%), (&))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
@@ -64,9 +64,9 @@ instance Setoid k => Morphable (Find Value) (Prefixed Rose k) where
 	morphing (run . premorph -> TU Nothing) = TU $ \_ -> Nothing
 	morphing (run . premorph -> TU (Just tree)) = TU $ find_rose_sub_tree % tree
 
-find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose (k :*: a) -> Maybe a
+find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose := k :*: a -> Maybe a
 find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? Just (extract $ extract tree) $ Nothing
 find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ? Nothing $ subtree >>= find_rose_sub_tree ks where
 
-	subtree :: Maybe (Nonempty Rose (k :*: a))
-	subtree = deconstruct tree & find @Value @List (Predicate ((==) (extract ks) . attached . extract))
+	subtree :: Maybe :. Nonempty Rose := k :*: a
+	subtree = find @Value / attached . extract >$< equate (extract ks) / deconstruct tree
