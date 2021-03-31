@@ -2,26 +2,33 @@
 
 module Pandora.Paradigm.Structure.Some.Rose where
 
+import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant (comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (lift)
-import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
+import Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (Failure, Success))
+import Pandora.Paradigm.Primary.Functor.Function ((!), (%), (&))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Find), Element (Value), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
+import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
 
 type Rose = Maybe <:.> Construction List
@@ -51,3 +58,15 @@ instance Focusable Root (Construction List) where
 instance Substructure Just (Construction List) where
 	type Substructural Just (Construction List) = List <:.> Construction List
 	substructure (extract . run -> Construct x xs) = Store $ TU xs :*: lift . Construct x . run
+
+instance Setoid k => Morphable (Find Value) (Prefixed Rose k) where
+	type Morphing (Find Value) (Prefixed Rose k) = (->) (Nonempty List k) <:.> Maybe
+	morphing (run . premorph -> TU Nothing) = TU $ \_ -> Nothing
+	morphing (run . premorph -> TU (Just tree)) = TU $ find_rose_sub_tree % tree
+
+find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose (k :*: a) -> Maybe a
+find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? Just (extract $ extract tree) $ Nothing
+find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ? Nothing $ subtree >>= find_rose_sub_tree ks where
+
+	subtree :: Maybe (Nonempty Rose (k :*: a))
+	subtree = deconstruct tree & find @Value @List (Predicate ((==) (extract ks) . attached . extract))
