@@ -58,3 +58,6 @@ filter p xs = run / morph @(Delete f) xs / p
 
 find :: forall f t u a . (Morphable (Find f) t, Morphing (Find f) t ~ (Predicate <:.:> u := (->))) => Predicate a -> t a -> u a
 find p xs = run / morph @(Find f) xs / p
+
+discover :: forall f k v t u a . (Morphable (Find f) t, Morphing (Find f) t ~ ((->) (v k) <:.> u)) => v k -> t a -> u a
+discover keys xs = run / morph @(Find f) xs / keys

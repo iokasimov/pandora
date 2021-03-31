@@ -388,3 +388,4 @@
 * Define `pass` method in `Pointable` typeclass
 * Define experimental `reconcile` method in `State` module
 * Remove `Maybe` from `Prefixed` type synonymous
+* Define `discover` for `Morphable Find` instances with composite keys
