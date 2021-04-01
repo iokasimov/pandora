@@ -29,11 +29,9 @@ premorph = extract . run
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
 
-data Morph a = Rotate a | Into a | Insert a | Push a | Pop a | Delete a | Find a
+data Morph a = Rotate a | Into a | Insert a | Push a | Pop a | Delete a | Find a | Element a
 
 data Occurrence a = All a | First a
-
-data Element a = Value a
 
 rotate :: forall f t . Morphable (Rotate f) t => t ~> Morphing (Rotate f) t
 rotate = morphing . TU . Tag @(Rotate f)

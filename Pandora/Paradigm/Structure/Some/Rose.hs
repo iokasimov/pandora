@@ -12,19 +12,18 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%), (&))
+import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
-import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Find), Element (Value), premorph, find)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Find, Element), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
@@ -59,8 +58,8 @@ instance Substructure Just (Construction List) where
 	type Substructural Just (Construction List) = List <:.> Construction List
 	substructure (extract . run -> Construct x xs) = Store $ TU xs :*: lift . Construct x . run
 
-instance Setoid k => Morphable (Find Value) (Prefixed Rose k) where
-	type Morphing (Find Value) (Prefixed Rose k) = (->) (Nonempty List k) <:.> Maybe
+instance Setoid k => Morphable (Find Element) (Prefixed Rose k) where
+	type Morphing (Find Element) (Prefixed Rose k) = (->) (Nonempty List k) <:.> Maybe
 	morphing (run . premorph -> TU Nothing) = TU $ \_ -> Nothing
 	morphing (run . premorph -> TU (Just tree)) = TU $ find_rose_sub_tree % tree
 
@@ -69,4 +68,4 @@ find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? J
 find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ? Nothing $ subtree >>= find_rose_sub_tree ks where
 
 	subtree :: Maybe :. Nonempty Rose := k :*: a
-	subtree = find @Value / attached . extract >$< equate (extract ks) / deconstruct tree
+	subtree = find @Element / attached . extract >$< equate (extract ks) / deconstruct tree
