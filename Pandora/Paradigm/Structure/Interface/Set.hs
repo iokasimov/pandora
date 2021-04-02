@@ -9,6 +9,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((!=)))
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Pattern.Object.Quasiring (one)
 import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, equate)
 import Pandora.Paradigm.Primary.Functor.Product (attached)
@@ -21,11 +22,8 @@ import Pandora.Paradigm.Controlflow.Effect (run)
 
 type Set t f a = (Traversable t, Setoid a, Setoid (t a), Morphable (Find f) t)
 
--- member :: forall e a . (Setoid a, Monotonic a e) => a -> e -> Boolean
--- member x = reduce @a @(Maybe a) (True !!) False . find (equate x)
-
-subset :: forall t f a . (Set t f a, Morphing (Find f) t ~ (Predicate <:.:> Maybe := (->))) => t a -> t a -> Boolean
-subset ss s = Nothing != ss ->> find @f @t @Maybe % s . equate
+subset :: forall t f a . (Set t f a, Morphing (Find f) t ~ (Predicate <:.:> Maybe := (->))) => Convergence Boolean := t a
+subset = Convergence $ \s ss -> Nothing != ss ->> find @f @t @Maybe % s . equate
 
 cardinality :: Traversable t => t a -> Numerator
 cardinality s = attached . run @(State _) % Zero $ s ->> (modify @Numerator (+ one) !)
