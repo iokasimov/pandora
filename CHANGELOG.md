@@ -390,3 +390,4 @@
 * Remove `Maybe` from `Prefixed` type synonymous
 * Define `discover` for `Morphable Find` instances with composite keys
 * Change `subset` method of `Set` interface: returns `Convergence Boolean`
+* Remove `Dictonary` typeclass
