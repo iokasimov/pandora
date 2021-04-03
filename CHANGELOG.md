@@ -391,3 +391,4 @@
 * Define `discover` for `Morphable Find` instances with composite keys
 * Change `subset` method of `Set` interface: returns `Convergence Boolean`
 * Remove `Dictonary` typeclass
+* Define `Lookup` verb for finding elements in datastructures by key

@@ -29,7 +29,7 @@ premorph = extract . run
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
 
-data Morph a = Rotate a | Into a | Insert a | Push a | Pop a | Delete a | Find a | Element a
+data Morph a = Rotate a | Into a | Insert a | Push a | Pop a | Delete a | Find a | Lookup a | Element a
 
 data Occurrence a = All a | First a
 
@@ -57,5 +57,8 @@ filter p xs = run / morph @(Delete f) xs / p
 find :: forall f t u a . (Morphable (Find f) t, Morphing (Find f) t ~ (Predicate <:.:> u := (->))) => Predicate a -> t a -> u a
 find p xs = run / morph @(Find f) xs / p
 
-discover :: forall f k v t u a . (Morphable (Find f) t, Morphing (Find f) t ~ ((->) (v k) <:.> u)) => v k -> t a -> u a
-discover keys xs = run / morph @(Find f) xs / keys
+lookup :: forall f k t u a . (Morphable (Lookup f) t, Morphing (Lookup f) t ~ ((->) k <:.> u)) => k -> t a -> u a
+lookup key xs = run / morph @(Lookup f) xs / key
+
+discover :: forall f k v t u a . (Morphable (Lookup f) t, Morphing (Lookup f) t ~ ((->) (v k) <:.> u)) => v k -> t a -> u a
+discover keys xs = run / morph @(Lookup f) xs / keys
