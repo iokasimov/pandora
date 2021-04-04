@@ -7,7 +7,7 @@ infixl 1 >>=
 infixr 1 =<<, <=<, >=>
 
 {- |
-> When providing a new instance, you should ensure it satisfies the one law:
+> When providing a new instance, you should ensure it satisfies :
 > * Interchange: t >>= f = join (f <$> t)
 -}
 

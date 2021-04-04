@@ -13,7 +13,7 @@ infixl 3 <&&&>
 infixl 4 <&&&&>
 
 {- |
-> When providing a new instance, you should ensure it satisfies the two laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Identity morphism: comap identity ≡ identity
 > * Interpreted of morphisms: comap (f . g) ≡ comap f . comap g
 -}

@@ -7,7 +7,7 @@ infixl 1 =>>
 infixr 1 <<=, =<=, =>=
 
 {- |
-> When providing a new instance, you should ensure it satisfies the three laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Duplication interchange: comap (comap f) . duplicate ≡ duplicate . comap f
 > * Extension interchange: extend f ≡ comap f . duplicate
 -}

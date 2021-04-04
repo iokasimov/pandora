@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 > Let g :: (Pointable t, Bindable t) => a -> t a
 > Let h :: (Pointable t, Bindable t) => t a
 
-> When providing a new instance, you should ensure it satisfies the three laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Left identity: point a >>= f ≡ f a
 > * Right identity: h >>= point ≡ h
 > * Associativity: h >>= (f >=> g) ≡ (h >>= f) >>= g

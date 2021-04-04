@@ -3,7 +3,7 @@ module Pandora.Pattern.Object.Ring (Ring) where
 import Pandora.Pattern.Object.Group (Group)
 
 {- |
-> When providing a new instance, you should ensure it satisfies the one law:
+> When providing a new instance, you should ensure it satisfies:
 > * Commutativity of addition: x + y ≡ y + x
 -}
 

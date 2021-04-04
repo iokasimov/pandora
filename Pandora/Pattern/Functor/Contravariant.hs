@@ -5,7 +5,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 infixl 4 >$<, $<, >$
 
 {- |
-> When providing a new instance, you should ensure it satisfies the two laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Identity morphism: contramap identity ≡ identity
 > * Interpreted of morphisms: contramap f . contramap g ≡ contramap (g . f)
 -}

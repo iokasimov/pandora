@@ -5,7 +5,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup)
 infixl 7 *
 
 {- |
-> When providing a new instance, you should ensure it satisfies the two laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Left distributivity: x * (y + z) ≡ x * y + x * z
 > * Right distributivity: (y + z) * x ≡ y * x + z * x
 -}

@@ -9,7 +9,7 @@ infixl 2 <***>
 infixl 1 <****>
 
 {- |
-> When providing a new instance, you should ensure it satisfies the three laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Interpreted: (.) <$> u <*> v <*> w ≡ u <*> (v <*> w)
 > * Left interchange: x <*> (f <$> y) ≡ (. f) <$> x <*> y
 > * Right interchange: f <$> (x <*> y) ≡ (f .) <$> x <*> y

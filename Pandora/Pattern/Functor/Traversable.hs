@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 > Let f :: (Applicative t, Applicative g) => t a -> u a
 > Let p :: (Pointable t, Pointable g) => t a -> u a
 
-> When providing a new instance, you should ensure it satisfies the four laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Numeratority of traversing: g . traverse f ≡ traverse (g . f)
 > * Numeratority of sequencing: f . sequence = sequence . comap f
 > * Preserving point: p (point x) ≡ point x

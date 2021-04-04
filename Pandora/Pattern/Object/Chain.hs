@@ -7,7 +7,7 @@ import Pandora.Paradigm.Primary.Object.Ordering (Ordering, order)
 infixl 4 <=>, <, <=, >=, >
 
 {- |
-> When providing a new instance, you should ensure it satisfies the three laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Reflexivity: x <= x ≡ True
 > * Transitivity: x <= y && y <= z ≡ True ===> x <= z ≡ True
 > * Antisymmetry: x <= y && y <= x ≡ True ===> x == y ≡ True

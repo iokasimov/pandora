@@ -6,7 +6,7 @@ import Pandora.Pattern.Object.Monoid (Monoid)
 infixl 6 -
 
 {- |
-> When providing a new instance, you should ensure it satisfies the two laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Right absorption: x + invert x ≡ zero
 > * Left absorption: invert x + x ≡ zero
 -}

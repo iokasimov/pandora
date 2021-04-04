@@ -3,7 +3,7 @@ module Pandora.Pattern.Functor.Divariant where
 infixl 4 >->
 
 {- |
-> When providing a new instance, you should ensure it satisfies the two laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Identity: dimap identity identity ≡ identity
 > * Interpreted: dimap (f . g) (h . i) ≡ dimap g h . dimap f i
 -}

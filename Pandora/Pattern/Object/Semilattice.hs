@@ -1,7 +1,7 @@
 module Pandora.Pattern.Object.Semilattice (Infimum (..), Supremum (..), Semilattice) where
 
 {- |
-> When providing a new instance, you should ensure it satisfies the three laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Associativity: x /\ (y /\ z) ≡ (x /\ y) /\ z
 > * Commutativity: x /\ y ≡ y /\ x
 > * Idempotency: x /\ x ≡ x
@@ -12,7 +12,7 @@ class Infimum a where
 	(/\) :: a -> a -> a
 
 {- |
-> When providing a new instance, you should ensure it satisfies the three laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Associativity: x \/ (y \/ z) ≡ (x \/ y) \/ z
 > * Commutativity: x \/ y ≡ y \/ x
 > * Idempotency: x \/ x ≡ x

@@ -8,7 +8,7 @@ type (-|) = Adjoint
 infixl 3 -|, |-, -|$, $|-, $$|-, $$$|-, $$$$|-
 
 {- |
-> When providing a new instance, you should ensure it satisfies the four laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Left adjunction identity: phi cozero ≡ identity
 > * Right adjunction identity: psi zero ≡ identity
 > * Left adjunction interchange: phi f ≡ comap f . eta

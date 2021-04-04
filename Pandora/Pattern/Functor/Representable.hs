@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (<:=))
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |
-> When providing a new instance, you should ensure it satisfies the three laws:
+> When providing a new instance, you should ensure it satisfies:
 > * Isomorphism (to): tabulate . index ≡ identity
 > * Isomorphism (from): index . tabulate ≡ identity
 > * Right adjoint: tabulate . point ≡ point
