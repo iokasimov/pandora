@@ -9,5 +9,6 @@ import Pandora.Pattern.Object.Quasiring as Exports
 import Pandora.Pattern.Object.Semiring as Exports
 import Pandora.Pattern.Object.Ringoid as Exports
 import Pandora.Pattern.Object.Semigroup as Exports
+import Pandora.Pattern.Object.Cycle as Exports
 import Pandora.Pattern.Object.Chain as Exports
 import Pandora.Pattern.Object.Setoid as Exports

@@ -392,3 +392,4 @@
 * Change `subset` method of `Set` interface: returns `Convergence Boolean`
 * Remove `Dictonary` typeclass
 * Define `Lookup` verb for finding elements in datastructures by key
+* Define `Cycle` typeclass with `Chain` superclass
