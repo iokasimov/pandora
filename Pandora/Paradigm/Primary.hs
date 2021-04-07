@@ -10,6 +10,7 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (Category ((.), ($), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
+import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
@@ -21,6 +22,12 @@ instance Category (Flip (->)) where
 
 instance Contravariant (Flip (->) r) where
 	f >$< g = (<$> f) ||= g
+
+instance Covariant (Flip (:*:) a) where
+	f <$> (Flip (x :*: y)) = Flip $ f x :*: y
+
+instance Extractable (Flip (:*:) a) where
+	extract (Flip (x :*: _)) = x
 
 instance Morphable (Into Maybe) (Conclusion e) where
 	type Morphing (Into Maybe) (Conclusion e) = Maybe
