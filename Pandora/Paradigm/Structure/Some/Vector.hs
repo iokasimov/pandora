@@ -1,6 +1,8 @@
 module Pandora.Paradigm.Structure.Some.Vector where
 
-import Pandora.Paradigm.Primary.Functor.Product (type (:*:))
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic)
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
-data Vector a = forall r . (Monotonic a (a :*: r), Monotonic a r) => Vector (a :*: r)
+data Vector a = forall r . Monotonic a r => Vector r
+
+instance Monotonic a (Vector a) where
+	reduce f r (Vector x) = reduce f r x
