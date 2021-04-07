@@ -394,3 +394,5 @@
 * Define `Lookup` verb for finding elements in datastructures by key
 * Define `Cycle` typeclass with `Chain` superclass
 * Move `lookup` and `discover` exressions to `Dictionary` module
+
+# 0.4.0

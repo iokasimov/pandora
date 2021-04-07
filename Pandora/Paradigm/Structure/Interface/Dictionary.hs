@@ -3,8 +3,6 @@
 module Pandora.Paradigm.Structure.Interface.Dictionary where
 
 import Pandora.Pattern.Category ((/))
-
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
