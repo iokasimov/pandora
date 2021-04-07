@@ -396,3 +396,4 @@
 * Move `lookup` and `discover` exressions to `Dictionary` module
 
 # 0.4.0
+* Define size typed `Vector` data structure
