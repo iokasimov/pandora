@@ -6,6 +6,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Paradigm.Primary.Functor.Product (type (:*:))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
 data Vector r a where
 	Scalar :: a -> Vector a a
@@ -34,3 +35,9 @@ instance Quasiring a => Quasiring (Vector a a) where
 
 instance (Quasiring a, Quasiring r, Quasiring (a :*: r), Quasiring (Vector r a)) => Quasiring (Vector (a :*: r) a) where
 	one = Vector one one
+
+instance Monotonic a (Vector a a) where
+	reduce f r (Scalar x) = f x r
+
+instance Monotonic a (Vector r a) => Monotonic a (Vector (a :*: r) a) where
+	reduce f r (Vector x xs) = reduce f (f x r) xs
