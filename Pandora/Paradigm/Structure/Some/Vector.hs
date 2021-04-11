@@ -5,6 +5,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
+import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Functor.Product (type (:*:))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
@@ -36,8 +37,14 @@ instance Quasiring a => Quasiring (Vector a a) where
 instance (Quasiring a, Quasiring r, Quasiring (a :*: r), Quasiring (Vector r a)) => Quasiring (Vector (a :*: r) a) where
 	one = Vector one one
 
+instance Group a => Group (Vector a a) where
+	invert (Scalar x) = Scalar $ invert x
+
+instance (Group a, Group r, Group (a :*: r), Group (Vector r a)) => Group (Vector (a :*: r) a) where
+	invert (Vector x xs) = Vector / invert x / invert xs
+
 instance Monotonic a (Vector a a) where
 	reduce f r (Scalar x) = f x r
 
 instance Monotonic a (Vector r a) => Monotonic a (Vector (a :*: r) a) where
-	reduce f r (Vector x xs) = reduce f (f x r) xs
+	reduce f r (Vector x xs) = reduce f / f x r / xs
