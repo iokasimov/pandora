@@ -6,6 +6,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Group (Group (invert))
+import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Functor.Product (type (:*:))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
@@ -42,6 +43,12 @@ instance Group a => Group (Vector a a) where
 
 instance (Group a, Group r, Group (a :*: r), Group (Vector r a)) => Group (Vector (a :*: r) a) where
 	invert (Vector x xs) = Vector / invert x / invert xs
+
+instance Setoid a => Setoid (Vector a a) where
+	Scalar x == Scalar y = x == y
+
+instance (Setoid a, Setoid (Vector r a)) => Setoid (Vector (a :*: r) a) where
+	Vector x xs == Vector y ys = (x == y) * (xs == ys)
 
 instance Monotonic a (Vector a a) where
 	reduce f r (Scalar x) = f x r
