@@ -399,3 +399,4 @@
 * Define size typed `Vector` data structure
 * Move `Vertical` datatype from `Binary` to `Morphable` module
 * Remove `substitute`, `subplace`, `subview` methods from `Substructure` typeclass
+* Remove `>>=:>` and `<:=<<` infix operators
