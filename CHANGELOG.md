@@ -397,3 +397,4 @@
 
 # 0.4.0
 * Define size typed `Vector` data structure
+* Move `Vertical` datatype from `Binary` to `Morphable` module
