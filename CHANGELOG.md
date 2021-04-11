@@ -398,4 +398,4 @@
 # 0.4.0
 * Define size typed `Vector` data structure
 * Move `Vertical` datatype from `Binary` to `Morphable` module
-* Remove `substitute` method from `Substructure` typeclass
+* Remove `substitute`, `subplace` methods from `Substructure` typeclass
