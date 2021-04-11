@@ -16,10 +16,11 @@ import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
+import Pandora.Paradigm.Inventory.Optics (over)
 import Pandora.Paradigm.Schemes (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate, into)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Substructure (substitute)
+import Pandora.Paradigm.Structure.Ability.Substructure (sub)
 import Pandora.Paradigm.Structure.Some.Binary (Binary)
 
 data Splay a = Zig a | Zag a
@@ -59,11 +60,11 @@ instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
 
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Binary
-	morphing = rotate @(Left Zig) . substitute @Left ((>>= run . rotate @(Right Zig)) ||=) . premorph
+	morphing = rotate @(Left Zig) . over (sub @Left) ((>>= run . rotate @(Right Zig)) ||=) . premorph
 
 instance Morphable (Rotate (Right (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Binary
-	morphing = rotate @(Right Zig) . substitute @Right ((>>= run . rotate @(Left Zig)) ||=) . premorph
+	morphing = rotate @(Right Zig) . over (sub @Right) ((>>= run . rotate @(Left Zig)) ||=) . premorph
 
 branch :: forall b . Morphable (Into (b Maybe)) Wye => Wye ~> Morphing (Into (b Maybe)) Wye
 branch = into @(b Maybe)

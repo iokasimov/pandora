@@ -36,7 +36,7 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusi
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert), Vertical (Up, Down), morph, premorph)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub, substitute)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 
 type Binary = Maybe <:.> Construction Wye
@@ -52,7 +52,7 @@ instance Morphable Insert Binary where
 	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift . Construct x $ End
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run / morph @Insert xs $ twosome / Identity x / Convergence f
-		in lift $ f x (extract ne) & order (ne & substitute @Left continue) ne (ne & substitute @Right continue)
+		in lift $ f x (extract ne) & order (ne & over (sub @Left) continue) ne (ne & over (sub @Right) continue)
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
@@ -83,7 +83,7 @@ binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @
 	insert' :: a -> Binary a -> Binary a
 	insert' x (run -> Nothing) = lift . Construct x $ End
 	insert' x tree@(run -> Just nonempty) = x <=> extract nonempty & order
-		(tree & substitute @Left (insert' x)) tree (tree & substitute @Right (insert' x))
+		(over / sub @Left / insert' x / tree) tree (over / sub @Right / insert' x / tree)
 
 type instance Nonempty Binary = Construction Wye
 
