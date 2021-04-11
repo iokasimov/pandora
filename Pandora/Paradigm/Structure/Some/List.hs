@@ -46,7 +46,7 @@ import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, meas
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push, Pop, Delete, Find, Element)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, into)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Tail), sub, subview)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure, sub), Segment (Tail))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
 
 -- | Linear data structure that serves as a collection of elements
@@ -94,8 +94,8 @@ instance Stack List where
 instance Focusable Head List where
 	type Focusing Head List a = Maybe a
 	focusing (extract -> stack) = Store $ extract <$> run stack :*: \case
-		Just x -> stack & subview @Tail & item @Push x & Tag
-		Nothing -> stack & subview @Tail & Tag
+		Just x -> stack & view (sub @Tail) & item @Push x & Tag
+		Nothing -> stack & view (sub @Tail) & Tag
 
 instance Measurable Length List where
 	type Measural Length List a = Numerator
@@ -162,12 +162,12 @@ instance Focusable Head (Tap (List <:.:> List := (:*:))) where
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
-		$ Tap % twosome (subview @Tail future) (item @Push x past) <$> view (focus @Head) future
+		$ Tap % twosome (view (sub @Tail) future) (item @Push x past) <$> view (focus @Head) future
 
 instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
-		$ Tap % twosome (item @Push x future) (subview @Tail past) <$> view (focus @Head) past
+		$ Tap % twosome (item @Push x future) (view (sub @Tail) past) <$> view (focus @Head) past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Zipper List

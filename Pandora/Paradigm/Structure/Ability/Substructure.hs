@@ -18,7 +18,4 @@ class Substructure f t where
 	sub :: t :~. Substructural f t
 	sub = comap (extract . run) . substructure . TU . Tag @f
 
-	subview :: t ~> Substructural f t
-	subview = view (sub @f)
-
 data Segment a = Tail a
