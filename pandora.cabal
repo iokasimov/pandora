@@ -117,7 +117,6 @@ library
     Pandora.Paradigm.Structure.Some.Binary
     Pandora.Paradigm.Structure.Some.Splay
     Pandora.Paradigm.Structure.Some.Rose
-    Pandora.Paradigm.Structure.Some.Vector
 
     Pandora.Pattern
     -- Category typeclass
@@ -163,6 +162,9 @@ library
     Pandora.Pattern.Transformer.Hoistable
     Pandora.Pattern.Transformer.Liftable
     Pandora.Pattern.Transformer.Lowerable
+    -- Linear albegra's primitives
+    Pandora.Pattern.Linear
+    Pandora.Pattern.Linear.Vector
   default-extensions:
     DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints, InstanceSigs
     FlexibleContexts, FlexibleInstances, KindSignatures, LiberalTypeSynonyms, LambdaCase, FunctionalDependencies

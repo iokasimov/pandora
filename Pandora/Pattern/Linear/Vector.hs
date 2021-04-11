@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Structure.Some.Vector where
+module Pandora.Pattern.Linear.Vector where
 
 import Pandora.Pattern.Category (($), (/))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
