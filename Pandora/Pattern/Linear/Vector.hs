@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Pattern.Linear.Vector where
 
 import Pandora.Pattern.Category (($), (/))
@@ -7,8 +9,14 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Pattern.Functor.Pointable (point)
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Functor.Product (type (:*:))
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction)
+import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Push), premorph, into, item)
+import Pandora.Paradigm.Structure.Some.List (List)
 
 data Vector r a where
 	Scalar :: a -> Vector a a
@@ -55,3 +63,13 @@ instance Monotonic a (Vector a a) where
 
 instance Monotonic a (Vector r a) => Monotonic a (Vector (a :*: r) a) where
 	reduce f r (Vector x xs) = reduce f / f x r / xs
+
+instance Morphable (Into List) (Vector r) where
+	type Morphing (Into List) (Vector r) = List
+	morphing (premorph -> Scalar x) = point x
+	morphing (premorph -> Vector x xs) = item @Push x $ into @List xs
+
+instance Morphable (Into (Construction Maybe)) (Vector r) where
+	type Morphing (Into (Construction Maybe)) (Vector r) = Construction Maybe
+	morphing (premorph -> Scalar x) = point x
+	morphing (premorph -> Vector x xs) = item @Push x $ into @(Nonempty List) xs
