@@ -65,7 +65,7 @@ instance Monoid (List a) where
 
 instance Morphable Push List where
 	type Morphing Push List = Identity <:.:> List := (->)
-	morphing (premorph -> xs) = T_U $ \(Identity x) -> lift . Construct x . run $ xs
+	morphing (premorph -> xs) = T_U $ lift . Construct % run xs . extract
 
 instance Morphable Pop List where
 	type Morphing Pop List = List
@@ -75,7 +75,7 @@ instance Morphable (Find Element) List where
 	type Morphing (Find Element) List = Predicate <:.:> Maybe := (->)
 	morphing (premorph -> TU Nothing) = T_U $ \_ -> Nothing
 	morphing (premorph -> TU (Just (Construct x xs))) = T_U $ \p ->
-		run p x ? Just x $ (find @Element @List @Maybe $: p $: TU xs)
+		run p x ? Just x $ find @Element @List @Maybe $: p $: TU xs
 
 instance Morphable (Delete First) List where
 	type Morphing (Delete First) List = Predicate <:.:> List := (->)

@@ -35,4 +35,4 @@ instance Adjoint (Product s) ((->) s) where
 	~(s :*: x) |- f = f x s
 
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
-match (Predicate p) f x r = p x ? f x :*: x $ r :*: x
+match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x

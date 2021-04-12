@@ -16,7 +16,7 @@ import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
-infixr 1 :*:
+infixr 0 :*:
 
 data Product s a = s :*: a
 
