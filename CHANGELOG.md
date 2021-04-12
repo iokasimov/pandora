@@ -402,3 +402,4 @@
 * Remove `>>=:>` and `<:=<<` infix operators
 * Move `Vector` datatype to `Linear` umbrella-module
 * Rename `/` infix function application operator to `$:`
+* Define `$::` and `$:::` infix function application operators

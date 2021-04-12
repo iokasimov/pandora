@@ -2,9 +2,11 @@ module Pandora.Pattern.Category (Category (..)) where
 
 import Pandora.Core.Functor (type (~~>))
 
-infixr 8 .
 infixl 1 $:
+infixl 2 $::
+infixl 2 $:::
 infixr 0 $
+infixr 8 .
 
 class Category (m :: * -> * -> *) where
 	identity :: m a a
@@ -15,3 +17,9 @@ class Category (m :: * -> * -> *) where
 
 	($:) :: m ~~> m
 	($:) f = identity . f
+
+	($::) :: m ~~> m
+	($::) f = identity . f
+
+	($:::) :: m ~~> m
+	($:::) f = identity . f
