@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
 import Pandora.Pattern.Category (identity, (.), ($), ($:), ($::))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -95,10 +95,13 @@ instance Morphable (Into Binary) (Construction Wye) where
 
 instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
-	morphing (premorph -> ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
+	morphing (premorph -> nonempty_list) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run $: morph @Insert @(Nonempty Binary) xs $ twosome $: Identity x $: Convergence f in
-		let change = lift . resolve continue (Construct x End) . run in
-		f x (extract ne) & order ne (over $: sub @Left $: change $: ne) (over $: sub @Right $: change $: ne)
+		let change = lift . resolve continue (leaf x) . run in
+		order $: nonempty_list
+			$: over $:: sub @Left $:: change $:: nonempty_list
+			$: over $:: sub @Right $:: change $:: nonempty_list
+			$: f x $:: extract nonempty_list
 
 instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a
@@ -116,7 +119,7 @@ instance Measurable Heighth (Construction Wye) where
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) = Binary
 	substructure (extract . run -> Construct x End) =
-		Store $ empty :*: lift . resolve (Construct x . Left) (Construct x End) . run
+		Store $ empty :*: lift . resolve (Construct x . Left) (leaf x) . run
 	substructure (extract . run -> Construct x (Left lst)) =
 		Store $ lift lst :*: lift . Construct x . resolve Left End . run
 	substructure (extract . run -> Construct x (Right rst)) =
@@ -127,7 +130,7 @@ instance Substructure Left (Construction Wye) where
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) = Binary
 	substructure (extract . run -> Construct x End) =
-		Store $ empty :*: lift . resolve (Construct x . Right) (Construct x End) . run
+		Store $ empty :*: lift . resolve (Construct x . Right) (leaf x) . run
 	substructure (extract . run -> Construct x (Left lst)) =
 		Store $ empty :*: lift . Construct x . resolve (Both lst) (Left lst) . run
 	substructure (extract . run -> Construct x (Right rst)) =
@@ -161,16 +164,21 @@ instance Morphable (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.>
 	type Morphing (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing (run . premorph -> Construct x (Left lst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward . Construct (twosome $: Identity x $: empty) $ next
+		lift . twosome lst . TU . TU . Leftward $ Construct $: twosome $:: Identity x $:: empty $: next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward . Construct (twosome $: Identity x $: lift rst) $ next
+		lift . twosome lst . TU . TU . Leftward $ Construct $: twosome $:: Identity x $:: lift rst $: next
 	morphing (run . premorph -> Construct _ (Right _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
 
 instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
 	type Morphing (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
-	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) = lift . twosome rst . TU . TU . Rightward . Construct (twosome $: Identity x $: empty) $ next
-	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) = lift . twosome rst . TU . TU . Rightward . Construct (twosome $: Identity x $: lift lst) $ next
+	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) =
+		lift . twosome rst . TU . TU . Rightward $ Construct $: twosome $:: Identity x $:: empty $: next
+	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
+		lift . twosome rst . TU . TU . Rightward $ Construct $: twosome $:: Identity x $:: lift lst $: next
 	morphing (run . premorph -> Construct _ (Left _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
+
+leaf :: a :=> Nonempty Binary
+leaf x = Construct x End
