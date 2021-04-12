@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category (identity, (.), ($), ($:))
+import Pandora.Pattern.Category (identity, (.), ($), ($:), ($::))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -43,8 +43,8 @@ type Binary = Maybe <:.> Construction Wye
 
 rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
 rebalance (Both x y) = extract x <=> extract y & order
-	(Construct $: extract y $ Both $: x $: rebalance (deconstruct y))
 	(Construct $: extract x $ Both $: rebalance (deconstruct x) $: rebalance (deconstruct y))
+	(Construct $: extract y $ Both $: x $: rebalance (deconstruct y))
 	(Construct $: extract x $ Both $: rebalance (deconstruct x) $: y)
 
 instance Morphable Insert Binary where
@@ -52,7 +52,7 @@ instance Morphable Insert Binary where
 	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift . Construct x $ End
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run $: morph @Insert xs $ twosome $: Identity x $: Convergence f
-		in lift $ f x (extract ne) & order (ne & over (sub @Left) continue) ne (ne & over (sub @Right) continue)
+		in lift $ f x (extract ne) & order ne (ne & over (sub @Left) continue) (ne & over (sub @Right) continue)
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
@@ -82,8 +82,10 @@ binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @
 
 	insert' :: a -> Binary a -> Binary a
 	insert' x (run -> Nothing) = lift . Construct x $ End
-	insert' x tree@(run -> Just nonempty) = x <=> extract nonempty & order
-		(over $: sub @Left $: insert' x $: tree) tree (over $: sub @Right $: insert' x $: tree)
+	insert' x tree@(run -> Just nonempty) = order $: tree
+		$: over $:: sub @Left $:: insert' x $:: tree
+		$: over $:: sub @Right $:: insert' x $:: tree
+		$ x <=> extract nonempty
 
 type instance Nonempty Binary = Construction Wye
 
@@ -96,7 +98,7 @@ instance Morphable Insert (Construction Wye) where
 	morphing (premorph -> ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run $: morph @Insert @(Nonempty Binary) xs $ twosome $: Identity x $: Convergence f in
 		let change = lift . resolve continue (Construct x End) . run in
-		f x (extract ne) & order (over $: sub @Left $: change $: ne) ne (over $: sub @Right $: change $: ne)
+		f x (extract ne) & order ne (over $: sub @Left $: change $: ne) (over $: sub @Right $: change $: ne)
 
 instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a
@@ -109,7 +111,7 @@ instance Measurable Heighth (Construction Wye) where
 	measurement (deconstruct . extract -> Right rst) = One + measure @Heighth rst
 	measurement (deconstruct . extract -> Both lst rst) = One +
 		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
-		in lm <=> rm & order rm lm lm
+		in lm <=> rm & order lm rm lm
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) = Binary
