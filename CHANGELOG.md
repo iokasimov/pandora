@@ -401,3 +401,4 @@
 * Remove `substitute`, `subplace`, `subview` methods from `Substructure` typeclass
 * Remove `>>=:>` and `<:=<<` infix operators
 * Move `Vector` datatype to `Linear` umbrella-module
+* Rename `/` infix function application operator to `$:`

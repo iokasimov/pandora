@@ -4,7 +4,7 @@
 module Pandora.Paradigm.Structure.Some.Splay where
 
 import Pandora.Core.Functor (type (~>), type (:.), type (:=))
-import Pandora.Pattern.Category ((.), ($), (/))
+import Pandora.Pattern.Category ((.), ($), ($:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Applicative ((<*>))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -45,18 +45,18 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (deconstruct <$> branch @Left xs >>= branch @Left) . Just . Construct x
-			. into @Wye $ twosome (deconstruct <$> branch @Left xs >>= branch @Right) / branch @Right xs
+			. into @Wye $ twosome (deconstruct <$> branch @Left xs >>= branch @Right) $: branch @Right xs
 
 		parent :: Maybe a
 		parent = extract <$> branch @Left xs
 
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zig))) (Construction Wye) = Binary
-	morphing (premorph -> tree) = TU $ run / rotate @(Left Zig) tree >>= run . rotate @(Left Zig)
+	morphing (premorph -> tree) = TU $ run $: rotate @(Left Zig) tree >>= run . rotate @(Left Zig)
 
 instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zig))) (Construction Wye) = Binary
-	morphing (premorph -> tree) = TU $ run / rotate @(Right Zig) tree >>= run . rotate @(Right Zig)
+	morphing (premorph -> tree) = TU $ run $: rotate @(Right Zig) tree >>= run . rotate @(Right Zig)
 
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Binary

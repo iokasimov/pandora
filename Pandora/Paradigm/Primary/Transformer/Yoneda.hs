@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Transformer.Yoneda where
 
-import Pandora.Pattern.Category (identity, (.), ($), (/))
+import Pandora.Pattern.Category (identity, (.), ($), ($:))
 import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -37,5 +37,5 @@ instance Liftable Yoneda where
 	lift x = Yoneda (<$> x)
 
 instance (Extractable t, Pointable t, Extractable u, Pointable u) => Adjoint (Yoneda t) (Yoneda u) where
-	x -| f = point . f . point / x
-	x |- g = extract . extract / g <$> x
+	x -| f = point . f . point $: x
+	x |- g = extract . extract $: g <$> x

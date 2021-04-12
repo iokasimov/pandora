@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
 import Pandora.Core.Functor (type (:=), type (~>), type (:=:=>))
-import Pandora.Pattern.Category ((.), (/))
+import Pandora.Pattern.Category ((.), ($:))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Setoid (Setoid)
@@ -42,19 +42,19 @@ into :: forall f t . Morphable (Into f) t => t ~> Morphing (Into f) t
 into = morphing . TU . Tag @(Into f)
 
 insert :: forall f t a . (Morphable (Insert f) t, Morphing (Insert f) t ~ (Identity <:.:> t := (->))) => a :=:=> t
-insert new xs = run / morph @(Insert f) xs / Identity new
+insert new xs = run $: morph @(Insert f) xs $: Identity new
 
 item :: forall f t a . (Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))) => a :=:=> t
-item new xs = run / morph @f xs / Identity new
+item new xs = run $: morph @f xs $: Identity new
 
 collate :: forall f t a . (Chain a, Morphable f t, Morphing f t ~ ((Identity <:.:> Comparison := (:*:)) <:.:> t := (->))) => a :=:=> t
-collate new xs = run / morph @f xs / T_U (Identity new :*: Convergence (<=>))
+collate new xs = run $: morph @f xs $: T_U (Identity new :*: Convergence (<=>))
 
 delete :: forall f t a . (Setoid a, Morphable (Delete f) t, Morphing (Delete f) t ~ (Predicate <:.:> t := (->))) => a :=:=> t
-delete x xs = run / morph @(Delete f) xs / equate x
+delete x xs = run $: morph @(Delete f) xs $: equate x
 
 filter :: forall f t a . (Morphable (Delete f) t, Morphing (Delete f) t ~ (Predicate <:.:> t := (->))) => Predicate a -> t a -> t a
-filter p xs = run / morph @(Delete f) xs / p
+filter p xs = run $: morph @(Delete f) xs $: p
 
 find :: forall f t u a . (Morphable (Find f) t, Morphing (Find f) t ~ (Predicate <:.:> u := (->))) => Predicate a -> t a -> u a
-find p xs = run / morph @(Find f) xs / p
+find p xs = run $: morph @(Find f) xs $: p
