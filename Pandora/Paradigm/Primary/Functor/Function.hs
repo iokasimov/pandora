@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Primary.Functor.Function where
 
-import Pandora.Pattern.Category (Category ((.), ($), ($:), identity))
+import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
@@ -34,7 +34,7 @@ instance Pointable ((->) e) where
 	point = (!)
 
 instance Bindable ((->) e) where
-	f >>= g = \x -> g $: f x $: x
+	f >>= g = \x -> g # f x # x
 
 instance Representable ((->) e) where
 	type Representation ((->) e) = e

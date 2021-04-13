@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Transformer.Jack where
 
-import Pandora.Pattern.Category (identity, (.), ($), ($:))
+import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -31,7 +31,7 @@ instance Covariant t => Pointable (Jack t) where
 instance Alternative t => Alternative (Jack t) where
 	It x <+> _ = It x
 	Other _ <+> It y = It y
-	Other x <+> Other y = Other $: x <+> y
+	Other x <+> Other y = Other # x <+> y
 
 instance Avoidable t => Avoidable (Jack t) where
 	empty = Other empty

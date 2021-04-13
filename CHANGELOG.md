@@ -401,7 +401,8 @@
 * Remove `substitute`, `subplace`, `subview` methods from `Substructure` typeclass
 * Remove `>>=:>` and `<:=<<` infix operators
 * Move `Vector` datatype to `Linear` umbrella-module
-* Rename `/` infix function application operator to `$:`
-* Define `$::` and `$:::` infix function application operators
+* Rename `/` infix function application operator to `#`
+* Define `$:` and `$::` infix function application operators
 * Decrease precedence for `:*:` infix operator
 * Change arguments order in `order` expression
+* Rename `$:` to `#`, `$::` to ` #:`, `$:::` to ` #::` and define `#:::`

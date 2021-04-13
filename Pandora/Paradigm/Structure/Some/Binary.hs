@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
-import Pandora.Pattern.Category (identity, (.), ($), ($:), ($::))
+import Pandora.Pattern.Category (identity, (.), ($), (#), (#:))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -43,15 +43,15 @@ type Binary = Maybe <:.> Construction Wye
 
 rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
 rebalance (Both x y) = extract x <=> extract y & order
-	(Construct $: extract x $ Both $: rebalance (deconstruct x) $: rebalance (deconstruct y))
-	(Construct $: extract y $ Both $: x $: rebalance (deconstruct y))
-	(Construct $: extract x $ Both $: rebalance (deconstruct x) $: y)
+	(Construct # extract x $ Both # rebalance (deconstruct x) # rebalance (deconstruct y))
+	(Construct # extract y $ Both # x # rebalance (deconstruct y))
+	(Construct # extract x $ Both # rebalance (deconstruct x) # y)
 
 instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
 	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift $ leaf x
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
-		let continue xs = run $: morph @Insert xs $ twosome $: Identity x $: Convergence f
+		let continue xs = run # morph @Insert xs $ twosome # Identity x # Convergence f
 		in lift $ f x (extract ne) & order ne (ne & over (sub @Left) continue) (ne & over (sub @Right) continue)
 
 instance (forall a . Chain a) => Focusable Root Binary where
@@ -82,9 +82,9 @@ binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @
 
 	insert' :: a -> Binary a -> Binary a
 	insert' x (run -> Nothing) = lift $ leaf x
-	insert' x tree@(run -> Just nonempty) = order $: tree
-		$: over $:: sub @Left $:: insert' x $:: tree
-		$: over $:: sub @Right $:: insert' x $:: tree
+	insert' x tree@(run -> Just nonempty) = order # tree
+		# over #: sub @Left #: insert' x #: tree
+		# over #: sub @Right #: insert' x #: tree
 		$ x <=> extract nonempty
 
 type instance Nonempty Binary = Construction Wye
@@ -96,12 +96,12 @@ instance Morphable (Into Binary) (Construction Wye) where
 instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
 	morphing (premorph -> nonempty_list) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
-		let continue xs = run $: morph @Insert @(Nonempty Binary) xs $ twosome $: Identity x $: Convergence f in
+		let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
 		let change = lift . resolve continue (leaf x) . run in
-		order $: nonempty_list
-			$: over $:: sub @Left $:: change $:: nonempty_list
-			$: over $:: sub @Right $:: change $:: nonempty_list
-			$: f x $:: extract nonempty_list
+		order # nonempty_list
+			# over #: sub @Left #: change #: nonempty_list
+			# over #: sub @Right #: change #: nonempty_list
+			# f x #: extract nonempty_list
 
 instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a
@@ -155,18 +155,18 @@ instance Morphable (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor
 	type Morphing (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
-		lift $ twosome $: Construct parent (resolve $: Both focused $: Left focused $: run rest) $: TU (TU next)
+		lift $ twosome # Construct parent (resolve # Both focused # Left focused # run rest) # TU (TU next)
 	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
-		lift $ twosome $: Construct parent (resolve $: Both % focused $: Right focused $: run rest) $: TU (TU next)
+		lift $ twosome # Construct parent (resolve # Both % focused # Right focused # run rest) # TU (TU next)
 	morphing (premorph -> T_U (_ :*: TU (TU Top))) = empty
 
 instance Morphable (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
 	type Morphing (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing (run . premorph -> Construct x (Left lst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward $ Construct $: twosome $:: Identity x $:: empty $: next
+		lift . twosome lst . TU . TU . Leftward $ Construct # twosome #: Identity x #: empty # next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward $ Construct $: twosome $:: Identity x $:: lift rst $: next
+		lift . twosome lst . TU . TU . Leftward $ Construct # twosome #: Identity x #: lift rst # next
 	morphing (run . premorph -> Construct _ (Right _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
 
@@ -174,9 +174,9 @@ instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.
 	type Morphing (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) =
-		lift . twosome rst . TU . TU . Rightward $ Construct $: twosome $:: Identity x $:: empty $: next
+		lift . twosome rst . TU . TU . Rightward $ Construct # twosome #: Identity x #: empty # next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . twosome rst . TU . TU . Rightward $ Construct $: twosome $:: Identity x $:: lift lst $: next
+		lift . twosome rst . TU . TU . Rightward $ Construct # twosome #: Identity x #: lift lst # next
 	morphing (run . premorph -> Construct _ (Left _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
 

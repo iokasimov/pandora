@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Some.Rose where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category ((.), ($), ($:))
+import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant (comap))
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -68,4 +68,4 @@ find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? J
 find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ? Nothing $ subtree >>= find_rose_sub_tree ks where
 
 	subtree :: Maybe :. Nonempty Rose := k :*: a
-	subtree = find @Element $: attached . extract >$< equate (extract ks) $: deconstruct tree
+	subtree = find @Element # attached . extract >$< equate (extract ks) # deconstruct tree

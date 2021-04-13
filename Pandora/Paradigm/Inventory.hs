@@ -12,7 +12,7 @@ import Pandora.Paradigm.Inventory.Environment as Exports
 import Pandora.Paradigm.Inventory.Accumulator as Exports
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category ((.), ($), ($:), identity)
+import Pandora.Pattern.Category ((.), ($), (#), identity)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -47,7 +47,7 @@ lens =<> new = modify $ set lens new
 lens ~<> f = modify $ over lens f
 
 magnify :: forall bg ls t . (Accessible ls bg, Stateful bg t) => t ls
-magnify = zoom @bg $: access @ls @bg $: current
+magnify = zoom @bg # access @ls @bg # current
 
 adjust :: forall bg ls t . (Accessible ls bg, Stateful bg t) => (ls -> ls) -> t ls
 adjust = zoom @bg (access @ls @bg) . modify

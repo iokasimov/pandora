@@ -7,7 +7,7 @@ import Pandora.Paradigm.Structure.Interface as Exports
 import Pandora.Paradigm.Structure.Modification as Exports
 import Pandora.Paradigm.Structure.Some as Exports
 
-import Pandora.Pattern.Category (($), (.), ($:))
+import Pandora.Pattern.Category (($), (.), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant (comap))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Pointable (point)
@@ -28,7 +28,7 @@ import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
 instance Monotonic s a => Monotonic s (s :*: a) where
-	reduce f r x = reduce f $: f (attached x) r $: extract x
+	reduce f r x = reduce f # f (attached x) r # extract x
 
 instance Nullable Maybe where
 	null = Predicate $ \case { Just _ -> True ; _ -> False }
