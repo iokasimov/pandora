@@ -4,8 +4,8 @@ import Pandora.Core.Functor (type (~~>))
 
 infixl 1 #
 infixl 2 #:
-infixl 2 #::
-infixl 2 #:::
+infixl 3 #::
+infixl 4 #:::
 infixr 0 $
 infixr 8 .
 
