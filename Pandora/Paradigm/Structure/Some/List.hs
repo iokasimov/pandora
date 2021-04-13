@@ -175,8 +175,9 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 
 instance Morphable (Into List) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into List) (Tap (List <:.:> List := (:*:))) = List
-	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _)
-		% item @Push x future $ past ->> modify . item @Push @List
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
+		$: past ->> modify . item @Push @List
+		$: item @Push x future
 
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
@@ -206,17 +207,20 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Ma
 
 instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
-	morphing (premorph -> zipper) = let spread x y = (:*:) <$> x <*> y in TU $ Tap (extract zipper) . T_U <$> ((|- spread) . (run <-> run) . run $ lower zipper)
+	morphing (premorph -> zipper) = let spread x y = (:*:) <$> x <*> y in TU $
+		Tap (extract zipper) . T_U <$> ((|- spread) . (run <-> run) . run $ lower zipper)
 
 instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
-	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _)
-		% item @Push x future $ past ->> modify . item @Push @(Nonempty List)
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
+		$: past ->> modify . item @Push @(Nonempty List)
+		$: item @Push x future
 
 instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = List
-	morphing (premorph -> Tap x (T_U (future :*: past))) = attached . run @(State _)
-		% item @Push x (lift future) $ past ->> modify . item @Push @List
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
+		$: past ->> modify . item @Push @List
+		$: item @Push x $:: lift future
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run

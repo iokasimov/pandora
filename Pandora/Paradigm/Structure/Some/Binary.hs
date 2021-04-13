@@ -49,14 +49,14 @@ rebalance (Both x y) = extract x <=> extract y & order
 
 instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
-	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift . Construct x $ End
+	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift $ leaf x
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run $: morph @Insert xs $ twosome $: Identity x $: Convergence f
 		in lift $ f x (extract ne) & order ne (ne & over (sub @Left) continue) (ne & over (sub @Right) continue)
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
-	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap (Construct % End)
+	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap leaf
 	focusing (run . extract -> Just x) = Store $ Just (extract x) :*: Tag . lift . resolve (Construct % deconstruct x) (rebalance $ deconstruct x)
 
 instance Measurable Heighth Binary where
@@ -81,7 +81,7 @@ binary :: forall t a . (Traversable t, Chain a) => t a -> Binary a
 binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @(Binary a) . insert' where
 
 	insert' :: a -> Binary a -> Binary a
-	insert' x (run -> Nothing) = lift . Construct x $ End
+	insert' x (run -> Nothing) = lift $ leaf x
 	insert' x tree@(run -> Just nonempty) = order $: tree
 		$: over $:: sub @Left $:: insert' x $:: tree
 		$: over $:: sub @Right $:: insert' x $:: tree
