@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
-import Pandora.Pattern.Category (identity, (.), ($), (#), (#:))
+import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -83,9 +83,9 @@ binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @
 	insert' :: a -> Binary a -> Binary a
 	insert' x (run -> Nothing) = lift $ leaf x
 	insert' x tree@(run -> Just nonempty) = order # tree
-		# over #: sub @Left #: insert' x #: tree
-		# over #: sub @Right #: insert' x #: tree
-		$ x <=> extract nonempty
+		# (over # sub @Left # insert' x # tree)
+		# (over # sub @Right # insert' x # tree)
+		# x <=> extract nonempty
 
 type instance Nonempty Binary = Construction Wye
 
@@ -99,9 +99,9 @@ instance Morphable Insert (Construction Wye) where
 		let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
 		let change = lift . resolve continue (leaf x) . run in
 		order # nonempty_list
-			# over #: sub @Left #: change #: nonempty_list
-			# over #: sub @Right #: change #: nonempty_list
-			# f x #: extract nonempty_list
+			# over (sub @Left) change nonempty_list
+			# over (sub @Right) change nonempty_list
+			# f x (extract nonempty_list)
 
 instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a
@@ -164,9 +164,9 @@ instance Morphable (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.>
 	type Morphing (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing (run . premorph -> Construct x (Left lst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward $ Construct # twosome #: Identity x #: empty # next
+		lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) empty # next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward $ Construct # twosome #: Identity x #: lift rst # next
+		lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (lift rst) # next
 	morphing (run . premorph -> Construct _ (Right _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
 
@@ -174,9 +174,9 @@ instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.
 	type Morphing (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) =
-		lift . twosome rst . TU . TU . Rightward $ Construct # twosome #: Identity x #: empty # next
+		lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) empty # next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . twosome rst . TU . TU . Rightward $ Construct # twosome #: Identity x #: lift lst # next
+		lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (lift lst) # next
 	morphing (run . premorph -> Construct _ (Left _) :*: _) = empty
 	morphing (run . premorph -> Construct _ End :*: _) = empty
 

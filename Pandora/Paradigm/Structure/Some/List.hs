@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.List where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern ((.|..))
-import Pandora.Pattern.Category ((.), ($), (#), (#:), identity)
+import Pandora.Pattern.Category ((.), ($), (#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -199,7 +199,7 @@ instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Ma
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Zipper List
-	morphing (premorph -> ne) = Tap # extract ne $ twosome # view #: sub @Tail #: ne # empty
+	morphing (premorph -> ne) = Tap # extract ne $ twosome # view (sub @Tail) ne # empty
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Zipper List
@@ -220,7 +220,7 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 	type Morphing (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
 		# past ->> modify . item @Push @List
-		# item @Push x #: lift future
+		# item @Push x (lift future)
 
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
