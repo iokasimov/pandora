@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
-import Pandora.Pattern.Category ((.), ($), (#))
+import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), ($>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), extend))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -26,7 +26,7 @@ infixr 7 .-+
 data Construction t a = Construct a (t :. Construction t := a)
 
 instance Covariant t => Covariant (Construction t) where
-	f <$> x = Construct # f (extract x) # f <$$> deconstruct x
+	f <$> ~(Construct x xs) = Construct # f x # f <$$> xs
 
 instance Avoidable t => Pointable (Construction t) where
 	point x = Construct x empty
@@ -35,15 +35,13 @@ instance Covariant t => Extractable (Construction t) where
 	extract ~(Construct x _) = x
 
 instance Applicative t => Applicative (Construction t) where
-	f <*> x = Construct # extract f (extract x)
-		$ deconstruct f <**> deconstruct x
+	~(Construct f fs) <*> ~(Construct x xs) = Construct # f x # fs <**> xs
 
 instance Traversable t => Traversable (Construction t) where
-	x ->> f = Construct <$> f (extract x) <*> deconstruct x ->>> f
+	~(Construct x xs) ->> f = Construct <$> f x <*> xs ->>> f
 
 instance Alternative t => Bindable (Construction t) where
-	x >>= f = Construct (extract . f $ extract x)
-		$ (deconstruct . f $ extract x) <+> (>>= f) <$> deconstruct x
+	~(Construct x xs) >>= f = Construct # extract (f x) # deconstruct (f x) <+> xs $>>= f
 
 instance Covariant t => Extendable (Construction t) where
 	x =>> f = Construct # f x # extend f <$> deconstruct x
