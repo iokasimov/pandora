@@ -25,13 +25,13 @@ instance Pointable (Environment e) where
 	point x = Environment (x !)
 
 instance Applicative (Environment e) where
-	f <*> x = Environment $ \e -> run f e $ run x e
+	f <*> x = Environment $ run f <*> run x
 
 instance Distributive (Environment e) where
 	g >>- f = Environment $ g >>- (run <$> f)
 
 instance Bindable (Environment e) where
-	Environment x >>= f = Environment $ \e -> run % e . f . x $ e
+	Environment x >>= f = Environment $ \e -> (run % e) . f . x $ e
 
 instance Monad (Environment e) where
 

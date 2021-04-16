@@ -65,7 +65,7 @@ instance Monoid (List a) where
 
 instance Morphable Push List where
 	type Morphing Push List = Identity <:.:> List := (->)
-	morphing (premorph -> xs) = T_U $ lift . Construct % run xs . extract
+	morphing (premorph -> xs) = T_U $ lift . (Construct % run xs) . extract
 
 instance Morphable Pop List where
 	type Morphing Pop List = List
@@ -112,7 +112,7 @@ instance Substructure Tail List where
 
 -- | Transform any traversable structure into a stack
 linearize :: forall t a . Traversable t => t a -> List a
-linearize = TU . extract . run @(State (Maybe :. Nonempty List := a)) % Nothing . fold (Just .|.. Construct)
+linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just .|.. Construct)
 
 type instance Nonempty List = Construction Maybe
 

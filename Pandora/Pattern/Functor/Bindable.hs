@@ -30,7 +30,7 @@ class Covariant t => Bindable t where
 	f >=> g = \x -> f x >>= g
 	-- | Right-to-left Kleisli composition
 	(<=<) :: (b -> t c) -> (a -> t b) -> (a -> t c)
-	g <=< f  = f >=> g
+	g <=< f = f >=> g
 
 	($>>=) :: Covariant u => u :. t := a -> (a -> t b) -> u :. t := b
 	x $>>= f = (>>= f) <$> x

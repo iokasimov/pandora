@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (~~>))
 
 infixl 1 #
 infixr 0 $
-infixr 8 .
+infixr 9 .
 
 class Category (m :: * -> * -> *) where
 	identity :: m a a

@@ -26,7 +26,7 @@ instance Adjoint (Store s) (State s) where
 	(-|) :: a -> (Store s a -> b) -> State s b
 	x -| f = State $ \s -> (:*:) s . f . Store $ s :*: (x !)
 	(|-) :: Store s a -> (a -> State s b) -> b
-	Store (s :*: f) |- g = extract . run % s . g $ f s
+	Store (s :*: f) |- g = extract . (run % s) . g $ f s
 
 instance Adjoint (Accumulator e) (Imprint e) where
 	x -| f = Imprint $ x -| f . Accumulator

@@ -38,15 +38,15 @@ instance (forall u . Bindable u) => Liftable (Continuation r) where
 
 -- | Call with current continuation
 cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
-cwcc f = Continuation $ \g -> run % g . f $ Continuation . (!) . g
+cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . (!) . g
 
 -- | Delimit the continuation of any 'shift'
 reset :: (forall u . Bindable u, Monad t, Traversable t) => Continuation r t r -> Continuation s t r
-reset = lift . run % point
+reset = lift . (run % point)
 
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it
 shift :: Pointable t => ((a -> t r) -> Continuation r t r) -> Continuation r t a
-shift f = Continuation $ run % point . f
+shift f = Continuation $ (run % point) . f
 
 interruptable :: Pointable t => ((a -> Continuation a t a) -> Continuation a t a) -> t a
-interruptable = run % point . cwcc
+interruptable = (run % point) . cwcc

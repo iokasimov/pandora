@@ -407,3 +407,4 @@
 * Change arguments order in `order` expression
 * Rename `$:` to `#`, `$::` to `#:`, `$:::` to ` #::` and define `#:::`
 * Remove `#:`, `#::`, `#:::` infix operators
+* Change precedence for `.` infix operator
