@@ -11,7 +11,7 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
-import Pandora.Paradigm.Primary.Functor.Product (type (:*:))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
@@ -73,3 +73,12 @@ instance Morphable (Into (Construction Maybe)) (Vector r) where
 	type Morphing (Into (Construction Maybe)) (Vector r) = Construction Maybe
 	morphing (premorph -> Scalar x) = point x
 	morphing (premorph -> Vector x xs) = item @Push x $ into @(Nonempty List) xs
+
+class Vectorize a r where
+	vectorize :: r -> Vector r a
+
+instance Vectorize a a where
+	vectorize x = Scalar x
+
+instance Vectorize a r => Vectorize a (a :*: r) where
+	vectorize (x :*: r) = Vector x $ vectorize r

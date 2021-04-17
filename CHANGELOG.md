@@ -411,3 +411,4 @@
 * Change precedence for `*`, `+`, `-` infix operators
 * Change precedence for `#` infix operator
 * Move `Linear` module to `Paradigm.Primary`
+* Define experimental `Vectorize` typeclass
