@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Linear.Vector where
+module Pandora.Paradigm.Primary.Linear.Vector where
 
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))

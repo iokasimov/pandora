@@ -1,3 +1,3 @@
-module Pandora.Paradigm.Linear (module Exports) where
+module Pandora.Paradigm.Primary.Linear (module Exports) where
 
-import Pandora.Paradigm.Linear.Vector as Exports
+import Pandora.Paradigm.Primary.Linear.Vector as Exports
