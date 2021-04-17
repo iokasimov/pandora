@@ -73,4 +73,4 @@ deconstruct ~(Construct _ xs) = xs
 f .-+ x = Construct x $ (f .-+) <$> f x
 
 section :: Comonad t => t ~> Construction t
-section xs = Construct # extract xs # (xs =>> section)
+section xs = Construct # extract xs $ xs =>> section

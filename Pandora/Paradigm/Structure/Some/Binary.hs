@@ -43,21 +43,22 @@ type Binary = Maybe <:.> Construction Wye
 
 rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
 rebalance (Both x y) = extract x <=> extract y & order
-	(Construct # extract x $ Both # rebalance (deconstruct x) # rebalance (deconstruct y))
-	(Construct # extract y $ Both # x # rebalance (deconstruct y))
-	(Construct # extract x $ Both # rebalance (deconstruct x) # y)
+	# Construct (extract x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
+	# Construct (extract y) (Both # x # rebalance (deconstruct y))
+	# Construct (extract x) (Both # rebalance (deconstruct x) # y)
 
 instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
 	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift $ leaf x
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run # morph @Insert xs $ twosome # Identity x # Convergence f
-		in lift $ f x (extract ne) & order ne (ne & over (sub @Left) continue) (ne & over (sub @Right) continue)
+		in lift $ f x # extract ne & order # ne # over (sub @Left) continue ne # over (sub @Right) continue ne
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
 	focusing (run . extract -> Nothing) = Store $ Nothing :*: Tag . TU . comap leaf
-	focusing (run . extract -> Just x) = Store $ Just (extract x) :*: Tag . lift . resolve (Construct % deconstruct x) (rebalance $ deconstruct x)
+	focusing (run . extract -> Just x) = Store $ Just # extract x :*: Tag . lift
+		. resolve (Construct % deconstruct x) (rebalance $ deconstruct x)
 
 instance Measurable Heighth Binary where
 	type Measural Heighth Binary a = Numerator

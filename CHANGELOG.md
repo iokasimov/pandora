@@ -409,3 +409,4 @@
 * Remove `#:`, `#::`, `#:::` infix operators
 * Change precedence for `.` infix operator
 * Change precedence for `*`, `+`, `-` infix operators
+* Change precedence for `#` infix operator
