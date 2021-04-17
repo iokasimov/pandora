@@ -412,3 +412,4 @@
 * Change precedence for `#` infix operator
 * Move `Linear` module to `Paradigm.Primary`
 * Define experimental `Vectorize` typeclass
+* Define `Matrix` datatype as combination of `Vector`'s

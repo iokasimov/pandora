@@ -120,6 +120,7 @@ library
     -- Linear albegra's primitives
     Pandora.Paradigm.Primary.Linear
     Pandora.Paradigm.Primary.Linear.Vector
+    Pandora.Paradigm.Primary.Linear.Matrix
 
     Pandora.Pattern
     -- Category typeclass
