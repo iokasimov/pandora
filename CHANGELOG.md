@@ -408,3 +408,4 @@
 * Rename `$:` to `#`, `$::` to `#:`, `$:::` to ` #::` and define `#:::`
 * Remove `#:`, `#::`, `#:::` infix operators
 * Change precedence for `.` infix operator
+* Change precedence for `*`, `+`, `-` infix operators

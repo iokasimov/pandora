@@ -1,6 +1,6 @@
 module Pandora.Pattern.Object.Semigroup (Semigroup (..)) where
 
-infixl 6 +
+infixl 7 +
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
