@@ -413,3 +413,5 @@
 * Move `Linear` module to `Paradigm.Primary`
 * Define experimental `Vectorize` typeclass
 * Define `Matrix` datatype as combination of `Vector`'s
+* Define `|>` datatype to use it for combining `Substructure` instances
+* Define `Substructured` type synonymous as constraint kind
