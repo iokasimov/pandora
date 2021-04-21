@@ -28,3 +28,5 @@ data (|>) (i :: * -> k) (j :: * -> k') a
 instance (Covariant t, Covariant (Substructural i t), Substructure i t, Substructure j (Substructural i t)) => Substructure (i |> j) t where
 	type Substructural (i |> j) t = Substructural j (Substructural i t)
 	substructure = extract . run >-> (unite . point <$>) $ sub @i |> sub @j
+
+type Substructured i source target = (Substructure i source, Substructural i source ~ target)
