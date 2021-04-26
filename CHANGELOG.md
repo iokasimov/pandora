@@ -417,3 +417,4 @@
 * Define `Substructured` type synonymous as constraint kind
 
 # 0.4.1
+* Generalize `$` and `#` `Category`'s infix operators
