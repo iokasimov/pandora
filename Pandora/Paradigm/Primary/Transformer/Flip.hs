@@ -1,5 +1,8 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Primary.Transformer.Flip where
 
+import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 
@@ -10,5 +13,5 @@ instance Interpreted (Flip v a) where
 	run ~(Flip x) = x
 	unite = Flip
 
-instance Bivariant v => Bivariant (Flip v) where
+instance (forall i . Covariant (Flip v i), Bivariant v) => Bivariant (Flip v) where
 	f <-> g = \x -> (g <-> f) ||= x

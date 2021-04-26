@@ -1,5 +1,7 @@
 module Pandora.Pattern.Functor.Bivariant where
 
+import Pandora.Pattern.Functor.Covariant (Covariant)
+
 infixl 4 <->
 
 {- |
@@ -8,9 +10,10 @@ infixl 4 <->
 > * Parametricity: bimap  (f . g) (h . i) ≡ bimap f h . bimap g i
 -}
 
-class Bivariant (v :: * -> * -> *) where
+class (forall i . Covariant (v i)) => Bivariant (v :: * -> * -> *) where
 	{-# MINIMAL (<->) #-}
-	(<->) :: (a -> b) -> (c -> d) -> v a c -> v b d
+	(<->) :: (forall i . Covariant (v i)) => (a -> b) -> (c -> d) -> v a c -> v b d
+
 	-- | Prefix version of '<->'
-	bimap :: (a -> b) -> (c -> d) -> v a c -> v b d
+	bimap :: (forall i . Covariant (v i)) => (a -> b) -> (c -> d) -> v a c -> v b d
 	bimap f g x = (f <-> g) x

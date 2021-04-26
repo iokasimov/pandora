@@ -21,11 +21,11 @@ instance Interpreted (T_U ct cu p t u) where
 	run ~(T_U x) = x
 	unite = T_U
 
-instance (Bivariant p, Covariant t, Covariant u) => Covariant (t <:.:> u := p) where
+instance (forall i . Covariant (p i), Bivariant p, Covariant t, Covariant u) => Covariant (t <:.:> u := p) where
 	f <$> x = ((f <$>) <-> (f <$>)) ||= x
 
 instance (Divariant p, Contravariant t, Covariant u) => Covariant (t >:.:> u := p) where
 	f <$> x = ((f >$<) >-> (f <$>)) ||= x
 
-instance (Bivariant p, Contravariant t, Contravariant u) => Contravariant (t >:.:< u := p) where
+instance (forall i . Covariant (p i), Bivariant p, Contravariant t, Contravariant u) => Contravariant (t >:.:< u := p) where
 	f >$< x = ((f >$<) <-> (f >$<)) ||= x
