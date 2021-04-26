@@ -1,5 +1,7 @@
 module Pandora.Pattern.Functor.Divariant where
 
+import Pandora.Pattern.Functor.Covariant (Covariant)
+
 infixl 4 >->
 
 {- |
@@ -8,7 +10,7 @@ infixl 4 >->
 > * Interpreted: dimap (f . g) (h . i) ≡ dimap g h . dimap f i
 -}
 
-class Divariant (v :: * -> * -> *) where
+class (forall i . Covariant (v i)) => Divariant (v :: * -> * -> *) where
 	{-# MINIMAL (>->) #-}
 	(>->) :: (a -> b) -> (c -> d) -> v b c -> v a d
 	-- | Prefix version of '>->'

@@ -1,7 +1,5 @@
 module Pandora.Pattern.Category (Category (..)) where
 
-import Pandora.Core.Functor (type (~~>))
-
 infixl 2 #
 infixr 0 $
 infixr 9 .

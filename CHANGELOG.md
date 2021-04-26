@@ -418,4 +418,4 @@
 
 # 0.4.1
 * Generalize `$` and `#` `Category`'s infix operators
-* Add `Covariant` constraint in `Bivariant` typeclass definition
+* Add `Covariant` constraint in `Bivariant` and `Divariant` typeclasses definition
