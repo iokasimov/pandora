@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
 
@@ -33,8 +33,8 @@ instance Liftable Outline where
 	lift t = Outlined t (Line identity)
 
 instance Hoistable Outline where
-	hoist _ (Line x) = Line x
-	hoist f (Outlined x y) = Outlined # f x # hoist f y
+	_ /|\ Line x = Line x
+	f /|\ Outlined x y = Outlined # f x # f /|\ y
 
 instance (Extractable t, Pointable t, Applicative t) => Interpreted (Outline t) where
 	type Primary (Outline t) a = t a

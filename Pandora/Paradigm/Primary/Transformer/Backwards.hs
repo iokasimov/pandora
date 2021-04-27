@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Functor.Function ((&))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
@@ -49,4 +49,4 @@ instance Lowerable Backwards where
 	lower = run
 
 instance Hoistable Backwards where
-	hoist f (Backwards x) = Backwards $ f x
+	f /|\ Backwards x = Backwards $ f x

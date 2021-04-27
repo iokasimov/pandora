@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Functor.Function ()
@@ -65,8 +65,8 @@ instance Liftable Jack where
 	lift = Other
 
 instance Hoistable Jack where
-	hoist _ (It x) = It x
-	hoist f (Other x) = Other $ f x
+	_ /|\ It x = It x
+	f /|\ Other x = Other $ f x
 
 instance (Setoid a, Setoid (t a)) => Setoid (Jack t a) where
 	It x == It y = x == y

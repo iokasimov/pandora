@@ -419,3 +419,4 @@
 # 0.4.1
 * Generalize `$` and `#` `Category`'s infix operators
 * Add `Covariant` constraint in `Bivariant` and `Divariant` typeclasses definition
+* Add infix version of `hoist` method in `Hoistable` typeclass - /|\

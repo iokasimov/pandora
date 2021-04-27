@@ -9,5 +9,11 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 > * Interpreted of morphisms: hoist (f . g) ≡ hoist f . hoist g
 -}
 
+infixr 5 /|\
+
 class Hoistable t where
+	{-# MINIMAL (/|\) #-}
+	(/|\) :: Covariant u => u ~> v -> t u ~> t v
+
 	hoist :: Covariant u => u ~> v -> t u ~> t v
+	hoist = (/|\)

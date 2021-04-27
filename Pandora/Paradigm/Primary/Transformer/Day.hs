@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Functor.Function ((!!))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 
@@ -34,4 +34,4 @@ instance Extractable t => Lowerable (Day t) where
 	lower (Day tb uc bca) = bca (extract tb) <$> uc
 
 instance Hoistable (Day t) where
-	hoist g (Day tb uc bca) = Day tb # g uc # bca
+	g /|\ Day tb uc bca = Day tb # g uc # bca

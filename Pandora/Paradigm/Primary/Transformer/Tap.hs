@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
 
 data Tap t a = Tap a (t a)
@@ -41,4 +41,4 @@ instance Lowerable Tap where
 	lower (Tap _ xs) = xs
 
 instance Hoistable Tap where
-	hoist f (Tap x xs) = Tap x # f xs
+	f /|\ Tap x xs = Tap x # f xs

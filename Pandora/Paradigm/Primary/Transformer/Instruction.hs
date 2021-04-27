@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\), hoist))
 import Pandora.Paradigm.Primary.Functor.Function ()
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
@@ -55,5 +55,5 @@ instance (forall t . Monad t) => Lowerable Instruction where
 	lower (Instruct xs) = xs >>= lower
 
 instance (forall v . Covariant v) => Hoistable Instruction where
-	hoist _ (Enter x) = Enter x
-	hoist f (Instruct xs) = Instruct $ hoist f <$> f xs
+	_ /|\ Enter x = Enter x
+	f /|\ Instruct xs = Instruct $ hoist f <$> f xs

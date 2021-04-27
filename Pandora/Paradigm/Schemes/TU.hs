@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), join))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable (hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype TU ct cu t u a = TU (t :. u := a)
@@ -64,5 +64,5 @@ instance Extractable t => Lowerable (TU Covariant Covariant t) where
 	lower (TU x) = extract x
 
 instance Covariant t => Hoistable (TU Covariant Covariant t) where
-	hoist :: u ~> v -> (t <:.> u ~> t <:.> v)
-	hoist f (TU x) = TU $ f <$> x
+	(/|\) :: u ~> v -> (t <:.> u ~> t <:.> v)
+	f /|\ TU x = TU $ f <$> x
