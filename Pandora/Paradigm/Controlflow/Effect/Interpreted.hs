@@ -5,6 +5,8 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Functor.Function ()
 
+infixr 6 ||=, =||
+
 type family Schematic (c :: (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 
 class Interpreted t where
