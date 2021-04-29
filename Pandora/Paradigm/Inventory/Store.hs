@@ -3,9 +3,8 @@
 module Pandora.Paradigm.Inventory.Store where
 
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
-import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (.#..)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -28,7 +27,7 @@ instance Extractable (Store s) where
 	extract = (|- ($)) . run
 
 instance Extendable (Store s) where
-	Store x =>> f = Store $ f <$$> (Store .|.. (-| identity)) <$> x
+	Store x =>> f = Store $ f <$$> Store .#.. (-| identity) <$> x
 
 instance Comonad (Store s) where
 

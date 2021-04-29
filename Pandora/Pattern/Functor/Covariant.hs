@@ -1,6 +1,7 @@
 module Pandora.Pattern.Functor.Covariant where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (<:=))
+import Pandora.Pattern.Category (Category ((.)))
 
 infixl 4 <$>, <$, $>
 infixl 3 <$$>
@@ -11,6 +12,8 @@ infixl 1 <&>
 infixl 2 <&&>
 infixl 3 <&&&>
 infixl 4 <&&&&>
+
+infixr 7 .#.., .#..., .#....
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -61,3 +64,15 @@ class Covariant (t :: * -> *) where
 	(<&&&&>) :: (Covariant u, Covariant v, Covariant w)
 		=> t :. u :. v :. w := a -> (a -> b) -> t :. u :. v :. w := b
 	x <&&&&> f = f <$$$$> x
+
+	(.#..) :: (t ~ v a, Category v)
+		=> v c d -> v a :. v b := c -> v a :. v b := d
+	f .#.. g = (f .) <$> g
+
+	(.#...) :: (t ~ v a, t ~ v b, Category v, Covariant (v a), Covariant (v b))
+		=> v d e -> v a :. v b :. v c := d -> v a :. v b :. v c := e
+	f .#... g = (f .) <$$> g
+
+	(.#....) :: (t ~ v a, t ~ v b, t ~ v c, Category v, Covariant (v a), Covariant (v b), Covariant (v c))
+		=> v e f -> v a :. v b :. v c :. v d := e -> v a :. v b :. v c :. v d := f
+	f .#.... g = (f .) <$$$> g

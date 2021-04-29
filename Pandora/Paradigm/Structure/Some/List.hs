@@ -3,9 +3,8 @@
 module Pandora.Paradigm.Structure.Some.List where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern ((.|..))
 import Pandora.Pattern.Category ((.), ($), (#), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
@@ -114,7 +113,7 @@ instance Substructure Tail List where
 
 -- | Transform any traversable structure into a stack
 linearize :: forall t a . Traversable t => t a -> List a
-linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just .|.. Construct)
+linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just .#.. Construct)
 
 type instance Nonempty List = Construction Maybe
 

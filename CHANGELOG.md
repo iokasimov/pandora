@@ -423,3 +423,4 @@
 * Define `PQ_` joint schema exclusively for `Lens` type
 * Change `Lens` representation - wrap it in `PQ_` joint schema
 * Remove `|>` type operator in favor of `.` `Category` method
+* Rename `.|..`, `.|...`, `.|....` to `.#..`, `.#...`, `.#....` and move them to `Covariant` typeclass
