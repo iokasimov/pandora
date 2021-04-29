@@ -28,10 +28,6 @@ instance Category Lens where
 -- Lens as natural transformation
 type (:~.) src tgt = forall a . Lens (src a) (tgt a)
 
--- | Lens composition infix operator
-(|>) :: Lens src tgt -> Lens tgt new -> Lens src new
-(|>) from to = PQ_ $ \src -> src <$ (run to . position $ run from src)
-
 -- | Get the target of a lens
 view :: Lens src tgt -> src -> tgt
 view lens = position . run lens
