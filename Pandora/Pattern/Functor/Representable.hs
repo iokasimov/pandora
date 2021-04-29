@@ -11,6 +11,8 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 > * Interchange tabulation: comap f . tabulate ≡ tabulate . comap f
 -}
 
+infixr 6 <#>
+
 class Pointable t => Representable t where
 	{-# MINIMAL (<#>), tabulate #-}
 	type Representation t :: *

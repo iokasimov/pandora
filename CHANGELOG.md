@@ -419,8 +419,8 @@
 # 0.4.1
 * Generalize `$` and `#` `Category`'s infix operators
 * Add `Covariant` constraint in `Bivariant` and `Divariant` typeclasses definition
-* Add infix version of `hoist` method in `Hoistable` typeclass - /|\
+* Add infix version of `hoist` method in `Hoistable` typeclass - `/|\`
 * Define `PQ_` joint schema exclusively for `Lens` type
 * Change `Lens` representation - wrap it in `PQ_` joint schema
-* Remove `|>` type operator in favor of `.` `Category` method
+* Remove `|>` lens composition operator in favor of `.` `Category` method
 * Rename `.|..`, `.|...`, `.|....` to `.#..`, `.#...`, `.#....` and move them to `Covariant` typeclass

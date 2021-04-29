@@ -42,4 +42,4 @@ over lens f = extract . retrofit f . run lens
 
 -- | Representable based lens
 represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
-represent r = PQ_ $ \x -> Store $ (r <#> x) :*: \new -> tabulate (\r' -> r' == r ? new $ r' <#> x)
+represent r = PQ_ $ \x -> Store $ r <#> x :*: \new -> tabulate (\r' -> r' == r ? new $ r' <#> x)
