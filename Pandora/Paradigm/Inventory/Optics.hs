@@ -1,12 +1,13 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Paradigm.Inventory.Optics where
 
-import Pandora.Core.Functor (type (:=>))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category (Category (identity, (.), ($)))
 import Pandora.Pattern.Functor.Covariant ((<$))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Inventory.Store (Store (Store), position, look, retrofit)
@@ -19,6 +20,10 @@ type (:-.) src tgt = Lens src tgt
 
 -- Reference to taret within some source
 type Lens = PQ_ (->) Store
+
+instance Category Lens where
+	identity = PQ_ $ \src -> Store $ src :*: identity
+	PQ_ to . PQ_ from = PQ_ $ \src -> src <$ (to . position $ from src)
 
 -- Lens as natural transformation
 type (:~.) src tgt = forall a . Lens (src a) (tgt a)

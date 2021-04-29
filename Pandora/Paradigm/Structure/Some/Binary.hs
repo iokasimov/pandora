@@ -56,7 +56,7 @@ instance Morphable Insert Binary where
 
 instance (forall a . Chain a) => Focusable Root Binary where
 	type Focusing Root Binary a = Maybe a
-	focusing = PQ_ $ \binary -> case run # extract binary of
+	focusing = PQ_ $ \bintree -> case run # extract bintree of
 		Nothing -> Store $ Nothing :*: Tag . TU . comap leaf
 		Just x -> Store $ Just # extract x :*: Tag . lift . resolve (Construct % deconstruct x) (rebalance $ deconstruct x)
 
@@ -70,13 +70,13 @@ instance Nullable Binary where
 
 instance Substructure Left Binary where
 	type Substructural Left Binary = Binary
-	substructure = PQ_ $ \binary -> case run . extract . run # binary of
+	substructure = PQ_ $ \bintree -> case run . extract . run # bintree of
 		Nothing -> Store $ empty :*: lift . identity
 		Just tree -> lift . lift <$> run (sub @Left) tree
 
 instance Substructure Right Binary where
 	type Substructural Right Binary = Binary
-	substructure = PQ_ $ \binary -> case run . extract . run # binary of
+	substructure = PQ_ $ \bintree -> case run . extract . run # bintree of
 		Nothing -> Store $ empty :*: lift . identity
 		Just tree -> lift . lift <$> run (sub @Right) tree
 
@@ -108,7 +108,7 @@ instance Morphable Insert (Construction Wye) where
 
 instance Focusable Root (Construction Wye) where
 	type Focusing Root (Construction Wye) a = a
-	focusing = PQ_ $ \binary -> case extract binary of
+	focusing = PQ_ $ \bintree -> case extract bintree of
 		Construct x xs -> Store $ x :*: Tag . Construct % xs
 
 instance Measurable Heighth (Construction Wye) where
@@ -122,7 +122,7 @@ instance Measurable Heighth (Construction Wye) where
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) = Binary
-	substructure = PQ_ $ \binary -> case extract # run binary of
+	substructure = PQ_ $ \bintree -> case extract # run bintree of
 		Construct x End -> Store $ empty :*: lift . resolve (Construct x . Left) (leaf x) . run
 		Construct x (Left lst) -> Store $ lift lst :*: lift . Construct x . resolve Left End . run
 		Construct x (Right rst) -> Store $ empty :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
@@ -130,7 +130,7 @@ instance Substructure Left (Construction Wye) where
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) = Binary
-	substructure = PQ_ $ \binary -> case extract # run binary of
+	substructure = PQ_ $ \bintree -> case extract # run bintree of
 		Construct x End -> Store $ empty :*: lift . resolve (Construct x . Right) (leaf x) . run
 		Construct x (Left lst) -> Store $ empty :*: lift . Construct x . resolve (Both lst) (Left lst) . run
 		Construct x (Right rst) -> Store $ lift rst :*: lift . Construct x . resolve Right End . run

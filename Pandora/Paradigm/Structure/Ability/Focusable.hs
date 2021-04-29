@@ -2,10 +2,9 @@
 
 module Pandora.Paradigm.Structure.Ability.Focusable where
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant ((<$>))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Optics (type (:-.))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
