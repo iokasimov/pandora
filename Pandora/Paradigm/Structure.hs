@@ -26,6 +26,7 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
+import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
 
 instance Monotonic s a => Monotonic s (s :*: a) where
 	reduce f r x = reduce f # f (attached x) r # extract x
@@ -35,13 +36,13 @@ instance Nullable Maybe where
 
 instance Substructure Right (Product s) where
 	type Substructural Right (Product s) = Identity
-	substructure (extract . run -> s :*: x) =
-		Store $ Identity x :*: lift . (s :*:) . extract
+	substructure = PQ_ $ \product -> case extract # run product of
+		s :*: x -> Store $ Identity x :*: lift . (s :*:) . extract
 
 instance Covariant t => Substructure Tail (Tap t) where
 	type Substructural Tail (Tap t) = t
-	substructure (extract . run -> Tap x xs) =
-		Store $ xs :*: lift . Tap x
+	substructure = PQ_ $ \tap -> case extract # run tap of
+		Tap x xs -> Store $ xs :*: lift . Tap x
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
@@ -70,17 +71,19 @@ instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) B
 
 instance Focusable Left (Product s) where
 	type Focusing Left (Product s) a = s
-	focusing (extract -> s :*: x) = Store $ s :*: Tag . (:*: x)
+	focusing = PQ_ $ \product -> case extract product of
+		s :*: x -> Store $ s :*: Tag . (:*: x)
 
 instance Focusable Right (Product s) where
 	type Focusing Right (Product s) a = a
-	focusing (extract -> s :*: x) = Store $ x :*: Tag . (s :*:)
+	focusing = PQ_ $ \product -> case extract product of
+		s :*: x -> Store $ x :*: Tag . (s :*:)
 
 instance Accessible s (s :*: a) where
-	access ~(s :*: x) = Store $ s :*: (:*: x)
+	access = PQ_ $ \(s :*: x) -> Store $ s :*: (:*: x)
 
 instance Accessible a (s :*: a) where
-	access ~(s :*: x) = Store $ x :*: (s :*:)
+	access = PQ_ $ \(s :*: x) -> Store $ x :*: (s :*:)
 
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @a |> access @b

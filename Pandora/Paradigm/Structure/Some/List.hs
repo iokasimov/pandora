@@ -38,6 +38,7 @@ import Pandora.Paradigm.Inventory.Optics (view)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
+import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
@@ -93,9 +94,9 @@ instance Stack List where
 
 instance Focusable Head List where
 	type Focusing Head List a = Maybe a
-	focusing (extract -> stack) = Store $ extract <$> run stack :*: \case
-		Just x -> stack & view (sub @Tail) & item @Push x & Tag
-		Nothing -> stack & view (sub @Tail) & Tag
+	focusing = PQ_ $ \stack -> Store $ extract <$> run (extract stack) :*: \case
+		Just x -> extract stack & view (sub @Tail) & item @Push x & Tag
+		Nothing -> extract stack & view (sub @Tail) & Tag
 
 instance Measurable Length List where
 	type Measural Length List a = Numerator
@@ -107,8 +108,9 @@ instance Nullable List where
 
 instance Substructure Tail List where
 	type Substructural Tail List = List
-	substructure (run . extract . run -> Just ns) = lift . lift <$> sub @Tail ns
-	substructure (run . extract . run -> Nothing) = Store $ empty :*: lift . identity
+	substructure = PQ_ $ \x -> case run . extract . run $ x of
+		Just ns -> lift . lift <$> run (sub @Tail) ns
+		Nothing -> Store $ empty :*: lift . identity
 
 -- | Transform any traversable structure into a stack
 linearize :: forall t a . Traversable t => t a -> List a
@@ -126,7 +128,7 @@ instance Morphable (Into List) (Construction Maybe) where
 
 instance Focusable Head (Construction Maybe) where
 	type Focusing Head (Construction Maybe) a = a
-	focusing (extract -> stack) = Store $ extract stack :*: Tag . Construct % deconstruct stack
+	focusing = PQ_ $ \stack -> Store $ extract (extract stack) :*: Tag . Construct % deconstruct (extract stack)
 
 instance Morphable Push (Construction Maybe) where
 	type Morphing Push (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
@@ -142,8 +144,8 @@ instance Monotonic a (Construction Maybe a) where
 
 instance Substructure Tail (Construction Maybe) where
 	type Substructural Tail (Construction Maybe) = List
-	substructure (extract . run -> Construct x xs) =
-		Store $ TU xs :*: lift . Construct x . run
+	substructure = PQ_ $ \stack -> case extract $ run stack of
+		Construct x xs -> Store $ TU xs :*: lift . Construct x . run
 
 type instance Zipper List = Tap (List <:.:> List := (:*:))
 
@@ -157,7 +159,7 @@ instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 
 instance Focusable Head (Tap (List <:.:> List := (:*:))) where
 	type Focusing Head (Tap (List <:.:> List := (:*:))) a = a
-	focusing (extract -> zipper) = Store $ extract zipper :*: Tag . Tap % lower zipper
+	focusing = PQ_ $ \zipper -> Store $ extract (extract zipper) :*: Tag . Tap % lower (extract zipper)
 
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
@@ -187,7 +189,7 @@ instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Constructio
 
 instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Focusing Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) a = a
-	focusing (extract -> zipper) = Store $ extract zipper :*: Tag . Tap % lower zipper
+	focusing = PQ_ $ \zipper -> Store $ extract (extract zipper) :*: Tag . Tap % lower (extract zipper)
 
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)

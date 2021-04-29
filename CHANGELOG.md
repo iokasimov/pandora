@@ -420,4 +420,5 @@
 * Generalize `$` and `#` `Category`'s infix operators
 * Add `Covariant` constraint in `Bivariant` and `Divariant` typeclasses definition
 * Add infix version of `hoist` method in `Hoistable` typeclass - /|\
-* Define `PQ_` joint schema
+* Define `PQ_` joint schema exclusively for `Lens` type
+* Change `Lens` representation - wrap it in `PQ_` joint schema

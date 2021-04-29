@@ -38,7 +38,7 @@ instance Adjoint (Equipment e) (Environment e) where
 
 zoom :: Stateful bg t => Lens bg ls -> State ls ~> t
 zoom lens less = let restruct f v = f <-> identity $ run less v
-	in adapt . State $ (|- restruct) . run . lens
+	in adapt . State $ (|- restruct) . run . run lens
 
 (=<>) :: Stateful src t => src :-. tgt -> tgt -> t src
 lens =<> new = modify $ set lens new
