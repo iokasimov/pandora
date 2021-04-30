@@ -14,4 +14,4 @@ instance Interpreted (Flip v a) where
 	unite = Flip
 
 instance (forall i . Covariant (Flip v i), Bivariant v) => Bivariant (Flip v) where
-	f <-> g = \x -> (g <-> f) ||= x
+	f <-> g = (g <-> f ||=)

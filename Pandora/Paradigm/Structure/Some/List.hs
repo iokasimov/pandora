@@ -204,7 +204,7 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) 
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Zipper List
-	morphing (premorph -> zipper) = Tap # extract zipper $ (lift <-> lift) ||= lower zipper
+	morphing (premorph -> zipper) = Tap # extract zipper $ lift <-> lift ||= lower zipper
 
 instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper (Construction Maybe)

@@ -19,7 +19,7 @@ class Substructure f t where
 	substructure :: Tagged f <:.> t :~. Substructural f t
 
 	sub :: Covariant t => t :~. Substructural f t
-	sub = (lift >-> (extract . run <$>)) ||= substructure @f @t
+	sub = lift >-> (extract . run <$>) ||= substructure @f @t
 
 data Segment a = Tail a
 
@@ -27,6 +27,6 @@ data (|>) (i :: * -> k) (j :: * -> k') a
 
 instance (Covariant t, Covariant (Substructural i t), Substructure i t, Substructure j (Substructural i t)) => Substructure (i |> j) t where
 	type Substructural (i |> j) t = Substructural j (Substructural i t)
-	substructure = (extract . run >-> (unite . point <$>)) ||= sub @j . sub @i
+	substructure = extract . run >-> (unite . point <$>) ||= sub @j . sub @i
 
 type Substructured i source target = (Substructure i source, Substructural i source ~ target)
