@@ -425,3 +425,4 @@
 * Remove `|>` lens composition operator in favor of `.` `Category` method
 * Rename `.|..`, `.|...`, `.|....` to `.#..`, `.#...`, `.#....` and move them to `Covariant` typeclass
 * Change precedence for `||=` and `=||` infix operators
+* Define precedence for `>-<` infix operator
