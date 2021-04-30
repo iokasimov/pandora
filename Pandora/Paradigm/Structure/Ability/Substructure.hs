@@ -3,6 +3,7 @@
 
 module Pandora.Paradigm.Structure.Ability.Substructure where
 
+import Pandora.Core.Functor (type (|>))
 import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -22,8 +23,6 @@ class Substructure f t where
 	sub = lift >-> (extract . run <$>) ||= substructure @f @t
 
 data Segment a = Tail a
-
-data (|>) (i :: * -> k) (j :: * -> k') a
 
 instance (Covariant t, Covariant (Substructural i t), Substructure i t, Substructure j (Substructural i t)) => Substructure (i |> j) t where
 	type Substructural (i |> j) t = Substructural j (Substructural i t)

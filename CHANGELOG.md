@@ -426,3 +426,4 @@
 * Rename `.|..`, `.|...`, `.|....` to `.#..`, `.#...`, `.#....` and move them to `Covariant` typeclass
 * Change precedence for `||=` and `=||` infix operators
 * Define precedence for `>-<` infix operator
+* Move `|>` existential polymorphic type to `Core.Functor` module
