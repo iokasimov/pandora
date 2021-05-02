@@ -1,5 +1,3 @@
-{-# LANGUAGE UndecidableInstances #-}
-
 module Pandora.Paradigm.Structure.Modification.Prefixed where
 
 import Pandora.Core.Functor (type (:.), type (:=))
@@ -7,6 +5,8 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
+import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
+import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
@@ -26,3 +26,9 @@ instance Traversable t => Traversable (Prefixed t k) where
 
 instance (Monoid k, Pointable t) => Pointable (Prefixed t k) where
 	point = Prefixed . point . (:*:) zero
+
+instance Alternative t => Alternative (Prefixed t k) where
+	x <+> y = Prefixed $ run x <+> run y
+
+instance Avoidable t => Avoidable (Prefixed t k) where
+	empty = Prefixed empty
