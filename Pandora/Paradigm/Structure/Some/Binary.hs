@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
 import Pandora.Pattern.Category (identity, (.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
@@ -32,12 +32,13 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (over)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root), focus)
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert), Vertical (Up, Down), morph, premorph)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert, Vary, Element), Vertical (Up, Down), morph, premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
+import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 type Binary = Maybe <:.> Construction Wye
 
@@ -180,3 +181,13 @@ instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.
 
 leaf :: a :=> Nonempty Binary
 leaf x = Construct x End
+
+instance Morphable (Vary Element) (Prefixed Binary k) where
+	type Morphing (Vary Element) (Prefixed Binary k) = (Product (k :*: Comparison k) <:.> Identity) <:.:> Prefixed Binary k := (->)
+	morphing (run . run . premorph -> Nothing) = T_U $ \(TU ((key :*: _) :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
+	morphing (run . run . premorph -> Just tree) = T_U $ \(TU ((key :*: Convergence f) :*: Identity value)) ->
+		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU ((key :*: Convergence f) :*: Identity value)
+		 -- FIXME: change focused value with new one
+		in let root = extract tree in Prefixed . lift $ f key (attached root) & order
+			# (over (focus @Root) ($> value) tree)
+			# over (sub @Left) continue tree # over (sub @Right) continue tree
