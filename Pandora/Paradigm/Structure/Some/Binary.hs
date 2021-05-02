@@ -138,6 +138,22 @@ instance Substructure Right (Construction Wye) where
 		Construct x (Right rst) -> Store $ lift rst :*: lift . Construct x . resolve Right End . run
 		Construct x (Both lst rst) -> Store $ lift rst :*: lift . Construct x . resolve (Both lst) (Left lst) . run
 
+instance Morphable (Vary Element) (Prefixed Binary k) where
+	type Morphing (Vary Element) (Prefixed Binary k) = (Product (k :*: Comparison k) <:.> Identity) <:.:> Prefixed Binary k := (->)
+	morphing (run . run . premorph -> Nothing) = T_U $ \(TU ((key :*: _) :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
+	morphing (run . run . premorph -> Just tree) = T_U $ \(TU ((key :*: Convergence f) :*: Identity value)) ->
+		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU ((key :*: Convergence f) :*: Identity value)
+		in let root = extract tree in Prefixed . lift $ f key # attached root & order
+			# over (focus @Root) ($> value) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
+
+instance Morphable (Lookup Key) (Prefixed Binary k) where
+	type Morphing (Lookup Key) (Prefixed Binary k) = (->) (k :*: Comparison k) <:.> Maybe
+	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
+	morphing (run . run . premorph -> Just tree) = TU $ \(key :*: Convergence f) ->
+		let root = extract tree in f key (attached root) & order # Just (extract root)
+			# run (morph @(Lookup Key) $ Prefixed # view (sub @Left) tree) (key :*: Convergence f)
+			# run (morph @(Lookup Key) $ Prefixed # view (sub @Right) tree) (key :*: Convergence f)
+
 data Biforked a = Top | Leftward a | Rightward a
 
 instance Covariant Biforked where
@@ -182,21 +198,3 @@ instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.
 
 leaf :: a :=> Nonempty Binary
 leaf x = Construct x End
-
-instance Morphable (Vary Element) (Prefixed Binary k) where
-	type Morphing (Vary Element) (Prefixed Binary k) = (Product (k :*: Comparison k) <:.> Identity) <:.:> Prefixed Binary k := (->)
-	morphing (run . run . premorph -> Nothing) = T_U $ \(TU ((key :*: _) :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
-	morphing (run . run . premorph -> Just tree) = T_U $ \(TU ((key :*: Convergence f) :*: Identity value)) ->
-		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU ((key :*: Convergence f) :*: Identity value)
-		 -- FIXME: change focused value with new one
-		in let root = extract tree in Prefixed . lift $ f key (attached root) & order
-			# (over (focus @Root) ($> value) tree)
-			# over (sub @Left) continue tree # over (sub @Right) continue tree
-
-instance Morphable (Lookup Key) (Prefixed Binary k) where
-	type Morphing (Lookup Key) (Prefixed Binary k) = (->) (Identity k :*: Comparison k) <:.> Maybe
-	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
-	morphing (run . run . premorph -> Just tree) = TU $ \(Identity key :*: Convergence f) ->
-		let root = extract tree in f key (attached root) & order # Just (extract root)
-			# run (morph @(Lookup Key) $ Prefixed # view (sub @Left) tree) (Identity key :*: Convergence f)
-			# run (morph @(Lookup Key) $ Prefixed # view (sub @Right) tree) (Identity key :*: Convergence f)
