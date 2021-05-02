@@ -29,7 +29,7 @@ premorph = extract . run
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
 
-data Morph a = Rotate a | Into a | Insert a | Push a | Pop a | Delete a | Find a | Lookup a | Vary a | Element a
+data Morph a = Rotate a | Into a | Insert a | Push a | Pop a | Delete a | Find a | Lookup a | Vary a | Key a | Element a
 
 data Occurrence a = All a | First a
 

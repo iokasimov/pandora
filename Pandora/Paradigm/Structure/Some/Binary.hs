@@ -29,13 +29,14 @@ import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), type (<:.>), typ
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (over)
+import Pandora.Paradigm.Inventory.Optics (over, view)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root), focus)
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Insert, Vary, Element), Vertical (Up, Down), morph, premorph)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
+	, Morph (Rotate, Into, Insert, Lookup, Vary, Key, Element), Vertical (Up, Down), morph, premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
@@ -191,3 +192,11 @@ instance Morphable (Vary Element) (Prefixed Binary k) where
 		in let root = extract tree in Prefixed . lift $ f key (attached root) & order
 			# (over (focus @Root) ($> value) tree)
 			# over (sub @Left) continue tree # over (sub @Right) continue tree
+
+instance Morphable (Lookup Key) (Prefixed Binary k) where
+	type Morphing (Lookup Key) (Prefixed Binary k) = (->) (Identity k :*: Comparison k) <:.> Maybe
+	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
+	morphing (run . run . premorph -> Just tree) = TU $ \(Identity key :*: Convergence f) ->
+		let root = extract tree in f key (attached root) & order # Just (extract root)
+			# run (morph @(Lookup Key) $ Prefixed # view (sub @Left) tree) (Identity key :*: Convergence f)
+			# run (morph @(Lookup Key) $ Prefixed # view (sub @Right) tree) (Identity key :*: Convergence f)
