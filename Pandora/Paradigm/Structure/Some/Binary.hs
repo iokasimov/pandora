@@ -154,6 +154,10 @@ instance Morphable (Lookup Key) (Prefixed Binary k) where
 			# run (morph @(Lookup Key) $ Prefixed # view (sub @Left) tree) (key :*: Convergence f)
 			# run (morph @(Lookup Key) $ Prefixed # view (sub @Right) tree) (key :*: Convergence f)
 
+instance Morphable (Into Binary) (Prefixed Binary k) where
+	type Morphing (Into Binary) (Prefixed Binary k) = Binary
+	morphing (run . premorph -> prefixed) = extract <$> prefixed
+
 data Biforked a = Top | Leftward a | Rightward a
 
 instance Covariant Biforked where
