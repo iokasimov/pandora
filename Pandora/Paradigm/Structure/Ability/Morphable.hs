@@ -59,5 +59,5 @@ filter p xs = run # morph @(Delete f) xs # p
 find :: forall f t u a . (Morphable (Find f) t, Morphing (Find f) t ~ (Predicate <:.:> u := (->))) => Predicate a -> t a -> u a
 find p xs = run # morph @(Find f) xs # p
 
-vary :: forall mod key value t . (Chain key, Morphable (Vary mod) (t key), Morphing (Vary mod) (t key) ~ ((Product (key :*: Comparison key) <:.> Identity) <:.:> t key := (->))) => key -> value -> t key value -> t key value
-vary key value xs = run # morph @(Vary mod) @(t key) xs # TU ((key :*: Convergence (<=>)) :*: Identity value)
+vary :: forall mod key value t . (Chain key, Morphable (Vary mod) (t key), Morphing (Vary mod) (t key) ~ ((Product key <:.> Identity) <:.:> t key := (->))) => key -> value -> t key value -> t key value
+vary key value xs = run # morph @(Vary mod) @(t key) xs # TU (key :*: Identity value)
