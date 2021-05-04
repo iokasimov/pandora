@@ -427,3 +427,4 @@
 * Change precedence for `||=` and `=||` infix operators
 * Define precedence for `>-<` infix operator
 * Move `|>` existential polymorphic type to `Core.Functor` module
+* Remove `|>` existential polymorphic type and its Substructure instance

@@ -29,6 +29,3 @@ type t ~~> u = forall a b . t a b -> u a b
 type (::|:.) p a b = p (p a b) b
 type (::|.:) p a b = p a (p a b)
 type (::|::) p a b = p (p a b) (p a b)
-
--- Existential type for combining polymorphic types
-data (|>) (i :: * -> k) (j :: * -> k') a
