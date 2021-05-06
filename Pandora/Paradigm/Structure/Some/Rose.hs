@@ -24,7 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Lookup, Element), premorph, find)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
@@ -59,8 +59,8 @@ instance Substructure Just (Construction List) where
 	substructure = PQ_ $ \rose -> case extract # run rose of
 		Construct x xs -> Store $ TU xs :*: lift . Construct x . run
 
-instance Setoid k => Morphable (Lookup Element) (Prefixed Rose k) where
-	type Morphing (Lookup Element) (Prefixed Rose k) = (->) (Nonempty List k) <:.> Maybe
+instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
+	type Morphing (Lookup Key) (Prefixed Rose k) = (->) (Nonempty List k) <:.> Maybe
 	morphing (run . premorph -> TU Nothing) = TU $ \_ -> Nothing
 	morphing (run . premorph -> TU (Just tree)) = TU $ find_rose_sub_tree % tree
 
