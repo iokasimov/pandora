@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Rose where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant (comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -13,22 +13,23 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
-import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
+import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Lookup, Element, Key), premorph, find)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
+	, Morph (Lookup, Vary, Element, Key), premorph, find, vary)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
-import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
+import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 import Pandora.Paradigm.Structure.Some.List (List)
 
 type Rose = Maybe <:.> Construction List
@@ -70,3 +71,15 @@ find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ?
 
 	subtree :: Maybe :. Nonempty Rose := k :*: a
 	subtree = find @Element # attached . extract >$< equate (extract ks) # deconstruct tree
+
+instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) where
+	type Morphing (Vary Element) (Prefixed (Construction List) k) =
+		(Product (Nonempty List k) <:.> Identity) <:.:> Prefixed (Construction List) k := (->)
+	morphing (run . premorph -> Construct x (TU Nothing)) = T_U $ \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
+		Construct key Nothing -> Prefixed $ attached x == key ? Construct (key :*: value) empty $ Construct x empty
+		Construct _ (Just _) -> Prefixed $ Construct x (TU Nothing)
+	morphing (run . premorph -> Construct x (TU (Just subtree))) = T_U $ \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
+		Construct key Nothing -> Prefixed $ attached x != key ? Construct x (lift subtree)
+			$ Construct (key :*: value) (lift subtree)
+		Construct key (Just keys) -> Prefixed $ attached x != key ? Construct x (lift subtree)
+			$ Construct (key :*: value) (lift $ run . vary @Element @_ @_ @(Prefixed (Nonempty Rose) _) keys value . Prefixed <$> subtree)
