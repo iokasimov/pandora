@@ -72,6 +72,7 @@ find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ?
 	subtree :: Maybe :. Nonempty Rose := k :*: a
 	subtree = find @Element # attached . extract >$< equate (extract ks) # deconstruct tree
 
+-- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) where
 	type Morphing (Vary Element) (Prefixed (Construction List) k) =
 		(Product (Nonempty List k) <:.> Identity) <:.:> Prefixed (Construction List) k := (->)
@@ -83,3 +84,12 @@ instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) w
 			$ Construct (key :*: value) (lift subtree)
 		Construct key (Just keys) -> Prefixed $ attached x != key ? Construct x (lift subtree)
 			$ Construct (key :*: value) (lift $ run . vary @Element @_ @_ @(Prefixed (Nonempty Rose) _) keys value . Prefixed <$> subtree)
+
+-- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
+instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where
+	type Morphing (Vary Element) (Prefixed Rose k) = (Product (Nonempty List k) <:.> Identity) <:.:> Prefixed Rose k := (->)
+	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (Construct key _ :*: Identity value)) -> Prefixed . lift $ Construct (key :*: value) empty
+	morphing (run . run . premorph -> Just (Construct focused subtree)) = T_U $ \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
+		Construct key Nothing -> Prefixed . lift $ attached focused == key ? Construct (key :*: value) subtree $ Construct focused subtree
+		Construct key (Just keys) -> Prefixed . lift $ attached focused != key ? Construct focused subtree
+			$ Construct focused (run . vary @Element @_ @_ @(Prefixed (Nonempty Rose) _) keys value . Prefixed <$> subtree)
