@@ -431,3 +431,4 @@
 * Remove `lookup` and `discover` methods from `Dictionary` interface
 * Define `lookup` method in `Morphable` ability module
 * Remove `binary` expression from `Binary` module
+* Define `Morphed` type synonymous as constraint kind

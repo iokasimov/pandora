@@ -18,14 +18,16 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
-class Morphable f t | f t -> t where
-	type Morphing (f :: k) (t :: * -> *) :: * -> *
-	morphing :: Tagged f <:.> t ~> Morphing f t
+class Morphable mod struct | mod struct -> struct where
+	type Morphing (mod :: k) (struct :: * -> *) :: * -> *
+	morphing :: Tagged mod <:.> struct ~> Morphing mod struct
 
-morph :: forall f t . Morphable f t => t ~> Morphing f t
-morph = morphing . TU . Tag @f
+type Morphed mod struct result = (Morphable mod struct, Morphing mod struct ~ result)
 
-premorph :: Morphable f t => Tagged f <:.> t ~> t
+morph :: forall mod struct . Morphable mod struct => struct ~> Morphing mod struct
+morph = morphing . TU . Tag @mod
+
+premorph :: Morphable mod struct => Tagged mod <:.> struct ~> struct
 premorph = extract . run
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
@@ -36,32 +38,32 @@ data Occurrence a = All a | First a
 
 data Vertical a = Up a | Down a
 
-rotate :: forall f t . Morphable (Rotate f) t => t ~> Morphing (Rotate f) t
-rotate = morphing . TU . Tag @(Rotate f)
+rotate :: forall mod struct . Morphable (Rotate mod) struct => struct ~> Morphing (Rotate mod) struct
+rotate = morphing . TU . Tag @(Rotate mod)
 
-into :: forall f t . Morphable (Into f) t => t ~> Morphing (Into f) t
-into = morphing . TU . Tag @(Into f)
+into :: forall mod struct . Morphable (Into mod) struct => struct ~> Morphing (Into mod) struct
+into = morphing . TU . Tag @(Into mod)
 
-insert :: forall f t a . (Morphable (Insert f) t, Morphing (Insert f) t ~ (Identity <:.:> t := (->))) => a :=:=> t
-insert new xs = run # morph @(Insert f) xs # Identity new
+insert :: forall mod struct a . Morphed (Insert mod) struct (Identity <:.:> struct := (->)) => a :=:=> struct
+insert new xs = run # morph @(Insert mod) xs # Identity new
 
-item :: forall f t a . (Morphable f t, Morphing f t ~ (Identity <:.:> t := (->))) => a :=:=> t
-item new xs = run # morph @f xs # Identity new
+item :: forall mod struct a . Morphed mod struct (Identity <:.:> struct := (->)) => a :=:=> struct
+item new xs = run # morph @mod xs # Identity new
 
-collate :: forall f t a . (Chain a, Morphable f t, Morphing f t ~ ((Identity <:.:> Comparison := (:*:)) <:.:> t := (->))) => a :=:=> t
-collate new xs = run # morph @f xs # T_U (Identity new :*: Convergence (<=>))
+collate :: forall mod struct a . (Chain a, Morphed mod struct ((Identity <:.:> Comparison := (:*:)) <:.:> struct := (->))) => a :=:=> struct
+collate new xs = run # morph @mod xs # T_U (Identity new :*: Convergence (<=>))
 
-delete :: forall f t a . (Setoid a, Morphable (Delete f) t, Morphing (Delete f) t ~ (Predicate <:.:> t := (->))) => a :=:=> t
-delete x xs = run # morph @(Delete f) xs # equate x
+delete :: forall mod struct a . (Setoid a, Morphed (Delete mod) struct (Predicate <:.:> struct := (->))) => a :=:=> struct
+delete x xs = run # morph @(Delete mod) xs # equate x
 
-filter :: forall f t a . (Morphable (Delete f) t, Morphing (Delete f) t ~ (Predicate <:.:> t := (->))) => Predicate a -> t a -> t a
-filter p xs = run # morph @(Delete f) xs # p
+filter :: forall mod struct a . (Morphed (Delete mod) struct (Predicate <:.:> struct := (->))) => Predicate a -> struct a -> struct a
+filter p xs = run # morph @(Delete mod) xs # p
 
-find :: forall f t u a . (Morphable (Find f) t, Morphing (Find f) t ~ (Predicate <:.:> u := (->))) => Predicate a -> t a -> u a
-find p xs = run # morph @(Find f) xs # p
+find :: forall mod struct result a . (Morphed (Find mod) struct (Predicate <:.:> result := (->))) => Predicate a -> struct a -> result a
+find p xs = run # morph @(Find mod) xs # p
 
-lookup :: forall mod key t a . (Morphable (Lookup mod) t, Morphing (Lookup mod) t ~ ((->) key <:.> Maybe)) => key -> t a -> Maybe a
+lookup :: forall mod key struct a . (Morphed (Lookup mod) struct ((->) key <:.> Maybe)) => key -> struct a -> Maybe a
 lookup key struct = run # morph @(Lookup mod) struct # key
 
-vary :: forall mod key value t . (Morphable (Vary mod) t, Morphing (Vary mod) t ~ ((Product key <:.> Identity) <:.:> t := (->))) => key -> value -> t value -> t value
-vary key value xs = run # morph @(Vary mod) @t xs # TU (key :*: Identity value)
+vary :: forall mod key value struct . (Morphed (Vary mod) struct ((Product key <:.> Identity) <:.:> struct := (->))) => key -> value -> struct value -> struct value
+vary key value xs = run # morph @(Vary mod) @struct xs # TU (key :*: Identity value)
