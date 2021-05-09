@@ -5,7 +5,6 @@ module Pandora.Paradigm.Structure.Some.Binary where
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
 import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), comap))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Bindable ((>>=))
@@ -29,7 +28,6 @@ import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
-import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (over, view)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -84,16 +82,6 @@ instance Substructure Right Binary where
 		Nothing -> Store $ empty :*: lift . identity
 		Just tree -> lift . lift <$> run (sub @Right) tree
 
-binary :: forall t a . (Traversable t, Chain a) => t a -> Binary a
-binary struct = attached $ run @(State (Binary a)) % empty $ struct ->> modify @(Binary a) . insert' where
-
-	insert' :: a -> Binary a -> Binary a
-	insert' x (run -> Nothing) = lift $ leaf x
-	insert' x tree@(run -> Just nonempty) = order # tree
-		# (over # sub @Left # insert' x # tree)
-		# (over # sub @Right # insert' x # tree)
-		# x <=> extract nonempty
-
 type instance Nonempty Binary = Construction Wye
 
 instance Morphable (Into Binary) (Construction Wye) where
@@ -142,11 +130,11 @@ instance Substructure Right (Construction Wye) where
 
 instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	type Morphing (Lookup Key) (Prefixed Binary k) = (->) k <:.> Maybe
-	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
+	morphing (run . run . premorph -> Nothing) = lift Nothing
 	morphing (run . run . premorph -> Just tree) = TU $ \key ->
 		let root = extract tree in key <=> attached root & order # Just (extract root)
-			# run (morph @(Lookup Key) $ Prefixed # view (sub @Left) tree) key
-			# run (morph @(Lookup Key) $ Prefixed # view (sub @Right) tree) key
+			# lookup @Key key (Prefixed $ view # sub @Left # tree)
+			# lookup @Key key (Prefixed $ view # sub @Right # tree)
 
 instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <:.> Maybe
@@ -162,10 +150,6 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU (key :*: Identity value)
 		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
 			# over (focus @Root) ($> value) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
-
--- instance Morphable (Into Binary) (Prefixed Binary k) where
--- 	type Morphing (Into Binary) (Prefixed Binary k) = Binary
--- 	morphing (run . premorph -> prefixed) = extract <$> prefixed
 
 data Biforked a = Top | Leftward a | Rightward a
 
