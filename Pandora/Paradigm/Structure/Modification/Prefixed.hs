@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Paradigm.Structure.Modification.Prefixed where
 
 import Pandora.Core.Functor (type (:.), type (:=))
@@ -5,11 +7,13 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
+import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 
 newtype Prefixed t k a = Prefixed (t :. Product k := a)
 
@@ -32,3 +36,7 @@ instance Alternative t => Alternative (Prefixed t k) where
 
 instance Avoidable t => Avoidable (Prefixed t k) where
 	empty = Prefixed empty
+
+instance Covariant t => Morphable (Into t) (Prefixed t k) where
+	type Morphing (Into t) (Prefixed t k) = t
+	morphing (run . premorph -> prefixed) = extract <$> prefixed

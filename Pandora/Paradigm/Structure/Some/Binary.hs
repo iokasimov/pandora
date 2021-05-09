@@ -163,9 +163,9 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
 			# over (focus @Root) ($> value) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
 
-instance Morphable (Into Binary) (Prefixed Binary k) where
-	type Morphing (Into Binary) (Prefixed Binary k) = Binary
-	morphing (run . premorph -> prefixed) = extract <$> prefixed
+-- instance Morphable (Into Binary) (Prefixed Binary k) where
+-- 	type Morphing (Into Binary) (Prefixed Binary k) = Binary
+-- 	morphing (run . premorph -> prefixed) = extract <$> prefixed
 
 data Biforked a = Top | Leftward a | Rightward a
 
