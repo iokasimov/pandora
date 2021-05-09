@@ -10,6 +10,7 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Functor.Bindable ((>>=))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Adjoint ((|-))
 import Pandora.Pattern.Functor ()
@@ -44,7 +45,8 @@ import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into, Push, Pop, Delete, Find, Element)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
+	, Morph (Rotate, Into, Push, Pop, Delete, Find, Element)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure, sub), Segment (Tail))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
@@ -120,6 +122,11 @@ type instance Nonempty List = Construction Maybe
 instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 	Construct x Nothing + ys = Construct x $ Just ys
 	Construct x (Just xs) + ys = Construct x . Just $ xs + ys
+
+instance Morphable (Find Element) (Construction Maybe) where
+	type Morphing (Find Element) (Construction Maybe) = Predicate <:.:> Maybe := (->)
+	morphing (premorph -> Construct x xs) = T_U $ \p ->
+		run p x ? Just x $ xs >>= find @Element @(Nonempty List) @Maybe # p
 
 instance Morphable (Into List) (Construction Maybe) where
 	type Morphing (Into List) (Construction Maybe) = List
