@@ -138,14 +138,6 @@ instance Substructure Right (Construction Wye) where
 		Construct x (Right rst) -> Store $ lift rst :*: lift . Construct x . resolve Right End . run
 		Construct x (Both lst rst) -> Store $ lift rst :*: lift . Construct x . resolve (Both lst) (Left lst) . run
 
-instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
-	type Morphing (Vary Element) (Prefixed Binary k) = (Product k <:.> Identity) <:.:> Prefixed Binary k := (->)
-	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
-	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
-		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU (key :*: Identity value)
-		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
-			# over (focus @Root) ($> value) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
-
 instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	type Morphing (Lookup Key) (Prefixed Binary k) = (->) k <:.> Maybe
 	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
@@ -153,6 +145,14 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		let root = extract tree in key <=> attached root & order # Just (extract root)
 			# run (morph @(Lookup Key) $ Prefixed # view (sub @Left) tree) key
 			# run (morph @(Lookup Key) $ Prefixed # view (sub @Right) tree) key
+
+instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
+	type Morphing (Vary Element) (Prefixed Binary k) = (Product k <:.> Identity) <:.:> Prefixed Binary k := (->)
+	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
+	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
+		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU (key :*: Identity value)
+		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
+			# over (focus @Root) ($> value) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
 
 instance Morphable (Into Binary) (Prefixed Binary k) where
 	type Morphing (Into Binary) (Prefixed Binary k) = Binary
