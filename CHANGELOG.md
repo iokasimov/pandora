@@ -428,3 +428,4 @@
 * Define precedence for `>-<` infix operator
 * Move `|>` existential polymorphic type to `Core.Functor` module
 * Remove `|>` existential polymorphic type and its Substructure instance
+* Remove `lookup` and `discover` methods from `Dictionary` interface
