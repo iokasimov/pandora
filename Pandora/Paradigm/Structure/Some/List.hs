@@ -47,10 +47,10 @@ import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, meas
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
-	, Occurrence (All, First), premorph, rotate, item, filter, find, into)
+	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure, sub), Segment (Tail))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
-import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
+import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 -- | Linear data structure that serves as a collection of elements
 type List = Maybe <:.> Construction Maybe
@@ -236,6 +236,9 @@ instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 
 instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 	type Morphing (Lookup Key) (Prefixed List key) = (->) key <:.> Maybe
-	morphing (run . premorph -> list) = TU $ \key -> run list >>= \nonempty_list ->
-		key == attached (extract nonempty_list) ? Just (extract # extract nonempty_list)
-			$ extract <$> (deconstruct nonempty_list >>= find @Element # Predicate ((key ==) . attached))
+	morphing (run . premorph -> list) = TU $ \key -> Prefixed <$> run list >>= lookup @Key key
+
+instance Setoid key => Morphable (Lookup Key) (Prefixed (Construction Maybe) key) where
+	type Morphing (Lookup Key) (Prefixed (Construction Maybe) key) = (->) key <:.> Maybe
+	morphing (run . premorph -> Construct x xs) = TU $ \key -> extract <$> search key where
+		search key = key == attached x ? Just x $ xs >>= find @Element # Predicate ((key ==) . attached)
