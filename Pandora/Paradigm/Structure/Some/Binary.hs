@@ -8,9 +8,11 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), comap))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
+import Pandora.Pattern.Functor.Bindable ((>>=))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
+import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
@@ -36,7 +38,7 @@ import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusi
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
-	, Morph (Rotate, Into, Insert, Lookup, Vary, Key, Element), Vertical (Up, Down), morph, premorph)
+	, Morph (Rotate, Into, Insert, Lookup, Vary, Key, Element), Vertical (Up, Down), morph, premorph, lookup)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
@@ -145,6 +147,13 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		let root = extract tree in key <=> attached root & order # Just (extract root)
 			# run (morph @(Lookup Key) $ Prefixed # view (sub @Left) tree) key
 			# run (morph @(Lookup Key) $ Prefixed # view (sub @Right) tree) key
+
+instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) where
+	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <:.> Maybe
+	morphing (run . premorph -> Construct x xs) = TU $ \key ->
+		key <=> attached x & order (Just # extract x)
+			(view # sub @Left # xs >>= lookup @Key key . Prefixed)
+			(view # sub @Right # xs >>= lookup @Key key . Prefixed)
 
 instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	type Morphing (Vary Element) (Prefixed Binary k) = (Product k <:.> Identity) <:.:> Prefixed Binary k := (->)
