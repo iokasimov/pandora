@@ -8,14 +8,18 @@ import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Pattern.Category (Category ((.), ($), identity))
+import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Transformer.Liftable (lift)
+import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
-import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
+import Pandora.Paradigm.Inventory.Store (Store (Store))
+import Pandora.Paradigm.Schemes (TU (TU), PQ_ (PQ_), type (<:.>), type (<:.:>))
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
 
 instance Category (Flip (->)) where
 	identity = Flip identity
@@ -88,3 +92,19 @@ instance Morphable (Into Wye) (Maybe <:.:> Maybe := (:*:)) where
 	morphing (run . premorph -> Nothing :*: Just y) = Right y
 	morphing (run . premorph -> Just x :*: Nothing) = Left x
 	morphing (run . premorph -> Nothing :*: Nothing) = End
+
+instance Substructure Left Wye where
+	type Substructural Left Wye = Maybe
+	substructure = PQ_ $ \new -> case lower new of
+		End -> Store $ Nothing :*: lift . resolve Left End
+		Left x -> Store $ Just x :*: lift . resolve Left End
+		Right y -> Store $ Nothing :*: (lift # Right y !)
+		Both x y -> Store $ Just x :*: lift . resolve (Both % y) (Right y)
+
+instance Substructure Right Wye where
+	type Substructural Right Wye = Maybe
+	substructure = PQ_ $ \new -> case lower new of
+		End -> Store $ Nothing :*: lift . resolve Right End
+		Left x -> Store $ Nothing :*: (lift # Left x !)
+		Right y -> Store $ Just y :*: lift . resolve Right End
+		Both x y -> Store $ Just y :*: lift . resolve (Both x) (Left x)

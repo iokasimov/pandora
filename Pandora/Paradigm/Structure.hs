@@ -12,14 +12,12 @@ import Pandora.Pattern.Functor.Covariant (Covariant (comap))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Transformer.Liftable (lift)
-import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Inventory.Optics ()
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
-import Pandora.Paradigm.Primary.Functor.Function ((%), (!))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
@@ -45,22 +43,6 @@ instance Covariant t => Substructure Tail (Tap t) where
 	type Substructural Tail (Tap t) = t
 	substructure = PQ_ $ \tap -> case extract # run tap of
 		Tap x xs -> Store $ xs :*: lift . Tap x
-
-instance Substructure Left Wye where
-	type Substructural Left Wye = Maybe
-	substructure = PQ_ $ \new -> case lower new of
-		End -> Store $ Nothing :*: lift . resolve Left End
-		Left x -> Store $ Just x :*: lift . resolve Left End
-		Right y -> Store $ Nothing :*: (lift # Right y !)
-		Both x y -> Store $ Just x :*: lift . resolve (Both % y) (Right y)
-
-instance Substructure Right Wye where
-	type Substructural Right Wye = Maybe
-	substructure = PQ_ $ \new -> case lower new of
-		End -> Store $ Nothing :*: lift . resolve Right End
-		Left x -> Store $ Nothing :*: (lift # Left x !)
-		Right y -> Store $ Just y :*: lift . resolve Right End
-		Both x y -> Store $ Just y :*: lift . resolve (Both x) (Left x)
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
