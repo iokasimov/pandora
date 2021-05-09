@@ -429,3 +429,4 @@
 * Move `|>` existential polymorphic type to `Core.Functor` module
 * Remove `|>` existential polymorphic type and its Substructure instance
 * Remove `lookup` and `discover` methods from `Dictionary` interface
+* Define `lookup` method in `Morphable` ability module

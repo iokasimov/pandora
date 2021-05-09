@@ -10,6 +10,7 @@ import Pandora.Pattern.Object.Setoid (Setoid)
 import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, equate)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
@@ -58,6 +59,9 @@ filter p xs = run # morph @(Delete f) xs # p
 
 find :: forall f t u a . (Morphable (Find f) t, Morphing (Find f) t ~ (Predicate <:.:> u := (->))) => Predicate a -> t a -> u a
 find p xs = run # morph @(Find f) xs # p
+
+lookup :: forall mod key t a . (Morphable (Lookup mod) t, Morphing (Lookup mod) t ~ ((->) key <:.> Maybe)) => key -> t a -> Maybe a
+lookup key struct = run # morph @(Lookup mod) struct # key
 
 vary :: forall mod key value t . (Morphable (Vary mod) t, Morphing (Vary mod) t ~ ((Product key <:.> Identity) <:.:> t := (->))) => key -> value -> t value -> t value
 vary key value xs = run # morph @(Vary mod) @t xs # TU (key :*: Identity value)
