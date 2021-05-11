@@ -148,9 +148,6 @@ instance Measurable Length (Construction Maybe) where
 	measurement (deconstruct . extract -> Nothing) = One
 	measurement (deconstruct . extract -> Just xs) = One + measure @Length xs
 
-instance Monotonic a (Construction Maybe a) where
-	reduce f r ~(Construct x xs) = f x $ reduce f r xs
-
 instance Substructure Tail (Construction Maybe) where
 	type Substructural Tail (Construction Maybe) = List
 	substructure = PQ_ $ \stack -> case extract $ run stack of
