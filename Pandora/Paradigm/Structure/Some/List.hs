@@ -118,6 +118,8 @@ instance Substructure Tail List where
 linearize :: forall t a . Traversable t => t a -> List a
 linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just .#.. Construct)
 
+----------------------------------------- Non-empty list -------------------------------------------
+
 type instance Nonempty List = Construction Maybe
 
 instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
@@ -154,6 +156,8 @@ instance Substructure Tail (Construction Maybe) where
 	substructure = PQ_ $ \stack -> case extract $ run stack of
 		Construct x xs -> Store $ TU xs :*: lift . Construct x . run
 
+----------------------------------------- Zipper of list -------------------------------------------
+
 type instance Zipper List = Tap (List <:.:> List := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) where
@@ -187,6 +191,8 @@ instance Morphable (Into List) (Tap (List <:.:> List := (:*:))) where
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
 		# past ->> modify . item @Push @List
 		# item @Push x future
+
+------------------------------------- Zipper of non-empty list -------------------------------------
 
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
@@ -234,9 +240,13 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 instance Monotonic a (Maybe <:.> Construction Maybe := a) where
 	reduce f r = reduce f r . run
 
+----------------------------------------- Prefixed list --------------------------------------------
+
 instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 	type Morphing (Lookup Key) (Prefixed List key) = (->) key <:.> Maybe
 	morphing (run . premorph -> list) = TU $ \key -> Prefixed <$> run list >>= lookup @Key key
+
+------------------------------------ Prefixed non-empty list ---------------------------------------
 
 instance Setoid key => Morphable (Lookup Key) (Prefixed (Construction Maybe) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Maybe) key) = (->) key <:.> Maybe
