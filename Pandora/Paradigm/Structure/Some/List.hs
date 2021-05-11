@@ -189,6 +189,16 @@ instance Morphable (Into List) (Tap (List <:.:> List := (:*:))) where
 		# past ->> modify . item @Push @List
 		# item @Push x future
 
+instance Substructure Left (Tap (List <:.:> List := (:*:))) where
+	type Substructural Left (Tap (List <:.:> List := (:*:))) = List
+	substructure = PQ_ $ \zipper -> case lower zipper of
+		Tap x (T_U (future :*: past)) -> Store $ future :*: lift . Tap x . T_U . (:*: past)
+
+instance Substructure Right (Tap (List <:.:> List := (:*:))) where
+	type Substructural Right (Tap (List <:.:> List := (:*:))) = List
+	substructure = PQ_ $ \zipper -> case lower zipper of
+		Tap x (T_U (future :*: past)) -> Store $ past :*: lift . Tap x . T_U . (future :*:)
+
 ------------------------------------- Zipper of non-empty list -------------------------------------
 
 type instance Zipper (Construction Maybe) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
