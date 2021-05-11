@@ -44,7 +44,7 @@ import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
+import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
@@ -233,9 +233,6 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
 		# past ->> modify . item @Push @List
 		# item @Push x (lift future)
-
-instance Monotonic a (Maybe <:.> Construction Maybe := a) where
-	reduce f r = reduce f r . run
 
 ----------------------------------------- Prefixed list --------------------------------------------
 

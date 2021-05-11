@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -22,7 +22,9 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Functor.Function ()
-import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce, resolve))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
+import Pandora.Paradigm.Schemes (type (<:.>))
 
 infixr 7 .-+
 
@@ -68,8 +70,14 @@ instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant t) =
 instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t) => Monoid (Construction t a) where
 	zero = Construct zero zero
 
+instance Monotonic a (t :. Construction t := a) where
+	reduce f r = reduce f r
+
 instance Monotonic a (t :. Construction t := a) => Monotonic a (Construction t a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
+
+instance Monotonic a (t <:.> Construction t := a) where
+	reduce f r = reduce f r . run
 
 deconstruct :: Construction t a -> t :. Construction t := a
 deconstruct ~(Construct _ xs) = xs
