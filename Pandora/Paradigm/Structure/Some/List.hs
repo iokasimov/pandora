@@ -259,6 +259,13 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 		# past ->> modify . item @Push @List
 		# item @Push x (lift future)
 
+------------------------------------ Zipper of combinative list ------------------------------------
+
+type instance Zipper (Comprehension Maybe) = Tap (Comprehension Maybe <:.:> Comprehension Maybe := (:*:))
+
+instance {-# OVERLAPS #-} Applicative (Tap (Comprehension Maybe <:.:> Comprehension Maybe := (:*:))) where
+	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
+
 ----------------------------------------- Prefixed list --------------------------------------------
 
 instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
