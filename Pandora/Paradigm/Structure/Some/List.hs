@@ -163,6 +163,9 @@ type instance Combinative List = Comprehension Maybe
 
 type instance Zipper List = Tap (List <:.:> List := (:*:))
 
+instance {-# OVERLAPS #-} Applicative (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
+
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) where
 	Tap x (T_U (future :*: past)) ->> f = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		<$> Reverse past ->> f <*> f x <*> future ->> f
