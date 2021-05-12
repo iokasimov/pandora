@@ -50,6 +50,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure, sub), Segment (Tail))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
+import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 -- | Linear data structure that serves as a collection of elements
@@ -188,6 +189,12 @@ instance Morphable (Into List) (Tap (List <:.:> List := (:*:))) where
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
 		# past ->> modify . item @Push @List
 		# item @Push x future
+
+instance Morphable (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:))) where
+	type Morphing (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:))) = Comprehension Maybe
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
+		# past ->> modify . item @Push @(Comprehension Maybe)
+		# item @Push x (Comprehension future)
 
 instance Substructure Left (Tap (List <:.:> List := (:*:))) where
 	type Substructural Left (Tap (List <:.:> List := (:*:))) = List
