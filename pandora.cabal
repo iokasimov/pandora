@@ -106,6 +106,7 @@ library
     Pandora.Paradigm.Structure.Ability.Zipper
     Pandora.Paradigm.Structure.Ability.Monotonic
     Pandora.Paradigm.Structure.Modification
+    Pandora.Paradigm.Structure.Modification.Combinative
     Pandora.Paradigm.Structure.Modification.Comprehension
     Pandora.Paradigm.Structure.Modification.Prefixed
     Pandora.Paradigm.Structure.Interface

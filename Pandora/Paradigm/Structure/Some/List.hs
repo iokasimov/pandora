@@ -50,6 +50,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure, sub), Segment (Tail))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
+import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
@@ -153,6 +154,10 @@ instance Substructure Tail (Construction Maybe) where
 	type Substructural Tail (Construction Maybe) = List
 	substructure = PQ_ $ \stack -> case extract $ run stack of
 		Construct x xs -> Store $ TU xs :*: lift . Construct x . run
+
+---------------------------------------- Combinative list ------------------------------------------
+
+type instance Combinative List = Comprehension Maybe
 
 ----------------------------------------- Zipper of list -------------------------------------------
 
