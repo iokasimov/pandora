@@ -262,6 +262,16 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 		# past ->> modify . item @Push @List
 		# item @Push x (lift future)
 
+instance Substructure Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Substructural Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
+	substructure = PQ_ $ \zipper -> case lower zipper of
+		Tap x (T_U (future :*: past)) -> Store $ future :*: lift . Tap x . T_U . (:*: past)
+
+instance Substructure Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Substructural Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
+	substructure = PQ_ $ \zipper -> case lower zipper of
+		Tap x (T_U (future :*: past)) -> Store $ past :*: lift . Tap x . T_U . (future :*:)
+
 ------------------------------------ Zipper of combinative list ------------------------------------
 
 type instance Zipper (Comprehension Maybe) = Tap (Comprehension Maybe <:.:> Comprehension Maybe := (:*:))
