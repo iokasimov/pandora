@@ -22,12 +22,11 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
-import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
+import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
@@ -42,7 +41,7 @@ import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root, Head), focus)
+import Pandora.Paradigm.Structure.Ability.Focusable (Location (Root))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
@@ -175,19 +174,15 @@ instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 	z =>> f = let move rtt = TU . deconstruct $ run . rtt .-+ z in
 		Tap # f z $ twosome # f <$> move (rotate @Left) # f <$> move (rotate @Right)
 
--- instance Focusable Head (Tap (List <:.:> List := (:*:))) where
--- 	type Focusing Head (Tap (List <:.:> List := (:*:))) a = a
--- 	focusing = PQ_ $ \zipper -> Store $ extract (extract zipper) :*: Tag . Tap % lower (extract zipper)
-
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
-		$ Tap % twosome (view (sub @Tail) future) (item @Push x past) <$> view (focus @Head) future
+		$ Tap % twosome (view (sub @Tail) future) (item @Push x past) <$> view (sub @Root) future
 
 instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
-		$ Tap % twosome (item @Push x future) (view (sub @Tail) past) <$> view (focus @Head) past
+		$ Tap % twosome (item @Push x future) (view (sub @Tail) past) <$> view (sub @Root) past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Zipper List
@@ -230,10 +225,6 @@ instance {-# OVERLAPS #-} Applicative (Tap (Construction Maybe <:.:> Constructio
 instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	Tap x (T_U (future :*: past)) ->> f = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		<$> Reverse past ->> f <*> f x <*> future ->> f
-
-instance Focusable Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	type Focusing Head (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) a = a
-	focusing = PQ_ $ \zipper -> Store $ extract (extract zipper) :*: Tag . Tap % lower (extract zipper)
 
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Maybe <:.> Zipper (Construction Maybe)
