@@ -204,6 +204,11 @@ instance Morphable (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:)))
 		# past ->> modify . item @Push @(Comprehension Maybe)
 		# item @Push x (Comprehension future)
 
+instance Substructure Root (Tap (List<:.:> List:= (:*:))) where
+	type Substructural Root (Tap (List<:.:> List:= (:*:))) = Identity
+	substructure = PQ_ $ \zipper -> case lower zipper of
+		Tap x xs -> Store $ Identity x :*: lift . (Tap % xs) . extract
+
 instance Substructure Left (Tap (List <:.:> List := (:*:))) where
 	type Substructural Left (Tap (List <:.:> List := (:*:))) = List
 	substructure = PQ_ $ \zipper -> case lower zipper of
