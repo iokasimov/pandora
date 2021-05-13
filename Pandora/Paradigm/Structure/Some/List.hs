@@ -42,7 +42,7 @@ import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Head), focus)
+import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root, Head), focus)
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
@@ -261,6 +261,11 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
 		# past ->> modify . item @Push @List
 		# item @Push x (lift future)
+
+instance Substructure Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
+	type Substructural Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
+	substructure = PQ_ $ \zipper -> case lower zipper of
+		Tap x xs -> Store $ Identity x :*: lift . (Tap % xs) . extract
 
 instance Substructure Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Substructural Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
