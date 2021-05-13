@@ -137,10 +137,6 @@ instance Morphable (Into List) (Construction Maybe) where
 	type Morphing (Into List) (Construction Maybe) = List
 	morphing = lift . premorph
 
-instance Focusable Head (Construction Maybe) where
-	type Focusing Head (Construction Maybe) a = a
-	focusing = PQ_ $ \stack -> Store $ extract (extract stack) :*: Tag . Construct % deconstruct (extract stack)
-
 instance Morphable Push (Construction Maybe) where
 	type Morphing Push (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
 	morphing (premorph -> xs) = T_U $ \(Identity x) -> Construct x $ Just xs
@@ -149,6 +145,11 @@ instance Measurable Length (Construction Maybe) where
 	type Measural Length (Construction Maybe) a = Denumerator
 	measurement (deconstruct . extract -> Nothing) = One
 	measurement (deconstruct . extract -> Just xs) = One + measure @Length xs
+
+instance Substructure Root (Construction Maybe) where
+	type Substructural Root (Construction Maybe) = Identity
+	substructure = PQ_ $ \zipper -> case lower zipper of
+		Construct x xs -> Store $ Identity x :*: lift . (Construct % xs) . extract
 
 instance Substructure Tail (Construction Maybe) where
 	type Substructural Tail (Construction Maybe) = List
@@ -174,9 +175,9 @@ instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 	z =>> f = let move rtt = TU . deconstruct $ run . rtt .-+ z in
 		Tap # f z $ twosome # f <$> move (rotate @Left) # f <$> move (rotate @Right)
 
-instance Focusable Head (Tap (List <:.:> List := (:*:))) where
-	type Focusing Head (Tap (List <:.:> List := (:*:))) a = a
-	focusing = PQ_ $ \zipper -> Store $ extract (extract zipper) :*: Tag . Tap % lower (extract zipper)
+-- instance Focusable Head (Tap (List <:.:> List := (:*:))) where
+-- 	type Focusing Head (Tap (List <:.:> List := (:*:))) a = a
+-- 	focusing = PQ_ $ \zipper -> Store $ extract (extract zipper) :*: Tag . Tap % lower (extract zipper)
 
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
