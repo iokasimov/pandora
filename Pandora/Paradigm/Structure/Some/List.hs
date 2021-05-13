@@ -96,12 +96,6 @@ instance Morphable (Delete All) List where
 
 instance Stack List where
 
-instance Focusable Head List where
-	type Focusing Head List a = Maybe a
-	focusing = PQ_ $ \stack -> Store $ extract <$> run (extract stack) :*: \case
-		Just x -> extract stack & view (sub @Tail) & item @Push x & Tag
-		Nothing -> extract stack & view (sub @Tail) & Tag
-
 instance Measurable Length List where
 	type Measural Length List a = Numerator
 	measurement (run . extract -> Nothing) = zero
@@ -109,6 +103,12 @@ instance Measurable Length List where
 
 instance Nullable List where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
+
+instance Substructure Root List where
+	type Substructural Root List = Maybe
+	substructure = PQ_ $ \zipper -> case run # lower zipper of
+		Just (Construct x xs) -> Store $ Just x :*: lift . resolve (lift . (Construct % xs)) empty
+		Nothing -> Store $ Nothing :*: lift . resolve (lift . (Construct % empty)) empty
 
 instance Substructure Tail List where
 	type Substructural Tail List = List
