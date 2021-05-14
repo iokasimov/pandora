@@ -19,6 +19,6 @@ class Substructure f t where
 	sub :: Covariant t => t :~. Substructural f t
 	sub = lift >-> (lower <$>) ||= substructure @f @t
 
-data Segment a = Tail a
+data Segment a = Root a | Tail a
 
 type Substructured i source target = (Substructure i source, Substructural i source ~ target)

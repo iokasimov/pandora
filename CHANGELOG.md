@@ -433,3 +433,4 @@
 * Remove `binary` expression from `Binary` module
 * Define `Morphed` type synonymous as constraint kind
 * Define `Combinative` type family
+* Remove `Location` datatype in `Focusable` module

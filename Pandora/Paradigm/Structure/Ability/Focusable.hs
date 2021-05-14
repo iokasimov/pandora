@@ -15,5 +15,3 @@ class Focusable f t where
 
 focus :: forall f t a . Focusable f t => t a :-. Focusing f t a
 focus = Tag @f >-> (extract <$>) ||= focusing
-
-data Location a = Root a | Head a

@@ -22,12 +22,11 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Structure.Ability.Focusable (Location (Root))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Lookup, Vary, Element, Key), premorph, find, vary)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Root))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 import Pandora.Paradigm.Structure.Some.List (List)
 
