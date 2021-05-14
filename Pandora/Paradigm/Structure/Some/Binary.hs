@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
 import Pandora.Pattern.Category (identity, (.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Bindable ((>>=))
@@ -25,7 +25,6 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
@@ -33,7 +32,7 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (over, view)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root), focus)
+import Pandora.Paradigm.Structure.Ability.Focusable (Location (Root))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
@@ -56,12 +55,6 @@ instance Morphable Insert Binary where
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run # morph @Insert xs $ twosome # Identity x # Convergence f
 		in lift $ f x # extract ne & order # ne # over (sub @Left) continue ne # over (sub @Right) continue ne
-
-instance (forall a . Chain a) => Focusable Root Binary where
-	type Focusing Root Binary a = Maybe a
-	focusing = PQ_ $ \bintree -> case run # extract bintree of
-		Nothing -> Store $ Nothing :*: Tag . TU . comap leaf
-		Just x -> Store $ Just # extract x :*: Tag . lift . resolve (Construct % deconstruct x) (rebalance $ deconstruct x)
 
 instance Measurable Heighth Binary where
 	type Measural Heighth Binary a = Numerator
