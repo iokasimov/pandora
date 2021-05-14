@@ -9,6 +9,7 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Bindable ((>>=))
 import Pandora.Pattern.Transformer.Liftable (lift)
+import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary ()
@@ -98,11 +99,6 @@ instance Morphable Insert (Construction Wye) where
 			# over (sub @Right) change nonempty_list
 			# f x (extract nonempty_list)
 
-instance Focusable Root (Construction Wye) where
-	type Focusing Root (Construction Wye) a = a
-	focusing = PQ_ $ \bintree -> case extract bintree of
-		Construct x xs -> Store $ x :*: Tag . Construct % xs
-
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
 	measurement (deconstruct . extract -> End) = One
@@ -111,6 +107,11 @@ instance Measurable Heighth (Construction Wye) where
 	measurement (deconstruct . extract -> Both lst rst) = One +
 		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
 		in lm <=> rm & order lm rm lm
+
+instance Substructure Root (Construction Wye) where
+	type Substructural Root (Construction Wye) = Identity
+	substructure = PQ_ $ \bintree -> case lower bintree of
+		Construct x xs -> Store $ Identity x :*: lift . (Construct % xs) . extract
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) = Binary
@@ -149,7 +150,7 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
 		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU (key :*: Identity value)
 		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
-			# over (focus @Root) ($> value) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
+			# over (sub @Root) (($> value) <$>) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
 
 data Biforked a = Top | Leftward a | Rightward a
 
