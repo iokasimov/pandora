@@ -4,7 +4,6 @@ import Pandora.Paradigm.Structure.Ability.Monotonic as Exports
 import Pandora.Paradigm.Structure.Ability.Zipper as Exports
 import Pandora.Paradigm.Structure.Ability.Substructure as Exports
 import Pandora.Paradigm.Structure.Ability.Measurable as Exports
-import Pandora.Paradigm.Structure.Ability.Focusable as Exports
 import Pandora.Paradigm.Structure.Ability.Morphable as Exports
 import Pandora.Paradigm.Structure.Ability.Accessible as Exports
 import Pandora.Paradigm.Structure.Ability.Nullable as Exports
