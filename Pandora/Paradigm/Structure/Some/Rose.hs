@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Rose where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -18,13 +18,11 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Structure.Ability.Focusable (Focusable (Focusing, focusing), Location (Root))
-import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
+import Pandora.Paradigm.Structure.Ability.Focusable (Location (Root))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Lookup, Vary, Element, Key), premorph, find, vary)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -35,14 +33,13 @@ import Pandora.Paradigm.Structure.Some.List (List)
 
 type Rose = Maybe <:.> Construction List
 
-instance Focusable Root Rose where
-	type Focusing Root Rose a = Maybe a
-	focusing = PQ_ $ \x -> case run # extract x of
-		Nothing -> Store $ Nothing :*: Tag . TU . comap (Construct % empty)
-		Just rose -> Store $ Just (extract rose) :*: Tag . resolve (lift . Construct % deconstruct rose) empty
-
 instance Nullable Rose where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
+
+instance Substructure Root Rose where
+	type Substructural Root Rose = Maybe
+	substructure = PQ_ $ \rose -> case run # lower rose of
+		Nothing -> Store $ Nothing :*: lift . TU . (Construct % empty <$>)
 
 instance Substructure Just Rose where
 	type Substructural Just Rose = List <:.> Construction List
