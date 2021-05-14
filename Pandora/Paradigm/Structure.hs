@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant (comap))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Transformer.Liftable (lift)
+import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Inventory.Optics ()
@@ -19,11 +20,11 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
@@ -33,11 +34,6 @@ instance Monotonic s a => Monotonic s (s :*: a) where
 
 instance Nullable Maybe where
 	null = Predicate $ \case { Just _ -> True ; _ -> False }
-
-instance Substructure Right (Product s) where
-	type Substructural Right (Product s) = Identity
-	substructure = PQ_ $ \product -> case extract # run product of
-		s :*: x -> Store $ Identity x :*: lift . (s :*:) . extract
 
 instance Covariant t => Substructure Tail (Tap t) where
 	type Substructural Tail (Tap t) = t
@@ -69,15 +65,15 @@ instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) B
 	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
 	morphing (premorph -> xs) = comap (into @(o ds)) ||= xs
 
-instance Focusable Left (Product s) where
-	type Focusing Left (Product s) a = s
-	focusing = PQ_ $ \product -> case extract product of
-		s :*: x -> Store $ s :*: Tag . (:*: x)
+instance Substructure Left (Flip Product a) where
+	type Substructural Left (Flip Product a) = Identity
+	substructure = PQ_ $ \product -> case run # lower product of
+		s :*: x -> Store $ Identity s :*: lift . Flip . (:*: x) . extract
 
-instance Focusable Right (Product s) where
-	type Focusing Right (Product s) a = a
-	focusing = PQ_ $ \product -> case extract product of
-		s :*: x -> Store $ x :*: Tag . (s :*:)
+instance Substructure Right (Product s) where
+	type Substructural Right (Product s) = Identity
+	substructure = PQ_ $ \product -> case lower product of
+		s :*: x -> Store $ Identity x :*: lift . (s :*:) . extract
 
 instance Accessible s (s :*: a) where
 	access = PQ_ $ \(s :*: x) -> Store $ s :*: (:*: x)
