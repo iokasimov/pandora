@@ -10,6 +10,7 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (lift)
+import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
@@ -51,9 +52,9 @@ instance Substructure Just Rose where
 
 type instance Nonempty Rose = Construction List
 
-instance Focusable Root (Construction List) where
-	type Focusing Root (Construction List) a = a
-	focusing = PQ_ $ \rose -> Store $ extract (extract rose) :*: Tag . Construct % deconstruct (extract rose)
+instance Substructure Root (Construction List) where
+	type Substructural Root (Construction List) = Identity
+	substructure = PQ_ $ \rose -> Store $ Identity # extract (lower rose) :*: lift . (Construct % deconstruct (lower rose)) . extract
 
 instance Substructure Just (Construction List) where
 	type Substructural Just (Construction List) = List <:.> Construction List
