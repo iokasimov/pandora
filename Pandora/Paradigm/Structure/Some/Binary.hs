@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
 import Pandora.Pattern.Category (identity, (.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Bindable ((>>=))
@@ -75,6 +75,8 @@ instance Substructure Right Binary where
 		Nothing -> Store $ empty :*: lift . identity
 		Just tree -> lift . lift <$> run (sub @Right) tree
 
+-------------------------------------- Non-empty binary tree ---------------------------------------
+
 type instance Nonempty Binary = Construction Wye
 
 instance Morphable (Into Binary) (Construction Wye) where
@@ -121,6 +123,8 @@ instance Substructure Right (Construction Wye) where
 		Construct x (Right rst) -> Store $ lift rst :*: lift . Construct x . resolve Right End . run
 		Construct x (Both lst rst) -> Store $ lift rst :*: lift . Construct x . resolve (Both lst) (Left lst) . run
 
+-------------------------------------- Prefixed binary tree ----------------------------------------
+
 instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	type Morphing (Lookup Key) (Prefixed Binary k) = (->) k <:.> Maybe
 	morphing (run . run . premorph -> Nothing) = lift Nothing
@@ -129,6 +133,16 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 			# lookup @Key key (Prefixed $ view # sub @Left # tree)
 			# lookup @Key key (Prefixed $ view # sub @Right # tree)
 
+instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
+	type Morphing (Vary Element) (Prefixed Binary k) = (Product k <:.> Identity) <:.:> Prefixed Binary k := (->)
+	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
+	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
+		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU (key :*: Identity value)
+		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
+			# over (sub @Root) ($$> value) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
+
+---------------------------------- Prefixed non-empty binary tree ----------------------------------
+
 instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <:.> Maybe
 	morphing (run . premorph -> Construct x xs) = TU $ \key ->
@@ -136,13 +150,7 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 			(view # sub @Left # xs >>= lookup @Key key . Prefixed)
 			(view # sub @Right # xs >>= lookup @Key key . Prefixed)
 
-instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
-	type Morphing (Vary Element) (Prefixed Binary k) = (Product k <:.> Identity) <:.:> Prefixed Binary k := (->)
-	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
-	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
-		let continue xs = run $ run # morph @(Vary Element) (Prefixed xs) # TU (key :*: Identity value)
-		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
-			# over (sub @Root) (($> value) <$>) tree # over (sub @Left) continue tree # over (sub @Right) continue tree
+-------------------------------------- Zipper of binary tree ---------------------------------------
 
 data Biforked a = Top | Leftward a | Rightward a
 
