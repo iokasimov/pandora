@@ -1,7 +1,8 @@
 module Pandora.Paradigm.Controlflow.Effect.Interpreted where
 
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Functor.Function ()
 
@@ -20,6 +21,22 @@ class Interpreted t where
 
 	(=||) :: Interpreted u => (t a -> u b) -> Primary t a -> Primary u b
 	(=||) f = run . f . unite
+
+	(<$||=) :: (Covariant j, Interpreted u)
+		=> (Primary t a -> Primary u b) -> j := t a -> j := u b
+	f <$||= x = (f ||=) <$> x
+
+	(<$$||=) :: (Covariant j, Covariant k, Interpreted u)
+		=> (Primary t a -> Primary u b) -> j :. k := t a -> j :. k := u b
+	f <$$||= x = (f ||=) <$$> x
+
+	(<$$$||=) :: (Covariant j, Covariant k, Covariant l, Interpreted u)
+		=> (Primary t a -> Primary u b) -> j :. k :. l := t a -> j :. k :. l := u b
+	f <$$$||= x = (f ||=) <$$$> x
+
+	(<$$$$||=) :: (Covariant j, Covariant k, Covariant l, Covariant m, Interpreted u)
+		=> (Primary t a -> Primary u b) -> j :. k :. l :. m := t a -> j :. k :. l :. m := u b
+	f <$$$$||= x = (f ||=) <$$$$> x
 
 (-=:) :: (Liftable t, Interpreted (t u), Interpreted (t v), Covariant u)
 	=> (t u a -> t v b) -> u a -> Primary (t v) b

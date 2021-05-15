@@ -436,3 +436,4 @@
 * Remove `Location` datatype in `Focusable` module
 * Remove `Focusable` ability if favor of `Structure` typeclass
 * Define `<$$`, `<$$$`, `<$$$$`, `$$>`, `$$$>`, `$$$$>` infix operators in `Covariant` typeclass
+* Define `<$||=`, `<$$||=`, `<$$$||=`, `<$$$$||=` infix operators in `Interpreted` typeclass
