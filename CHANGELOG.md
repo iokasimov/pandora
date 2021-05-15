@@ -434,5 +434,5 @@
 * Define `Morphed` type synonymous as constraint kind
 * Define `Combinative` type family
 * Remove `Location` datatype in `Focusable` module
-* Remove `Focusable` ability
+* Remove `Focusable` ability if favor of `Structure` typeclass
 * Define `<$$`, `<$$$`, `<$$$$`, `$$>`, `$$$>`, `$$$$>` infix operators in `Covariant` typeclass

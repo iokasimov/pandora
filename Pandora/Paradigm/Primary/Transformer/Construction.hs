@@ -70,13 +70,10 @@ instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant t) =
 instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t) => Monoid (Construction t a) where
 	zero = Construct zero zero
 
-instance Monotonic a (t :. Construction t := a) where
-	reduce f r = reduce f r
-
 instance Monotonic a (t :. Construction t := a) => Monotonic a (Construction t a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
 
-instance Monotonic a (t <:.> Construction t := a) where
+instance Monotonic a (t :. Construction t := a) => Monotonic a (t <:.> Construction t := a) where
 	reduce f r = reduce f r . run
 
 deconstruct :: Construction t a -> t :. Construction t := a
