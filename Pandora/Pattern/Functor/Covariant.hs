@@ -76,3 +76,21 @@ class Covariant (t :: * -> *) where
 	(.#....) :: (t ~ v a, t ~ v b, t ~ v c, Category v, Covariant (v a), Covariant (v b), Covariant (v c))
 		=> v e f -> v a :. v b :. v c :. v d := e -> v a :. v b :. v c :. v d := f
 	f .#.... g = (f .) <$$$> g
+
+	(<$$) :: Covariant u => b -> t :. u := a -> t :. u := b
+	x <$$ s = (\_-> x) <$$> s
+
+	(<$$$) :: (Covariant u, Covariant v) => b -> t :. u :. v := a -> t :. u :. v := b
+	x <$$$ s = (\_-> x) <$$$> s
+
+	(<$$$$) :: (Covariant u, Covariant v, Covariant w) => b -> t :. u :. v :. w := a -> t :. u :. v :. w := b
+	x <$$$$ s = (\_-> x) <$$$$> s
+
+	($$>) :: Covariant u => t :. u := a -> b -> t :. u := b
+	s $$> x = (\_-> x) <$$> s
+
+	($$$>) :: (Covariant u, Covariant v) => t :. u :. v := a -> b -> t :. u :. v := b
+	s $$$> x = (\_-> x) <$$$> s
+
+	($$$$>) :: (Covariant u, Covariant v, Covariant w) => t :. u :. v :. w := a -> b -> t :. u :. v :. w := b
+	s $$$$> x = (\_-> x) <$$$$> s

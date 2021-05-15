@@ -435,3 +435,4 @@
 * Define `Combinative` type family
 * Remove `Location` datatype in `Focusable` module
 * Remove `Focusable` ability
+* Define `<$$`, `<$$$`, `<$$$$`, `$$>`, `$$$>`, `$$$$>` infix operators in `Covariant` typeclass
