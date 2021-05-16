@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), type (<:.>), type (<:.:>))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=||))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=||$>))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Lookup, Vary, Element, Key), premorph, find, vary)
@@ -73,9 +73,9 @@ instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where
 	morphing (run . run . premorph -> Just (Construct focused subtree)) = T_U $ \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
 		Construct key Nothing -> Prefixed . lift $ attached focused == key ? Construct (key :*: value) subtree $ Construct focused subtree
 		Construct key (Just keys) -> Prefixed . lift $ attached focused != key ? Construct focused subtree
-			$ Construct focused $ (vary @Element @_ @_ @(Prefixed (Nonempty Rose) _) keys value =||) <$> subtree
+			$ Construct focused $ vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value =||$> subtree
 
----------------------------------- Prefixed non-empty rose tree ------------------------------------
+---------------------------------- Non-empty prefixed rose tree ------------------------------------
 
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) where
@@ -88,7 +88,7 @@ instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) w
 		Construct key Nothing -> Prefixed $ attached x != key ? Construct x # lift subtree
 			$ Construct (key :*: value) (lift subtree)
 		Construct key (Just keys) -> Prefixed $ attached x != key ? Construct x # lift subtree
-			$ Construct (key :*: value) . lift $ (vary @Element @_ @_ @(Prefixed (Nonempty Rose) _) keys value =||) <$> subtree
+			$ Construct (key :*: value) . lift $ vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value =||$> subtree
 
 find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose := k :*: a -> Maybe a
 find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? Just (extract $ extract tree) $ Nothing
