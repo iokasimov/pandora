@@ -438,3 +438,5 @@
 * Define `<$$`, `<$$$`, `<$$$$`, `$$>`, `$$$>`, `$$$$>` infix operators in `Covariant` typeclass
 * Define `<$||=`, `<$$||=`, `<$$$||=`, `<$$$$||=` infix operators in `Interpreted` typeclass
 * Define `=||$>`, =||$$>`, `=||$$$>`, `=||$$$$>` infix operators in `Interpreted` typeclass
+
+# 0.4.2
