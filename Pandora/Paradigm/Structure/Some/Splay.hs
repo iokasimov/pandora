@@ -15,7 +15,7 @@ import Pandora.Paradigm.Primary.Functor.Product (twosome)
 import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (||=))
 import Pandora.Paradigm.Inventory.Optics (over)
 import Pandora.Paradigm.Schemes (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate, into)
@@ -24,6 +24,32 @@ import Pandora.Paradigm.Structure.Ability.Substructure (sub)
 import Pandora.Paradigm.Structure.Some.Binary (Binary)
 
 data Splay a = Zig a | Zag a
+
+instance Morphable (Rotate (Left Zig)) Binary where
+	type Morphing (Rotate (Left Zig)) Binary = Binary
+	morphing (premorph -> binary) = unite $ run binary >>= run . rotate @(Left Zig)
+
+instance Morphable (Rotate (Right Zig)) Binary where
+	type Morphing (Rotate (Right Zig)) Binary = Binary
+	morphing (premorph -> binary) = unite $ run binary >>= run . rotate @(Right Zig)
+
+instance Morphable (Rotate (Left (Zig Zig))) Binary where
+	type Morphing (Rotate (Left (Zig Zig))) Binary = Binary
+	morphing (premorph -> binary) = unite $ run binary >>= run . rotate @(Left (Zig Zig))
+
+instance Morphable (Rotate (Right (Zig Zig))) Binary where
+	type Morphing (Rotate (Right (Zig Zig))) Binary = Binary
+	morphing (premorph -> binary) = unite $ run binary >>= run . rotate @(Right (Zig Zig))
+
+instance Morphable (Rotate (Left (Zig Zag))) Binary where
+	type Morphing (Rotate (Left (Zig Zag))) Binary = Binary
+	morphing (premorph -> binary) = unite $ run binary >>= run . rotate @(Left (Zig Zag))
+
+instance Morphable (Rotate (Right (Zig Zag))) Binary where
+	type Morphing (Rotate (Right (Zig Zag))) Binary = Binary
+	morphing (premorph -> binary) = unite $ run binary >>= run . rotate @(Right (Zig Zag))
+
+-------------------------------------- Non-empty Splay tree ----------------------------------------
 
 instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 	type Morphing (Rotate (Left Zig)) (Construction Wye) = Binary
