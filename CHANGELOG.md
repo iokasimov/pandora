@@ -437,7 +437,7 @@
 * Remove `Focusable` ability if favor of `Structure` typeclass
 * Define `<$$`, `<$$$`, `<$$$$`, `$$>`, `$$$>`, `$$$$>` infix operators in `Covariant` typeclass
 * Define `<$||=`, `<$$||=`, `<$$$||=`, `<$$$$||=` infix operators in `Interpreted` typeclass
-* Define `=||$>`, =||$$>`, `=||$$$>`, `=||$$$$>` infix operators in `Interpreted` typeclass
+* Define `=||$>`, `=||$$>`, `=||$$$>`, `=||$$$$>` infix operators in `Interpreted` typeclass
 
 # 0.4.2
 * Rename `>-<` method of `Invariant` typeclass to `<$<`

@@ -14,9 +14,9 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-), ($|-))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
-import Pandora.Paradigm.Primary.Transformer (Flip (Flip))
+import Pandora.Paradigm.Primary.Transformer (Flip)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite), Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Functor (Product ((:*:)), type (:*:), delta)
@@ -39,8 +39,7 @@ instance Bindable (State s) where
 instance Monad (State s) where
 
 instance Invariant (Flip State r) where
-	f <$< g = \(Flip (State s)) -> Flip . State
-		$ g >-> (f <-> identity) $ s
+	f <$< g = ((g >-> (f <-> identity) ||=) ||=)
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
