@@ -5,6 +5,7 @@ module Pandora.Paradigm.Inventory.State where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -13,7 +14,6 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-), ($|-))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
-import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Paradigm.Primary.Transformer (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite), Schematic)
@@ -39,7 +39,8 @@ instance Bindable (State s) where
 instance Monad (State s) where
 
 instance Invariant (Flip State r) where
-	f <$< g = \(Flip (State s)) -> Flip . State $ g >-> (f <-> identity) $ s
+	f <$< g = \(Flip (State s)) -> Flip . State
+		$ g >-> (f <-> identity) $ s
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a

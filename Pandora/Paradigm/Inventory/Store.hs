@@ -5,13 +5,17 @@ module Pandora.Paradigm.Inventory.Store where
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (.#..)))
+import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Bivariant ((<->))
+import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor ()
+import Pandora.Paradigm.Primary.Transformer (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
@@ -30,6 +34,10 @@ instance Extendable (Store s) where
 	Store x =>> f = Store $ f <$$> Store .#.. (-| identity) <$> x
 
 instance Comonad (Store s) where
+
+instance Invariant (Flip Store r) where
+	f <$< g = \(Flip (Store s)) -> Flip . Store
+		$ f <-> (g >-> identity) $ s
 
 instance Interpreted (Store s) where
 	type Primary (Store s) a = (:*:) s :. (->) s := a
