@@ -440,3 +440,4 @@
 * Define `=||$>`, =||$$>`, `=||$$$>`, `=||$$$$>` infix operators in `Interpreted` typeclass
 
 # 0.4.2
+* Rename `>-<` method of `Invariant` typeclass to `<$<`

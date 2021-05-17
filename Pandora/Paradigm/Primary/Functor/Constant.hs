@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Constant where
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
-import Pandora.Pattern.Functor.Invariant (Invariant ((>-<)))
+import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
@@ -27,7 +27,7 @@ instance Contravariant (Constant a) where
 	_ >$< Constant x = Constant x
 
 instance Invariant (Constant a) where
-	_ >-< _ = \(Constant x) -> Constant x
+	_ <$< _ = \(Constant x) -> Constant x
 
 instance Traversable (Constant a) where
 	Constant x ->> _ = point $ Constant x
