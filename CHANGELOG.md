@@ -442,3 +442,4 @@
 # 0.4.2
 * Rename `>-<` method of `Invariant` typeclass to `<$<`
 * Define `P_T` joint schema exclusively for `Prism` type
+* Define `Prism` type and its `preview` method
