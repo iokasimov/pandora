@@ -22,3 +22,7 @@ class Substructure f t where
 data Segment a = Root a | Tail a
 
 type Substructured i source target = (Substructure i source, Substructural i source ~ target)
+
+-- class Substructure' f t where
+-- 	type Substructural' (f :: k) (t :: * -> *) :: * -> *
+-- 	substructure' :: Tagged f <:.> t :~. Substructural' f t

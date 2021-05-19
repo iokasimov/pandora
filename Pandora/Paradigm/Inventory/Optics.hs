@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Primary.Functor.Function ((!))
+import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), attached)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
@@ -26,33 +27,34 @@ infixr 0 :~.
 type (:-.) src tgt = Lens src tgt
 
 -- Reference to taret within some source
-type Lens = PQ_ (->) Store
+type Lens = PQ_ (->) (P_T Store Identity)
 
 instance Category Lens where
-	identity = PQ_ $ \src -> Store $ src :*: identity
-	PQ_ to . PQ_ from = PQ_ $ \src -> src <$ (to . position $ from src)
+	identity = PQ_ $ \src -> P_T . Store $ Identity src :*: identity . extract
+	PQ_ to . PQ_ from = PQ_ $ \src -> P_T $ src <$ (run . to . extract @Identity . position . run $ from src)
 
-instance Invariant (Flip Lens tgt) where
-	f <$< g = ((g >-> (f <$>) ||=) ||=)
+-- instance Invariant (Flip Lens tgt) where
+-- 	f <$< g = ((g >-> (f <$>) ||=) ||=)
 
 -- Lens as natural transformation
 type (:~.) src tgt = forall a . Lens (src a) (tgt a)
 
 -- | Get the target of a lens
 view :: Lens src tgt -> src -> tgt
-view lens = position . run lens
+view lens = extract @Identity . position . run . run lens
 
 -- | Replace the target of a lens
 set :: Lens src tgt -> tgt -> src -> src
-set lens new = look new . run lens
+set lens new = look (Identity new) . run . run lens
 
 -- | Modify the target of a lens
 over :: Lens src tgt -> (tgt -> tgt) -> src -> src
-over lens f = extract . retrofit f . run lens
+over lens f = extract . retrofit (f <$>) . run . run lens
 
+-- FIXME: uncomment this expression
 -- | Representable based lens
-represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
-represent r = PQ_ $ \x -> Store $ r <#> x :*: \new -> tabulate (\r' -> r' == r ? new $ r' <#> x)
+-- represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
+-- represent r = PQ_ $ \x -> Store $ r <#> x :*: \new -> tabulate (\r' -> r' == r ? new $ r' <#> x)
 
 type Prism = PQ_ (->) (P_T Store Maybe)
 
