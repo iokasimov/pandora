@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.List where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.), ($), (#), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (.#..)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
