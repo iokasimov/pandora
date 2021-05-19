@@ -17,12 +17,8 @@ class Substructure f t where
 	substructure :: Tagged f <:.> t :~. Substructural f t
 
 	sub :: Covariant t => t :~. Substructural f t
-	sub = lift >-> (lower <$>) ||= substructure @f @t
+	sub = lift >-> ((lower <$>) ||=) ||= substructure @f @t
 
 data Segment a = Root a | Tail a
 
 type Substructured i source target = (Substructure i source, Substructural i source ~ target)
-
--- class Substructure' f t where
--- 	type Substructural' (f :: k) (t :: * -> *) :: * -> *
--- 	substructure' :: Tagged f <:.> t :~. Substructural' f t

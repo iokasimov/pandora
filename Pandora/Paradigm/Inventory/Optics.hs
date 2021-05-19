@@ -67,3 +67,5 @@ instance Category Prism where
 
 preview :: Prism src tgt -> src -> Maybe tgt
 preview prism = position . run . run prism
+
+type Optics mod = PQ_ (->) (P_T Store mod)
