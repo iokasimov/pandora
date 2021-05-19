@@ -16,7 +16,7 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Schemes (TU (TU), PQ_ (PQ_), type (<:.>), type (<:.:>))
+import Pandora.Paradigm.Schemes (TU (TU), PQ_ (PQ_), P_T (P_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure))
@@ -95,16 +95,16 @@ instance Morphable (Into Wye) (Maybe <:.:> Maybe := (:*:)) where
 
 instance Substructure Left Wye where
 	type Substructural Left Wye = Maybe
-	substructure = PQ_ $ \new -> case lower new of
-		End -> Store $ Nothing :*: lift . resolve Left End
-		Left x -> Store $ Just x :*: lift . resolve Left End
-		Right y -> Store $ Nothing :*: (lift # Right y !)
-		Both x y -> Store $ Just x :*: lift . resolve (Both % y) (Right y)
+	substructure = PQ_ $ \new -> P_T $ case lower new of
+		End -> Store $ Identity Nothing :*: lift . resolve Left End . extract
+		Left x -> Store $ Identity (Just x) :*: lift . resolve Left End . extract
+		Right y -> Store $ Identity Nothing :*: (lift # Right y !) . extract
+		Both x y -> Store $ Identity (Just x) :*: lift . resolve (Both % y) (Right y) . extract
 
 instance Substructure Right Wye where
 	type Substructural Right Wye = Maybe
-	substructure = PQ_ $ \new -> case lower new of
-		End -> Store $ Nothing :*: lift . resolve Right End
-		Left x -> Store $ Nothing :*: (lift # Left x !)
-		Right y -> Store $ Just y :*: lift . resolve Right End
-		Both x y -> Store $ Just y :*: lift . resolve (Both x) (Left x)
+	substructure = PQ_ $ \new -> P_T $ case lower new of
+		End -> Store $ Identity Nothing :*: lift . resolve Right End . extract
+		Left x -> Store $ Identity Nothing :*: (lift # Left x !) . extract
+		Right y -> Store $ Identity (Just y) :*: lift . resolve Right End . extract
+		Both x y -> Store $ Identity (Just y) :*: lift . resolve (Both x) (Left x) . extract
