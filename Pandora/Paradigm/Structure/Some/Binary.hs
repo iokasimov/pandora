@@ -26,7 +26,7 @@ import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), type (<:.>), type (<:.:>))
+import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), P_T (P_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (over, view)
@@ -65,15 +65,15 @@ instance Nullable Binary where
 
 instance Substructure Left Binary where
 	type Substructural Left Binary = Binary
-	substructure = PQ_ $ \bintree -> case run . extract . run # bintree of
-		Nothing -> Store $ empty :*: lift . identity
-		Just tree -> lift . lift <$> run (sub @Left) tree
+	substructure = PQ_ $ \bintree -> P_T $ case run . extract . run # bintree of
+		Nothing -> Store $ Identity empty :*: lift . identity . extract
+		Just tree -> lift . lift <$> run (run (sub @Left) tree)
 
 instance Substructure Right Binary where
 	type Substructural Right Binary = Binary
-	substructure = PQ_ $ \bintree -> case run . extract . run # bintree of
-		Nothing -> Store $ empty :*: lift . identity
-		Just tree -> lift . lift <$> run (sub @Right) tree
+	substructure = PQ_ $ \bintree -> P_T $ case run . extract . run # bintree of
+		Nothing -> Store $ Identity empty :*: lift . identity . extract
+		Just tree -> lift . lift <$> run (run (sub @Right) tree)
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
@@ -104,24 +104,24 @@ instance Measurable Heighth (Construction Wye) where
 
 instance Substructure Root (Construction Wye) where
 	type Substructural Root (Construction Wye) = Identity
-	substructure = PQ_ $ \bintree -> case lower bintree of
-		Construct x xs -> Store $ Identity x :*: lift . (Construct % xs) . extract
+	substructure = PQ_ $ \bintree -> P_T $ case lower bintree of
+		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract . extract
 
 instance Substructure Left (Construction Wye) where
 	type Substructural Left (Construction Wye) = Binary
-	substructure = PQ_ $ \bintree -> case extract # run bintree of
-		Construct x End -> Store $ empty :*: lift . resolve (Construct x . Left) (leaf x) . run
-		Construct x (Left lst) -> Store $ lift lst :*: lift . Construct x . resolve Left End . run
-		Construct x (Right rst) -> Store $ empty :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
-		Construct x (Both lst rst) -> Store $ lift lst :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
+	substructure = PQ_ $ \bintree -> P_T $ case extract # run bintree of
+		Construct x End -> Store $ Identity empty :*: lift . resolve (Construct x . Left) (leaf x) . run . extract
+		Construct x (Left lst) -> Store $ Identity (lift lst) :*: lift . Construct x . resolve Left End . run . extract
+		Construct x (Right rst) -> Store $ Identity empty :*: lift . Construct x . resolve (Both % rst) (Right rst) . run . extract
+		Construct x (Both lst rst) -> Store $ Identity (lift lst) :*: lift . Construct x . resolve (Both % rst) (Right rst) . run . extract
 
 instance Substructure Right (Construction Wye) where
 	type Substructural Right (Construction Wye) = Binary
-	substructure = PQ_ $ \bintree -> case extract # run bintree of
-		Construct x End -> Store $ empty :*: lift . resolve (Construct x . Right) (leaf x) . run
-		Construct x (Left lst) -> Store $ empty :*: lift . Construct x . resolve (Both lst) (Left lst) . run
-		Construct x (Right rst) -> Store $ lift rst :*: lift . Construct x . resolve Right End . run
-		Construct x (Both lst rst) -> Store $ lift rst :*: lift . Construct x . resolve (Both lst) (Left lst) . run
+	substructure = PQ_ $ \bintree -> P_T $ case extract # run bintree of
+		Construct x End -> Store $ Identity empty :*: lift . resolve (Construct x . Right) (leaf x) . run . extract
+		Construct x (Left lst) -> Store $ Identity empty :*: lift . Construct x . resolve (Both lst) (Left lst) . run . extract
+		Construct x (Right rst) -> Store $ Identity (lift rst) :*: lift . Construct x . resolve Right End . run . extract
+		Construct x (Both lst rst) -> Store $ Identity (lift rst) :*: lift . Construct x . resolve (Both lst) (Left lst) . run . extract
 
 -------------------------------------- Prefixed binary tree ----------------------------------------
 
