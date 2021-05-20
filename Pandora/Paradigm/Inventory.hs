@@ -11,9 +11,8 @@ import Pandora.Paradigm.Inventory.Equipment as Exports
 import Pandora.Paradigm.Inventory.Environment as Exports
 import Pandora.Paradigm.Inventory.Accumulator as Exports
 
--- import Pandora.Core.Functor (type (~>))
+import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.), ($), (#), identity)
--- import Pandora.Pattern.Functor.Covariant ((<$>))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -38,17 +37,9 @@ instance Adjoint (Equipment e) (Environment e) where
 	x -| f = Environment $ x -| f . Equipment
 	x |- g = run x |- run . g
 
--- (-|) :: a -> ((s :*: a) -> b) -> (s -> b)
--- x -| f = \s -> f $ s :*: x
--- (|-) :: (s :*: a) -> (a -> s -> b) -> b
--- ~(s :*: x) |- f = f x s
-
-zoom :: forall bg ls t a . Stateful bg t => Lens bg ls -> State ls a -> t a
--- zoom :: forall bg ls t a . Lens bg ls -> State ls a -> State bg a
-zoom lens less = adapt . State $ \bigger -> (|- restruct) . run . run $ run lens bigger where
-
-	restruct :: (Identity ls -> b) -> Identity ls -> Product b a
-	restruct tackle focused = tackle . Identity <-> identity $ run less (extract focused)
+zoom :: Stateful bg t => Lens bg ls -> State ls ~> t
+zoom lens less = let restruct to = (to . Identity <-> identity) . run less . extract @Identity
+	in adapt . State $ (|- restruct) . run . run . run lens
 
 (=<>) :: Stateful src t => src :-. tgt -> tgt -> t src
 lens =<> new = modify $ set lens new
