@@ -443,5 +443,4 @@
 * Rename `>-<` method of `Invariant` typeclass to `<$<`
 * Define `P_T` joint schema exclusively for `Prism` type
 * Define `Prism` type and its `preview` method
-* [WIP] Redefine `Lens` type so it's has the same scheme as `Prism`
-* Define `Optics` type as generalization of `Lens` and `Prism`
+* Redefine `Lens` type as `Optics` on `Identity`
