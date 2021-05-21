@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant ((<$>), (<$))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -44,10 +44,9 @@ set lens new = look (Identity new) . run . run lens
 over :: Lens src tgt -> (tgt -> tgt) -> src -> src
 over lens f = extract . retrofit (f <$>) . run . run lens
 
--- FIXME: uncomment this expression
 -- | Representable based lens
--- represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
--- represent r = PQ_ $ \x -> Store $ r <#> x :*: \new -> tabulate (\r' -> r' == r ? new $ r' <#> x)
+represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
+represent r = PQ_ $ \x -> P_T $ Store $ Identity (r <#> x) :*: \new -> tabulate (\r' -> r' == r ? extract new $ r' <#> x)
 
 type Prism = PQ_ (->) (P_T Store Maybe)
 
