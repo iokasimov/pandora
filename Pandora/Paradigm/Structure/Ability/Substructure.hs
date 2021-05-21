@@ -19,7 +19,10 @@ data Segment a = Root a | Tail a
 -- FIXME: uncomment this type synonymous as soon as I realize what to do with Available
 -- type Substructured i source target = (Substructure i source, Substructural i source ~ target)
 
-class Substructure (segment :: k) (structure :: * -> *) where
+class Substructure segment (structure :: * -> *) where
 	type Available segment structure :: * -> *
 	type Substance segment structure :: * -> *
 	substructure :: (Tagged segment <:.> structure) #=@ Substance segment structure := Available segment structure
+
+	sub :: Covariant structure => structure #=@ Substance segment structure := Available segment structure
+	sub = lift >-> ((lower <$>) ||=) ||= substructure @segment @structure
