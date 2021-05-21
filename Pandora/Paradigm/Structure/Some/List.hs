@@ -47,7 +47,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure, sub), Segment (Root, Tail))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure, sub), Segment (Root, Tail))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack)
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
@@ -104,13 +104,15 @@ instance Nullable List where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
 instance Substructure Root List where
-	type Substructural Root List = Maybe
+	type Available Root List = Identity
+	type Substance Root List = Maybe
 	substructure = PQ_ $ \zipper -> P_T $ case run # lower zipper of
 		Just (Construct x xs) -> Store $ Identity (Just x) :*: lift . resolve (lift . (Construct % xs)) empty . extract
 		Nothing -> Store $ Identity Nothing :*: lift . resolve (lift . (Construct % empty)) empty . extract
 
 instance Substructure Tail List where
-	type Substructural Tail List = List
+	type Available Tail List = Identity
+	type Substance Tail List = List
 	substructure = PQ_ $ \x -> P_T $ case run . extract . run $ x of
 		Just ns -> lift . lift <$> run (run (sub @Tail) ns)
 		Nothing -> Store $ Identity empty :*: lift . identity . extract
@@ -146,12 +148,14 @@ instance Measurable Length (Construction Maybe) where
 	measurement (deconstruct . extract -> Just xs) = One + measure @Length xs
 
 instance Substructure Root (Construction Maybe) where
-	type Substructural Root (Construction Maybe) = Identity
+	type Available Root (Construction Maybe) = Identity
+	type Substance Root (Construction Maybe) = Identity
 	substructure = PQ_ $ \zipper -> P_T $ case lower zipper of
 		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract . extract
 
 instance Substructure Tail (Construction Maybe) where
-	type Substructural Tail (Construction Maybe) = List
+	type Available Tail (Construction Maybe) = Identity
+	type Substance Tail (Construction Maybe) = List
 	substructure = PQ_ $ \stack -> P_T $ case extract $ run stack of
 		Construct x xs -> Store $ Identity (TU xs) :*: lift . Construct x . run . extract
 
@@ -201,17 +205,20 @@ instance Morphable (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:)))
 		# item @Push x (Comprehension future)
 
 instance Substructure Root (Tap (List<:.:> List:= (:*:))) where
-	type Substructural Root (Tap (List<:.:> List:= (:*:))) = Identity
+	type Available Root (Tap (List<:.:> List:= (:*:))) = Identity
+	type Substance Root (Tap (List<:.:> List:= (:*:))) = Identity
 	substructure = PQ_ $ \zipper -> P_T $ case lower zipper of
 		Tap x xs -> Store $ Identity (Identity x) :*: lift . (Tap % xs) . extract . extract
 
 instance Substructure Left (Tap (List <:.:> List := (:*:))) where
-	type Substructural Left (Tap (List <:.:> List := (:*:))) = List
+	type Available Left (Tap (List <:.:> List := (:*:))) = Identity
+	type Substance Left (Tap (List <:.:> List := (:*:))) = List
 	substructure = PQ_ $ \zipper -> P_T $ case lower zipper of
 		Tap x (T_U (future :*: past)) -> Store $ Identity future :*: lift . Tap x . T_U . (:*: past) . extract
 
 instance Substructure Right (Tap (List <:.:> List := (:*:))) where
-	type Substructural Right (Tap (List <:.:> List := (:*:))) = List
+	type Available Right (Tap (List <:.:> List := (:*:))) = Identity
+	type Substance Right (Tap (List <:.:> List := (:*:))) = List
 	substructure = PQ_ $ \zipper -> P_T $ case lower zipper of
 		Tap x (T_U (future :*: past)) -> Store $ Identity past :*: lift . Tap x . T_U . (future :*:) . extract
 
@@ -260,17 +267,20 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 		# item @Push x (lift future)
 
 instance Substructure Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	type Substructural Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
+	type Available Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
+	type Substance Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
 	substructure = PQ_ $ \zipper -> P_T $ case lower zipper of
 		Tap x xs -> Store $ Identity (Identity x) :*: lift . (Tap % xs) . extract . extract
 
 instance Substructure Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	type Substructural Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
+	type Available Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
+	type Substance Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
 	substructure = PQ_ $ \zipper -> P_T $ case lower zipper of
 		Tap x (T_U (future :*: past)) -> Store $ Identity future :*: lift . Tap x . T_U . (:*: past) . extract
 
 instance Substructure Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	type Substructural Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
+	type Available Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
+	type Substance Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
 	substructure = PQ_ $ \zipper -> P_T $ case lower zipper of
 		Tap x (T_U (future :*: past)) -> Store $ Identity past :*: lift . Tap x . T_U . (future :*:) . extract
 
