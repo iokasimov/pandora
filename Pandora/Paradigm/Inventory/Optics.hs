@@ -5,17 +5,13 @@ module Pandora.Paradigm.Inventory.Optics where
 import Pandora.Pattern.Category (Category (identity, (.), ($)))
 import Pandora.Pattern.Functor.Covariant ((<$>), (<$))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Bindable ((>>=))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
-import Pandora.Pattern.Functor.Divariant ((>->))
-import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), attached)
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Inventory.Store (Store (Store), position, look, retrofit)
 import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
@@ -32,9 +28,6 @@ type Lens = PQ_ (->) (P_T Store Identity)
 instance Category Lens where
 	identity = PQ_ $ \src -> P_T . Store $ Identity src :*: identity . extract
 	PQ_ to . PQ_ from = PQ_ $ \src -> P_T $ src <$ (run . to . extract @Identity . position . run $ from src)
-
--- instance Invariant (Flip Lens tgt) where
--- 	f <$< g = ((g >-> (f <$>) ||=) ||=)
 
 -- Lens as natural transformation
 type (:~.) src tgt = forall a . Lens (src a) (tgt a)
