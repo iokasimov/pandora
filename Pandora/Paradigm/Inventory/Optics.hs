@@ -18,6 +18,8 @@ import Pandora.Paradigm.Schemes.P_T (P_T (P_T))
 infixr 0 :-.
 infixr 0 :~.
 
+-- Optics Identity (src a) (tgt a)
+
 type Optics mode = PQ_ (->) (P_T Store mode)
 
 type (:-.) src tgt = Lens src tgt
@@ -31,6 +33,8 @@ instance Category Lens where
 
 -- Lens as natural transformation
 type (:~.) src tgt = forall a . Lens (src a) (tgt a)
+
+type (#=@) src tgt mode = forall a . Optics mode (src a) (tgt a)
 
 -- | Get the target of a lens
 view :: Lens src tgt -> src -> tgt
