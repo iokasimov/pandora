@@ -17,6 +17,7 @@ import Pandora.Paradigm.Schemes.P_T (P_T (P_T))
 
 infixr 0 :-.
 infixr 0 :~.
+infixl 2 #=@
 
 -- Optics Identity (src a) (tgt a)
 
