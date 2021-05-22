@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant ((<$>), (<$))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
@@ -19,9 +19,7 @@ infixr 0 :-.
 infixr 0 :~.
 infixl 2 #=@
 
--- Optics Identity (src a) (tgt a)
-
-type Optics mode = PQ_ (->) (P_T Store mode)
+type Optics (mode :: * -> *) = PQ_ (->) (P_T Store mode)
 
 type (:-.) src tgt = Lens src tgt
 
@@ -37,9 +35,13 @@ type (:~.) src tgt = forall a . Lens (src a) (tgt a)
 
 type (#=@) src tgt mode = forall a . Optics mode (src a) (tgt a)
 
--- | Get the target of a lens
+-- | TODO: DEPRECATED
 view :: Lens src tgt -> src -> tgt
 view lens = extract @Identity . position . run . run lens
+
+-- | Get the target of a lens
+view' :: Optics mode src tgt -> src -> mode tgt
+view' lens = position . run . run lens
 
 -- | Replace the target of a lens
 set :: Lens src tgt -> tgt -> src -> src
