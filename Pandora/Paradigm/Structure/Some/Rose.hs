@@ -18,15 +18,17 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), P_T (P_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=||$>))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Lookup, Vary, Element, Key), premorph, find, vary)
+import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substructural, substructure), Segment (Root, Tail))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root, Tail))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 import Pandora.Paradigm.Structure.Some.List (List)
 
@@ -35,13 +37,19 @@ type Rose = Maybe <:.> Construction List
 instance Nullable Rose where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
+-- FIXME: If we want to remove root node, we ruin the whole tree
 instance Substructure Root Rose where
-	type Substructural Root Rose = Maybe
-	substructure = PQ_ $ \rose -> case run # lower rose of
-		Nothing -> P_T . Store $ Identity Nothing :*: lift . TU . (Construct % empty <$>) . extract
+	type Available Root Rose = Maybe
+	type Substance Root Rose = Identity
+	substructure = PQ_ $ \rose -> P_T $ case run # lower rose of
+		Nothing -> Store $ Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <$>)
+		Just nonempty_rose -> Store $ Just (Identity # extract nonempty_rose) :*: \case
+			Just (Identity new) -> lift . TU . Just . Construct new $ deconstruct nonempty_rose
+			Nothing -> lift empty
 
 instance Substructure Just Rose where
-	type Substructural Just Rose = List <:.> Construction List
+	type Available Just Rose = Identity
+	type Substance Just Rose = List <:.> Construction List
 	substructure = PQ_ $ \rose -> P_T $ case run . extract . run # rose of
 		Nothing -> Store $ Identity empty :*: (lift empty !)
 		Just (Construct x xs) -> Store $ Identity (TU xs) :*: lift . lift . Construct x . run . extract
@@ -51,11 +59,13 @@ instance Substructure Just Rose where
 type instance Nonempty Rose = Construction List
 
 instance Substructure Root (Construction List) where
-	type Substructural Root (Construction List) = Identity
+	type Available Root (Construction List) = Identity
+	type Substance Root (Construction List) = Identity
 	substructure = PQ_ $ \rose -> P_T . Store $ Identity (Identity # extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
 
 instance Substructure Tail (Construction List) where
-	type Substructural Tail (Construction List) = List <:.> Construction List
+	type Available Tail (Construction List) = Identity
+	type Substance Tail (Construction List) = List <:.> Construction List
 	substructure = PQ_ $ \rose -> case extract # run rose of
 		Construct x xs -> P_T . Store $ Identity (TU xs) :*: lift . Construct x . run . extract
 
