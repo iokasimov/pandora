@@ -37,7 +37,8 @@ instance Nullable Maybe where
 	null = Predicate $ \case { Just _ -> True ; _ -> False }
 
 instance Covariant t => Substructure Tail (Tap t) where
-	type Substructural Tail (Tap t) = t
+	type Available Tail (Tap t) = Identity
+	type Substance Tail (Tap t) = t
 	substructure = PQ_ $ \tap -> P_T $ case extract # run tap of
 		Tap x xs -> Store $ Identity xs :*: lift . Tap x . extract
 
@@ -67,12 +68,14 @@ instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) B
 	morphing (premorph -> xs) = comap (into @(o ds)) ||= xs
 
 instance Substructure Left (Flip Product a) where
-	type Substructural Left (Flip Product a) = Identity
+	type Available Left (Flip Product a) = Identity
+	type Substance Left (Flip Product a) = Identity
 	substructure = PQ_ $ \product -> P_T $ case run # lower product of
 		s :*: x -> Store $ Identity (Identity s) :*: lift . Flip . (:*: x) . extract . extract
 
 instance Substructure Right (Product s) where
-	type Substructural Right (Product s) = Identity
+	type Available Right (Product s) = Identity
+	type Substance Right (Product s) = Identity
 	substructure = PQ_ $ \product -> P_T $ case lower product of
 		s :*: x -> Store $ Identity (Identity x) :*: lift . (s :*:) . extract . extract
 
