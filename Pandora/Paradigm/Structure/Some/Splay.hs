@@ -16,7 +16,7 @@ import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (||=))
-import Pandora.Paradigm.Inventory.Optics (over)
+import Pandora.Paradigm.Inventory.Optics (over, over')
 import Pandora.Paradigm.Schemes (TU (TU), type (<:.>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate, into)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -76,21 +76,25 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 		parent :: Maybe a
 		parent = extract <$> branch @Left xs
 
+-- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zig))) (Construction Wye) = Binary
 	morphing (premorph -> tree) = TU $ run # rotate @(Left Zig) tree >>= run . rotate @(Left Zig)
 
+-- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zig))) (Construction Wye) = Binary
 	morphing (premorph -> tree) = TU $ run # rotate @(Right Zig) tree >>= run . rotate @(Right Zig)
 
+-- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Binary
-	morphing = rotate @(Left Zig) . over (sub @Left) ((>>= run . rotate @(Right Zig)) ||=) . premorph
+	morphing = rotate @(Left Zig) . over' (sub @Left) (>>= run . rotate @(Right Zig)) . premorph
 
+-- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Binary
-	morphing = rotate @(Right Zig) . over (sub @Right) ((>>= run . rotate @(Left Zig)) ||=) . premorph
+	morphing = rotate @(Right Zig) . over' (sub @Right) (>>= run . rotate @(Left Zig)) . premorph
 
 branch :: forall b . Morphable (Into (b Maybe)) Wye => Wye ~> Morphing (Into (b Maybe)) Wye
 branch = into @(b Maybe)
