@@ -29,7 +29,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), P_T (P_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=||))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (over, over', view, view')
+import Pandora.Paradigm.Inventory.Optics (over, over', view)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
@@ -138,8 +138,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	morphing (run . run . premorph -> Nothing) = lift Nothing
 	morphing (run . run . premorph -> Just tree) = TU $ \key ->
 		let root = extract tree in key <=> attached root & order (Just # extract root)
-			(view' # sub @Left # tree >>= lookup @Key key . Prefixed)
-			(view' # sub @Right # tree >>= lookup @Key key . Prefixed)
+			(view # sub @Left # tree >>= lookup @Key key . Prefixed)
+			(view # sub @Right # tree >>= lookup @Key key . Prefixed)
 
 instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	type Morphing (Vary Element) (Prefixed Binary k) = (Product k <:.> Identity) <:.:> Prefixed Binary k := (->)
@@ -157,8 +157,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <:.> Maybe
 	morphing (run . premorph -> Construct x xs) = TU $ \key ->
 		key <=> attached x & order (Just # extract x)
-			(view' # sub @Left # xs >>= lookup @Key key . Prefixed . extract)
-			(view' # sub @Right # xs >>= lookup @Key key . Prefixed . extract)
+			(view # sub @Left # xs >>= lookup @Key key . Prefixed . extract)
+			(view # sub @Right # xs >>= lookup @Key key . Prefixed . extract)
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 

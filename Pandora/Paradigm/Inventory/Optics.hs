@@ -35,13 +35,9 @@ type (:~.) src tgt = forall a . Lens (src a) (tgt a)
 
 type (#=@) src tgt mode = forall a . Optics mode (src a) (tgt a)
 
--- | TODO: DEPRECATED
-view :: Lens src tgt -> src -> tgt
-view lens = extract @Identity . position . run . run lens
-
 -- | Get the target of a lens
-view' :: Optics mode src tgt -> src -> mode tgt
-view' lens = position . run . run lens
+view :: Optics mode src tgt -> src -> mode tgt
+view lens = position . run . run lens
 
 -- | Replace the target of a lens
 set :: Lens src tgt -> tgt -> src -> src

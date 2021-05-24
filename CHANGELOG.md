@@ -445,4 +445,5 @@
 * Define `Prism` type and its `preview` method
 * Redefine `Lens` type as `Optics` on `Identity`
 * Define `#=@` type operator as synonymous for `Optics`
-* [WIP] Redefine `Substructure` typeclass with polymorphic `Optics`
+* Redefine `Substructure` typeclass with polymorphic `Optics`
+* Generalize optical `view` method

@@ -181,12 +181,12 @@ instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
-		$ Tap % twosome (view (sub @Tail) future) (item @Push x past) <$> view (sub @Root) future
+		$ Tap % twosome (extract # view (sub @Tail) future) (item @Push x past) <$> extract (view # sub @Root # future)
 
 instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Zipper List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
-		$ Tap % twosome (item @Push x future) (view (sub @Tail) past) <$> view (sub @Root) past
+		$ Tap % twosome (item @Push x future) (extract # view (sub @Tail) past) <$> extract (view # sub @Root # past)
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Zipper List
@@ -243,7 +243,7 @@ instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Ma
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Zipper List
-	morphing (premorph -> ne) = Tap # extract ne $ twosome # view (sub @Tail) ne # empty
+	morphing (premorph -> ne) = Tap # extract ne $ twosome # extract (view # sub @Tail # ne) # empty
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Zipper List
