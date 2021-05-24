@@ -29,7 +29,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), P_T (P_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=||))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (over, over', view)
+import Pandora.Paradigm.Inventory.Optics (over, view)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
@@ -55,8 +55,8 @@ instance Morphable Insert Binary where
 		let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
 		let change = Just . resolve continue (leaf x) in
 		lift $ f x # extract ne & order # ne
-			# over' (sub @Left) change ne
-			# over' (sub @Right) change ne
+			# over (sub @Left) change ne
+			# over (sub @Right) change ne
 
 instance Measurable Heighth Binary where
 	type Measural Heighth Binary a = Numerator
@@ -94,8 +94,8 @@ instance Morphable Insert (Construction Wye) where
 		let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
 		let change = Just . resolve continue (leaf x) in
 		order # nonempty_list
-			# over' (sub @Left) change nonempty_list
-			# over' (sub @Right) change nonempty_list
+			# over (sub @Left) change nonempty_list
+			# over (sub @Right) change nonempty_list
 			# f x (extract nonempty_list)
 
 instance Measurable Heighth (Construction Wye) where
@@ -147,9 +147,9 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
 		let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)
 		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
-			# over' (sub @Root) ($$$> value) tree
-			# over' (sub @Left) continue tree
-			# over' (sub @Right) continue tree
+			# over (sub @Root) ($$$> value) tree
+			# over (sub @Left) continue tree
+			# over (sub @Right) continue tree
 
 ---------------------------------- Prefixed non-empty binary tree ----------------------------------
 

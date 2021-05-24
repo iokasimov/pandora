@@ -43,13 +43,9 @@ view lens = position . run . run lens
 set :: Lens src tgt -> tgt -> src -> src
 set lens new = look (Identity new) . run . run lens
 
--- | TODO: DEPRECATED
-over :: Lens src tgt -> (tgt -> tgt) -> src -> src
-over lens f = extract . retrofit (f <$>) . run . run lens
-
 -- | Modify the target of a lens
-over' :: Covariant mode => Optics mode src tgt -> (mode tgt -> mode tgt) -> src -> src
-over' lens f = extract . retrofit f . run . run lens
+over :: Covariant mode => Optics mode src tgt -> (mode tgt -> mode tgt) -> src -> src
+over lens f = extract . retrofit f . run . run lens
 
 -- | Representable based lens
 represent :: (Representable t, Setoid (Representation t)) => Representation t -> t a :-. a
