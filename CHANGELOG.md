@@ -446,4 +446,4 @@
 * Redefine `Lens` type as `Optics` on `Identity`
 * Define `#=@` type operator as synonymous for `Optics`
 * Redefine `Substructure` typeclass with polymorphic `Optics`
-* Generalize optical `view`, `over` methods
+* Generalize optical `view`, `set`, `over` methods

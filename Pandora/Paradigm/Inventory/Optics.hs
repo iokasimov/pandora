@@ -39,9 +39,8 @@ type (#=@) src tgt mode = forall a . Optics mode (src a) (tgt a)
 view :: Optics mode src tgt -> src -> mode tgt
 view lens = position . run . run lens
 
--- | Replace the target of a lens
-set :: Lens src tgt -> tgt -> src -> src
-set lens new = look (Identity new) . run . run lens
+set :: Optics mode src tgt -> mode tgt -> src -> src
+set lens new = look new . run . run lens
 
 -- | Modify the target of a lens
 over :: Covariant mode => Optics mode src tgt -> (mode tgt -> mode tgt) -> src -> src

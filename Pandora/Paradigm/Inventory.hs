@@ -42,7 +42,7 @@ zoom :: Stateful bg t => Lens bg ls -> State ls ~> t
 zoom lens less = let restruct to = (to . Identity <-> identity) . run less . extract @Identity
 	in adapt . State $ (|- restruct) . run . run . run lens
 
-(=<>) :: Stateful src t => src :-. tgt -> tgt -> t src
+(=<>) :: Stateful src t => Optics mode src tgt -> mode tgt -> t src
 lens =<> new = modify $ set lens new
 
 (~<>) :: Covariant mode => Stateful src t => Optics mode src tgt -> (mode tgt -> mode tgt) -> t src
