@@ -1,3 +1,3 @@
 module Pandora.Paradigm.Structure.Ability.Zipper where
 
-type family Zipper (s :: * -> *) = (r :: * -> *) | r -> s
+type family Zipper (structure :: * -> *) (moves :: k) = (result :: * -> *) | result -> structure

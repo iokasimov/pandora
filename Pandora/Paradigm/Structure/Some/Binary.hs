@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
+import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($$$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -173,7 +173,8 @@ type Bifurcation = Biforked <:.> Construction Biforked
 
 type Bicursor = Identity <:.:> Binary := (:*:)
 
-type instance Zipper (Construction Wye) = Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)
+type instance Zipper (Construction Wye) (Up ::: Down Left ::: Down Right) =
+	Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)
 
 instance Morphable (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
 	type Morphing (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))

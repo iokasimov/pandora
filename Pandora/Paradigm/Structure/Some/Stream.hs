@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Some.Stream where
 
-import Pandora.Core.Functor (type (:=), type (:=>))
+import Pandora.Core.Functor (type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (point)
@@ -19,7 +19,7 @@ import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
 type Stream = Construction Identity
 
-type instance Zipper Stream = Tap (Stream <:.:> Stream := (:*:))
+type instance Zipper (Construction Identity) (Left ::: Right) = Tap (Stream <:.:> Stream := (:*:))
 
 instance Morphable (Rotate Left) (Tap (Stream <:.:> Stream := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Stream <:.:> Stream := (:*:))) = Tap (Stream <:.:> Stream := (:*:))

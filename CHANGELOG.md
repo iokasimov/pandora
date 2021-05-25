@@ -449,3 +449,4 @@
 * Generalize optical `view`, `set`, `over` methods
 * Change `Substructured` constraint type according to new `Substructure` definition
 * Define `:::` - type operator for almost anything higher kinded
+* Redefine `Zipper` - add possible moves to type definition
