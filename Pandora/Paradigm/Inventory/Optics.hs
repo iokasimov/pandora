@@ -3,11 +3,11 @@
 module Pandora.Paradigm.Inventory.Optics where
 
 import Pandora.Pattern.Category (Category (identity, (.), ($)))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))

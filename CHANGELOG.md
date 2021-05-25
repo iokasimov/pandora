@@ -447,3 +447,4 @@
 * Define `#=@` type operator as synonymous for `Optics`
 * Redefine `Substructure` typeclass with polymorphic `Optics`
 * Generalize optical `view`, `set`, `over` methods
+* Change `Substructured` constraint type according to new `Substructure` definition

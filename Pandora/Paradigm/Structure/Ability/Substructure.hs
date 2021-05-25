@@ -10,14 +10,13 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ((||=))
 import Pandora.Paradigm.Inventory.Optics (type (#=@))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
 data Segment a = Root a | Tail a
 
--- FIXME: uncomment this type synonymous as soon as I realize what to do with Available
--- type Substructured i source target = (Substructure i source, Substructural i source ~ target)
+-- There is no information about Available
+type Substructured segment source target = (Substructure segment source, Substance segment source ~ target)
 
 class Substructure segment (structure :: * -> *) where
 	type Available segment structure :: * -> *

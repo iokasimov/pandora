@@ -3,8 +3,8 @@
 module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>))
-import Pandora.Pattern.Category (identity, (.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($$>), ($$$>)))
+import Pandora.Pattern.Category ((.), ($), (#))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($$$>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Bindable ((>>=))
@@ -35,7 +35,7 @@ import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
-	, Morph (Rotate, Into, Insert, Lookup, Vary, Key, Element), Vertical (Up, Down), collate, lookup, vary)
+	, Morph (Rotate, Into, Insert, Lookup, Vary, Key, Element), Vertical (Up, Down), lookup, vary)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
