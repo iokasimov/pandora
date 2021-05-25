@@ -3,6 +3,7 @@ module Pandora.Core.Functor where
 infixr 0 :=, <:=, :=>, :=:=>, ~>
 infixr 1 .:, :.
 infixr 2 ::|:., ::|.:, ::|::
+infixr 9 :::
 
 -- | Parameter application
 type (:=) t a = t a
@@ -29,3 +30,6 @@ type t ~~> u = forall a b . t a b -> u a b
 type (::|:.) p a b = p (p a b) b
 type (::|.:) p a b = p a (p a b)
 type (::|::) p a b = p (p a b) (p a b)
+
+-- Type operator for anything higher kinded
+data (:::) t u :: k -> k' -> *
