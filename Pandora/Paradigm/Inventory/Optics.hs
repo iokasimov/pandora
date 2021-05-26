@@ -16,34 +16,32 @@ import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
 import Pandora.Paradigm.Schemes.P_T (P_T (P_T))
 
 infixr 0 :-.
-infixr 0 :~.
 infixl 2 #=@
 
-type Optics (mode :: * -> *) = PQ_ (->) (P_T Store mode)
+type Optics (available :: * -> *) = PQ_ (->) (P_T Store available)
 
-type (:-.) src tgt = Lens src tgt
+type (:-.) source target = Lens source target
 
 -- Reference to taret within some source
 type Lens = Optics Identity
 
 instance Category Lens where
-	identity = PQ_ $ \src -> P_T . Store $ Identity src :*: identity . extract
-	PQ_ to . PQ_ from = PQ_ $ \src -> P_T $ src <$ (run . to . extract @Identity . position . run $ from src)
+	identity = PQ_ $ \source -> P_T . Store $ Identity source :*: identity . extract
+	PQ_ to . PQ_ from = PQ_ $ \source -> P_T $ source <$ (run . to . extract @Identity . position . run $ from source)
 
--- Lens as natural transformation
-type (:~.) src tgt = forall a . Lens (src a) (tgt a)
+-- Optics as natural transformation
+type (#=@) source target available = forall a . Optics available (source a) (target a)
 
-type (#=@) src tgt mode = forall a . Optics mode (src a) (tgt a)
-
--- | Get the target of a lens
-view :: Optics mode src tgt -> src -> mode tgt
+-- | Get focused target value
+view :: Optics available source target -> source -> available target
 view lens = position . run . run lens
 
-set :: Optics mode src tgt -> mode tgt -> src -> src
+-- Replace focused target value with new value
+set :: Optics available source target -> available target -> source -> source
 set lens new = look new . run . run lens
 
--- | Modify the target of a lens
-over :: Covariant mode => Optics mode src tgt -> (mode tgt -> mode tgt) -> src -> src
+-- | Modify focused target value
+over :: Covariant available => Optics available source target -> (available target -> available target) -> source -> source
 over lens f = extract . retrofit f . run . run lens
 
 -- | Representable based lens
