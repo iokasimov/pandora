@@ -38,14 +38,14 @@ instance Adjoint (Equipment e) (Environment e) where
 	x -| f = Environment $ x -| f . Equipment
 	x |- g = run x |- run . g
 
-zoom :: Stateful bg t => Lens bg ls -> State ls ~> t
+zoom :: Stateful bg t => Lens Identity bg ls -> State ls ~> t
 zoom lens less = let restruct to = (to . Identity <-> identity) . run less . extract @Identity
 	in adapt . State $ (|- restruct) . run . run . run lens
 
-(=<>) :: Stateful src t => Optics mode src tgt -> mode tgt -> t src
+(=<>) :: Stateful src t => Lens mode src tgt -> mode tgt -> t src
 lens =<> new = modify $ set lens new
 
-(~<>) :: Covariant mode => Stateful src t => Optics mode src tgt -> (mode tgt -> mode tgt) -> t src
+(~<>) :: Covariant mode => Stateful src t => Lens mode src tgt -> (mode tgt -> mode tgt) -> t src
 lens ~<> f = modify $ over lens f
 
 magnify :: forall bg ls t . (Accessible ls bg, Stateful bg t) => t ls

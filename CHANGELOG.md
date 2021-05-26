@@ -452,3 +452,4 @@
 * Redefine `Zipper` - add possible moves to type definition
 * Define experimental `Fastenable` type family to have it as `Constraint`
 * Remove `:~.` type operator in `Optics` module
+* Rename `Optics` type synonymous to `Lens`
