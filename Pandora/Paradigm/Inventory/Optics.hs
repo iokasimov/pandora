@@ -2,7 +2,6 @@
 
 module Pandora.Paradigm.Inventory.Optics where
 
-import Pandora.Core (type (:=))
 import Pandora.Pattern.Category (Category (identity, (.), ($)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))

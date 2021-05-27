@@ -28,7 +28,6 @@ import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
-import Pandora.Paradigm.Schemes.P_T (P_T (P_T))
 
 instance Monotonic s a => Monotonic s (s :*: a) where
 	reduce f r x = reduce f # f (attached x) r # extract x
