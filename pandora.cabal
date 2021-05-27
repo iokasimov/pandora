@@ -72,6 +72,7 @@ library
     Pandora.Paradigm.Schemes.UTU
     Pandora.Paradigm.Schemes.T_U
     Pandora.Paradigm.Schemes.U_T
+    Pandora.Paradigm.Schemes.PTU
     Pandora.Paradigm.Schemes.P_T
     Pandora.Paradigm.Schemes.PQ_
     -- Control flow primitives
