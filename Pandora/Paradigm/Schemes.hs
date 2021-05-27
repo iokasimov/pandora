@@ -3,6 +3,7 @@
 module Pandora.Paradigm.Schemes (module Exports) where
 
 import Pandora.Paradigm.Schemes.PQ_ as Exports
+import Pandora.Paradigm.Schemes.P_Q_T as Exports
 import Pandora.Paradigm.Schemes.P_T as Exports
 import Pandora.Paradigm.Schemes.PTU as Exports
 import Pandora.Paradigm.Schemes.U_T as Exports

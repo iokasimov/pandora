@@ -454,3 +454,4 @@
 * Remove `:~.` type operator in `Optics` module
 * Rename `Optics` type synonymous to `Lens`
 * Define `PTU` joint schema
+* Define `P_Q_T` joint schema
