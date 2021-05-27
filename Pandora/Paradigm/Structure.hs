@@ -27,7 +27,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
-import Pandora.Paradigm.Schemes.PQ_ (PQ_ (PQ_))
+import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Schemes.P_T (P_T (P_T))
 
 instance Monotonic s a => Monotonic s (s :*: a) where
@@ -39,7 +39,7 @@ instance Nullable Maybe where
 instance Covariant t => Substructure Tail (Tap t) where
 	type Available Tail (Tap t) = Identity
 	type Substance Tail (Tap t) = t
-	substructure = PQ_ $ \tap -> P_T $ case extract # run tap of
+	substructure = P_Q_T $ \tap -> case extract # run tap of
 		Tap x xs -> Store $ Identity xs :*: lift . Tap x . extract
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
@@ -70,20 +70,20 @@ instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) B
 instance Substructure Left (Flip Product a) where
 	type Available Left (Flip Product a) = Identity
 	type Substance Left (Flip Product a) = Identity
-	substructure = PQ_ $ \product -> P_T $ case run # lower product of
+	substructure = P_Q_T $ \product -> case run # lower product of
 		s :*: x -> Store $ Identity (Identity s) :*: lift . Flip . (:*: x) . extract . extract
 
 instance Substructure Right (Product s) where
 	type Available Right (Product s) = Identity
 	type Substance Right (Product s) = Identity
-	substructure = PQ_ $ \product -> P_T $ case lower product of
+	substructure = P_Q_T $ \product -> case lower product of
 		s :*: x -> Store $ Identity (Identity x) :*: lift . (s :*:) . extract . extract
 
 instance Accessible s (s :*: a) where
-	access = PQ_ $ \(s :*: x) -> P_T . Store $ Identity s :*: (:*: x) . extract
+	access = P_Q_T $ \(s :*: x) -> Store $ Identity s :*: (:*: x) . extract
 
 instance Accessible a (s :*: a) where
-	access = PQ_ $ \(s :*: x) -> P_T . Store $ Identity x :*: (s :*:) . extract
+	access = P_Q_T $ \(s :*: x) -> Store $ Identity x :*: (s :*:) . extract
 
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @b . access @a
