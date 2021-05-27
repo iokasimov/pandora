@@ -16,7 +16,7 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Schemes (TU (TU), PQ_ (PQ_), P_T (P_T), type (<:.>), type (<:.:>))
+import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
@@ -96,7 +96,7 @@ instance Morphable (Into Wye) (Maybe <:.:> Maybe := (:*:)) where
 instance Substructure Left Wye where
 	type Available Left Wye = Maybe
 	type Substance Left Wye = Identity
-	substructure = PQ_ $ \new -> P_T $ case lower new of
+	substructure = P_Q_T $ \new -> case lower new of
 		End -> Store $ Nothing :*: lift . resolve Left End . (extract <$>)
 		Left x -> Store $ Just (Identity x) :*: lift . resolve Left End . (extract <$>)
 		Right y -> Store $ Nothing :*: (lift # Right y !) . (extract <$>)
@@ -105,7 +105,7 @@ instance Substructure Left Wye where
 instance Substructure Right Wye where
 	type Available Right Wye = Maybe
 	type Substance Right Wye = Identity
-	substructure = PQ_ $ \new -> P_T $ case lower new of
+	substructure = P_Q_T $ \new -> case lower new of
 		End -> Store $ Nothing :*: lift . resolve Right End . (extract <$>)
 		Left x -> Store $ Nothing :*: (lift # Left x !) . (extract <$>)
 		Right y -> Store $ Just (Identity y) :*: lift . resolve Right End . (extract <$>)

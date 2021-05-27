@@ -26,7 +26,7 @@ import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), PQ_ (PQ_), P_T (P_T), type (<:.>), type (<:.:>))
+import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), P_Q_T (P_Q_T), P_T (P_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=||))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (over, view)
@@ -69,16 +69,16 @@ instance Nullable Binary where
 instance Substructure Left Binary where
 	type Available Left Binary = Maybe
 	type Substance Left Binary = Construction Wye
-	substructure = PQ_ $ \bintree -> P_T $ case run . lower # bintree of
+	substructure = P_Q_T $ \bintree -> case run . lower # bintree of
 		Nothing -> Store $ Nothing :*: lift . TU
-		Just tree -> lift . lift <$> run (run (sub @Left) tree)
+		Just tree -> lift . lift <$> run (sub @Left) tree
 
 instance Substructure Right Binary where
 	type Available Right Binary = Maybe
 	type Substance Right Binary = Construction Wye
-	substructure = PQ_ $ \bintree -> P_T $ case run . extract . run # bintree of
+	substructure = P_Q_T $ \bintree -> case run . extract . run # bintree of
 		Nothing -> Store $ Nothing :*: lift . TU
-		Just tree -> lift . lift <$> run (run (sub @Right) tree)
+		Just tree -> lift . lift <$> run (sub @Right) tree
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
@@ -110,13 +110,13 @@ instance Measurable Heighth (Construction Wye) where
 instance Substructure Root (Construction Wye) where
 	type Available Root (Construction Wye) = Identity
 	type Substance Root (Construction Wye) = Identity
-	substructure = PQ_ $ \bintree -> P_T $ case lower bintree of
+	substructure = P_Q_T $ \bintree -> case lower bintree of
 		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract . extract
 
 instance Substructure Left (Construction Wye) where
 	type Available Left (Construction Wye) = Maybe
 	type Substance Left (Construction Wye) = Construction Wye
-	substructure = PQ_ $ \bintree -> P_T $ case extract # run bintree of
+	substructure = P_Q_T $ \bintree -> case extract # run bintree of
 		Construct x End -> Store $ Nothing :*: lift . resolve (Construct x . Left) (leaf x)
 		Construct x (Left lst) -> Store $ Just lst :*: lift . Construct x . resolve Left End
 		Construct x (Right rst) -> Store $ Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst)
@@ -125,7 +125,7 @@ instance Substructure Left (Construction Wye) where
 instance Substructure Right (Construction Wye) where
 	type Available Right (Construction Wye) = Maybe
 	type Substance Right (Construction Wye) = Construction Wye
-	substructure = PQ_ $ \bintree -> P_T $ case extract # run bintree of
+	substructure = P_Q_T $ \bintree -> case extract # run bintree of
 		Construct x End -> Store $ Nothing :*: lift . resolve (Construct x . Right) (leaf x)
 		Construct x (Left lst) -> Store $ Nothing :*: lift . Construct x . resolve (Both lst) (Left lst)
 		Construct x (Right rst) -> Store $ Just rst :*: lift . Construct x . resolve Right End
