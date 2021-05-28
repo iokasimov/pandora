@@ -24,9 +24,15 @@ type Lens = P_Q_T (->) Store
 
 type (:-.) source target = Lens Identity source target
 
+type family Convex lens where
+	Convex Lens = Lens Identity
+
 instance Category (Lens Identity) where
 	identity = P_Q_T $ \source -> Store $ Identity source :*: identity . extract
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
+
+type family Obscure lens where
+	Obscure Lens = Lens Maybe
 
 instance Category (Lens Maybe) where
 	identity = P_Q_T $ \source -> Store $ Just source :*: resolve identity source
@@ -50,5 +56,5 @@ over :: Covariant available => Lens available source target -> (available target
 over lens f = extract . retrofit f . run lens
 
 -- | Representable based lens
-represent :: (Representable t, Setoid (Representation t)) => Representation t -> Lens Identity (t a) a
+represent :: (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
 represent r = P_Q_T $ \x -> Store $ Identity (r <#> x) :*: \new -> tabulate (\r' -> r' == r ? extract new $ r' <#> x)

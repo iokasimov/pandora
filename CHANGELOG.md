@@ -455,4 +455,5 @@
 * Rename `Optics` type synonymous to `Lens`
 * Define `PTU` joint schema
 * Define `P_Q_T` joint schema
-* [WIP] Redefine `Lens` type synonymous and use `P_Q_T` joint schema
+* Redefine `Lens` type synonymous and use `P_Q_T` joint schema
+* Define `Convex` and `Obscure` type families for `Lens`
