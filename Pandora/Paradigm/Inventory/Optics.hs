@@ -9,10 +9,13 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Function ((!))
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Inventory.Store (Store (Store), position, look, retrofit)
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
+import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 
 infixr 0 :-.
 infixl 2 #=@
@@ -24,6 +27,12 @@ type (:-.) source target = Lens Identity source target
 instance Category (Lens Identity) where
 	identity = P_Q_T $ \source -> Store $ Identity source :*: identity . extract
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
+
+instance Category (Lens Maybe) where
+	identity = P_Q_T $ \source -> Store $ Just source :*: resolve identity source
+	P_Q_T to . P_Q_T from = P_Q_T $ \source -> case position (from source) of
+		Nothing -> Store $ Nothing :*: (source !)
+		Just between -> source <$ to between
 
 -- Lens as natural transformation
 type (#=@) source target available = forall a . Lens available (source a) (target a)
