@@ -203,24 +203,6 @@ instance Morphable (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:)))
 		# past ->> modify . item @Push @(Comprehension Maybe)
 		# item @Push x (Comprehension future)
 
-instance Substructure Root (Tap (List<:.:> List:= (:*:))) where
-	type Available Root (Tap (List<:.:> List:= (:*:))) = Identity
-	type Substance Root (Tap (List<:.:> List:= (:*:))) = Identity
-	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x xs -> Store $ Identity (Identity x) :*: lift . (Tap % xs) . extract . extract
-
-instance Substructure Left (Tap (List <:.:> List := (:*:))) where
-	type Available Left (Tap (List <:.:> List := (:*:))) = Identity
-	type Substance Left (Tap (List <:.:> List := (:*:))) = List
-	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store $ Identity future :*: lift . Tap x . T_U . (:*: past) . extract
-
-instance Substructure Right (Tap (List <:.:> List := (:*:))) where
-	type Available Right (Tap (List <:.:> List := (:*:))) = Identity
-	type Substance Right (Tap (List <:.:> List := (:*:))) = List
-	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store $ Identity past :*: lift . Tap x . T_U . (future :*:) . extract
-
 ------------------------------------- Zipper of non-empty list -------------------------------------
 
 type instance Zipper (Construction Maybe) (Left ::: Right) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
@@ -267,24 +249,6 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
 		# past ->> modify . item @Push @List
 		# item @Push x (lift future)
-
-instance Substructure Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	type Available Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
-	type Substance Root (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
-	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x xs -> Store $ Identity (Identity x) :*: lift . (Tap % xs) . extract . extract
-
-instance Substructure Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	type Available Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
-	type Substance Left (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
-	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store $ Identity future :*: lift . Tap x . T_U . (:*: past) . extract
-
-instance Substructure Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	type Available Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Identity
-	type Substance Right (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
-	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store $ Identity past :*: lift . Tap x . T_U . (future :*:) . extract
 
 ------------------------------------ Zipper of combinative list ------------------------------------
 
