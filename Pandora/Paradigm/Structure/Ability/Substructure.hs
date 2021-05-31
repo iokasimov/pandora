@@ -15,8 +15,8 @@ import Pandora.Paradigm.Schemes.TU (type (<:.>))
 
 data Segment a = Root a | Tail a
 
--- There is no information about Available
-type Substructured segment source target = (Substructure segment source, Substance segment source ~ target)
+type Substructured segment source available target = (Substructure segment source,
+	Substance segment source ~ target, Available segment source ~ available)
 
 class Substructure segment (structure :: * -> *) where
 	type Available segment structure :: * -> *

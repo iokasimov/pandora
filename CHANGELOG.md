@@ -457,3 +457,4 @@
 * Define `P_Q_T` joint schema
 * Redefine `Lens` type synonymous and use `P_Q_T` joint schema
 * Define `Convex` and `Obscure` type families for `Lens`
+* Change `Substructured` constraint - add paramater for `Available`
