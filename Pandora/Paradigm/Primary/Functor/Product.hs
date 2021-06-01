@@ -1,6 +1,9 @@
 module Pandora.Paradigm.Primary.Functor.Product where
 
+import Pandora.Core.Functor (type (:=))
+import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
@@ -23,7 +26,7 @@ data Product s a = s :*: a
 type (:*:) = Product
 
 instance Covariant (Product s) where
-	f <$> x = attached x :*: f (extract x)
+	f <$> x = attached x :*: f # extract x
 
 instance Extractable (Product a) where
 	extract ~(_ :*: y) = y
@@ -63,7 +66,10 @@ instance (Supremum s, Supremum a) => Supremum (s :*: a) where
 instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 
 instance (Group s, Group a) => Group (s :*: a) where
-	invert x = invert (attached x) :*: invert (extract x)
+	invert x = invert # attached x :*: invert # extract x
+
+instance {-# OVERLAPS #-} Applicative t => Applicative (t <:.:> t := (:*:)) where
+	T_U (lfs :*: rfs) <*> T_U (ls :*: rs) = T_U $ lfs <*> ls :*: rfs <*> rs
 
 delta :: a -> a :*: a
 delta x = x :*: x
@@ -75,4 +81,4 @@ attached :: a :*: b -> a
 attached ~(x :*: _) = x
 
 twosome :: t a -> u a -> (<:.:>) t u (:*:) a
-twosome x y = T_U (x :*: y)
+twosome x y = T_U $ x :*: y
