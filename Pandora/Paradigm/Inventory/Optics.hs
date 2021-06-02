@@ -2,7 +2,8 @@
 
 module Pandora.Paradigm.Inventory.Optics where
 
-import Pandora.Pattern.Category (Category (identity, (.), ($)))
+import Pandora.Core.Impliable (Impliable (Arguments, imply))
+import Pandora.Pattern.Category (Category (identity, (.), ($), (#)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
@@ -30,6 +31,11 @@ type family Convex lens where
 instance Category (Lens Identity) where
 	identity = P_Q_T $ \source -> Store $ Identity source :*: identity . extract
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
+
+instance Impliable (P_Q_T (->) Store Identity source target) where
+	type Arguments (P_Q_T (->) Store Identity source target) =
+		(source -> target) -> (source -> target -> source) -> P_Q_T (->) Store Identity source target
+	imply getter setter = P_Q_T $ \source -> Store $ Identity # getter source :*: setter source . extract
 
 type family Obscure lens where
 	Obscure Lens = Lens Maybe
