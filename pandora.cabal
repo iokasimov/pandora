@@ -22,6 +22,7 @@ library
     -- Axioms set
     Pandora.Core
     Pandora.Core.Functor
+    Pandora.Core.Impliable
 
     Pandora.Paradigm
     -- Basic constructions
