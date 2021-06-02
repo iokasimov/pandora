@@ -7,6 +7,7 @@ import Pandora.Paradigm.Structure.Interface as Exports
 import Pandora.Paradigm.Structure.Modification as Exports
 import Pandora.Paradigm.Structure.Some as Exports
 
+import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (.), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant (comap))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -18,15 +19,17 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Inventory.Optics ()
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
+import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
+import Pandora.Paradigm.Schemes.T_U ( type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 
 instance Monotonic s a => Monotonic s (s :*: a) where
@@ -86,3 +89,15 @@ instance Accessible a (s :*: a) where
 
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @b . access @a
+
+instance Covariant t => Substructure Left (t <:.:> t := (:*:)) where
+	type Available Left (t <:.:> t := (:*:)) = Identity
+	type Substance Left (t <:.:> t := (:*:)) = t
+	substructure = P_Q_T $ \x -> case run # lower x of
+		ls :*: rs -> Store $ Identity ls :*: lift . (twosome % rs) . extract
+
+instance Covariant t => Substructure Right (t <:.:> t := (:*:)) where
+	type Available Right (t <:.:> t := (:*:)) = Identity
+	type Substance Right (t <:.:> t := (:*:)) = t
+	substructure = P_Q_T $ \x -> case run # lower x of
+		ls :*: rs -> Store $ Identity rs :*: lift . (twosome ls) . extract
