@@ -26,6 +26,9 @@ infixl 2 #=@
 
 type Lens = P_Q_T (->) Store
 
+instance Invariant (Flip (Lens available) tgt) where
+	f <$< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T $ g >-> (f <$>) $ lens
+
 type (:-.) source target = Lens Identity source target
 
 type family Convex lens where
@@ -35,9 +38,6 @@ instance Category (Lens Identity) where
 	identity = P_Q_T $ \source -> Store $ Identity source :*: identity . extract
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
 
-instance Invariant (Flip (Lens available) tgt) where
-	f <$< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T $ g >-> (f <$>) $ lens
-
 instance Impliable (P_Q_T (->) Store Identity source target) where
 	type Arguments (P_Q_T (->) Store Identity source target) =
 		(source -> target) -> (source -> target -> source) -> P_Q_T (->) Store Identity source target
@@ -45,6 +45,11 @@ instance Impliable (P_Q_T (->) Store Identity source target) where
 
 type family Obscure lens where
 	Obscure Lens = Lens Maybe
+
+instance Impliable (P_Q_T (->) Store Maybe source target) where
+	type Arguments (P_Q_T (->) Store Maybe source target) =
+		(source -> Maybe target) -> (source -> Maybe target -> source) -> P_Q_T (->) Store Maybe source target
+	imply getter setter = P_Q_T $ \source -> Store $ getter source :*: setter source
 
 instance Category (Lens Maybe) where
 	identity = P_Q_T $ \source -> Store $ Just source :*: resolve identity source
