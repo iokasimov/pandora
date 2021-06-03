@@ -4,8 +4,10 @@ module Pandora.Paradigm.Inventory.Optics where
 
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Category (Category (identity, (.), ($), (#)))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
+import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
@@ -13,6 +15,7 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Function ((!))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Inventory.Store (Store (Store), position, look, retrofit)
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
@@ -31,6 +34,9 @@ type family Convex lens where
 instance Category (Lens Identity) where
 	identity = P_Q_T $ \source -> Store $ Identity source :*: identity . extract
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
+
+instance Invariant (Flip (Lens available) tgt) where
+	f <$< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T $ g >-> (f <$>) $ lens
 
 instance Impliable (P_Q_T (->) Store Identity source target) where
 	type Arguments (P_Q_T (->) Store Identity source target) =
