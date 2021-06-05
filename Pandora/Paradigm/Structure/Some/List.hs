@@ -104,11 +104,11 @@ instance Nullable List where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
 instance Substructure Root List where
-	type Available Root List = Identity
-	type Substance Root List = Maybe
+	type Available Root List = Maybe
+	type Substance Root List = Identity
 	substructure = P_Q_T $ \zipper -> case run # lower zipper of
-		Just (Construct x xs) -> Store $ Identity (Just x) :*: lift . resolve (lift . (Construct % xs)) empty . extract
-		Nothing -> Store $ Identity Nothing :*: lift . resolve (lift . (Construct % empty)) empty . extract
+		Just (Construct x xs) -> Store $ Just (Identity x) :*: lift . resolve (lift . (Construct % xs) . extract @Identity) empty
+		Nothing -> Store $ Nothing :*: lift . resolve (lift . (Construct % empty) . extract @Identity) empty
 
 instance Substructure Tail List where
 	type Available Tail List = Identity
@@ -180,13 +180,15 @@ instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Tap (List <:.:> List := (:*:))
-	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
-		$ Tap % twosome (extract # view (sub @Tail) future) (item @Push x past) <$> extract (view # sub @Root # future)
+	morphing (premorph -> Tap x (T_U (future :*: past))) =
+		let subtree = twosome # extract (view (sub @Tail) future) # item @Push x past in
+		TU $ (Tap . extract) % subtree <$> view (sub @Root) future
 
 instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Tap (List <:.:> List := (:*:))
-	morphing (premorph -> Tap x (T_U (future :*: past))) = TU
-		$ Tap % twosome (item @Push x future) (extract # view (sub @Tail) past) <$> extract (view # sub @Root # past)
+	morphing (premorph -> Tap x (T_U (future :*: past))) =
+		let subtree = twosome # item @Push x future # extract (view (sub @Tail) past) in
+		TU $ (Tap . extract) % subtree <$> view (sub @Root) past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Tap (List <:.:> List := (:*:))
