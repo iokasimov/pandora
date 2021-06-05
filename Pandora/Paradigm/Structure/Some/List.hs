@@ -3,6 +3,7 @@
 module Pandora.Paradigm.Structure.Some.List where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:::))
+import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Category ((.), ($), (#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -33,7 +34,7 @@ import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Inventory.State (State, fold, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (view)
+import Pandora.Paradigm.Inventory.Optics (Convex, Lens, view)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
@@ -149,14 +150,14 @@ instance Measurable Length (Construction Maybe) where
 instance Substructure Root (Construction Maybe) where
 	type Available Root (Construction Maybe) = Identity
 	type Substance Root (Construction Maybe) = Identity
-	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract . extract
+	substructure = imply @(Convex Lens _ _) (Identity . extract . lower)
+		(\source target -> lift $ Construct # extract target # deconstruct (lower source))
 
 instance Substructure Tail (Construction Maybe) where
 	type Available Tail (Construction Maybe) = Identity
 	type Substance Tail (Construction Maybe) = List
-	substructure = P_Q_T $ \stack -> case extract $ run stack of
-		Construct x xs -> Store $ Identity (TU xs) :*: lift . Construct x . run . extract
+	substructure = imply @(Convex Lens _ _) (TU . deconstruct . lower)
+		(\source target -> lift $ Construct # extract (lower source) # run target)
 
 ---------------------------------------- Combinative list ------------------------------------------
 
