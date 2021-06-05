@@ -459,3 +459,4 @@
 * Define `Convex` and `Obscure` type families for `Lens`
 * Change `Substructured` constraint - add paramater for `Available`
 * Define experimental `Impliable` typeclass
+* Remove `:-.` type operator in `Optics` module

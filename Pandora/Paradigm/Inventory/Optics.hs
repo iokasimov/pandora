@@ -21,15 +21,12 @@ import Pandora.Paradigm.Inventory.Store (Store (Store), position, look, retrofit
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 
-infixr 0 :-.
 infixl 2 #=@
 
 type Lens = P_Q_T (->) Store
 
 instance Invariant (Flip (Lens available) tgt) where
 	f <$< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T $ g >-> (f <$>) $ lens
-
-type (:-.) source target = Lens Identity source target
 
 type family Convex lens where
 	Convex Lens = Lens Identity
@@ -40,7 +37,7 @@ instance Category (Lens Identity) where
 
 instance Impliable (P_Q_T (->) Store Identity source target) where
 	type Arguments (P_Q_T (->) Store Identity source target) =
-		(source -> target) -> (source -> target -> source) -> P_Q_T (->) Store Identity source target
+		(source -> target) -> (source -> target -> source) -> Lens Identity source target
 	imply getter setter = P_Q_T $ \source -> Store $ Identity # getter source :*: setter source . extract
 
 type family Obscure lens where
@@ -48,7 +45,7 @@ type family Obscure lens where
 
 instance Impliable (P_Q_T (->) Store Maybe source target) where
 	type Arguments (P_Q_T (->) Store Maybe source target) =
-		(source -> Maybe target) -> (source -> Maybe target -> source) -> P_Q_T (->) Store Maybe source target
+		(source -> Maybe target) -> (source -> Maybe target -> source) -> Lens Maybe source target
 	imply getter setter = P_Q_T $ \source -> Store $ getter source :*: setter source
 
 instance Category (Lens Maybe) where
@@ -73,5 +70,5 @@ over :: Covariant available => Lens available source target -> (available target
 over lens f = extract . retrofit f . run lens
 
 -- | Representable based lens
-represent :: (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
-represent r = P_Q_T $ \x -> Store $ Identity (r <#> x) :*: \new -> tabulate (\r' -> r' == r ? extract new $ r' <#> x)
+represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
+represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate $ \r' -> r' == r ? target $ r' <#> source)
