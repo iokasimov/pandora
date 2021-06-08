@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
-import Pandora.Paradigm.Primary.Functor.Function ((!))
+import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
@@ -32,7 +32,7 @@ type family Convex lens where
 	Convex Lens = Lens Identity
 
 instance Category (Lens Identity) where
-	identity = P_Q_T $ \source -> Store $ Identity source :*: identity . extract
+	identity = imply @(Convex Lens _ _) identity ((%) (!))
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
 
 instance Impliable (P_Q_T (->) Store Identity source target) where
@@ -49,8 +49,8 @@ instance Impliable (P_Q_T (->) Store Maybe source target) where
 	imply getter setter = P_Q_T $ \source -> Store $ getter source :*: setter source
 
 instance Category (Lens Maybe) where
-	identity = P_Q_T $ \source -> Store $ Just source :*: resolve identity source
-	P_Q_T to . P_Q_T from = P_Q_T $ \source -> case position (from source) of
+	identity = imply @(Obscure Lens _ _) # Just # resolve identity
+	P_Q_T to . P_Q_T from = P_Q_T $ \source -> case position # from source of
 		Nothing -> Store $ Nothing :*: (source !)
 		Just between -> source <$ to between
 
