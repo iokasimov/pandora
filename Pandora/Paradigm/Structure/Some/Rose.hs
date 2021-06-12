@@ -13,7 +13,7 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
@@ -50,7 +50,7 @@ instance Substructure Just Rose where
 	type Available Just Rose = Identity
 	type Substance Just Rose = List <:.> Construction List
 	substructure = P_Q_T $ \rose -> case run . extract . run # rose of
-		Nothing -> Store $ Identity empty :*: (lift empty !)
+		Nothing -> Store $ Identity empty :*: (lift empty !.)
 		Just (Construct x xs) -> Store $ Identity (TU xs) :*: lift . lift . Construct x . run . extract
 
 --------------------------------------- Non-empty rose tree ----------------------------------------

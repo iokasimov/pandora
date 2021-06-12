@@ -460,3 +460,6 @@
 * Change `Substructured` constraint - add paramater for `Available`
 * Define experimental `Impliable` typeclass
 * Remove `:-.` type operator in `Optics` module
+
+# 0.4.3
+* Rename `!` to `!.` in `Function` module

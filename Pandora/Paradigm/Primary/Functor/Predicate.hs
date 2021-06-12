@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool, (?))
-import Pandora.Paradigm.Primary.Functor.Function ((!))
+import Pandora.Paradigm.Primary.Functor.Function ((!.))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
@@ -28,7 +28,7 @@ instance Divisible Predicate where
 	Predicate g >*< Predicate h = Predicate $ \(b :*: c) -> g b * h c
 
 instance Determinable Predicate where
-	determine = Predicate (True !)
+	determine = Predicate (True !.)
 
 equate :: Setoid a => a :=> Predicate
 equate x = Predicate (== x)

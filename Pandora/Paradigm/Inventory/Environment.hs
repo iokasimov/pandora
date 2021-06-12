@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -22,7 +22,7 @@ instance Covariant (Environment e) where
 	f <$> Environment x = Environment $ f . x
 
 instance Pointable (Environment e) where
-	point x = Environment (x !)
+	point x = Environment (x !.)
 
 instance Applicative (Environment e) where
 	f <*> x = Environment $ run f <*> run x

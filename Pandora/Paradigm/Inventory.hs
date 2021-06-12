@@ -17,7 +17,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bivariant ((<->))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
@@ -26,7 +26,7 @@ import Pandora.Paradigm.Structure.Ability.Accessible (Accessible (access))
 
 instance Adjoint (Store s) (State s) where
 	(-|) :: a -> (Store s a -> b) -> State s b
-	x -| f = State $ \s -> (:*:) s . f . Store $ s :*: (x !)
+	x -| f = State $ \s -> (:*:) s . f . Store $ s :*: (x !.)
 	(|-) :: Store s a -> (a -> State s b) -> b
 	Store (s :*: f) |- g = extract . (run % s) . g $ f s
 

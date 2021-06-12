@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 
 newtype Continuation r t a = Continuation ((->) ::|:. a :. t := r)
 
@@ -38,7 +38,7 @@ instance (forall u . Bindable u) => Liftable (Continuation r) where
 
 -- | Call with current continuation
 cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
-cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . (!) . g
+cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . (!.) . g
 
 -- | Delimit the continuation of any 'shift'
 reset :: (forall u . Bindable u, Monad t, Traversable t) => Continuation r t r -> Continuation s t r

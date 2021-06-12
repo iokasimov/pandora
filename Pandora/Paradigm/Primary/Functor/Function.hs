@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 
-infixr 2 !
+infixr 2 !.
 infixr 9 %
 infixl 1 &
 
@@ -31,7 +31,7 @@ instance Distributive ((->) e) where
 	g >>- f = \e -> (f % e) <$> g
 
 instance Pointable ((->) e) where
-	point = (!)
+	point = (!.)
 
 instance Bindable ((->) e) where
 	f >>= g = \x -> g # f x # x
@@ -50,9 +50,9 @@ instance Semigroup r => Semigroup (e -> r) where
 instance Ringoid r => Ringoid (e -> r) where
 	f * g = \e -> f e * g e
 
-{-# INLINE (!) #-}
-(!) :: a -> b -> a
-x ! _ = x
+{-# INLINE (!.) #-}
+(!.) :: a -> b -> a
+x !. _ = x
 
 {-# INLINE (!!) #-}
 (!!) :: a -> b -> c -> a

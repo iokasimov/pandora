@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
@@ -32,7 +32,7 @@ type family Convex lens where
 	Convex Lens = Lens Identity
 
 instance Category (Lens Identity) where
-	identity = imply @(Convex Lens _ _) identity ((%) (!))
+	identity = imply @(Convex Lens _ _) identity ((%) (!.))
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
 
 instance Impliable (P_Q_T (->) Store Identity source target) where
@@ -51,7 +51,7 @@ instance Impliable (P_Q_T (->) Store Maybe source target) where
 instance Category (Lens Maybe) where
 	identity = imply @(Obscure Lens _ _) # Just # resolve identity
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> case position # from source of
-		Nothing -> Store $ Nothing :*: (source !)
+		Nothing -> Store $ Nothing :*: (source !.)
 		Just between -> source <$ to between
 
 -- Lens as natural transformation

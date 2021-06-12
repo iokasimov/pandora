@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Object.Setoid (Setoid ((!=)))
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Pattern.Object.Quasiring (one)
-import Pandora.Paradigm.Primary.Functor.Function ((!), (%))
+import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, equate)
@@ -26,4 +26,4 @@ subset :: forall t f a . (Set t f a, Morphing (Find f) t ~ (Predicate <:.:> Mayb
 subset = Convergence $ \s ss -> Nothing != ss ->> (find @f @t @Maybe % s) . equate
 
 cardinality :: Traversable t => t a -> Numerator
-cardinality s = attached . run @(State _) % Zero $ s ->> (modify @Numerator (+ one) !)
+cardinality s = attached . run @(State _) % Zero $ s ->> (modify @Numerator (+ one) !.)
