@@ -3,7 +3,7 @@ module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, im
 import Pandora.Pattern.Category (($), (.), (#))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
-import Pandora.Paradigm.Primary.Functor.Function ((!.), (!!))
+import Pandora.Paradigm.Primary.Functor.Function ((!.), (!..))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 
@@ -41,7 +41,7 @@ yield v = Continuation $ \next -> Pipe $ \i (Consumer o) -> o v # pause next i
 
 -- | Pipeline that does nothing
 finish :: Pointable t => Pipeline i o t () ()
-finish = Continuation (Pipe (point () !!) !.)
+finish = Continuation (Pipe (point () !..) !.)
 
 -- | Do some effectful computation within pipeline
 impact :: Bindable t => t a -> Pipeline i o t a a
@@ -52,11 +52,11 @@ impact action = Continuation $ \next -> Pipe $ \i o -> action >>= \x -> pipe (ne
 p =*= q = Continuation $ \_ -> Pipe $ \i -> pipe # run q end # pause (run p end !.) i where
 
 	end :: b -> Pipe c d () t ()
-	end _ = Pipe (point () !!)
+	end _ = Pipe (point () !..)
 
 -- | Run pipeline and get result
 pipeline :: Pointable t => Pipeline i o t () () -> t ()
-pipeline p = pipe # run p (Pipe . (!!) . point) # i # o where
+pipeline p = pipe # run p (Pipe . (!..) . point) # i # o where
 
 	i :: Producer i t ()
 	i = Producer $ \o' -> produce i o'

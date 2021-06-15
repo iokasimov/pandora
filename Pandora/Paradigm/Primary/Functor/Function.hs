@@ -54,9 +54,9 @@ instance Ringoid r => Ringoid (e -> r) where
 (!.) :: a -> b -> a
 x !. _ = x
 
-{-# INLINE (!!) #-}
-(!!) :: a -> b -> c -> a
-(!!) x _ _ = x
+{-# INLINE (!..) #-}
+(!..) :: a -> b -> c -> a
+(!..) x _ _ = x
 
 {-# INLINE (!!!) #-}
 (!!!) :: a -> b -> c -> d -> a
