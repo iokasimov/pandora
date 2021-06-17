@@ -464,3 +464,4 @@
 # 0.4.3
 * Rename `!` to `!.` in `Function` module
 * Rename `!!` to `!..` in `Function` module
+* Rename `!!!` to `!...` in `Function` module
