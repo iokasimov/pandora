@@ -15,9 +15,11 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run) 
 import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), twosome)
+import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
@@ -52,6 +54,13 @@ instance Lowerable Tap where
 
 instance Hoistable Tap where
 	f /|\ Tap x xs = Tap x # f xs
+
+instance {-# OVERLAPS #-} Applicative t => Applicative (Tap (t <:.:> t := (:*:))) where
+	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
+
+instance {-# OVERLAPS #-} Traversable t => Traversable (Tap (t <:.:> t := (:*:))) where
+	Tap x (T_U (future :*: past)) ->> f = (\past' x' future' -> Tap x' $ twosome # future' # run past')
+		<$> Reverse past ->> f <*> f x <*> future ->> f
 
 instance Covariant t => Substructure Root (Tap (t <:.:> t := (:*:))) where
 	type Available Root (Tap (t <:.:> t := (:*:))) = Identity

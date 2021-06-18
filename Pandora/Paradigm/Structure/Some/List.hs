@@ -210,13 +210,6 @@ instance Morphable (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:)))
 
 type instance Zipper (Construction Maybe) (Left ::: Right) = Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 
-instance {-# OVERLAPS #-} Applicative (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
-
-instance {-# OVERLAPS #-} Traversable (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
-	Tap x (T_U (future :*: past)) ->> f = (\past' x' future' -> Tap x' $ twosome # future' # run past')
-		<$> Reverse past ->> f <*> f x <*> future ->> f
-
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) =
 		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
