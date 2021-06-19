@@ -39,7 +39,7 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 instance (Covariant t, Covariant t', Covariant u) => Covariant (t <:<.>:> t' := u) where
 	f <$> TUT x = TUT $ f <$$$> x
 
-instance (Adjoint t' t, Bindable u) => Applicative (t <:<.>:> t' := u) where
+instance (Covariant t, Covariant t', Adjoint t' t, Bindable u) => Applicative (t <:<.>:> t' := u) where
 	f <*> x = TUT $ (>>= (|- (<$$$> run x))) <$> run f
 
 instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
@@ -48,16 +48,16 @@ instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> 
 instance (Pointable t, Applicative t, Covariant t', Avoidable u) => Avoidable (t <:<.>:> t' := u) where
 	empty = TUT $ point empty
 
-instance (Pointable u, Adjoint t' t) => Pointable (t <:<.>:> t' := u) where
+instance (Covariant t, Covariant t', Pointable u, Adjoint t' t) => Pointable (t <:<.>:> t' := u) where
 	point = unite . (-| point)
 
-instance (Adjoint t' t, Bindable u) => Bindable (t <:<.>:> t' := u) where
+instance (Covariant t, Covariant t', Adjoint t' t, Bindable u) => Bindable (t <:<.>:> t' := u) where
 	x >>= f = TUT $ run x $>>= (|- run . f)
 
-instance (Adjoint t' t, Extendable u) => Extendable (t' <:<.>:> t := u) where
+instance (Covariant t', Covariant t, Adjoint t' t, Extendable u) => Extendable (t' <:<.>:> t := u) where
 	x =>> f = TUT $ run x $=>> (-| f . unite)
 
-instance (Adjoint t t', Extractable u) => Extractable (t <:<.>:> t' := u) where
+instance (Covariant t, Covariant t', Adjoint t t', Extractable u) => Extractable (t <:<.>:> t' := u) where
 	extract = (|- extract) . run
 
 instance (Adjoint t' t, Distributive t) => Liftable (t <:<.>:> t') where

@@ -15,7 +15,7 @@ infixl 3 -|, |-, -|$, $|-, $$|-, $$$|-, $$$$|-
 > * Right adjunction interchange: psi f ≡ epsilon . comap f
 -}
 
-class (Covariant t, Covariant u) => Adjoint t u where
+class Adjoint t u where
 	{-# MINIMAL (-|), (|-) #-}
 	-- | Left adjunction
 	(-|) :: a -> (t a -> b) -> u b
