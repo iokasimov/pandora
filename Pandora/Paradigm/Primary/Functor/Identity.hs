@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Identity where
 
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -28,6 +28,9 @@ newtype Identity a = Identity a
 
 instance Covariant Identity where
 	f <$> Identity x = Identity $ f x
+
+instance Covariant_ Identity (->) (->) where
+	f -<$>- Identity x = Identity $ f x
 
 instance Pointable Identity where
 	point = Identity

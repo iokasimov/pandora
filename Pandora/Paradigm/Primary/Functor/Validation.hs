@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Validation where
 
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -19,6 +19,14 @@ data Validation e a = Flaws e | Validated a
 instance Covariant (Validation e) where
 	_ <$> Flaws e = Flaws e
 	f <$> Validated x = Validated $ f x
+
+instance Covariant_ (Validation e) (->) (->) where
+	_ -<$>- Flaws e = Flaws e
+	f -<$>- Validated x = Validated $ f x
+	_ -<$>- Flaws e = Flaws e
+	f -<$>- Validated x = Validated $ f x
+	_ -<$>- Flaws e = Flaws e
+	f -<$>- Validated x = Validated $ f x
 
 instance Pointable (Validation e) where
 	point = Validated

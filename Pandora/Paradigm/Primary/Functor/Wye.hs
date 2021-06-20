@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Wye where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -17,6 +17,12 @@ instance Covariant Wye where
 	f <$> Left x = Left # f x
 	f <$> Right y = Right # f y
 	f <$> Both x y = Both # f x # f y
+
+instance Covariant_ Wye (->) (->) where
+	_ -<$>- End = End
+	f -<$>- Left x = Left # f x
+	f -<$>- Right y = Right # f y
+	f -<$>- Both x y = Both # f x # f y
 
 instance Traversable Wye where
 	End ->> _ = point End

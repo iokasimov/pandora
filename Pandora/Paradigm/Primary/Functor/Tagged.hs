@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Tagged where
 
 import Pandora.Core.Functor (type (:=>), type (~>))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))

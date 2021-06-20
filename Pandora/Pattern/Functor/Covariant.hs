@@ -94,3 +94,6 @@ class Covariant (t :: * -> *) where
 
 	($$$$>) :: (Covariant u, Covariant v, Covariant w) => t :. u :. v :. w := a -> b -> t :. u :. v :. w := b
 	s $$$$> x = (\_-> x) <$$$$> s
+
+class (Category source, Category target) => Covariant_ t source target where
+	(-<$>-) :: source a b -> target (t a) (t b)

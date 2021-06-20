@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Maybe where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -30,6 +30,10 @@ data Maybe a = Nothing | Just a
 instance Covariant Maybe where
 	f <$> Just x = Just $ f x
 	_ <$> Nothing = Nothing
+
+instance Covariant_ Maybe (->) (->) where
+	f -<$>- Just x = Just $ f x
+	f -<$>- Nothing = Nothing
 
 instance Pointable Maybe where
 	point = Just

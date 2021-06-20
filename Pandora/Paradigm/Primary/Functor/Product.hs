@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Product where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -27,6 +27,9 @@ type (:*:) = Product
 
 instance Covariant (Product s) where
 	f <$> x = attached x :*: f # extract x
+
+instance Covariant_ (Product s) (->) (->) where
+	f -<$>- x = attached x :*: f # extract x
 
 instance Extractable (Product a) where
 	extract ~(_ :*: y) = y

@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (identity, (.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -25,6 +25,10 @@ data Conclusion e a = Failure e | Success a
 instance Covariant (Conclusion e) where
 	f <$> Success x = Success $ f x
 	_ <$> Failure y = Failure y
+
+instance Covariant_ (Conclusion e) (->) (->) where
+	f -<$>- Success x = Success $ f x
+	_ -<$>- Failure y = Failure y
 
 instance Pointable (Conclusion e) where
 	point = Success

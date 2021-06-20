@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.These where
 
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -13,6 +13,11 @@ instance Covariant (These e) where
 	f <$> This x = This $ f x
 	_ <$> That y = That y
 	f <$> These y x = These y $ f x
+
+instance Covariant_ (These e) (->) (->) where
+	f -<$>- This x = This $ f x
+	_ -<$>- That y = That y
+	f -<$>- These y x = These y $ f x
 
 instance Pointable (These e) where
 	point = This

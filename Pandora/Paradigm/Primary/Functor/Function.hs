@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Primary.Functor.Function where
 
 import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -23,6 +23,9 @@ instance Category (->) where
 
 instance Covariant ((->) a) where
 	(<$>) = (.)
+
+instance Covariant_ ((->) a) (->) (->) where
+	(-<$>-) = (.)
 
 instance Applicative ((->) e) where
 	(<*>) f g x = f x $ g x

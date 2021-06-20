@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Edges where
 
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Paradigm.Primary.Functor.Function ()
@@ -13,6 +13,12 @@ instance Covariant Edges where
 	f <$> Connect x = Connect $ f x
 	f <$> Overlay x = Overlay $ f x
 	f <$> Leap x = Leap $ f x
+
+instance Covariant_ Edges (->) (->) where
+	_ -<$>- Empty = Empty
+	f -<$>- Connect x = Connect $ f x
+	f -<$>- Overlay x = Overlay $ f x
+	f -<$>- Leap x = Leap $ f x
 
 instance Traversable Edges where
 	Empty ->> _ = point Empty
