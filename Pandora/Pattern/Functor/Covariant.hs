@@ -3,8 +3,8 @@ module Pandora.Pattern.Functor.Covariant where
 import Pandora.Core.Functor (type (:.), type (:=), type (<:=))
 import Pandora.Pattern.Category (Category ((.)))
 
-infixl 4 <$>, <$, $>
-infixl 3 <$$>
+infixl 4 <$>, -<$>-, <$, $>
+infixl 3 <$$>, -<$$>-
 infixl 2 <$$$>
 infixl 1 <$$$$>
 
@@ -97,3 +97,8 @@ class Covariant (t :: * -> *) where
 
 class (Category source, Category target) => Covariant_ t source target where
 	(-<$>-) :: source a b -> target (t a) (t b)
+
+(-<$$>-) :: forall t u source target a b 
+	. (Covariant_ t source source, Covariant_ u source target) 
+	=> source a b -> target (u (t a)) (u (t b))
+(-<$$>-) s = ((-<$>-) @u @source @target ((-<$>-) @t @source @source s))

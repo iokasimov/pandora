@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Transformer.Backwards where
 
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -18,6 +18,9 @@ newtype Backwards t a = Backwards (t a)
 
 instance Covariant t => Covariant (Backwards t) where
 	f <$> Backwards x = Backwards $ f <$> x
+
+instance Covariant_ t (->) (->) => Covariant_ (Backwards t) (->) (->) where
+	f -<$>- Backwards x = Backwards $ f -<$>- x
 
 instance Pointable t => Pointable (Backwards t) where
 	point = Backwards . point

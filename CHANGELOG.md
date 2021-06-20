@@ -466,3 +466,4 @@
 * Rename `!!` to `!..` in `Function` module
 * Rename `!!!` to `!...` in `Function` module
 * Define experimental `Covariant_` typeclass
+* Define experimental `-<$$>-` method of `Covariant_` typeclass
