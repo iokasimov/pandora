@@ -53,6 +53,9 @@ instance Semigroup r => Semigroup (e -> r) where
 instance Ringoid r => Ringoid (e -> r) where
 	f * g = \e -> f e * g e
 
+(-.#..-) :: (Covariant_ (v a) (->) target, Category v) => v c d -> target (v a (v b c)) (v a (v b d))
+(-.#..-) f = (-<$>-) (f .)
+
 {-# INLINE (!.) #-}
 (!.) :: a -> b -> a
 x !. _ = x

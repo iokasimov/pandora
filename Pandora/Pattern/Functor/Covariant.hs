@@ -97,8 +97,10 @@ class Covariant (t :: * -> *) where
 
 class (Category source, Category target) => Covariant_ t source target where
 	(-<$>-) :: source a b -> target (t a) (t b)
-
+	
+-- TODO: Figure out how to work with hidden type variables
+-- to put intermediate category `between`
 (-<$$>-) :: forall t u source target a b 
-	. (Covariant_ t source source, Covariant_ u source target) 
-	=> source a b -> target (u (t a)) (u (t b))
-(-<$$>-) s = ((-<$>-) @u @source @target ((-<$>-) @t @source @source s))
+	. (Covariant_ u source source, Covariant_ t source target) 
+	=> source a b -> target (t (u a)) (t (u b))
+(-<$$>-) s = ((-<$>-) ((-<$>-) @u @source @source s))
