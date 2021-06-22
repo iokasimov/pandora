@@ -4,7 +4,7 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
@@ -40,6 +40,9 @@ instance Extractable Identity where
 
 instance Applicative Identity where
 	Identity f <*> Identity x = Identity $ f x
+
+instance Applicative_ Identity (->) (->) where
+	Identity f -<*>- Identity x = Identity $ f x
 
 instance Traversable Identity where
 	Identity x ->> f = Identity <$> f x

@@ -468,3 +468,4 @@
 * Define experimental `Covariant_` typeclass
 * Define experimental `-<$$>-` method of `Covariant_` typeclass
 * Define experimental `-.#..-` method in `Function` module
+* Define experimental `Applicative_` typeclass

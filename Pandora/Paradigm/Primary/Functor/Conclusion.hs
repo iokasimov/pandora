@@ -5,7 +5,7 @@ import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -36,6 +36,10 @@ instance Pointable (Conclusion e) where
 instance Applicative (Conclusion e) where
 	Success f <*> x = f <$> x
 	Failure y <*> _ = Failure y
+
+instance Applicative_ (Conclusion e) (->) (->) where
+	Success f -<*>- x = f -<$>- x
+	Failure y -<*>- _ = Failure y
 
 instance Alternative (Conclusion e) where
 	Failure _ <+> x = x

@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Validation where
 import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
@@ -36,6 +36,12 @@ instance Semigroup e => Applicative (Validation e) where
 	Flaws e <*> Validated _ = Flaws e
 	Validated _ <*> Flaws e' = Flaws e'
 	Validated f <*> Validated x = Validated $ f x
+
+instance Semigroup e => Applicative_ (Validation e) (->) (->) where
+	Flaws e -<*>- Flaws e' = Flaws $ e + e'
+	Flaws e -<*>- Validated _ = Flaws e
+	Validated _ -<*>- Flaws e' = Flaws e'
+	Validated f -<*>- Validated x = Validated $ f x
 
 instance Alternative (Validation e) where
 	Flaws _ <+> x = x
