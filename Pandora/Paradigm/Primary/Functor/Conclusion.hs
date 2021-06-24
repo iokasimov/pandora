@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -32,6 +32,9 @@ instance Covariant_ (Conclusion e) (->) (->) where
 
 instance Pointable (Conclusion e) where
 	point = Success
+
+instance Pointable_ (Conclusion e) (->) where
+	point_ = Success
 
 instance Applicative (Conclusion e) where
 	Success f <*> x = f <$> x

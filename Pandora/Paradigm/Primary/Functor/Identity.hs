@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Identity where
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
@@ -34,6 +34,9 @@ instance Covariant_ Identity (->) (->) where
 
 instance Pointable Identity where
 	point = Identity
+
+instance Pointable_ Identity (->) where
+	point_ = Identity
 
 instance Extractable Identity where
 	extract (Identity x) = x

@@ -9,3 +9,6 @@ class Covariant t => Pointable t where
 
 	pass :: t ()
 	pass = point ()
+
+class Pointable_ t target where
+	point_ :: target a (t a)

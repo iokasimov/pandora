@@ -2,8 +2,8 @@ module Pandora.Paradigm.Primary.Transformer.Continuation where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_)
+import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
@@ -24,6 +24,9 @@ instance Covariant t => Covariant (Continuation r t) where
 
 instance Covariant t => Pointable (Continuation r t) where
 	point x = Continuation ($ x)
+
+instance Covariant_ t (->) (->) => Pointable_ (Continuation r t) (->) where
+	point_ x = Continuation ($ x)
 
 instance Covariant t => Applicative (Continuation r t) where
 	f <*> x = Continuation $ \h -> run f $ \g -> run x # h . g

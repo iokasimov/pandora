@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
 import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)), Applicative_ ((-<*>-)))
@@ -38,6 +38,9 @@ instance Covariant_ t (->) (->) => Covariant_ (Construction t) (->) (->) where
 
 instance Avoidable t => Pointable (Construction t) where
 	point x = Construct x empty
+
+instance Avoidable t => Pointable_ (Construction t) (->) where
+	point_ x = Construct x empty
 
 instance Covariant t => Extractable (Construction t) where
 	extract ~(Construct x _) = x

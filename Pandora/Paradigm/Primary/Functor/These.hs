@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.These where
 
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Functor.Function ()
@@ -21,6 +21,9 @@ instance Covariant_ (These e) (->) (->) where
 
 instance Pointable (These e) where
 	point = This
+
+instance Pointable_ (These e) (->) where
+	point_ = This
 
 instance Traversable (These e) where
 	This x ->> f = This <$> f x
