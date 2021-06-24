@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Predicate where
 
 import Pandora.Core.Functor (type (~>), type (:=>))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)), Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Divisible (Divisible ((>*<)))
 import Pandora.Pattern.Functor.Determinable (Determinable (determine))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -23,6 +23,9 @@ instance Interpreted Predicate where
 
 instance Contravariant Predicate where
 	f >$< Predicate g = Predicate $ g . f
+
+instance Contravariant_ Predicate (->) (->) where
+	f ->$<- Predicate g = Predicate $ g . f
 
 instance Divisible Predicate where
 	Predicate g >*< Predicate h = Predicate $ \(b :*: c) -> g b * h c

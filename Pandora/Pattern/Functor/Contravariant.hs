@@ -1,8 +1,9 @@
 module Pandora.Pattern.Functor.Contravariant where
 
 import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Pattern.Category (Category)
 
-infixl 4 >$<, $<, >$
+infixl 4 >$<, ->$<-, $<, >$
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -50,3 +51,6 @@ class Contravariant (t :: * -> *) where
 	(>&&&&<) :: (Contravariant u, Contravariant v, Contravariant w)
 		=> t :. u :. v :. w := a -> (a -> b) -> t :. u :. v :. w := b
 	x >&&&&< f = f >$$$$< x
+
+class (Category source, Category target) => Contravariant_ t source target where
+	(->$<-) :: source a b -> target (t b) (t a)
