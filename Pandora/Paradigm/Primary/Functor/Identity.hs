@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -55,6 +55,9 @@ instance Distributive Identity where
 
 instance Bindable Identity where
 	Identity x >>= f = f x
+
+instance Bindable_ Identity (->) where
+	join_ (Identity x) = x
 
 instance Monad Identity
 
