@@ -17,3 +17,6 @@ class (forall i . Covariant (v i)) => Bivariant (v :: * -> * -> *) where
 	-- | Prefix version of '<->'
 	bimap :: (forall i . Covariant (v i)) => (a -> b) -> (c -> d) -> v a c -> v b d
 	bimap f g x = (f <-> g) x
+
+class Bivariant_ (v :: * -> * -> *) left right target where
+	(-<->-) :: left a b -> right c d -> target (v a c) (v b d)

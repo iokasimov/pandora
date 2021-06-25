@@ -472,3 +472,4 @@
 * Define experimental `Contravariant_` typeclass
 * Define experimental `Pointable_` typeclass
 * Define experimental `Bindable_` typeclass
+* Define experimental `Bivariant_` typeclass

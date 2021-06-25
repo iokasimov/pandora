@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
+import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)), Bivariant_ ((-<->-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -44,6 +44,9 @@ instance Comonad (Product s) where
 
 instance Bivariant Product where
 	f <-> g = \ ~(s :*: x) -> f s :*: g x
+
+instance Bivariant_ Product (->) (->) (->) where
+	f -<->- g = \ ~(s :*: x) -> f s :*: g x
 
 instance (Setoid s, Setoid a) => Setoid (s :*: a) where
 	x == y = (attached x == attached y) * (extract x == extract y)
