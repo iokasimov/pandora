@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Extendable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 
 infixl 1 =>>
 infixr 1 <<=, =<=, =>=
@@ -39,3 +39,6 @@ class Covariant t => Extendable t where
 	x $=>> f = (=>> f) <$> x
 	(<<=$) :: Covariant u => u :. t := a -> (t a -> b) -> u :. t := b
 	x <<=$ f = (=>> f) <$> x
+
+class Covariant_ t source source => Extendable_ t source where
+	duplicate_ :: source (t a) (t (t a))

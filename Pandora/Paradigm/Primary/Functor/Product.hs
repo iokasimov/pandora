@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)), Extendable_ (duplicate_))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)), Bivariant_ ((-<->-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -39,6 +39,9 @@ instance Traversable (Product s) where
 
 instance Extendable (Product s) where
 	x =>> f = attached x :*: f (attached x :*: extract x)
+
+instance Extendable_ (Product s) (->) where
+	duplicate_ (s :*: x) = s :*: (s :*: x) 
 
 instance Comonad (Product s) where
 
