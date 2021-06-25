@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
-import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
+import Pandora.Pattern.Functor.Divariant (Divariant ((>->)), Divariant_ ((->->-)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 
@@ -55,6 +55,9 @@ instance Representable ((->) e) where
 
 instance Divariant ((->)) where
 	(>->) ab cd bc = cd . bc . ab
+
+instance Divariant_ ((->)) (->) (->) (->) where
+	(->->-) ab cd bc = cd . bc . ab
 
 instance Semigroup r => Semigroup (e -> r) where
 	f + g = \e -> f e + g e

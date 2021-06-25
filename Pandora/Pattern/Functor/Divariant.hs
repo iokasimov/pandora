@@ -16,3 +16,6 @@ class (forall i . Covariant (v i)) => Divariant (v :: * -> * -> *) where
 	-- | Prefix version of '>->'
 	dimap :: (a -> b) -> (c -> d) -> v b c -> v a d
 	dimap f g x = (f >-> g) x
+
+class Divariant_ (v :: * -> * -> *) left right target where
+	(->->-) :: left a b -> right c d -> target (v b c) (v a d)
