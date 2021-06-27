@@ -475,3 +475,4 @@
 * Define experimental `Bivariant_` typeclass
 * Define experimental `Divariant_` typeclass
 * Define experimental `Extendable_` typeclass
+* Use experimental `Covariant_` as superclass of `Extractable`

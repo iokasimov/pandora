@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Extendable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_)
 
 infixl 1 =>>
 infixr 1 <<=, =<=, =>=

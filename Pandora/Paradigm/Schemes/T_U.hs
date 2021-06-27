@@ -1,10 +1,10 @@
 module Pandora.Paradigm.Schemes.T_U where
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)), Bivariant_ ((-<->-)))
-import Pandora.Pattern.Functor.Divariant (Divariant ((>->)), Divariant_ ((->->-)))
+import Pandora.Pattern.Functor.Divariant (Divariant ((>->))) 
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 
 newtype T_U ct cu p t u a = T_U (p (t a) (u a))

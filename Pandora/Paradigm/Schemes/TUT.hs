@@ -3,7 +3,7 @@ module Pandora.Paradigm.Schemes.TUT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor ((<*+>))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)), Covariant_ ((-<$>-)), (-<$$>-), (-<$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)), Covariant_ ((-<$>-)), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
