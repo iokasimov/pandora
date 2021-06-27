@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Paradigm.Primary.Transformer (module Exports) where
 
 import Pandora.Paradigm.Primary.Transformer.Yoneda as Exports

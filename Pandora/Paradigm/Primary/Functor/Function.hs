@@ -4,6 +4,7 @@ module Pandora.Paradigm.Primary.Functor.Function where
 
 import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
@@ -12,6 +13,7 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)), Divariant_ ((->->-)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 infixr 2 !.
 infixr 9 %
@@ -26,6 +28,9 @@ instance Covariant ((->) a) where
 
 instance Covariant_ ((->) a) (->) (->) where
 	(-<$>-) = (.)
+
+instance Contravariant_ (Flip (->) a) (->) (->) where
+	f ->$<- Flip g = Flip $ g . f
 
 instance Applicative ((->) e) where
 	(<*>) f g x = f x $ g x

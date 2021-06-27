@@ -1,9 +1,7 @@
 module Pandora.Pattern.Functor.Bivariant where
 
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_)
-import Pandora.Pattern.Functor.Contravariant (Contravariant_)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((||=))
 
 infixl 4 <->
 

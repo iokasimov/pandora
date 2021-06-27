@@ -9,7 +9,7 @@ import Pandora.Paradigm.Primary.Object as Exports
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
