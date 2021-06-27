@@ -42,7 +42,7 @@ instance Avoidable t => Pointable (Construction t) where
 instance Avoidable t => Pointable_ (Construction t) (->) where
 	point_ x = Construct x empty
 
-instance Covariant t => Extractable (Construction t) where
+instance Covariant_ t (->) (->) => Extractable (Construction t) (->) where
 	extract ~(Construct x _) = x
 
 instance Applicative t => Applicative (Construction t) where
@@ -51,7 +51,7 @@ instance Applicative t => Applicative (Construction t) where
 instance Traversable t => Traversable (Construction t) where
 	~(Construct x xs) ->> f = Construct <$> f x <*> xs ->>> f
 
-instance Alternative t => Bindable (Construction t) where
+instance (Alternative t, Covariant_ t (->) (->)) => Bindable (Construction t) where
 	~(Construct x xs) >>= f = Construct # extract (f x) # deconstruct (f x) <+> xs $>>= f
 
 instance (Covariant_ t (->) (->), Alternative t) => Bindable_ (Construction t) (->) where
@@ -60,9 +60,9 @@ instance (Covariant_ t (->) (->), Alternative t) => Bindable_ (Construction t) (
 instance Covariant t => Extendable (Construction t) where
 	x =>> f = Construct # f x # extend f <$> deconstruct x
 
-instance (Avoidable t, Alternative t) => Monad (Construction t) where
+instance (Avoidable t, Alternative t, Covariant_ t (->) (->)) => Monad (Construction t) where
 
-instance Covariant t => Comonad (Construction t) where
+instance (Covariant t, Covariant_ t (->) (->)) => Comonad (Construction t) (->) where
 
 instance Lowerable Construction where
 	lower x = extract <$> deconstruct x
@@ -70,13 +70,13 @@ instance Lowerable Construction where
 instance Hoistable Construction where
 	f /|\ x = Construct # extract x $ f # hoist f <$> deconstruct x
 
-instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant t) => Setoid (Construction t a) where
+instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant t, Covariant_ t (->) (->)) => Setoid (Construction t a) where
 	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)
 
-instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant t) => Semigroup (Construction t a) where
+instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant t, Covariant_ t (->) (->)) => Semigroup (Construction t a) where
 	x + y = Construct # extract x + extract y # deconstruct x + deconstruct y
 
-instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t) => Monoid (Construction t a) where
+instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t, Covariant_ t (->) (->)) => Monoid (Construction t a) where
 	zero = Construct zero zero
 
 instance Monotonic a (t :. Construction t := a) => Monotonic a (Construction t a) where
@@ -92,5 +92,5 @@ deconstruct ~(Construct _ xs) = xs
 (.-+) :: Covariant t => a :=> t -> a :=> Construction t
 f .-+ x = Construct x $ (f .-+) <$> f x
 
-section :: Comonad t => t ~> Construction t
+section :: Comonad t (->) => t ~> Construction t
 section xs = Construct # extract xs $ xs =>> section

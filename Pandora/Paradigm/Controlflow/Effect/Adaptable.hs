@@ -4,23 +4,23 @@ module Pandora.Paradigm.Controlflow.Effect.Adaptable where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category (identity, (.))
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower), Hoistable (hoist))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
-import Pandora.Paradigm.Controlflow.Effect.Transformer (Transformer, wrap, bring, (:>), (:<))
+import Pandora.Paradigm.Controlflow.Effect.Transformer (Monadic, Comonadic, wrap, bring, (:>), (:<))
 
 class Adaptable t u where
 	{-# MINIMAL adapt #-}
 	adapt :: t ~> u
 
-type Lifting t u = (Transformer Monad t, Liftable (Schematic Monad t), Covariant u)
-type Lowering t u = (Transformer Comonad t, Lowerable (Schematic Comonad t), Covariant u)
-type Wrappable t u = (Transformer Monad t, Pointable u)
-type Bringable t u = (Transformer Comonad t, Extractable u)
+type Lifting t u = (Monadic t, Liftable (Schematic Monad t), Covariant u, Covariant_ u (->) (->))
+type Lowering t u = (Comonadic t, Lowerable (Schematic Comonad t), Covariant u, Covariant_ u (->) (->))
+type Wrappable t u = (Monadic t, Pointable u)
+type Bringable t u = (Comonadic t, Extractable u (->))
 
 instance Covariant t => Adaptable t t where
 	adapt = identity
@@ -41,6 +41,7 @@ instance
 	( Covariant (t :> u :> v)
 	, Liftable (Schematic Monad t)
 	, Covariant (Schematic Monad u v)
+	, Covariant_ (Schematic Monad u v) (->) (->)
 	, Wrappable u v
 	) => Adaptable u (t :> u :> v) where
 	adapt = lift . wrap
@@ -67,7 +68,8 @@ instance
 	adapt = lower . lower
 
 instance
-	( Covariant (t :> u :> v :> w)
+	( Covariant_ t (->) (->) 
+ 	, Covariant (t :> u :> v :> w)
 	, Liftable (Schematic Monad t)
 	, Lifting t (Schematic Monad u (v :> w))
 	, Lifting u (Schematic Monad v w)
@@ -321,13 +323,14 @@ instance
 	) => Adaptable (t :< u :< v :< w :< x :< y :< z :< f :< h) f where
 	adapt = bring . lower . lower . lower . lower . lower . lower . lower
 
-instance (Covariant u, Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u) (t :> u') where
+instance (Covariant u, Covariant_ u (->) (->), Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u) (t :> u') where
 	adapt = hoist adapt
 
 instance
 	( Covariant u
-	, Covariant v
+	, Covariant v, Covariant_ v (->) (->)
 	, Covariant (Schematic Monad u v)
+	, Covariant_ (Schematic Monad u v) (->) (->)
 	, Hoistable ((:>) (t :> u))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)
@@ -336,10 +339,15 @@ instance
 	adapt = hoist (hoist adapt)
 
 instance
-	( Covariant u, Covariant v, Covariant w
+	( Covariant u, Covariant_ u (->) (->)
+	, Covariant v, Covariant_ v (->) (->)
+	, Covariant w, Covariant_ w (->) (->)
 	, Covariant (Schematic Monad u v)
+	, Covariant_ (Schematic Monad u v) (->) (->)
 	, Covariant (Schematic Monad u (v :> w))
+	, Covariant_ (Schematic Monad u (v :> w)) (->) (->)
 	, Covariant (Schematic Monad v w)
+	, Covariant_ (Schematic Monad v w) (->) (->)
 	, Hoistable ((:>) (t :> u :> v))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)
@@ -349,12 +357,15 @@ instance
 	adapt = hoist (hoist (hoist adapt))
 
 instance
-	( Covariant u, Covariant v, Covariant w, Covariant x
+	( Covariant u, Covariant v, Covariant w, Covariant x, Covariant_ x (->) (->)
 	, Covariant (Schematic Monad u v)
 	, Covariant (Schematic Monad u (v :> w))
 	, Covariant (Schematic Monad u (v :> (w :> x)))
+	, Covariant_ (Schematic Monad u (v :> (w :> x))) (->) (->)
 	, Covariant (Schematic Monad v (w :> x))
+	, Covariant_ (Schematic Monad v (w :> x)) (->) (->)
 	, Covariant (Schematic Monad w x)
+	, Covariant_ (Schematic Monad w x) (->) (->)
 	, Hoistable ((:>) (t :> u :> v))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)
@@ -365,15 +376,20 @@ instance
 	adapt = hoist (hoist (hoist (hoist adapt)))
 
 instance
-	( Covariant u, Covariant v, Covariant w, Covariant x, Covariant y
+	( Covariant u, Covariant v, Covariant w, Covariant x
+	, Covariant y, Covariant_ y (->) (->)
 	, Covariant (Schematic Monad u v)
 	, Covariant (Schematic Monad u (v :> w))
 	, Covariant (Schematic Monad u (v :> (w :> x)))
 	, Covariant (Schematic Monad u (v :> (w :> (x :> y))))
+	, Covariant_ (Schematic Monad u (v :> (w :> (x :> y)))) (->) (->)
 	, Covariant (Schematic Monad v (w :> x))
 	, Covariant (Schematic Monad v (w :> (x :> y)))
+	, Covariant_ (Schematic Monad v (w :> (x :> y))) (->) (->)
 	, Covariant (Schematic Monad w (x :> y))
+	, Covariant_ (Schematic Monad w (x :> y)) (->) (->)
 	, Covariant (Schematic Monad x y)
+	, Covariant_ (Schematic Monad x y) (->) (->)
 	, Hoistable ((:>) (t :> u :> v :> w))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)
@@ -385,20 +401,26 @@ instance
 	adapt = hoist (hoist (hoist (hoist (hoist adapt))))
 
 instance
-	( Covariant u, Covariant v, Covariant w, Covariant x, Covariant y, Covariant z
+	( Covariant u, Covariant v, Covariant w, Covariant x, Covariant y
+	, Covariant z, Covariant_ z (->) (->)
 	, Covariant (Schematic Monad u v)
 	, Covariant (Schematic Monad u (v :> w))
 	, Covariant (Schematic Monad u (v :> (w :> x)))
 	, Covariant (Schematic Monad u (v :> (w :> (x :> y))))
 	, Covariant (Schematic Monad u (v :> (w :> (x :> (y :> z)))))
+	, Covariant_ (Schematic Monad u (v :> (w :> (x :> (y :> z))))) (->) (->)
 	, Covariant (Schematic Monad v (w :> x))
 	, Covariant (Schematic Monad v (w :> (x :> y)))
 	, Covariant (Schematic Monad v (w :> (x :> (y :> z))))
+	, Covariant_ (Schematic Monad v (w :> (x :> (y :> z)))) (->) (->)
 	, Covariant (Schematic Monad w (x :> y))
 	, Covariant (Schematic Monad w (x :> (y :> z)))
+	, Covariant_ (Schematic Monad w (x :> (y :> z))) (->) (->)
 	, Covariant (Schematic Monad x y)
 	, Covariant (Schematic Monad x (y :> z))
+	, Covariant_ (Schematic Monad x (y :> z)) (->) (->)
 	, Covariant (Schematic Monad y z)
+	, Covariant_ (Schematic Monad y z) (->) (->)
 	, Hoistable ((:>) (t :> u :> v :> w))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)
@@ -413,26 +435,33 @@ instance
 
 instance
 	( Covariant u, Covariant v, Covariant w, Covariant x
-	, Covariant y, Covariant z, Covariant f
+	, Covariant y, Covariant z
+	, Covariant f, Covariant_ f (->) (->)
 	, Covariant (Schematic Monad u v)
 	, Covariant (Schematic Monad u (v :> w))
 	, Covariant (Schematic Monad u (v :> (w :> x)))
 	, Covariant (Schematic Monad u (v :> (w :> (x :> y))))
 	, Covariant (Schematic Monad u (v :> (w :> (x :> (y :> z)))))
 	, Covariant (Schematic Monad u (v :> (w :> (x :> (y :> (z :> f))))))
+	, Covariant_ (Schematic Monad u (v :> (w :> (x :> (y :> (z :> f)))))) (->) (->)
 	, Covariant (Schematic Monad v (w :> x))
 	, Covariant (Schematic Monad v (w :> (x :> y)))
 	, Covariant (Schematic Monad v (w :> (x :> (y :> z))))
 	, Covariant (Schematic Monad v (w :> (x :> (y :> (z :> f)))))
+	, Covariant_ (Schematic Monad v (w :> (x :> (y :> (z :> f))))) (->) (->)
 	, Covariant (Schematic Monad w (x :> y))
 	, Covariant (Schematic Monad w (x :> (y :> z)))
 	, Covariant (Schematic Monad w (x :> (y :> (z :> f))))
+	, Covariant_ (Schematic Monad w (x :> (y :> (z :> f)))) (->) (->)
 	, Covariant (Schematic Monad x y)
 	, Covariant (Schematic Monad x (y :> z))
 	, Covariant (Schematic Monad x (y :> (z :> f)))
+	, Covariant_ (Schematic Monad x (y :> (z :> f))) (->) (->)
 	, Covariant (Schematic Monad y z)
 	, Covariant (Schematic Monad y (z :> f))
+	, Covariant_ (Schematic Monad y (z :> f)) (->) (->)
 	, Covariant (Schematic Monad z f)
+	, Covariant_ (Schematic Monad z f) (->) (->)
 	, Hoistable ((:>) (t :> u :> v :> w))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)
@@ -448,7 +477,8 @@ instance
 
 instance
 	( Covariant u, Covariant v, Covariant w, Covariant x
-	, Covariant y, Covariant z, Covariant f, Covariant h
+	, Covariant y, Covariant z, Covariant f
+	, Covariant h, Covariant_ h (->) (->)
 	, Covariant (Schematic Monad u v)
 	, Covariant (Schematic Monad u (v :> w))
 	, Covariant (Schematic Monad u (v :> (w :> x)))
@@ -456,25 +486,32 @@ instance
 	, Covariant (Schematic Monad u (v :> (w :> (x :> (y :> z)))))
 	, Covariant (Schematic Monad u (v :> (w :> (x :> (y :> (z :> f))))))
 	, Covariant (Schematic Monad u (v :> (w :> (x :> (y :> (z :> (f :> h)))))))
+	, Covariant_ (Schematic Monad u (v :> (w :> (x :> (y :> (z :> (f :> h))))))) (->) (->)
 	, Covariant (Schematic Monad v (w :> x))
 	, Covariant (Schematic Monad v (w :> (x :> y)))
 	, Covariant (Schematic Monad v (w :> (x :> (y :> z))))
 	, Covariant (Schematic Monad v (w :> (x :> (y :> (z :> f)))))
 	, Covariant (Schematic Monad v (w :> (x :> (y :> (z :> (f :> h))))))
+	, Covariant_ (Schematic Monad v (w :> (x :> (y :> (z :> (f :> h)))))) (->) (->)
 	, Covariant (Schematic Monad w (x :> y))
 	, Covariant (Schematic Monad w (x :> (y :> z)))
 	, Covariant (Schematic Monad w (x :> (y :> (z :> f))))
 	, Covariant (Schematic Monad w (x :> (y :> (z :> (f :> h)))))
+	, Covariant_ (Schematic Monad w (x :> (y :> (z :> (f :> h))))) (->) (->)
 	, Covariant (Schematic Monad x y)
 	, Covariant (Schematic Monad x (y :> z))
 	, Covariant (Schematic Monad x (y :> (z :> f)))
 	, Covariant (Schematic Monad x (y :> (z :> (f :> h))))
+	, Covariant_ (Schematic Monad x (y :> (z :> (f :> h)))) (->) (->)
 	, Covariant (Schematic Monad y z)
 	, Covariant (Schematic Monad y (z :> f))
 	, Covariant (Schematic Monad y (z :> (f :> h)))
+	, Covariant_ (Schematic Monad y (z :> (f :> h))) (->) (->)
 	, Covariant (Schematic Monad z f)
 	, Covariant (Schematic Monad z (f :> h))
+	, Covariant_ (Schematic Monad z (f :> h)) (->) (->)
 	, Covariant (Schematic Monad f h)
+	, Covariant_ (Schematic Monad f h) (->) (->)
 	, Hoistable ((:>) (t :> u :> v :> w))
 	, Hoistable (Schematic Monad t)
 	, Hoistable (Schematic Monad u)

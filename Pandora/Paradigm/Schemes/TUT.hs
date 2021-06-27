@@ -3,7 +3,7 @@ module Pandora.Paradigm.Schemes.TUT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor ((<*+>))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)), Covariant_ ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -39,6 +39,9 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 instance (Covariant t, Covariant t', Covariant u) => Covariant (t <:<.>:> t' := u) where
 	f <$> TUT x = TUT $ f <$$$> x
 
+instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:<.>:> t' := u) (->) (->)where
+	f -<$>- TUT x = TUT $ f -<$$$>- x
+
 instance (Covariant t, Covariant t', Adjoint t' t, Bindable u) => Applicative (t <:<.>:> t' := u) where
 	f <*> x = TUT $ (>>= (|- (<$$$> run x))) <$> run f
 
@@ -57,7 +60,7 @@ instance (Covariant t, Covariant t', Adjoint t' t, Bindable u) => Bindable (t <:
 instance (Covariant t', Covariant t, Adjoint t' t, Extendable u) => Extendable (t' <:<.>:> t := u) where
 	x =>> f = TUT $ run x $=>> (-| f . unite)
 
-instance (Covariant t, Covariant t', Adjoint t t', Extractable u) => Extractable (t <:<.>:> t' := u) where
+instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Adjoint t t', Extractable u (->)) => Extractable (t <:<.>:> t' := u) (->) where
 	extract = (|- extract) . run
 
 instance (Adjoint t' t, Distributive t) => Liftable (t <:<.>:> t') where

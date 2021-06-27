@@ -4,7 +4,7 @@ module Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (..), (:
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -29,10 +29,13 @@ newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 instance Covariant (Schematic Monad t u) => Covariant (t :> u) where
 	f <$> TM x = TM $ f <$> x
 
+instance Covariant_ (Schematic Monad t u) (->) (->) => Covariant_ (t :> u) (->) (->) where
+	f -<$>- TM x = TM $ f -<$>- x
+
 instance Pointable (Schematic Monad t u) => Pointable (t :> u) where
 	point = TM . point
 
-instance Extractable (Schematic Monad t u) => Extractable (t :> u) where
+instance Extractable (Schematic Monad t u) (->) => Extractable (t :> u) (->) where
 	extract = extract . tm
 
 instance Applicative (Schematic Monad t u) => Applicative (t :> u) where

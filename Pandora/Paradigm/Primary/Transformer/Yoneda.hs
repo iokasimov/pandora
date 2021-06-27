@@ -1,8 +1,10 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Primary.Transformer.Yoneda where
 
 import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor ((<*+>))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -18,6 +20,9 @@ newtype Yoneda t a = Yoneda
 instance Covariant (Yoneda t) where
 	f <$> x = Yoneda (\k -> yoneda x (k . f))
 
+instance Covariant_ (Yoneda t) (->) (->) where
+	f -<$>- x = Yoneda (\k -> yoneda x (k . f))
+
 instance Alternative t => Alternative (Yoneda t) where
 	Yoneda f <+> Yoneda g = Yoneda (f <*+> g)
 
@@ -30,12 +35,12 @@ instance Avoidable t => Avoidable (Yoneda t) where
 instance Pointable t => Pointable (Yoneda t) where
 	point x = Yoneda (\f -> point $ f x)
 
-instance Extractable t => Extractable (Yoneda t) where
+instance Extractable t (->) => Extractable (Yoneda t) (->) where
 	extract (Yoneda f) = extract $ f identity
 
 instance Liftable Yoneda where
 	lift x = Yoneda (<$> x)
 
-instance (Extractable t, Pointable t, Extractable u, Pointable u) => Adjoint (Yoneda t) (Yoneda u) where
+instance (Extractable t (->), Pointable t, Extractable u (->) , Pointable u) => Adjoint (Yoneda t) (Yoneda u) where
 	x -| f = point . f . point # x
 	x |- g = extract . extract # g <$> x

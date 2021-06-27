@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Modification.Comprehension where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_)
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -66,7 +66,7 @@ instance Semigroup (t <:.> Construction t := a) => Semigroup (Comprehension t a)
 instance Monoid (t <:.> Construction t := a) => Monoid (Comprehension t a) where
 	zero = Comprehension zero
 
-instance Pointable t => Morphable Push (Comprehension t) where
+instance (Covariant_ t (->) (->), Pointable t) => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 

@@ -2,7 +2,7 @@ module Pandora.Paradigm.Schemes.UT where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -31,6 +31,9 @@ instance Interpreted (UT ct cu t u) where
 instance (Covariant t, Covariant u) => Covariant (t <.:> u) where
 	f <$> UT x = UT $ f <$$> x
 
+instance (Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <.:> u) (->) (->) where
+	f -<$>- UT x = UT $ f -<$$>- x
+
 instance (Applicative t, Applicative u) => Applicative (t <.:> u) where
 	UT f <*> UT x = UT $ f <**> x
 
@@ -40,13 +43,13 @@ instance (Pointable t, Pointable u) => Pointable (t <.:> u) where
 instance (Traversable t, Bindable t, Applicative u, Monad u) => Bindable (t <.:> u) where
 	UT x >>= f = UT $ x >>= \i -> join <$> i ->> run . f
 
-instance (Extractable t, Extractable u) => Extractable (t <.:> u) where
+instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where
 	extract = extract . extract . run
 
 instance Pointable t => Liftable (UT Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <.:> u
 	lift x = UT $ point <$> x
 
-instance Extractable t => Lowerable (UT Covariant Covariant t) where
+instance Extractable t (->) => Lowerable (UT Covariant Covariant t) where
 	lower :: Covariant u => t <.:> u ~> u
 	lower (UT x) = extract <$> x

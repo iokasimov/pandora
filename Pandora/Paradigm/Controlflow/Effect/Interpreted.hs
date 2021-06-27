@@ -2,7 +2,7 @@ module Pandora.Paradigm.Controlflow.Effect.Interpreted where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>)), Covariant_)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Functor.Function ()
 
@@ -54,6 +54,6 @@ class Interpreted t where
 		=> (t a -> u b) -> j :. k :. l :. m := Primary t a -> j :. k :. l :. m := Primary u b
 	f =||$$$$> x = (f =||) <$$$$> x
 
-(-=:) :: (Liftable t, Interpreted (t u), Interpreted (t v), Covariant u)
+(-=:) :: (Liftable t, Interpreted (t u), Interpreted (t v), Covariant u, Covariant_ u (->) (->))
 	=> (t u a -> t v b) -> u a -> Primary (t v) b
 (-=:) f = run . f . lift

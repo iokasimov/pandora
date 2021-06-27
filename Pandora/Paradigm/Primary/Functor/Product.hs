@@ -31,7 +31,7 @@ instance Covariant (Product s) where
 instance Covariant_ (Product s) (->) (->) where
 	f -<$>- x = attached x :*: f # extract x
 
-instance Extractable (Product a) where
+instance Extractable (Product a) (->) where
 	extract ~(_ :*: y) = y
 
 instance Traversable (Product s) where
@@ -43,7 +43,7 @@ instance Extendable (Product s) where
 instance Extendable_ (Product s) (->) where
 	duplicate_ (s :*: x) = s :*: (s :*: x) 
 
-instance Comonad (Product s) where
+instance Comonad (Product s) (->) where
 
 instance Bivariant Product where
 	f <-> g = \ ~(s :*: x) -> f s :*: g x

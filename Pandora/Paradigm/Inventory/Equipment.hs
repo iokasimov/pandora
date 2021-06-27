@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
 
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
@@ -19,7 +19,10 @@ newtype Equipment e a = Equipment (e :*: a)
 instance Covariant (Equipment e) where
 	f <$> Equipment x = Equipment $ f <$> x
 
-instance Extractable (Equipment e) where
+instance Covariant_ (Equipment e) (->) (->) where
+	f -<$>- Equipment x = Equipment $ f -<$>- x
+
+instance Extractable (Equipment e) (->) where
 	extract = extract . run
 
 instance Traversable (Equipment e) where
@@ -43,7 +46,7 @@ type Equipped e t = Adaptable t (Equipment e)
 instance {-# OVERLAPS #-} Extendable u => Extendable ((:*:) e <:.> u) where
 	TU (e :*: x) =>> f = TU . (:*:) e $ x =>> f . TU . (:*:) e
 
-instance Comonad (Equipment e) where
+instance Comonad (Equipment e) (->) where
 
 retrieve :: Equipped e t => t a -> e
 retrieve = attached . run @(Equipment _) . adapt

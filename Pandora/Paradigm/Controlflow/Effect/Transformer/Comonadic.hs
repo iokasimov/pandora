@@ -4,7 +4,7 @@ module Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (..)
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -20,7 +20,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 
 class Interpreted t => Comonadic t where
 	{-# MINIMAL bring #-}
-	bring :: Extractable u => t :< u ~> t
+	bring :: Extractable u (->) => t :< u ~> t
 
 infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
@@ -28,10 +28,13 @@ newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
 instance Covariant (Schematic Comonad t u) => Covariant (t :< u) where
 	f <$> TC x = TC $ f <$> x
 
+instance Covariant_ (Schematic Comonad t u) (->) (->) => Covariant_ (t :< u) (->) (->) where
+	f -<$>- TC x = TC $ f -<$>- x
+
 instance Pointable (Schematic Comonad t u) => Pointable (t :< u) where
 	point = TC . point
 
-instance Extractable (Schematic Comonad t u) => Extractable (t :< u) where
+instance Extractable (Schematic Comonad t u) (->) => Extractable (t :< u) (->) where
 	extract = extract . tc
 
 instance Applicative (Schematic Comonad t u) => Applicative (t :< u) where
@@ -52,7 +55,7 @@ instance Bindable (Schematic Comonad t u) => Bindable (t :< u) where
 instance Extendable (Schematic Comonad t u) => Extendable (t :< u) where
 	TC x =>> f = TC $ x =>> f . TC
 
-instance (Extractable (t :< u), Extendable (t :< u)) => Comonad (t :< u) where
+instance (Extractable (t :< u) (->), Extendable (t :< u)) => Comonad (t :< u) (->) where
 
 instance Lowerable (Schematic Comonad t) => Lowerable ((:<) t) where
 	lower (TC x) = lower x

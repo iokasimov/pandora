@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($$$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Bindable ((>>=))
@@ -168,6 +168,11 @@ instance Covariant Biforked where
 	_ <$> Top = Top
 	f <$> Leftward l = Leftward $ f l
 	f <$> Rightward r = Rightward $ f r
+
+instance Covariant_ Biforked (->) (->) where
+	_ -<$>- Top = Top
+	f -<$>- Leftward l = Leftward $ f l
+	f -<$>- Rightward r = Rightward $ f r
 
 type Bifurcation = Biforked <:.> Construction Biforked
 

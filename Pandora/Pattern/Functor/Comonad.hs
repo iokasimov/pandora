@@ -13,4 +13,4 @@ import Pandora.Pattern.Functor.Extendable (Extendable)
 > * Associativity: extend f . extend g ≡ extend (f . extend g)
 -}
 
-class (Extractable t, Extendable t) => Comonad t
+class (Extractable t source, Extendable t) => Comonad t source

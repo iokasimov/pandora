@@ -2,7 +2,7 @@ module Pandora.Paradigm.Schemes.TU where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -34,6 +34,9 @@ instance Interpreted (TU ct cu t u) where
 instance (Covariant t, Covariant u) => Covariant (t <:.> u) where
 	f <$> x = TU $ f <$$> run x
 
+instance (Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:.> u) (->) (->) where
+	f -<$>- x = TU $ f -<$$>- run x
+
 instance (Applicative t, Applicative u) => Applicative (t <:.> u) where
 	TU f <*> TU x = TU $ f <**> x
 
@@ -46,7 +49,7 @@ instance (Covariant u, Avoidable t) => Avoidable (t <:.> u) where
 instance (Pointable t, Pointable u) => Pointable (t <:.> u) where
 	point = TU . point . point
 
-instance (Extractable t, Extractable u) => Extractable (t <:.> u) where
+instance (Extractable t (->), Extractable u (->)) => Extractable (t <:.> u) (->) where
 	extract = extract . extract . run
 
 instance (Traversable t, Traversable u) => Traversable (t <:.> u) where
@@ -59,7 +62,7 @@ instance Pointable t => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <:.> u
 	lift = TU . point
 
-instance Extractable t => Lowerable (TU Covariant Covariant t) where
+instance Extractable t (->) => Lowerable (TU Covariant Covariant t) where
 	lower :: t <:.> u ~> u
 	lower (TU x) = extract x
 

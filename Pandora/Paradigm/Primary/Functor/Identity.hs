@@ -38,7 +38,7 @@ instance Pointable Identity where
 instance Pointable_ Identity (->) where
 	point_ = Identity
 
-instance Extractable Identity where
+instance Extractable Identity (->) where
 	extract (Identity x) = x
 
 instance Applicative Identity where
@@ -64,7 +64,7 @@ instance Monad Identity
 instance Extendable Identity where
 	x =>> f = Identity . f $ x
 
-instance Comonad Identity
+instance Comonad Identity (->)
 
 instance Representable Identity where
 	type Representation Identity = ()

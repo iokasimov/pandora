@@ -41,7 +41,7 @@ instance Pointable (Tagged tag) where
 instance Pointable_ (Tagged tag) (->) where
 	point_ = Tag
 
-instance Extractable (Tagged tag) where
+instance Extractable (Tagged tag) (->) where
 	extract (Tag x) = x
 
 instance Applicative (Tagged tag) where
@@ -64,7 +64,7 @@ instance Monad (Tagged tag)
 instance Extendable (Tagged tag) where
 	x =>> f = Tag . f $ x
 
-instance Comonad (Tagged tag)
+instance Comonad (Tagged tag) (->)
 
 instance Bivariant Tagged where
 	_ <-> g = \(Tag x) -> Tag $ g x

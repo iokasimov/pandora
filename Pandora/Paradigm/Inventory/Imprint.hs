@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Inventory.Imprint (Imprint (..), Traceable) where
 
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
@@ -22,10 +22,13 @@ newtype Imprint e a = Imprint (e -> a)
 instance Covariant (Imprint e) where
 	f <$> Imprint x = Imprint $ f . x
 
+instance Covariant_ (Imprint e) (->) (->) where
+	f -<$>- Imprint x = Imprint $ f . x
+
 instance Distributive (Imprint e) where
 	g >>- f = Imprint $ g >>- (run <$> f)
 
-instance Monoid e => Extractable (Imprint e) where
+instance Monoid e => Extractable (Imprint e) (->) where
 	extract (Imprint x) = x zero
 
 instance Divariant Imprint where

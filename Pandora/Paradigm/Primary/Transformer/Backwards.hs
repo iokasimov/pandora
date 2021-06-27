@@ -28,7 +28,7 @@ instance Pointable t => Pointable (Backwards t) where
 instance Pointable_ t (->) => Pointable_ (Backwards t) (->) where
 	point_ = Backwards . point_
 
-instance Extractable t => Extractable (Backwards t) where
+instance Extractable t (->) => Extractable (Backwards t) (->) where
 	extract (Backwards x) = extract x
 
 instance Applicative t => Applicative (Backwards t) where

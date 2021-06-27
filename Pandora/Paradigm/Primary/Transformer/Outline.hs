@@ -1,7 +1,9 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Primary.Transformer.Outline where
 
 import Pandora.Pattern.Category (identity, (.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -18,10 +20,14 @@ instance Covariant (Outline t) where
 	f <$> Line a = Line $ f a
 	f <$> Outlined x y = Outlined x # (.) f <$> y
 
+instance Covariant_ (Outline t) (->) (->) where
+	f -<$>- Line a = Line $ f a
+	f -<$>- Outlined x y = Outlined x # (.) f -<$>- y
+
 instance Pointable (Outline t) where
 	point = Line
 
-instance Extractable t => Extractable (Outline t) where
+instance Extractable t (->) => Extractable (Outline t) (->) where
 	extract (Line x) = x
 	extract (Outlined x y) = extract y # extract x
 
@@ -36,7 +42,7 @@ instance Hoistable Outline where
 	_ /|\ Line x = Line x
 	f /|\ Outlined x y = Outlined # f x # f /|\ y
 
-instance (Extractable t, Pointable t, Applicative t) => Interpreted (Outline t) where
+instance (Extractable t (->), Pointable t, Applicative t) => Interpreted (Outline t) where
 	type Primary (Outline t) a = t a
 	run (Line x) = point x
 	run (Outlined t f) = run f <*> t

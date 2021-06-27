@@ -1,7 +1,9 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Primary.Transformer.Reverse where
 
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -19,10 +21,13 @@ newtype Reverse t a = Reverse (t a)
 instance Covariant t => Covariant (Reverse t) where
 	f <$> Reverse x = Reverse # f <$> x
 
+instance Covariant_ t (->) (->) => Covariant_ (Reverse t) (->) (->) where
+	f -<$>- Reverse x = Reverse # f -<$>- x
+
 instance Pointable t => Pointable (Reverse t) where
 	point = Reverse . point
 
-instance Extractable t => Extractable (Reverse t) where
+instance Extractable t (->) => Extractable (Reverse t) (->) where
 	extract (Reverse x) = extract x
 
 instance Applicative t => Applicative (Reverse t) where
