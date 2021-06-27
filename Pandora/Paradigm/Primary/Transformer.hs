@@ -13,3 +13,10 @@ import Pandora.Paradigm.Primary.Transformer.Construction as Exports
 import Pandora.Paradigm.Primary.Transformer.Reverse as Exports
 import Pandora.Paradigm.Primary.Transformer.Backwards as Exports
 import Pandora.Paradigm.Primary.Transformer.Flip as Exports
+
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+
+instance Interpreted (Flip v a) where
+	type Primary (Flip v a) e = v e a
+	run ~(Flip x) = x
+	unite = Flip

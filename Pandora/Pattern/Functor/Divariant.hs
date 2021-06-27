@@ -1,6 +1,7 @@
 module Pandora.Pattern.Functor.Divariant where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
 
 infixl 4 >->
 
@@ -17,5 +18,5 @@ class (forall i . Covariant (v i)) => Divariant (v :: * -> * -> *) where
 	dimap :: (a -> b) -> (c -> d) -> v b c -> v a d
 	dimap f g x = (f >-> g) x
 
-class Divariant_ (v :: * -> * -> *) left right target where
+class Divariant_ v left right target where
 	(->->-) :: left a b -> right c d -> target (v b c) (v a d)

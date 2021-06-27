@@ -15,7 +15,8 @@ import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor ()
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+--import Pandora.Paradigm.Primary.Transformer ()
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
@@ -39,7 +40,7 @@ instance Extendable (Store s) where
 instance Comonad (Store s) (->) where
 
 instance Invariant (Flip Store r) where
-	f <$< g = ((f <-> (g >-> identity) ||=) ||=)
+	f <$< g = \(Flip x) -> Flip $ f <-> (g >-> identity) ||= x
 
 instance Interpreted (Store s) where
 	type Primary (Store s) a = (:*:) s :. (->) s := a
