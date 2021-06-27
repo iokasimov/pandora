@@ -11,6 +11,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Functor.Function ()
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 
@@ -27,6 +28,14 @@ instance Covariant_ (Validation e) (->) (->) where
 	f -<$>- Validated x = Validated $ f x
 	_ -<$>- Flaws e = Flaws e
 	f -<$>- Validated x = Validated $ f x
+
+instance Covariant_ (Flip Validation a) (->) (->) where
+	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
+	_ -<$>- Flip (Validated x) = Flip $ Validated x
+	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
+	_ -<$>- Flip (Validated x) = Flip $ Validated x
+	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
+	_ -<$>- Flip (Validated x) = Flip $ Validated x
 
 instance Pointable (Validation e) where
 	point = Validated

@@ -1,6 +1,9 @@
 module Pandora.Pattern.Functor.Bivariant where
 
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_)
+import Pandora.Pattern.Functor.Contravariant (Contravariant_)
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((||=))
 
 infixl 4 <->
 
@@ -18,5 +21,6 @@ class (forall i . Covariant (v i)) => Bivariant (v :: * -> * -> *) where
 	bimap :: (forall i . Covariant (v i)) => (a -> b) -> (c -> d) -> v a c -> v b d
 	bimap f g x = (f <-> g) x
 
-class Bivariant_ (v :: * -> * -> *) left right target where
-	(-<->-) :: left a b -> right c d -> target (v a c) (v b d)
+class (forall i . Covariant_ (v i) left target, forall i . Covariant_ (Flip v i) right target)
+	=> Bivariant_ v left right target where
+	(-<->-) :: left a b -> right c d -> target (v a c) (v b d) 

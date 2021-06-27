@@ -15,6 +15,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -29,6 +30,10 @@ instance Covariant (Conclusion e) where
 instance Covariant_ (Conclusion e) (->) (->) where
 	f -<$>- Success x = Success $ f x
 	_ -<$>- Failure y = Failure y
+
+instance Covariant_ (Flip Conclusion e) (->) (->) where
+	_ -<$>- Flip (Success x) = Flip $ Success x
+	f -<$>- Flip (Failure y) = Flip . Failure $ f y
 
 instance Pointable (Conclusion e) where
 	point = Success

@@ -32,9 +32,6 @@ instance Contravariant (Flip (->) r) where
 instance Covariant (Flip (:*:) a) where
 	f <$> (Flip (x :*: y)) = Flip $ f x :*: y
 
-instance Covariant_ (Flip (:*:) a) (->) (->) where
-	f -<$>- (Flip (x :*: y)) = Flip $ f x :*: y
-
 instance Extractable (Flip (:*:) a) (->) where
 	extract (Flip (x :*: _)) = x
 

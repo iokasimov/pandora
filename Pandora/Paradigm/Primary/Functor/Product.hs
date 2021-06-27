@@ -17,6 +17,7 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
 infixr 0 :*:
@@ -30,6 +31,9 @@ instance Covariant (Product s) where
 
 instance Covariant_ (Product s) (->) (->) where
 	f -<$>- x = attached x :*: f # extract x
+
+instance Covariant_ (Flip (:*:) a) (->) (->) where
+	f -<$>- (Flip (x :*: y)) = Flip $ f x :*: y
 
 instance Extractable (Product a) (->) where
 	extract ~(_ :*: y) = y
