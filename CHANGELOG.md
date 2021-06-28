@@ -478,3 +478,4 @@
 * Use experimental `Covariant_` as superclass of `Extractable`
 * Define `Covariant_` superclasses for `Bivariant_`
 * Define `Covariant_` and `Contravariant_` superclasses for `Divariant_`
+* Define experimental `Traversable_` typeclass
