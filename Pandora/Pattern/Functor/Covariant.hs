@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (<:=))
 import Pandora.Pattern.Category (Category ((.)))
 
 infixl 4 <$>, -<$>-, <$, $>
-infixl 3 <$$>, -<$$>-
+infixl 3 <$$>, -<<$$>-, -<$$>>-
 infixl 2 <$$$>
 infixl 1 <$$$$>
 
@@ -98,13 +98,20 @@ class Covariant (t :: * -> *) where
 class (Category source, Category target) => Covariant_ t source target where
 	(-<$>-) :: source a b -> target (t a) (t b)
 	
--- TODO: Figure out how to work with hidden type variables
--- to put intermediate category `between`
-(-<$$>-) :: forall t u source target a b 
+(-<$$>-) :: forall t u category a b 
+	. (Covariant_ u category category, Covariant_ t category category) 
+	=> category a b -> category (t (u a)) (t (u b))
+(-<$$>-) s = ((-<$>-) ((-<$>-) @u @category @category s))
+
+(-<<$$>-) :: forall t u source target a b 
 	. (Covariant_ u source source, Covariant_ t source target) 
 	=> source a b -> target (t (u a)) (t (u b))
-(-<$$>-) s = ((-<$>-) ((-<$>-) @u @source @source s))
+(-<<$$>-) s = ((-<$>-) ((-<$>-) @u @source @source s))
 
+(-<$$>>-) :: forall t u source target a b 
+	. (Covariant_ u source target, Covariant_ t target target) 
+	=> source a b -> target (t (u a)) (t (u b))
+(-<$$>>-) s = ((-<$>-) ((-<$>-) @u @source @target s))
 
 -- TODO: Figure out how to work with hidden type variables
 -- to put intermediate category `between`
