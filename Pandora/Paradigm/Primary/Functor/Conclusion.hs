@@ -35,7 +35,7 @@ instance Covariant_ (Flip Conclusion e) (->) (->) where
 	_ -<$>- Flip (Success x) = Flip $ Success x
 	f -<$>- Flip (Failure y) = Flip . Failure $ f y
 
-instance Pointable (Conclusion e) where
+instance Pointable (Conclusion e) (->) where
 	point = Success
 
 instance Pointable_ (Conclusion e) (->) where

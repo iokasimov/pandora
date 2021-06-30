@@ -21,23 +21,23 @@ infixl 5 ->>, ->>>, ->>>>, ->>>>>
 class Covariant t => Traversable t where
 	{-# MINIMAL (->>) #-}
 	-- | Infix version of 'traverse'
-	(->>) :: (Pointable u, Applicative u) => t a -> (a -> u b) -> u :. t := b
+	(->>) :: (Pointable u (->), Applicative u) => t a -> (a -> u b) -> u :. t := b
 
 	-- | Prefix version of '->>'
-	traverse :: (Pointable u, Applicative u) => (a -> u b) -> t a -> u :. t := b
+	traverse :: (Pointable u (->), Applicative u) => (a -> u b) -> t a -> u :. t := b
 	traverse f t = t ->> f
 	-- | The dual of 'distribute'
-	sequence :: (Pointable u, Applicative u) => t :. u := a -> u :. t := a
+	sequence :: (Pointable u (->), Applicative u) => t :. u := a -> u :. t := a
 	sequence t = t ->> (\x -> x)
 
 	-- | Infix versions of `traverse` with various nesting levels
-	(->>>) :: (Pointable u, Applicative u, Traversable v)
+	(->>>) :: (Pointable u (->), Applicative u, Traversable v)
 		=> v :. t := a -> (a -> u b) -> u :. v :. t := b
 	x ->>> f = x ->> (->> f)
-	(->>>>) :: (Pointable u, Applicative u, Traversable v, Traversable w)
+	(->>>>) :: (Pointable u (->), Applicative u, Traversable v, Traversable w)
 		=> w :. v :. t := a -> (a -> u b) -> u :. w :. v :. t := b
 	x ->>>> f = x ->> (->> (->> f))
-	(->>>>>) :: (Pointable u, Applicative u, Traversable v, Traversable w, Traversable j)
+	(->>>>>) :: (Pointable u (->), Applicative u, Traversable v, Traversable w, Traversable j)
 		=> j :. w :. v :. t := a -> (a -> u b) -> u :. j :. w :. v :. t := b
 	x ->>>>> f = x ->> (->> (->> (->> f)))
 

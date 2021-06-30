@@ -32,7 +32,7 @@ instance Covariant Identity where
 instance Covariant_ Identity (->) (->) where
 	f -<$>- Identity x = Identity $ f x
 
-instance Pointable Identity where
+instance Pointable Identity (->) where
 	point = Identity
 
 instance Pointable_ Identity (->) where

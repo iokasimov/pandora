@@ -21,7 +21,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 
 class Interpreted t => Monadic t where
 	{-# MINIMAL wrap #-}
-	wrap :: Pointable u => t ~> t :> u
+	wrap :: Pointable u (->) => t ~> t :> u
 
 infixr 3 :>
 newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
@@ -32,7 +32,7 @@ instance Covariant (Schematic Monad t u) => Covariant (t :> u) where
 instance Covariant_ (Schematic Monad t u) (->) (->) => Covariant_ (t :> u) (->) (->) where
 	f -<$>- TM x = TM $ f -<$>- x
 
-instance Pointable (Schematic Monad t u) => Pointable (t :> u) where
+instance Pointable (Schematic Monad t u) (->) => Pointable (t :> u) (->) where
 	point = TM . point
 
 instance Extractable (Schematic Monad t u) (->) => Extractable (t :> u) (->) where
@@ -59,7 +59,7 @@ instance Bindable (Schematic Monad t u) => Bindable (t :> u) where
 instance Extendable (Schematic Monad t u) => Extendable (t :> u) where
 	TM x =>> f = TM $ x =>> f . TM
 
-instance (Pointable (t :> u), Bindable (t :> u)) => Monad (t :> u) where
+instance (Covariant_ (Schematic Monad t u) (->) (->), Pointable (t :> u) (->), Bindable (t :> u)) => Monad (t :> u) where
 
 instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
 	lift = TM . lift

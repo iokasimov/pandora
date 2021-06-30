@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Transformer.Instruction where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -23,7 +23,11 @@ instance Covariant t => Covariant (Instruction t) where
 	f <$> Enter x = Enter $ f x
 	f <$> Instruct xs = Instruct $ f <$$> xs
 
-instance Covariant t => Pointable (Instruction t) where
+instance Covariant_ t (->) (->) => Covariant_ (Instruction t) (->) (->) where
+	f -<$>- Enter x = Enter $ f x
+	f -<$>- Instruct xs = Instruct $ f -<$$>- xs
+
+instance Covariant_ t (->) (->) => Pointable (Instruction t) (->) where
 	point = Enter
 
 instance Alternative t => Alternative (Instruction t) where

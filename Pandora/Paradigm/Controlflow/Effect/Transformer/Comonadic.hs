@@ -31,7 +31,7 @@ instance Covariant (Schematic Comonad t u) => Covariant (t :< u) where
 instance Covariant_ (Schematic Comonad t u) (->) (->) => Covariant_ (t :< u) (->) (->) where
 	f -<$>- TC x = TC $ f -<$>- x
 
-instance Pointable (Schematic Comonad t u) => Pointable (t :< u) where
+instance Pointable (Schematic Comonad t u) (->) => Pointable (t :< u) (->) where
 	point = TC . point
 
 instance Extractable (Schematic Comonad t u) (->) => Extractable (t :< u) (->) where

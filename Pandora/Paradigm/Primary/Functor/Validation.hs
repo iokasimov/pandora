@@ -37,7 +37,7 @@ instance Covariant_ (Flip Validation a) (->) (->) where
 	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
 	_ -<$>- Flip (Validated x) = Flip $ Validated x
 
-instance Pointable (Validation e) where
+instance Pointable (Validation e) (->) where
 	point = Validated
 
 instance Pointable_ (Validation e) (->) where

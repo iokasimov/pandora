@@ -48,10 +48,10 @@ instance (Covariant t, Covariant t', Adjoint t' t, Bindable u) => Applicative (t
 instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
 	x <+> y = TUT $ run x <*+> run y
 
-instance (Pointable t, Applicative t, Covariant t', Avoidable u) => Avoidable (t <:<.>:> t' := u) where
+instance (Pointable t (->), Applicative t, Covariant t', Avoidable u) => Avoidable (t <:<.>:> t' := u) where
 	empty = TUT $ point empty
 
-instance (Covariant t, Covariant t', Pointable u, Adjoint t' t) => Pointable (t <:<.>:> t' := u) where
+instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Pointable u (->), Adjoint t' t) => Pointable (t <:<.>:> t' := u) (->) where
 	point = unite . (-| point)
 
 instance (Covariant t, Covariant t', Adjoint t' t, Bindable u) => Bindable (t <:<.>:> t' := u) where

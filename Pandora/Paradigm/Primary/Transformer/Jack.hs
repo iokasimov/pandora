@@ -1,3 +1,5 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Primary.Transformer.Jack where
 
 import Pandora.Pattern.Category (identity, (.), ($), (#))
@@ -29,7 +31,7 @@ instance Covariant_ t (->) (->) => Covariant_ (Jack t) (->) (->) where
 	f -<$>- It x = It $ f x
 	f -<$>- Other y = Other $ f -<$>- y
 
-instance Covariant t => Pointable (Jack t) where
+instance Covariant_ t (->) (->) => Pointable (Jack t) (->) where
 	point = It
 
 instance Alternative t => Alternative (Jack t) where
@@ -57,7 +59,7 @@ instance Traversable t => Traversable (Jack t) where
 instance Distributive t => Distributive (Jack t) where
 	x >>- f = distribute $ f <$> x
 
-instance (Pointable t, Bindable t) => Bindable (Jack t) where
+instance (Pointable t (->), Bindable t) => Bindable (Jack t) where
 	It x >>= f = f x
 	Other x >>= f = Other $ x >>= jack point identity . f
 

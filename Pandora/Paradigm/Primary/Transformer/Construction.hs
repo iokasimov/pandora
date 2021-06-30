@@ -36,10 +36,10 @@ instance Covariant t => Covariant (Construction t) where
 instance Covariant_ t (->) (->) => Covariant_ (Construction t) (->) (->) where
 	f -<$>- ~(Construct x xs) = Construct # f x # f -<$$>- xs
 
-instance Avoidable t => Pointable (Construction t) where
+instance (Avoidable t, Covariant_ t (->) (->)) => Pointable (Construction t) (->) where
 	point x = Construct x empty
 
-instance Avoidable t => Pointable_ (Construction t) (->) where
+instance (Avoidable t, Covariant_ t (->) (->)) => Pointable_ (Construction t) (->) where
 	point_ x = Construct x empty
 
 instance Covariant_ t (->) (->) => Extractable (Construction t) (->) where

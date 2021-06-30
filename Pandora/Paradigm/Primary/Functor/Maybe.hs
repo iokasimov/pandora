@@ -35,7 +35,7 @@ instance Covariant_ Maybe (->) (->) where
 	f -<$>- Just x = Just $ f x
 	_ -<$>- Nothing = Nothing
 
-instance Pointable Maybe where
+instance Pointable Maybe (->) where
 	point = Just
 
 instance Pointable_ Maybe (->) where

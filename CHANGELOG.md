@@ -480,3 +480,4 @@
 * Define `Covariant_` and `Contravariant_` superclasses for `Divariant_`
 * Define experimental `Traversable_` typeclass
 * Define experimental `-<<$$>-` and `-<$$>>-` methods of `Covariant_` typeclass
+* Use experimental `Covariant_` as superclass of `Pointable`

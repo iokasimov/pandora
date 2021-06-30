@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Modification.Comprehension where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -37,7 +37,10 @@ instance Interpreted (Comprehension t) where
 instance Covariant (t <:.> Construction t) => Covariant (Comprehension t) where
 	f <$> Comprehension x = Comprehension $ f <$> x
 
-instance (Avoidable t, Pointable t) => Pointable (Comprehension t) where
+instance Covariant_ (t <:.> Construction t) (->) (->) => Covariant_ (Comprehension t) (->) (->) where
+	f -<$>- Comprehension x = Comprehension $ f -<$>- x
+
+instance (Avoidable t, Pointable t (->)) => Pointable (Comprehension t) (->) where
 	point = Comprehension . TU . point . Construct % empty
 
 instance Alternative t => Alternative (Comprehension t) where
@@ -49,13 +52,13 @@ instance (Avoidable t, Alternative t) => Avoidable (Comprehension t) where
 instance Traversable (t <:.> Construction t) => Traversable (Comprehension t) where
 	Comprehension x ->> f = Comprehension <$> x ->> f
 
-instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t, Pointable t, Avoidable t) => Applicative (Comprehension t) where
+instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t, Pointable t (->), Avoidable t) => Applicative (Comprehension t) where
 	fs <*> xs = fs >>= \f -> xs >>= Comprehension . TU . point . point . f
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t) => Bindable (Comprehension t) where
 	Comprehension (TU t) >>= f = Comprehension . TU $ t >>= \(Construct x xs) -> run . run $ f x + (Comprehension (TU xs) >>= f)
 
-instance (forall a . Semigroup (t <:.> Construction t := a), Pointable t, Avoidable t, Bindable t) => Monad (Comprehension t) where
+instance (forall a . Semigroup (t <:.> Construction t := a), Pointable t (->), Avoidable t, Bindable t) => Monad (Comprehension t) where
 
 instance Setoid (t <:.> Construction t := a) => Setoid (Comprehension t a) where
 	Comprehension ls == Comprehension rs = ls == rs
@@ -66,7 +69,7 @@ instance Semigroup (t <:.> Construction t := a) => Semigroup (Comprehension t a)
 instance Monoid (t <:.> Construction t := a) => Monoid (Comprehension t a) where
 	zero = Comprehension zero
 
-instance (Covariant_ t (->) (->), Pointable t) => Morphable Push (Comprehension t) where
+instance (Covariant t, Covariant_ t (->) (->), Pointable t (->)) => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 

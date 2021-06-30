@@ -19,7 +19,7 @@ instance Covariant_ (These e) (->) (->) where
 	_ -<$>- That y = That y
 	f -<$>- These y x = These y $ f x
 
-instance Pointable (These e) where
+instance Pointable (These e) (->) where
 	point = This
 
 instance Pointable_ (These e) (->) where

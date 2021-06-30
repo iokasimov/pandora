@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.State where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity, (.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
@@ -27,10 +27,13 @@ newtype State s a = State ((->) s :. (:*:) s := a)
 instance Covariant (State s) where
 	f <$> x = State $ (<$>) f . run x
 
+instance Covariant_ (State s) (->) (->) where
+	f -<$>- x = State $ (-<$>-) f . run x
+
 instance Applicative (State s) where
 	f <*> x = State $ (|- (<$>)) . (run x <-> identity) . run f
 
-instance Pointable (State s) where
+instance Pointable (State s) (->) where
 	point = State . (-| identity)
 
 instance Bindable (State s) where
@@ -68,7 +71,7 @@ replace s = adapt . State $ \_ -> s :*: s
 reconcile :: (Bindable t, Stateful s t, Adaptable u t) => (s -> u s) -> t s
 reconcile f = current >>= adapt . f >>= replace
 
-type Memorable s t = (Pointable t, Applicative t, Stateful s t)
+type Memorable s t = (Pointable t (->), Applicative t, Stateful s t)
 
 fold :: (Traversable t, Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = struct ->> modify . op *> current

@@ -22,7 +22,7 @@ instance Covariant t => Covariant (Backwards t) where
 instance Covariant_ t (->) (->) => Covariant_ (Backwards t) (->) (->) where
 	f -<$>- Backwards x = Backwards $ f -<$>- x
 
-instance Pointable t => Pointable (Backwards t) where
+instance Pointable t (->) => Pointable (Backwards t) (->) where
 	point = Backwards . point
 
 instance Pointable_ t (->) => Pointable_ (Backwards t) (->) where

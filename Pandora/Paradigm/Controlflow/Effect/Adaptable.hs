@@ -19,7 +19,7 @@ class Adaptable t u where
 
 type Lifting t u = (Monadic t, Liftable (Schematic Monad t), Covariant u, Covariant_ u (->) (->))
 type Lowering t u = (Comonadic t, Lowerable (Schematic Comonad t), Covariant u, Covariant_ u (->) (->))
-type Wrappable t u = (Monadic t, Pointable u)
+type Wrappable t u = (Monadic t, Pointable u (->))
 type Bringable t u = (Comonadic t, Extractable u (->))
 
 instance Covariant t => Adaptable t t where

@@ -20,7 +20,7 @@ instance Covariant_ t (->) (->) => Covariant_ (Jet t) (->) (->) where
 instance Traversable t => Traversable (Jet t) where
 	Jet x xs ->> f = Jet <$> f x <*> xs ->>> f
 
-instance (forall u . Avoidable u) => Pointable (Jet t) where
+instance (forall u . Avoidable u, Covariant_ t (->) (->)) => Pointable (Jet t) (->) where
 	point x = Jet x empty
 
 instance Covariant_ t (->) (->) => Extractable (Jet t) (->) where

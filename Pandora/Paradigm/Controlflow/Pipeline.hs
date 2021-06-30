@@ -40,7 +40,7 @@ yield :: o -> Pipeline i o t () r
 yield v = Continuation $ \next -> Pipe $ \i (Consumer o) -> o v # pause next i
 
 -- | Pipeline that does nothing
-finish :: Pointable t => Pipeline i o t () ()
+finish :: Pointable t (->) => Pipeline i o t () ()
 finish = Continuation (Pipe (point () !..) !.)
 
 -- | Do some effectful computation within pipeline
@@ -48,14 +48,14 @@ impact :: Bindable t => t a -> Pipeline i o t a a
 impact action = Continuation $ \next -> Pipe $ \i o -> action >>= \x -> pipe (next x) i o
 
 -- | Compose two pipelines into one
-(=*=) :: forall i e o t . Pointable t => Pipeline i e t () () -> Pipeline e o t () () -> Pipeline i o t () ()
+(=*=) :: forall i e o t . Pointable t (->) => Pipeline i e t () () -> Pipeline e o t () () -> Pipeline i o t () ()
 p =*= q = Continuation $ \_ -> Pipe $ \i -> pipe # run q end # pause (run p end !.) i where
 
 	end :: b -> Pipe c d () t ()
 	end _ = Pipe (point () !..)
 
 -- | Run pipeline and get result
-pipeline :: Pointable t => Pipeline i o t () () -> t ()
+pipeline :: Pointable t (->) => Pipeline i o t () () -> t ()
 pipeline p = pipe # run p (Pipe . (!..) . point) # i # o where
 
 	i :: Producer i t ()

@@ -41,7 +41,7 @@ instance Applicative_ ((->) e) (->) (->) where
 instance Distributive ((->) e) where
 	g >>- f = \e -> (f % e) <$> g
 
-instance Pointable ((->) e) where
+instance Pointable ((->) e) (->) where
 	point = (!.)
 
 instance Pointable_ ((->) e) (->) where

@@ -18,7 +18,7 @@ instance Covariant_ (Wedge e) (->) (->) where
 	_ -<$>- Here x = Here x
 	f -<$>- There x = There $ f x
 
-instance Pointable (Wedge e) where
+instance Pointable (Wedge e) (->) where
 	point = There
 
 instance Pointable_ (Wedge e) (->) where

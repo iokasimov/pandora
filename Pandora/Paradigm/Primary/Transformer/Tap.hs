@@ -36,7 +36,7 @@ instance Covariant t => Covariant (Tap t) where
 instance Covariant_ t (->) (->) => Covariant_ (Tap t) (->) (->) where
 	f -<$>- Tap x xs = Tap # f x # f -<$>- xs
 
-instance Avoidable t => Pointable (Tap t) where
+instance (Avoidable t, Covariant_ t (->) (->)) => Pointable (Tap t) (->) where
 	point = Tap % empty
 
 instance (Covariant t, Covariant_ t (->) (->))  => Extractable (Tap t) (->) where

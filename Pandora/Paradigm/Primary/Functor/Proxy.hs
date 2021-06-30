@@ -22,7 +22,7 @@ instance Covariant_ Proxy (->) (->) where
 instance Contravariant Proxy where
 	_ >$< _ = Proxy
 
-instance Pointable Proxy where
+instance Pointable Proxy (->) where
 	point _ = Proxy
 
 instance Pointable_ Proxy (->) where

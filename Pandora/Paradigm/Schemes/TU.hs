@@ -46,7 +46,7 @@ instance (Covariant u, Alternative t) => Alternative (t <:.> u) where
 instance (Covariant u, Avoidable t) => Avoidable (t <:.> u) where
 	empty = TU empty
 
-instance (Pointable t, Pointable u) => Pointable (t <:.> u) where
+instance (Pointable t (->), Pointable u (->)) => Pointable (t <:.> u) (->) where
 	point = TU . point . point
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <:.> u) (->) where
@@ -58,7 +58,7 @@ instance (Traversable t, Traversable u) => Traversable (t <:.> u) where
 instance (Bindable t, Distributive t, Bindable u) => Bindable (t <:.> u) where
 	TU x >>= f = TU $ x >>= \i -> join <$> i >>- run . f
 
-instance Pointable t => Liftable (TU Covariant Covariant t) where
+instance Pointable t (->) => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <:.> u
 	lift = TU . point
 

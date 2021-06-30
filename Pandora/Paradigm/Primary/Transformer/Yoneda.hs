@@ -32,7 +32,7 @@ instance Applicative t => Applicative (Yoneda t) where
 instance Avoidable t => Avoidable (Yoneda t) where
 	empty = Yoneda (empty !.)
 
-instance Pointable t => Pointable (Yoneda t) where
+instance Pointable t (->) => Pointable (Yoneda t) (->) where
 	point x = Yoneda (\f -> point $ f x)
 
 instance Extractable t (->) => Extractable (Yoneda t) (->) where
@@ -41,6 +41,6 @@ instance Extractable t (->) => Extractable (Yoneda t) (->) where
 instance Liftable Yoneda where
 	lift x = Yoneda (<$> x)
 
-instance (Extractable t (->), Pointable t, Extractable u (->) , Pointable u) => Adjoint (Yoneda t) (Yoneda u) where
+instance (Extractable t (->), Pointable t (->), Extractable u (->) , Pointable u (->)) => Adjoint (Yoneda t) (Yoneda u) where
 	x -| f = point . f . point # x
 	x |- g = extract . extract # g <$> x

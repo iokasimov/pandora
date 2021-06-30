@@ -36,7 +36,7 @@ instance Determinable Predicate where
 equate :: Setoid a => a :=> Predicate
 equate x = Predicate (== x)
 
-satisfy :: (Pointable t, Avoidable t) => Predicate a -> a -> t a
+satisfy :: (Pointable t (->), Avoidable t) => Predicate a -> a -> t a
 satisfy p x = run p x ? point x $ empty
 
 not :: Predicate ~> Predicate

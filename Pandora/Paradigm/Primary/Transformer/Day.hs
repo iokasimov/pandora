@@ -21,7 +21,7 @@ instance Covariant (Day t u) where
 instance Covariant_ (Day t u) (->) (->) where
 	f -<$>- Day tb uc g = Day tb uc # f -.#..- g
 
-instance (Pointable t, Pointable u) => Pointable (Day t u) where
+instance (Pointable t (->), Pointable u (->)) => Pointable (Day t u) (->) where
 	point x = Day # point () # point () # (x !..)
 
 instance (Applicative t, Applicative u) => Applicative (Day t u) where

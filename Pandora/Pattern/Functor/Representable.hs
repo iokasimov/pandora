@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 
 infixr 6 <#>
 
-class Pointable t => Representable t where
+class Pointable t (->) => Representable t where
 	{-# MINIMAL (<#>), tabulate #-}
 	type Representation t :: *
 	-- | Infix and flipped version of 'index'

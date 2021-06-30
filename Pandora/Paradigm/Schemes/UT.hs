@@ -37,7 +37,7 @@ instance (Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <.:> 
 instance (Applicative t, Applicative u) => Applicative (t <.:> u) where
 	UT f <*> UT x = UT $ f <**> x
 
-instance (Pointable t, Pointable u) => Pointable (t <.:> u) where
+instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
 	point = UT . point . point
 
 instance (Traversable t, Bindable t, Applicative u, Monad u) => Bindable (t <.:> u) where
@@ -46,7 +46,7 @@ instance (Traversable t, Bindable t, Applicative u, Monad u) => Bindable (t <.:>
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where
 	extract = extract . extract . run
 
-instance Pointable t => Liftable (UT Covariant Covariant t) where
+instance Pointable t (->) => Liftable (UT Covariant Covariant t) where
 	lift :: Covariant u => u ~> t <.:> u
 	lift x = UT $ point <$> x
 

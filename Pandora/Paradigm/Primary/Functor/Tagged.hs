@@ -35,7 +35,7 @@ instance Covariant (Tagged tag) where
 instance Covariant_ (Tagged tag) (->) (->) where
 	f -<$>- Tag x = Tag $ f x
 
-instance Pointable (Tagged tag) where
+instance Pointable (Tagged tag) (->) where
 	point = Tag
 
 instance Pointable_ (Tagged tag) (->) where

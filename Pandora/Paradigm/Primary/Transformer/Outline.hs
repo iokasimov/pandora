@@ -24,7 +24,7 @@ instance Covariant_ (Outline t) (->) (->) where
 	f -<$>- Line a = Line $ f a
 	f -<$>- Outlined x y = Outlined x # (.) f -<$>- y
 
-instance Pointable (Outline t) where
+instance Pointable (Outline t) (->) where
 	point = Line
 
 instance Extractable t (->) => Extractable (Outline t) (->) where
@@ -42,7 +42,7 @@ instance Hoistable Outline where
 	_ /|\ Line x = Line x
 	f /|\ Outlined x y = Outlined # f x # f /|\ y
 
-instance (Extractable t (->), Pointable t, Applicative t) => Interpreted (Outline t) where
+instance (Extractable t (->), Pointable t (->), Applicative t) => Interpreted (Outline t) where
 	type Primary (Outline t) a = t a
 	run (Line x) = point x
 	run (Outlined t f) = run f <*> t

@@ -24,7 +24,7 @@ instance Covariant t => Covariant (Reverse t) where
 instance Covariant_ t (->) (->) => Covariant_ (Reverse t) (->) (->) where
 	f -<$>- Reverse x = Reverse # f -<$>- x
 
-instance Pointable t => Pointable (Reverse t) where
+instance Pointable t (->) => Pointable (Reverse t) (->) where
 	point = Reverse . point
 
 instance Extractable t (->) => Extractable (Reverse t) (->) where
