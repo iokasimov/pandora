@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Adjoint where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>)), Covariant_)
 
 type (-|) = Adjoint
 
@@ -50,3 +50,7 @@ class Adjoint t u where
 	($$$$|-) :: (Covariant v, Covariant w, Covariant x, Covariant y) =>
 		v :. w :. x :. y :. t := a -> (a -> u b) -> v :. w :. x :. y := b
 	x $$$$|- f = (|- f) <$$$$> x
+
+class (Covariant_ t target source, Covariant_ u source target) => Adjoint_ t u source target where
+	(--|-) :: source (t a) b -> target a (u b)
+	(-|--) :: target a (u b) -> source (t a) b

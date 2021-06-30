@@ -21,7 +21,7 @@ import Pandora.Paradigm.Primary.Functor.Identity as Exports
 import Pandora.Paradigm.Primary.Functor.Function as Exports
 
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)), Adjoint_ ((--|-), (-|--)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
 
@@ -33,6 +33,12 @@ instance Adjoint (Product s) ((->) s) where
 	x -| f = \s -> f $ s :*: x
 	(|-) :: (s :*: a) -> (a -> s -> b) -> b
 	~(s :*: x) |- f = f x s
+
+instance Adjoint_ (Product s) ((->) s) (->) (->) where
+	(--|-) :: ((s :*: a) -> b) -> a -> (s -> b)
+	f --|- x = \s -> f $ s :*: x
+	(-|--) :: (a -> s -> b) -> (s :*: a) -> b
+	f -|-- ~(s :*: x) = f x s
 
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
 match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
