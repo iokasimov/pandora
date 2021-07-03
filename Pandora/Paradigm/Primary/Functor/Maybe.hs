@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)), Applicative' (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)), Traversable_ ((-->>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -24,6 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Primary.Functor.Function ()
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 
 data Maybe a = Nothing | Just a
 
@@ -51,6 +52,11 @@ instance Applicative Maybe where
 instance Applicative_ Maybe (->) (->) where
 	Just f -<*>- x = f -<$>- x
 	Nothing -<*>- _ = Nothing
+
+instance Applicative' Maybe (:*:) where
+	multiply f (Just x :*: Just y) = Just . f $ x :*: y
+	multiply f (Nothing :*: _) = Nothing
+	multiply f (_ :*: Nothing) = Nothing
 
 instance Alternative Maybe where
 	Nothing <+> y = y
