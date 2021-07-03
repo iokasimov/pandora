@@ -483,3 +483,4 @@
 * Use experimental `Covariant_` as superclass of `Pointable`
 * Define experimental `Adjoint_` typeclass
 * Define experimental `Applicative'` typeclass
+* Define experimental `Divisible'` typeclass
