@@ -5,8 +5,8 @@ import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)), Traversable_ ((-->>-)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)), Bivariant_ ((-<->-)))
@@ -45,10 +45,6 @@ instance Applicative (Conclusion e) where
 	Success f <*> x = f <$> x
 	Failure y <*> _ = Failure y
 
-instance Applicative_ (Conclusion e) (->) (->) where
-	Success f -<*>- x = f -<$>- x
-	Failure y -<*>- _ = Failure y
-
 instance Alternative (Conclusion e) where
 	Failure _ <+> x = x
 	Success x <+> _ = Success x
@@ -56,10 +52,6 @@ instance Alternative (Conclusion e) where
 instance Traversable (Conclusion e) where
 	Failure y ->> _ = point $ Failure y
 	Success x ->> f = Success <$> f x
-
-instance Traversable_ (Conclusion e) (->) (->) where
-	Failure y -->>- _ = point_ $ Failure y
-	Success x -->>- f = Success -<$>- f x
 
 instance Bindable (Conclusion e) where
 	Success x >>= f = f x

@@ -468,7 +468,6 @@
 * Define experimental `Covariant_` typeclass
 * Define experimental `-<$$>-` method of `Covariant_` typeclass
 * Define experimental `-.#..-` method in `Function` module
-* Define experimental `Applicative_` typeclass
 * Define experimental `Contravariant_` typeclass
 * Define experimental `Pointable_` typeclass
 * Define experimental `Bindable_` typeclass
@@ -478,7 +477,6 @@
 * Use experimental `Covariant_` as superclass of `Extractable`
 * Define `Covariant_` superclasses for `Bivariant_`
 * Define `Covariant_` and `Contravariant_` superclasses for `Divariant_`
-* Define experimental `Traversable_` typeclass
 * Define experimental `-<<$$>-` and `-<$$>>-` methods of `Covariant_` typeclass
 * Use experimental `Covariant_` as superclass of `Pointable`
 * Define experimental `Adjoint_` typeclass

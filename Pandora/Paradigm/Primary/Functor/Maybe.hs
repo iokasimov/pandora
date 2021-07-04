@@ -6,8 +6,8 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)), Applicative' (multiply))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)), Traversable_ ((-->>-)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative' (multiply))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -49,10 +49,6 @@ instance Applicative Maybe where
 	Just f <*> x = f <$> x
 	Nothing <*> _ = Nothing
 
-instance Applicative_ Maybe (->) (->) where
-	Just f -<*>- x = f -<$>- x
-	Nothing -<*>- _ = Nothing
-
 instance Applicative' Maybe (:*:) where
 	multiply f (Just x :*: Just y) = Just . f $ x :*: y
 	multiply f (Nothing :*: _) = Nothing
@@ -65,10 +61,6 @@ instance Alternative Maybe where
 instance Traversable Maybe where
 	Nothing ->> _ = point Nothing
 	Just x ->> f = Just <$> f x
-
-instance Traversable_ Maybe (->) (->) where
-	Nothing -->>- _ = point_ Nothing
-	Just x -->>- f = Just -<$>- f x
 
 instance Bindable Maybe where
 	Just x >>= f = f x

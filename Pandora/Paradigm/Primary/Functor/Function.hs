@@ -5,7 +5,7 @@ module Pandora.Paradigm.Primary.Functor.Function where
 import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
@@ -34,9 +34,6 @@ instance Contravariant_ (Flip (->) a) (->) (->) where
 
 instance Applicative ((->) e) where
 	(<*>) f g x = f x $ g x
-
-instance Applicative_ ((->) e) (->) (->) where
-	(-<*>-) f g x = f x $ g x
 
 instance Distributive ((->) e) where
 	g >>- f = \e -> (f % e) <$> g

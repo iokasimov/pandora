@@ -5,7 +5,7 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ ((-<*>-)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
@@ -46,9 +46,6 @@ instance Extractable (Tagged tag) (->) where
 
 instance Applicative (Tagged tag) where
 	Tag f <*> Tag x = Tag $ f x
-
-instance Applicative_ (Tagged tag) (->) (->) where
-	Tag f -<*>- Tag x = Tag $ f x
 
 instance Traversable (Tagged tag) where
 	Tag x ->> f = Tag <$> f x
