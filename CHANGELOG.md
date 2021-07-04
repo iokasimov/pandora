@@ -482,3 +482,4 @@
 * Define experimental `Adjoint_` typeclass
 * Define experimental `Applicative'` typeclass
 * Define experimental `Divisible'` typeclass
+* Define experimental `.<*>.` method
