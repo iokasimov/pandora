@@ -1,9 +1,9 @@
 module Pandora.Pattern.Functor.Traversable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Applicative (Applicative)
-import Pandora.Pattern.Functor.Pointable (Pointable, Pointable_)
+import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |
 > Let f :: (Applicative t, Applicative g) => t a -> u a
@@ -40,6 +40,3 @@ class Covariant t => Traversable t where
 	(->>>>>) :: (Pointable u (->), Applicative u, Traversable v, Traversable w, Traversable j)
 		=> j :. w :. v :. t := a -> (a -> u b) -> u :. j :. w :. v :. t := b
 	x ->>>>> f = x ->> (->> (->> (->> f)))
-
---class Covariant_ t source target => Traversable_ t source target where
---	(-->>-) :: (Pointable_ u source, Applicative_ u source target) => t a -> target (source a (u b)) (u (t b))

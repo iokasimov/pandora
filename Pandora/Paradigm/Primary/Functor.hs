@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match) where
+module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match, (.<*>.)) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Convergence as Exports
@@ -20,8 +20,7 @@ import Pandora.Paradigm.Primary.Functor.Constant as Exports
 import Pandora.Paradigm.Primary.Functor.Identity as Exports
 import Pandora.Paradigm.Primary.Functor.Function as Exports
 
-import Pandora.Pattern.Category ((.), ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Applicative (Applicative' (multiply))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)), Adjoint_ ((--|-), (-|--)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
@@ -42,9 +41,12 @@ instance Adjoint_ (Product s) ((->) s) (->) (->) where
 	(-|--) :: (a -> s -> b) -> (s :*: a) -> b
 	f -|-- ~(s :*: x) = f x s
 
+instance Applicative' ((->) e) (:*:) where
+	multiply f (g :*: h) = \x -> f $ g x :*: h x
+
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
 match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
 
 -- TODO: Generalize (:*:) to some t which is Adjiont_ t ((->) a)
-(.<*>.) :: (Covariant t, Applicative' t (:*:)) => t (a -> b) -> t a -> t b
+(.<*>.) :: Applicative' t (:*:) => t (a -> b) -> t a -> t b
 f .<*>. x = multiply ((&) -|--) (f :*: x) 

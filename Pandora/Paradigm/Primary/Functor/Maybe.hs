@@ -51,8 +51,8 @@ instance Applicative Maybe where
 
 instance Applicative' Maybe (:*:) where
 	multiply f (Just x :*: Just y) = Just . f $ x :*: y
-	multiply f (Nothing :*: _) = Nothing
-	multiply f (_ :*: Nothing) = Nothing
+	multiply _ (Nothing :*: _) = Nothing
+	multiply _ (_ :*: Nothing) = Nothing
 
 instance Alternative Maybe where
 	Nothing <+> y = y

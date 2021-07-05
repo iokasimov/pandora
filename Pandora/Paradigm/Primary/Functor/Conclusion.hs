@@ -5,7 +5,7 @@ import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative' (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -15,6 +15,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
+import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -44,6 +45,11 @@ instance Pointable_ (Conclusion e) (->) where
 instance Applicative (Conclusion e) where
 	Success f <*> x = f <$> x
 	Failure y <*> _ = Failure y
+
+instance Applicative' (Conclusion e) (:*:) where
+	multiply f (Success x :*: Success y) = Success . f $ x :*: y
+	multiply _ (Failure x :*: _) = Failure x
+	multiply _ (_ :*: Failure x) = Failure x
 
 instance Alternative (Conclusion e) where
 	Failure _ <+> x = x
