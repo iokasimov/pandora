@@ -1,3 +1,4 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match, (.<*>.)) where
@@ -47,6 +48,5 @@ instance Applicative' ((->) e) (:*:) where
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
 match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
 
--- TODO: Generalize (:*:) to some t which is Adjiont_ t ((->) a)
-(.<*>.) :: Applicative' t (:*:) => t (a -> b) -> t a -> t b
-f .<*>. x = multiply ((&) -|--) (f :*: x) 
+(.<*>.) :: forall a b t v . (Applicative' t v, Adjoint_ (v (a -> b)) ((->) (a -> b)) (->) (->), Adjoint_ (v (t (a -> b))) ((->) (t (a -> b))) (->) (->)) => t (a -> b) -> t a -> t b
+(.<*>.) = (%) ((--|-) @(v (t (a -> b))) (multiply ((&) -|--)))
