@@ -22,7 +22,7 @@ import Pandora.Paradigm.Primary.Functor.Identity as Exports
 import Pandora.Paradigm.Primary.Functor.Function as Exports
 
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Applicative (Applicative' (multiply))
+import Pandora.Pattern.Functor.Applicative (Applicative' (multiply), Applicative_ (multiply_))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)), Adjoint_ ((--|-), (-|--)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
@@ -50,3 +50,6 @@ match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
 
 (.<*>.) :: forall a b t v . (Applicative' t v, Adjoint_ (v (a -> b)) ((->) (a -> b)) (->) (->), Adjoint_ (v (t (a -> b))) ((->) (t (a -> b))) (->) (->)) => t (a -> b) -> t a -> t b
 (.<*>.) = (%) ((--|-) @(v (t (a -> b))) (multiply ((&) -|--)))
+
+(-<*>-) :: forall a b t v . (Applicative_ t v (->) (->), Adjoint_ (v (a -> b)) ((->) (a -> b)) (->) (->), Adjoint_ (v (t (a -> b))) ((->) (t (a -> b))) (->) (->)) => t (a -> b) -> t a -> t b
+(-<*>-) = (%) ((--|-) @(v (t (a -> b))) (multiply_ @t @v @(->) @(->) ((&) -|--)))

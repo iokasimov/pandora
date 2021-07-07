@@ -49,3 +49,6 @@ class Covariant t => Applicative t where
 
 class Bivariant v => Applicative' t v where
 	multiply :: (v a b -> r) -> v (t a) (t b) -> t r
+
+class Bivariant v => Applicative_ t v source target where
+	multiply_ :: source (v a b) r -> target (v (t a) (t b)) (t r)
