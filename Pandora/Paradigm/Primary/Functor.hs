@@ -1,7 +1,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match, (.<*>.)) where
+module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match, (-<*>-)) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Convergence as Exports
@@ -22,7 +22,8 @@ import Pandora.Paradigm.Primary.Functor.Identity as Exports
 import Pandora.Paradigm.Primary.Functor.Function as Exports
 
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Applicative (Applicative' (multiply), Applicative_ (multiply_))
+import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
+import Pandora.Pattern.Functor.Divisible (Divisible' (divide))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)), Adjoint_ ((--|-), (-|--)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
@@ -42,14 +43,11 @@ instance Adjoint_ (Product s) ((->) s) (->) (->) where
 	(-|--) :: (a -> s -> b) -> (s :*: a) -> b
 	f -|-- ~(s :*: x) = f x s
 
-instance Applicative' ((->) e) (:*:) where
+instance Applicative_ ((->) e) (:*:) (->) (->) where
 	multiply f (g :*: h) = \x -> f $ g x :*: h x
 
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
 match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
 
-(.<*>.) :: forall a b t v . (Applicative' t v, Adjoint_ (v (a -> b)) ((->) (a -> b)) (->) (->), Adjoint_ (v (t (a -> b))) ((->) (t (a -> b))) (->) (->)) => t (a -> b) -> t a -> t b
-(.<*>.) = (%) ((--|-) @(v (t (a -> b))) (multiply ((&) -|--)))
-
 (-<*>-) :: forall a b t v . (Applicative_ t v (->) (->), Adjoint_ (v (a -> b)) ((->) (a -> b)) (->) (->), Adjoint_ (v (t (a -> b))) ((->) (t (a -> b))) (->) (->)) => t (a -> b) -> t a -> t b
-(-<*>-) = (%) ((--|-) @(v (t (a -> b))) (multiply_ @t @v @(->) @(->) ((&) -|--)))
+(-<*>-) = (%) ((--|-) @(v (t (a -> b))) (multiply @t @v @(->) @(->) ((&) -|--)))
