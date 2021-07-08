@@ -23,7 +23,6 @@ import Pandora.Paradigm.Primary.Functor.Function as Exports
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
-import Pandora.Pattern.Functor.Divisible (Divisible' (divide))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)), Adjoint_ ((--|-), (-|--)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)

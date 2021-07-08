@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Predicate where
 import Pandora.Core.Functor (type (~>), type (:=>))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)), Contravariant_ ((->$<-)))
-import Pandora.Pattern.Functor.Divisible (Divisible ((>*<)), Divisible' (divide))
+import Pandora.Pattern.Functor.Divisible (Divisible ((>*<)), Divisible_ (divide))
 import Pandora.Pattern.Functor.Determinable (Determinable (determine))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -30,7 +30,7 @@ instance Contravariant_ Predicate (->) (->) where
 instance Divisible Predicate where
 	Predicate g >*< Predicate h = Predicate $ \(b :*: c) -> g b * h c
 
-instance Divisible' Predicate (:*:) where
+instance Divisible_ Predicate (:*:) where
 	divide f (Predicate g :*: Predicate h) = Predicate $ \r -> case f r of
 		b :*: c -> g b * h c
 
