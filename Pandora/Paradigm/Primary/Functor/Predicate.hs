@@ -30,7 +30,7 @@ instance Contravariant_ Predicate (->) (->) where
 instance Divisible Predicate where
 	Predicate g >*< Predicate h = Predicate $ \(b :*: c) -> g b * h c
 
-instance Divisible_ Predicate (:*:) where
+instance Divisible_ Predicate (:*:) (->) (->) where
 	divide f (Predicate g :*: Predicate h) = Predicate $ \r -> case f r of
 		b :*: c -> g b * h c
 
