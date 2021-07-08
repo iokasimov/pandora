@@ -51,6 +51,12 @@ instance Applicative' (Conclusion e) (:*:) where
 	multiply _ (Failure x :*: _) = Failure x
 	multiply _ (_ :*: Failure x) = Failure x
 
+instance Applicative' (Conclusion e) Conclusion where
+	multiply f (Failure (Success x)) = Success . f $ Failure x
+	multiply f (Success (Success y)) = Success . f $ Success y
+	multiply _ (Failure (Failure e)) = Failure e
+	multiply _ (Success (Failure e)) = Failure e
+
 instance Alternative (Conclusion e) where
 	Failure _ <+> x = x
 	Success x <+> _ = Success x
