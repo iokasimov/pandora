@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Traversable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Functor.Covariant (Covariant_)
 import Pandora.Pattern.Functor.Applicative (Applicative)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
@@ -18,7 +18,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 
 infixl 5 ->>, ->>>, ->>>>, ->>>>>
 
-class Covariant t => Traversable t where
+class Covariant_ t (->) (->) => Traversable t where
 	{-# MINIMAL (->>) #-}
 	-- | Infix version of 'traverse'
 	(->>) :: (Pointable u (->), Applicative u) => t a -> (a -> u b) -> u :. t := b
