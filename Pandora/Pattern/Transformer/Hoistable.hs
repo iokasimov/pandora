@@ -1,7 +1,7 @@
 module Pandora.Pattern.Transformer.Hoistable (Hoistable (..)) where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant_)
 
 {- |
 > When providing a new instance, you should ensure it satisfies one law:
@@ -13,7 +13,7 @@ infixr 5 /|\
 
 class Hoistable t where
 	{-# MINIMAL (/|\) #-}
-	(/|\) :: (Covariant u, Covariant_ u (->) (->)) => u ~> v -> t u ~> t v
+	(/|\) :: (Covariant_ u (->) (->)) => u ~> v -> t u ~> t v
 
-	hoist :: (Covariant u, Covariant_ u (->) (->)) => u ~> v -> t u ~> t v
+	hoist :: (Covariant_ u (->) (->)) => u ~> v -> t u ~> t v
 	hoist = (/|\)

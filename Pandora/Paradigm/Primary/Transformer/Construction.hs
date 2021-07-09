@@ -68,7 +68,7 @@ instance Lowerable Construction where
 	lower x = extract @_ @(->) -<$>- deconstruct x
 
 instance Hoistable Construction where
-	f /|\ x = Construct # extract x $ f # hoist f <$> deconstruct x
+	f /|\ x = Construct # extract x $ f # hoist f -<$>- deconstruct x
 
 instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant t, Covariant_ t (->) (->)) => Setoid (Construction t a) where
 	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)

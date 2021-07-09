@@ -485,3 +485,4 @@
 * Define experimental `-<*>-` method
 * Use experimental `Covariant_` as superclass of `Lowerable`
 * Remove `Covariant` superclass of `Liftable`
+* Remove `Covariant` superclass of `Hoistable`
