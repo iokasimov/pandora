@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
+import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
@@ -39,9 +39,6 @@ instance Covariant_ Maybe (->) (->) where
 
 instance Pointable Maybe (->) where
 	point = Just
-
-instance Pointable_ Maybe (->) where
-	point_ = Just
 
 instance Avoidable Maybe where
 	empty = Nothing

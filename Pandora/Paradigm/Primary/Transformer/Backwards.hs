@@ -4,7 +4,7 @@ import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
+import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
@@ -24,9 +24,6 @@ instance Covariant_ t (->) (->) => Covariant_ (Backwards t) (->) (->) where
 
 instance Pointable t (->) => Pointable (Backwards t) (->) where
 	point = Backwards . point
-
-instance Pointable_ t (->) => Pointable_ (Backwards t) (->) where
-	point_ = Backwards . point_
 
 instance Extractable t (->) => Extractable (Backwards t) (->) where
 	extract (Backwards x) = extract x

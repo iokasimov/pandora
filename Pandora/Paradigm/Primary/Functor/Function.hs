@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
+import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)), Divariant_ ((->->-)))
@@ -40,9 +40,6 @@ instance Distributive ((->) e) where
 
 instance Pointable ((->) e) (->) where
 	point = (!.)
-
-instance Pointable_ ((->) e) (->) where
-	point_ = (!.)
 
 instance Bindable ((->) e) where
 	f >>= g = \x -> g # f x # x

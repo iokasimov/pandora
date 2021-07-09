@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Proxy where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point), Pointable_ (point_))
+import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
@@ -24,9 +24,6 @@ instance Contravariant Proxy where
 
 instance Pointable Proxy (->) where
 	point _ = Proxy
-
-instance Pointable_ Proxy (->) where
-	point_ _ = Proxy
 
 instance Applicative Proxy where
 	_ <*> _ = Proxy

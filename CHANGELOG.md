@@ -488,3 +488,4 @@
 * Remove `Covariant` superclass of `Hoistable`
 
 # 0.4.4
+* Remove experimental `Pointable_` typeclass
