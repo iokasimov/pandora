@@ -59,7 +59,7 @@ instance (Bindable t, Distributive t, Bindable u) => Bindable (t <:.> u) where
 	TU x >>= f = TU $ x >>= \i -> join <$> i >>- run . f
 
 instance Pointable t (->) => Liftable (TU Covariant Covariant t) where
-	lift :: Covariant u => u ~> t <:.> u
+	lift :: Covariant_ u (->) (->) => u ~> t <:.> u
 	lift = TU . point
 
 instance Extractable t (->) => Lowerable (TU Covariant Covariant t) where

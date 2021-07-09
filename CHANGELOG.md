@@ -484,3 +484,4 @@
 * Define experimental `Divisible_` typeclass
 * Define experimental `-<*>-` method
 * Use experimental `Covariant_` as superclass of `Lowerable`
+* Remove `Covariant` superclass of `Liftable`

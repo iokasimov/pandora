@@ -63,8 +63,8 @@ instance (Covariant t', Covariant t, Adjoint t' t, Extendable u) => Extendable (
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Adjoint t t', Extractable u (->)) => Extractable (t <:<.>:> t' := u) (->) where
 	extract = (|- extract) . run
 
-instance (Adjoint t' t, Distributive t) => Liftable (t <:<.>:> t') where
-	lift :: Covariant u => u ~> t <:<.>:> t' := u
+instance (forall u . Covariant u, Adjoint t' t, Distributive t) => Liftable (t <:<.>:> t') where
+	lift :: Covariant_ u (->) (->) => u ~> t <:<.>:> t' := u
 	lift x = TUT $ x >>- (-| identity)
 
 instance (forall u . Covariant u, Adjoint t t', Distributive t') => Lowerable (t <:<.>:> t') where

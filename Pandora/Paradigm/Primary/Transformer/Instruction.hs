@@ -52,7 +52,7 @@ instance Traversable t => Traversable (Instruction t) where
 	Instruct xs ->> f = Instruct <$> xs ->>> f
 
 instance Liftable Instruction where
-	lift x = Instruct $ Enter <$> x
+	lift x = Instruct $ Enter -<$>- x
 
 instance (forall t . Monad t) => Lowerable Instruction where
 	lower (Enter x) = point x
