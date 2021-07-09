@@ -35,7 +35,7 @@ instance (Extendable t, Extendable u) => Extendable (Day t u) where
 	day@(Day tb uc _) =>> f = Day tb uc (f day !..)
 
 instance Extractable t (->) => Lowerable (Day t) where
-	lower (Day tb uc bca) = bca (extract tb) <$> uc
+	lower (Day tb uc bca) = bca (extract tb) -<$>- uc
 
 instance Hoistable (Day t) where
 	g /|\ Day tb uc bca = Day tb # g uc # bca

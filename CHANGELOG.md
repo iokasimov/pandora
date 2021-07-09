@@ -483,3 +483,4 @@
 * Define experimental `Applicative_` typeclass
 * Define experimental `Divisible_` typeclass
 * Define experimental `-<*>-` method
+* Use experimental `Covariant_` as superclass of `Lowerable`

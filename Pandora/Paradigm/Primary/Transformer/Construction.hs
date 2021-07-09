@@ -65,7 +65,7 @@ instance (Avoidable t, Alternative t, Covariant_ t (->) (->)) => Monad (Construc
 instance (Covariant t, Covariant_ t (->) (->)) => Comonad (Construction t) (->) where
 
 instance Lowerable Construction where
-	lower x = extract <$> deconstruct x
+	lower x = extract @_ @(->) -<$>- deconstruct x
 
 instance Hoistable Construction where
 	f /|\ x = Construct # extract x $ f # hoist f <$> deconstruct x

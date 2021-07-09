@@ -51,5 +51,5 @@ instance Pointable t (->) => Liftable (UT Covariant Covariant t) where
 	lift x = UT $ point <$> x
 
 instance Extractable t (->) => Lowerable (UT Covariant Covariant t) where
-	lower :: Covariant u => t <.:> u ~> u
-	lower (UT x) = extract <$> x
+	lower :: Covariant_ u (->) (->) => t <.:> u ~> u
+	lower (UT x) = extract @_ @(->) -<$>- x
