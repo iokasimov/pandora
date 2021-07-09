@@ -48,7 +48,7 @@ instance Traversable (Tagged tag) where
 	Tag x ->> f = Tag <$> f x
 
 instance Distributive (Tagged tag) where
-	x >>- f = Tag $ extract . f <$> x
+	x >>- f = Tag $ extract . f -<$>- x
 
 instance Bindable (Tagged tag) where
 	Tag x >>= f = f x

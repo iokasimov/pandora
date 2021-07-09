@@ -489,3 +489,4 @@
 
 # 0.4.4
 * Remove experimental `Pointable_` typeclass
+* Use experimental `Covariant_` as superclass of `Distributive`

@@ -36,7 +36,7 @@ instance Applicative ((->) e) where
 	(<*>) f g x = f x $ g x
 
 instance Distributive ((->) e) where
-	g >>- f = \e -> (f % e) <$> g
+	g >>- f = \e -> (f % e) -<$>- g
 
 instance Pointable ((->) e) (->) where
 	point = (!.)

@@ -57,7 +57,7 @@ instance Traversable t => Traversable (Jack t) where
 	Other y ->> f = Other <$> y ->> f
 
 instance Distributive t => Distributive (Jack t) where
-	x >>- f = distribute $ f <$> x
+	x >>- f = distribute $ f -<$>- x
 
 instance (Pointable t (->), Bindable t) => Bindable (Jack t) where
 	It x >>= f = f x

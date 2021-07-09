@@ -45,7 +45,7 @@ instance Traversable Identity where
 	Identity x ->> f = Identity <$> f x
 
 instance Distributive Identity where
-	x >>- f = Identity $ extract . f <$> x
+	x >>- f = Identity $ extract . f -<$>- x
 
 instance Bindable Identity where
 	Identity x >>= f = f x

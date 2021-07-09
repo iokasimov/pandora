@@ -55,8 +55,8 @@ instance (Extractable t (->), Extractable u (->)) => Extractable (t <:.> u) (->)
 instance (Traversable t, Traversable u) => Traversable (t <:.> u) where
 	x ->> f = TU <$> run x ->>> f
 
-instance (Bindable t, Distributive t, Bindable u) => Bindable (t <:.> u) where
-	TU x >>= f = TU $ x >>= \i -> join <$> i >>- run . f
+instance (Bindable t, Distributive t, Covariant_ u (->) (->), Bindable u) => Bindable (t <:.> u) where
+	TU x >>= f = TU $ x >>= \i -> join -<$>- i >>- run . f
 
 instance Pointable t (->) => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant_ u (->) (->) => u ~> t <:.> u
@@ -66,6 +66,6 @@ instance Extractable t (->) => Lowerable (TU Covariant Covariant t) where
 	lower :: t <:.> u ~> u
 	lower (TU x) = extract x
 
-instance Covariant t => Hoistable (TU Covariant Covariant t) where
+instance Covariant_ t (->) (->) => Hoistable (TU Covariant Covariant t) where
 	(/|\) :: u ~> v -> (t <:.> u ~> t <:.> v)
-	f /|\ TU x = TU $ f <$> x
+	f /|\ TU x = TU $ f -<$>- x
