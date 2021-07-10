@@ -40,3 +40,6 @@ class Covariant_ t (->) (->) => Traversable t where
 	(->>>>>) :: (Pointable u (->), Applicative u, Traversable v, Traversable w, Traversable j)
 		=> j :. w :. v :. t := a -> (a -> u b) -> u :. j :. w :. v :. t := b
 	x ->>>>> f = x ->> (->> (->> (->> f)))
+
+class Covariant_ t source target => Traversable_ t source target where
+	traverse_ :: (Pointable u (->), Applicative u) => source a (u b) -> target (t a) (u (t b))

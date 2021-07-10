@@ -1,7 +1,8 @@
 module Pandora.Pattern.Functor.Bindable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_)
+import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 
 infixl 1 >>=
 infixr 1 =<<, <=<, >=>
@@ -37,3 +38,6 @@ class Covariant t => Bindable t where
 
 class Covariant_ t source source => Bindable_ t source where
 	join_ :: source (t (t a)) (t a)
+
+	(-=<<-) :: source a (t b) -> source (t a) (t b)
+	(-=<<-) f = join_ . (-<$>-) f

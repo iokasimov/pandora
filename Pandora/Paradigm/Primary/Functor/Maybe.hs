@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ (multiply))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((->>)), Traversable_ (traverse_))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -65,6 +65,10 @@ instance Alternative Maybe where
 instance Traversable Maybe where
 	Nothing ->> _ = point Nothing
 	Just x ->> f = Just <$> f x
+
+instance Traversable_ Maybe (->) (->) where
+	traverse_ _ Nothing = point Nothing
+	traverse_ f (Just x) = Just -<$>- f x
 
 instance Bindable Maybe where
 	Just x >>= f = f x

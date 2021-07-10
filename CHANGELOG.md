@@ -491,3 +491,4 @@
 * Remove experimental `Pointable_` typeclass
 * Use experimental `Covariant_` as superclass of `Distributive`
 * Use experimental `Covariant_` as superclass of `Traversable`
+* Define experimental `Traversable_` typeclass
