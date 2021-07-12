@@ -492,3 +492,4 @@
 * Use experimental `Covariant_` as superclass of `Distributive`
 * Use experimental `Covariant_` as superclass of `Traversable`
 * Define experimental `Traversable_` typeclass
+* Define experimental `Distributibe_` typeclass

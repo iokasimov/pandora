@@ -35,3 +35,6 @@ class Covariant_ t (->) (->) => Distributive t where
 	(>>>>>-) :: (Covariant_ u (->) (->), Covariant_ v (->) (->), Covariant_ w (->) (->), Covariant_ j (->) (->))
 		=> u :. v :. w :. j := a -> (a -> t b) -> t :. u :. v :. w :. j := b
 	x >>>>>- f = x >>- (>>- (>>- (>>- f)))
+
+class Covariant_ t source target => Distributive_ t source target where
+	distribute_ :: Covariant_ u source target => source a (t b) -> target (u a) (t (u b))
