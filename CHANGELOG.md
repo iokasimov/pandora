@@ -493,3 +493,4 @@
 * Use experimental `Covariant_` as superclass of `Traversable`
 * Define experimental `Traversable_` typeclass
 * Define experimental `Distributibe_` typeclass
+* Define experimental `-<<-<<-` method of `Traversable_` typeclass

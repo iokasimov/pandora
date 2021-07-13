@@ -16,7 +16,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 > * Preserving apply: f (x <*> y) ≡ f x <*> f y
 -}
 
-infixl 5 ->>, ->>>, ->>>>, ->>>>>
+infixl 5 ->>, ->>>, ->>>>, ->>>>>, -<<--, -<<-<<-
 
 class Covariant_ t (->) (->) => Traversable t where
 	{-# MINIMAL (->>) #-}
@@ -43,3 +43,8 @@ class Covariant_ t (->) (->) => Traversable t where
 
 class Covariant_ t source target => Traversable_ t source target where
 	(-<<--) :: (Pointable u (->), Applicative u) => source a (u b) -> target (t a) (u (t b))
+
+(-<<-<<-) :: forall t u v category a b . 
+	(Pointable u (->), Applicative u, Traversable_ t category category, Traversable_ v category category)
+	=> category a (u b) -> category (v (t a)) (u (v (t b)))
+(-<<-<<-) f = ((-<<--) ((-<<--) @t @category @category f))
