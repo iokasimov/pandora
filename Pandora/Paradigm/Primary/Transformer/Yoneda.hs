@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint_ ((--|-), (-|--)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Functor.Function ((!.))
 
@@ -41,6 +41,6 @@ instance Extractable t (->) => Extractable (Yoneda t) (->) where
 instance Liftable Yoneda where
 	lift x = Yoneda (-<$>- x)
 
-instance (Extractable t (->), Pointable t (->), Extractable u (->) , Pointable u (->)) => Adjoint (Yoneda t) (Yoneda u) where
-	x -| f = point . f . point # x
-	x |- g = extract . extract # g <$> x
+instance (Extractable t (->), Pointable t (->), Extractable u (->) , Pointable u (->)) => Adjoint_ (Yoneda t) (Yoneda u) (->) (->) where
+	f --|- x = point . f . point # x
+	g -|-- x = extract . extract # g <$> x

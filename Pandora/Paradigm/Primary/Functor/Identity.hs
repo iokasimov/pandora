@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint_ ((--|-), (-|--)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -65,9 +65,9 @@ instance Representable Identity where
 	() <#> Identity x = x
 	tabulate f = Identity $ f ()
 
-instance Adjoint Identity Identity where
-	x -| f = Identity . f . Identity $ x
-	x |- g = extract . extract . comap g $ x
+instance Adjoint_ Identity Identity (->) (->) where
+	f --|- x = Identity . f . Identity $ x
+	g -|-- x = extract . extract . comap g $ x
 
 instance Setoid a => Setoid (Identity a) where
 	Identity x == Identity y = x == y
