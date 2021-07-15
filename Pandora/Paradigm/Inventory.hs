@@ -14,7 +14,7 @@ import Pandora.Paradigm.Inventory.Accumulator as Exports
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((.), ($), (#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
-import Pandora.Pattern.Functor.Adjoint (Adjoint_ ((--|-), (-|--)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((--|-), (-|--)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
@@ -24,17 +24,17 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
 import Pandora.Paradigm.Structure.Ability.Accessible (Accessible (access))
 
-instance Adjoint_ (Store s) (State s) (->) (->) where
+instance Adjoint (Store s) (State s) (->) (->) where
 	(--|-) :: (Store s a -> b) -> a -> State s b
 	f --|- x = State $ \s -> (:*:) s . f . Store $ s :*: (x !.)
 	(-|--) :: (a -> State s b) -> Store s a -> b
 	g -|-- Store (s :*: f) = extract . (run % s) . g $ f s
 
-instance Adjoint_ (Accumulator e) (Imprint e) (->) (->) where
+instance Adjoint (Accumulator e) (Imprint e) (->) (->) where
 	f --|- x = Imprint $ f . Accumulator --|- x
 	g -|-- x = run . g -|-- run x
 
-instance Adjoint_ (Equipment e) (Environment e) (->) (->) where
+instance Adjoint (Equipment e) (Environment e) (->) (->) where
 	f --|- x = Environment $ f . Equipment --|- x
 	g -|-- x = run . g -|-- run x
 

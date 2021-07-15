@@ -11,7 +11,7 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
-import Pandora.Pattern.Functor.Adjoint (Adjoint_ ((-|--), (--|-)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|--), (--|-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -35,7 +35,7 @@ instance Covariant (Flip (:*:) a) where
 instance Extractable (Flip (:*:) a) (->) where
 	extract (Flip (x :*: _)) = x
 
-instance Adjoint_ (Flip Product s) ((->) s) (->) (->) where
+instance Adjoint (Flip Product s) ((->) s) (->) (->) where
 	f --|- x = \s -> f $ Flip $ x :*: s
 	f -|-- Flip (x :*: s) = f x s
 

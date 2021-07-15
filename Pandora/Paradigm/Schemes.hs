@@ -16,31 +16,31 @@ import Pandora.Paradigm.Schemes.TU as Exports
 
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant)
-import Pandora.Pattern.Functor.Adjoint (Adjoint_ ((--|-), (-|--)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((--|-), (-|--)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
-instance (Covariant (v <:.> t), Covariant (u <:.> w), Adjoint_ t u (->) (->), Adjoint_ v w (->) (->))
-	=> Adjoint_ (v <:.> t) (u <:.> w) (->) (->) where
+instance (Covariant (v <:.> t), Covariant (u <:.> w), Adjoint t u (->) (->), Adjoint v w (->) (->))
+	=> Adjoint (v <:.> t) (u <:.> w) (->) (->) where
 		g -|-- TU y = (run . g -|--) -|-- y
 		f --|- x = TU $ (f . TU --|-) --|- x
 
-instance (Covariant (v <:.> t), Covariant (w <.:> u), Adjoint_ t u (->) (->), Adjoint_ v w (->) (->))
-	=> Adjoint_ (v <:.> t) (w <.:> u) (->) (->) where
+instance (Covariant (v <:.> t), Covariant (w <.:> u), Adjoint t u (->) (->), Adjoint v w (->) (->))
+	=> Adjoint (v <:.> t) (w <.:> u) (->) (->) where
 		g -|-- TU t = (run . g -|--) -|-- t
 		f --|- x = UT $ (f . TU --|-) --|- x
 
-instance (Covariant (t <.:> v), Covariant (w <.:> u), Adjoint_ t u (->) (->), Adjoint_ v w (->) (->))
-	=> Adjoint_ (t <.:> v) (w <.:> u) (->) (->) where
+instance (Covariant (t <.:> v), Covariant (w <.:> u), Adjoint t u (->) (->), Adjoint v w (->) (->))
+	=> Adjoint (t <.:> v) (w <.:> u) (->) (->) where
 		g -|-- UT t =  (run . g -|--) -|-- t
 		f --|- x = UT $ (f . UT --|-) --|- x
 
-instance (Covariant (t <.:> v), Covariant (w <:.> u) , Adjoint_ v u (->) (->), Adjoint_ t w (->) (->))
-	=> Adjoint_ (t <.:> v) (w <:.> u) (->) (->) where
+instance (Covariant (t <.:> v), Covariant (w <:.> u) , Adjoint v u (->) (->), Adjoint t w (->) (->))
+	=> Adjoint (t <.:> v) (w <:.> u) (->) (->) where
 		g -|-- UT x = (run . g -|--) -|-- x
 		f --|- x = TU $ (f . UT --|-) --|- x
 
 instance (Covariant ((t <:<.>:> u) t'), Covariant ((v <:<.>:> w) v')
-	, Adjoint_ t w (->) (->), Adjoint_ t' v' (->) (->), Adjoint_ t v (->) (->), Adjoint_ u v (->) (->), Adjoint_ v' t' (->) (->))
-	=> Adjoint_ ((t <:<.>:> u) t') ((v <:<.>:> w) v') (->) (->) where
+	, Adjoint t w (->) (->), Adjoint t' v' (->) (->), Adjoint t v (->) (->), Adjoint u v (->) (->), Adjoint v' t' (->) (->))
+	=> Adjoint ((t <:<.>:> u) t') ((v <:<.>:> w) v') (->) (->) where
 		g -|-- TUT x = ((run . g -|--) -|--) -|-- x
 		f --|- x = TUT $  ((f . TUT --|-) --|-) --|- x
