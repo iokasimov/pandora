@@ -496,3 +496,4 @@
 * Define experimental `-<<-<<-` method of `Traversable_` typeclass
 * Remove `Adjoint` typeclass
 * Rename experimental `Adjoint_` to `Adjoint`
+* Remove `Bivariant` typeclass

@@ -16,7 +16,7 @@ import Pandora.Pattern.Category ((.), ($), (#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Bivariant ((<->))
+import Pandora.Pattern.Functor.Bivariant ((-<->-))
 import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
@@ -39,7 +39,7 @@ instance Adjoint (Equipment e) (Environment e) (->) (->) where
 	g |- x = run . g |- run x
 
 zoom :: Stateful bg t => Lens Identity bg ls -> State ls ~> t
-zoom lens less = let restruct to = (to . Identity <-> identity) . run less . extract @Identity
+zoom lens less = let restruct to = (to . Identity -<->- identity @(->)) . run less . extract @Identity
 	in adapt . State $ (restruct |-) . run . run lens
 
 (=<>) :: Stateful src t => Lens mode src tgt -> mode tgt -> t src

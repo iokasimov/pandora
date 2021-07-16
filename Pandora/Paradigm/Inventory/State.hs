@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
-import Pandora.Pattern.Functor.Bivariant ((<->))
+import Pandora.Pattern.Functor.Bivariant ((-<->-))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Paradigm.Primary.Transformer (Flip)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -31,7 +31,7 @@ instance Covariant_ (State s) (->) (->) where
 	f -<$>- x = State $ (-<$>-) f . run x
 
 instance Applicative (State s) where
-	f <*> x = State $ ((<$>) |-) . (run x <-> identity) . run f
+	f <*> x = State $ ((<$>) |-) . (run x -<->- identity @(->)) . run f
 
 instance Pointable (State s) (->) where
 	point = State . (identity @(->) -|)
@@ -42,7 +42,7 @@ instance Bindable (State s) where
 instance Monad (State s) where
 
 instance Invariant (Flip State r) where
-	f <$< g = ((g >-> (f <-> identity) ||=) ||=)
+	f <$< g = ((g >-> (f -<->- identity @(->)) ||=) ||=)
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a

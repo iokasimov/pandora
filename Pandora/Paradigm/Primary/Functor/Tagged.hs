@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
+import Pandora.Pattern.Functor.Bivariant (Bivariant_ ((-<->-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -23,6 +23,7 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Functor.Function ()
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Tagged tag a = Tag a
 
@@ -34,6 +35,9 @@ instance Covariant (Tagged tag) where
 
 instance Covariant_ (Tagged tag) (->) (->) where
 	f -<$>- Tag x = Tag $ f x
+
+instance Covariant_ (Flip Tagged a) (->) (->) where
+	_ -<$>- Flip (Tag x) = Flip $ Tag x
 
 instance Pointable (Tagged tag) (->) where
 	point = Tag
@@ -60,8 +64,8 @@ instance Extendable (Tagged tag) where
 
 instance Comonad (Tagged tag) (->)
 
-instance Bivariant Tagged where
-	_ <-> g = \(Tag x) -> Tag $ g x
+instance Bivariant_ Tagged (->) (->) (->)where
+	_ -<->- g = \(Tag x) -> Tag $ g x
 
 instance Setoid a => Setoid (Tagged tag a) where
 	Tag x == Tag y = x == y
