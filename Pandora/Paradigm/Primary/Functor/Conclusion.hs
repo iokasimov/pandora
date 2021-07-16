@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ (m
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)), Traversable_ ((-<<--)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Bivariant (Bivariant_ ((-<->-)))
+import Pandora.Pattern.Functor.Bivariant (Bivariant ((-<->-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -77,7 +77,7 @@ instance Bindable_ (Conclusion e) (->) where
 
 instance Monad (Conclusion e) where
 
-instance Bivariant_ Conclusion (->) (->) (->) where
+instance Bivariant Conclusion (->) (->) (->) where
 	f -<->- g = conclusion # Failure . f # Success . g
 
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where

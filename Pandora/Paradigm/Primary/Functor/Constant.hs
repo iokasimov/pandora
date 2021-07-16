@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Bivariant (Bivariant_ ((-<->-)))
+import Pandora.Pattern.Functor.Bivariant (Bivariant ((-<->-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -39,7 +39,7 @@ instance Invariant (Constant a) where
 instance Traversable (Constant a) where
 	Constant x ->> _ = point $ Constant x
 
-instance Bivariant_ Constant (->) (->) (->)where
+instance Bivariant Constant (->) (->) (->)where
 	f -<->- _ = \(Constant x) -> Constant $ f x
 
 instance Setoid a => Setoid (Constant a b) where
