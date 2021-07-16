@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), ($>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), ($=>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((--|-), (-|--)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
@@ -43,7 +43,7 @@ instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->
 	f -<$>- TUT x = TUT $ f -<$$$>- x
 
 instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u) => Applicative (t <:<.>:> t' := u) where
-	f <*> x = TUT $ (>>= ((<$$$> run x) -|--)) <$> run f
+	f <*> x = TUT $ (>>= ((<$$$> run x) |-)) <$> run f
 
 instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
 	x <+> y = TUT $ run x <*+> run y
@@ -52,21 +52,21 @@ instance (Pointable t (->), Applicative t, Covariant t', Avoidable u) => Avoidab
 	empty = TUT $ point empty
 
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Pointable u (->), Adjoint t' t (->) (->)) => Pointable (t <:<.>:> t' := u) (->) where
-	point = unite . (point @_ @(->) --|-)
+	point = unite . (point @_ @(->) -|)
 
 instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u) => Bindable (t <:<.>:> t' := u) where
-	x >>= f = TUT $ run x $>>= (run . f -|--)
+	x >>= f = TUT $ run x $>>= (run . f |-)
 
 instance (Covariant t', Covariant t, Adjoint t' t (->) (->), Extendable u) => Extendable (t' <:<.>:> t := u) where
-	x =>> f = TUT $ run x $=>> (f . unite --|-)
+	x =>> f = TUT $ run x $=>> (f . unite -|)
 
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Adjoint t t' (->) (->), Extractable u (->)) => Extractable (t <:<.>:> t' := u) (->) where
-	extract = (extract @_ @(->) -|--) . run
+	extract = (extract @_ @(->) |-) . run
 
 instance (forall u . Covariant u, Adjoint t' t (->) (->), Distributive t) => Liftable (t <:<.>:> t') where
 	lift :: Covariant_ u (->) (->) => u ~> t <:<.>:> t' := u
-	lift x = TUT $ x >>- (identity @(->) --|-)
+	lift x = TUT $ x >>- (identity @(->) -|)
 
 instance (forall u . Covariant u, Adjoint t t' (->) (->), Distributive t') => Lowerable (t <:<.>:> t') where
 	lower :: Covariant_ u (->) (->) => (t <:<.>:> t' := u) ~> u
-	lower (TUT x) = (>>- identity) -|-- x
+	lower (TUT x) = (>>- identity) |- x

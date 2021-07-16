@@ -4,7 +4,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant_)
 
 type (-|) = Adjoint
 
-infixl 3 --|-, -|--
+infixl 3 -|, |-
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -14,8 +14,6 @@ infixl 3 --|-, -|--
 > * Right adjunction interchange: psi f ≡ epsilon . comap f
 -}
 
--- TODO: Rename Adjoint to Adjoint
-
 class (Covariant_ t target source, Covariant_ u source target) => Adjoint t u source target where
-	(--|-) :: source (t a) b -> target a (u b)
-	(-|--) :: target a (u b) -> source (t a) b
+	(-|) :: source (t a) b -> target a (u b)
+	(|-) :: target a (u b) -> source (t a) b

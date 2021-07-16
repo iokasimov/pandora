@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Adjoint ((--|-), (-|--))
+import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Paradigm.Primary.Transformer (Flip)
@@ -31,13 +31,13 @@ instance Covariant_ (State s) (->) (->) where
 	f -<$>- x = State $ (-<$>-) f . run x
 
 instance Applicative (State s) where
-	f <*> x = State $ ((<$>) -|--) . (run x <-> identity) . run f
+	f <*> x = State $ ((<$>) |-) . (run x <-> identity) . run f
 
 instance Pointable (State s) (->) where
-	point = State . (identity @(->) --|-)
+	point = State . (identity @(->) -|)
 
 instance Bindable (State s) where
-	x >>= f = State $ (run . f -|--) <$> run x
+	x >>= f = State $ (run . f |-) <$> run x
 
 instance Monad (State s) where
 

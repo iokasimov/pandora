@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Functor.Function as Exports
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((--|-), (-|--)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
 
@@ -31,10 +31,10 @@ type Equivalence = Convergence Boolean
 type Comparison = Convergence Ordering
 
 instance Adjoint (Product s) ((->) s) (->) (->) where
-	(--|-) :: ((s :*: a) -> b) -> a -> (s -> b)
-	f --|- x = \s -> f $ s :*: x
-	(-|--) :: (a -> s -> b) -> (s :*: a) -> b
-	f -|-- ~(s :*: x) = f x s
+	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)
+	f -| x = \s -> f $ s :*: x
+	(|-) :: (a -> s -> b) -> (s :*: a) -> b
+	f |- ~(s :*: x) = f x s
 
 instance Applicative_ ((->) e) (:*:) (->) (->) where
 	multiply f (g :*: h) = \x -> f $ g x :*: h x
@@ -43,4 +43,4 @@ match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
 match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
 
 (-<*>-) :: forall a b t v . (Applicative_ t v (->) (->), Adjoint (v (a -> b)) ((->) (a -> b)) (->) (->), Adjoint (v (t (a -> b))) ((->) (t (a -> b))) (->) (->)) => t (a -> b) -> t a -> t b
-(-<*>-) = (%) ((--|-) @(v (t (a -> b))) (multiply @t @v @(->) @(->) ((&) -|--)))
+(-<*>-) = (%) ((-|) @(v (t (a -> b))) (multiply @t @v @(->) @(->) ((&) |-)))

@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
-import Pandora.Pattern.Functor.Adjoint ((--|-), (-|--))
+import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
 import Pandora.Paradigm.Primary.Functor ()
@@ -31,10 +31,10 @@ instance Covariant_ (Store s) (->) (->) where
 	f -<$>- Store x = Store $ f -<$$>- x
 
 instance Extractable (Store s) (->) where
-	extract = (($) -|--) . run
+	extract = (($) |-) . run
 
 instance Extendable (Store s) where
-	Store x =>> f = Store $ f <$$> Store .#.. (identity @(->) --|-) <$> x
+	Store x =>> f = Store $ f <$$> Store .#.. (identity @(->) -|) <$> x
 
 instance Comonad (Store s) (->) where
 
