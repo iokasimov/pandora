@@ -3,7 +3,7 @@ module Pandora.Paradigm.Schemes.T_U where
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
-import Pandora.Pattern.Functor.Bivariant (Bivariant ((-<->-)))
+import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->))) 
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 
@@ -22,13 +22,13 @@ instance Interpreted (T_U ct cu p t u) where
 	unite = T_U
 
 instance (forall i . Covariant (p i), Bivariant p (->) (->) (->), Covariant t, Covariant u) => Covariant (t <:.:> u := p) where
-	f <$> x = (f <$>) -<->- (f <$>) ||= x
+	f <$> x = (f <$>) <-> (f <$>) ||= x
 
 instance (forall i . Covariant_ (p i) (->) (->), Bivariant p (->) (->) (->), Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:.:> u := p) (->) (->) where
-	f -<$>- x = (f -<$>-) -<->- (f -<$>-) ||= x
+	f -<$>- x = (f -<$>-) <-> (f -<$>-) ||= x
 
 instance (Divariant p, Contravariant t, Covariant u) => Covariant (t >:.:> u := p) where
 	f <$> x = (f >$<) >-> (f <$>) ||= x
 
 instance (forall i . Covariant (p i), Bivariant p (->) (->) (->), Contravariant t, Contravariant u) => Contravariant (t >:.:< u := p) where
-	f >$< x = (f >$<) -<->- (f >$<) ||= x
+	f >$< x = (f >$<) <-> (f >$<) ||= x

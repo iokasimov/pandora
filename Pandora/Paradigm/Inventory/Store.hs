@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Bivariant ((-<->-))
+import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Primary.Functor.Function ((%))
@@ -39,7 +39,7 @@ instance Extendable (Store s) where
 instance Comonad (Store s) (->) where
 
 instance Invariant (Flip Store r) where
-	f <$< g = \(Flip x) -> Flip $ f -<->- (g >-> identity) ||= x
+	f <$< g = \(Flip x) -> Flip $ f <-> (g >-> identity) ||= x
 
 instance Interpreted (Store s) where
 	type Primary (Store s) a = (:*:) s :. (->) s := a
