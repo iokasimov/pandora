@@ -5,7 +5,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Distributive (Distributive_ ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((--<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -31,7 +31,7 @@ instance Applicative Proxy where
 instance Alternative Proxy where
 	_ <+> _ = Proxy
 
-instance Distributive_ Proxy (->) (->) where
+instance Distributive Proxy (->) (->) where
 	_ --<<- _ = Proxy
 
 instance Bindable Proxy where

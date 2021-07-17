@@ -499,3 +499,4 @@
 * Remove `Bivariant` typeclass
 * Rename experimental `Bivariant_` to `Bivariant`
 * Remove `Distributive` typeclass
+* Rename experimental `Distributive_` to `Distributive`

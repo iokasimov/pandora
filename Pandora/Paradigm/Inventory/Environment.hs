@@ -6,7 +6,7 @@ import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Distributive (Distributive_ ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((--<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
@@ -30,7 +30,7 @@ instance Pointable (Environment e) (->) where
 instance Applicative (Environment e) where
 	f <*> x = Environment $ run f <*> run x
 
-instance Distributive_ (Environment e) (->) (->) where
+instance Distributive (Environment e) (->) (->) where
 	f --<<- g = Environment $ (run -<$>- f) --<<- g
 
 instance Bindable (Environment e) where
