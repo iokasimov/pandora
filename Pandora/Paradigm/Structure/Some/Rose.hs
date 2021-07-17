@@ -17,7 +17,7 @@ import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
@@ -77,7 +77,7 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where
-	type Morphing (Vary Element) (Prefixed Rose k) = (Product (Nonempty List k) <:.> Identity) <:.:> Prefixed Rose k := (->)
+	type Morphing (Vary Element) (Prefixed Rose k) = ((:*:) (Nonempty List k) <:.> Identity) <:.:> Prefixed Rose k := (->)
 	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (Construct key _ :*: Identity value)) -> Prefixed . lift $ Construct (key :*: value) empty
 	morphing (run . run . premorph -> Just (Construct focused subtree)) = T_U $ \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
 		Construct key Nothing -> Prefixed . lift $ attached focused == key ? Construct (key :*: value) subtree $ Construct focused subtree
@@ -89,7 +89,7 @@ instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) where
 	type Morphing (Vary Element) (Prefixed (Construction List) k) =
-		(Product (Nonempty List k) <:.> Identity) <:.:> Prefixed (Construction List) k := (->)
+		((:*:) (Nonempty List k) <:.> Identity) <:.:> Prefixed (Construction List) k := (->)
 	morphing (run . premorph -> Construct x (TU Nothing)) = T_U $ \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
 		Construct key Nothing -> Prefixed $ attached x == key ? Construct (key :*: value) empty $ Construct x empty
 		Construct _ (Just _) -> Prefixed $ Construct x (TU Nothing)

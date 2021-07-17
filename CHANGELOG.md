@@ -502,3 +502,4 @@
 * Rename experimental `Distributive_` to `Distributive`
 * Remove `Divariant` typeclass
 * Rename experimental `Divariant_` to `Divariant`
+* Rename `Product` type to `:*:`

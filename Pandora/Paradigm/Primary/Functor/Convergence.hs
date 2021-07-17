@@ -4,7 +4,7 @@ import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)), Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Divisible (Divisible ((>*<)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)))
 
 data Convergence r a = Convergence (a -> a -> r)
 

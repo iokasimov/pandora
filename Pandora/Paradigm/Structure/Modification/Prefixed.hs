@@ -12,15 +12,15 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)))
+import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 
-newtype Prefixed t k a = Prefixed (t :. Product k := a)
+newtype Prefixed t k a = Prefixed (t :. (:*:) k := a)
 
 instance Interpreted (Prefixed t k) where
-	type Primary (Prefixed t k) a = t :. Product k := a
+	type Primary (Prefixed t k) a = t :. (:*:) k := a
 	run ~(Prefixed x) = x
 	unite = Prefixed
 

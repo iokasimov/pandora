@@ -32,7 +32,7 @@ infixl 4 -<*>-
 type Equivalence = Convergence Boolean
 type Comparison = Convergence Ordering
 
-instance Adjoint (Product s) ((->) s) (->) (->) where
+instance Adjoint ((:*:) s) ((->) s) (->) (->) where
 	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)
 	f -| x = \s -> f $ s :*: x
 	(|-) :: (a -> s -> b) -> (s :*: a) -> b

@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Functor.Function ((%), (&))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
+import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
@@ -142,7 +142,7 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 			(view # sub @Right # tree >>= lookup @Key key . Prefixed)
 
 instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
-	type Morphing (Vary Element) (Prefixed Binary k) = (Product k <:.> Identity) <:.:> Prefixed Binary k := (->)
+	type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <:.> Identity) <:.:> Prefixed Binary k := (->)
 	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
 	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
 		let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)

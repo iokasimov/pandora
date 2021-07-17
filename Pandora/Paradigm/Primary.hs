@@ -35,7 +35,7 @@ instance Covariant (Flip (:*:) a) where
 instance Extractable (Flip (:*:) a) (->) where
 	extract (Flip (x :*: _)) = x
 
-instance Adjoint (Flip Product s) ((->) s) (->) (->) where
+instance Adjoint (Flip (:*:) s) ((->) s) (->) (->) where
 	f -| x = \s -> f $ Flip $ x :*: s
 	f |- Flip (x :*: s) = f x s
 

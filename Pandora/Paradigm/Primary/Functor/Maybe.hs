@@ -25,7 +25,7 @@ import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (Failure, Success))
 import Pandora.Paradigm.Primary.Functor.Function ()
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
+import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)))
 
 data Maybe a = Nothing | Just a
 

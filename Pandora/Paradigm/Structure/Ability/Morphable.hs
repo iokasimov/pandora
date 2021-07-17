@@ -12,7 +12,7 @@ import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, equate)
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
+import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
@@ -65,5 +65,5 @@ find p xs = run # morph @(Find mod) xs # p
 lookup :: forall mod key struct a . (Morphed (Lookup mod) struct ((->) key <:.> Maybe)) => key -> struct a -> Maybe a
 lookup key struct = run # morph @(Lookup mod) struct # key
 
-vary :: forall mod key value struct . (Morphed (Vary mod) struct ((Product key <:.> Identity) <:.:> struct := (->))) => key -> value -> struct value -> struct value
+vary :: forall mod key value struct . (Morphed (Vary mod) struct (((:*:) key <:.> Identity) <:.:> struct := (->))) => key -> value -> struct value -> struct value
 vary key value xs = run # morph @(Vary mod) @struct xs # TU (key :*: Identity value)

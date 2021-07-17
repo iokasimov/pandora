@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Functor.Function ((%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
+import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
@@ -69,15 +69,15 @@ instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) B
 	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
 	morphing (premorph -> xs) = comap (into @(o ds)) ||= xs
 
-instance Substructure Left (Flip Product a) where
-	type Available Left (Flip Product a) = Identity
-	type Substance Left (Flip Product a) = Identity
+instance Substructure Left (Flip (:*:) a) where
+	type Available Left (Flip (:*:) a) = Identity
+	type Substance Left (Flip (:*:) a) = Identity
 	substructure = P_Q_T $ \product -> case run # lower product of
 		s :*: x -> Store $ Identity (Identity s) :*: lift . Flip . (:*: x) . extract . extract
 
-instance Substructure Right (Product s) where
-	type Available Right (Product s) = Identity
-	type Substance Right (Product s) = Identity
+instance Substructure Right ((:*:) s) where
+	type Available Right ((:*:) s) = Identity
+	type Substance Right ((:*:) s) = Identity
 	substructure = P_Q_T $ \product -> case lower product of
 		s :*: x -> Store $ Identity (Identity x) :*: lift . (s :*:) . extract . extract
 

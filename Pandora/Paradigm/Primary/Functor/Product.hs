@@ -22,34 +22,32 @@ import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
 infixr 0 :*:
 
-data Product s a = s :*: a
+data (:*:) s a = s :*: a
 
-type (:*:) = Product
-
-instance Covariant (Product s) where
+instance Covariant ((:*:) s) where
 	f <$> x = attached x :*: f # extract x
 
-instance Covariant_ (Product s) (->) (->) where
+instance Covariant_ ((:*:) s) (->) (->) where
 	f -<$>- x = attached x :*: f # extract x
 
 instance Covariant_ (Flip (:*:) a) (->) (->) where
 	f -<$>- (Flip (x :*: y)) = Flip $ f x :*: y
 
-instance Extractable (Product a) (->) where
+instance Extractable ((:*:) a) (->) where
 	extract ~(_ :*: y) = y
 
-instance Traversable (Product s) where
+instance Traversable ((:*:) s) where
 	x ->> f = (attached x :*:) <$> f (extract x)
 
-instance Extendable (Product s) where
+instance Extendable ((:*:) s) where
 	x =>> f = attached x :*: f (attached x :*: extract x)
 
-instance Extendable_ (Product s) (->) where
+instance Extendable_ ((:*:) s) (->) where
 	duplicate_ (s :*: x) = s :*: (s :*: x) 
 
-instance Comonad (Product s) (->) where
+instance Comonad ((:*:) s) (->) where
 
-instance Bivariant Product (->) (->) (->) where
+instance Bivariant (:*:) (->) (->) (->) where
 	f <-> g = \ ~(s :*: x) -> f s :*: g x
 
 instance (Setoid s, Setoid a) => Setoid (s :*: a) where

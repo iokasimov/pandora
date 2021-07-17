@@ -11,7 +11,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool, (?))
 import Pandora.Paradigm.Primary.Functor.Function ((!.))
-import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:))
+import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Predicate a = Predicate (a -> Boolean)
