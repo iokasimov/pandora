@@ -4,14 +4,16 @@ module Pandora.Paradigm.Inventory.Imprint (Imprint (..), Traceable) where
 
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
+import Pandora.Pattern.Functor.Divariant (Divariant_ ((->->-)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Functor.Function ()
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (||=)))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable)
@@ -23,7 +25,10 @@ instance Covariant (Imprint e) where
 	f <$> Imprint x = Imprint $ f . x
 
 instance Covariant_ (Imprint e) (->) (->) where
-	f -<$>- Imprint x = Imprint $ f . x
+	f -<$>- Imprint g = Imprint $ f . g
+
+instance Contravariant_ (Flip Imprint a) (->) (->) where
+	f ->$<- Flip (Imprint g) = Flip . Imprint $ g . f
 
 instance Distributive (Imprint e) (->) (->) where
 	f -<< g = Imprint $ (run -<$>- f) -<< g
@@ -31,8 +36,8 @@ instance Distributive (Imprint e) (->) (->) where
 instance Monoid e => Extractable (Imprint e) (->) where
 	extract (Imprint x) = x zero
 
-instance Divariant Imprint where
-	(>->) ab cd bc = ab >-> cd ||= bc
+instance Divariant_ Imprint (->) (->) (->) where
+	(->->-) ab cd bc = ab ->->- cd ||= bc
 
 instance Semigroup e => Extendable (Imprint e) where
 	Imprint x =>> f = Imprint $ \e -> f $ Imprint $ x . (e +)

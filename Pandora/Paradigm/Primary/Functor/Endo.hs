@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Endo where
 
 import Pandora.Pattern.Category (identity, (.), (#))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
-import Pandora.Pattern.Functor.Divariant ((>->))
+import Pandora.Pattern.Functor.Divariant ((->->-))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
@@ -16,7 +16,7 @@ instance Interpreted Endo where
 	unite = Endo
 
 instance Invariant Endo where
-	f <$< g = (g >-> f ||=)
+	f <$< g = (g ->->- f ||=)
 
 instance Semigroup (Endo a) where
 	Endo f + Endo g = Endo # g . f

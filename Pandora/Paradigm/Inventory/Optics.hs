@@ -7,7 +7,7 @@ import Pandora.Pattern.Category (Category (identity, (.), ($), (#)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
-import Pandora.Pattern.Functor.Divariant ((>->))
+import Pandora.Pattern.Functor.Divariant ((->->-))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
@@ -26,7 +26,7 @@ infixl 2 #=@
 type Lens = P_Q_T (->) Store
 
 instance Invariant (Flip (Lens available) tgt) where
-	f <$< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T $ g >-> (f <$>) $ lens
+	f <$< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T $ g ->->- (f <$>) $ lens
 
 type family Convex lens where
 	Convex Lens = Lens Identity

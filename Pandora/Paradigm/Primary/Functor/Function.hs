@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
-import Pandora.Pattern.Functor.Divariant (Divariant ((>->)), Divariant_ ((->->-)))
+import Pandora.Pattern.Functor.Divariant (Divariant_ ((->->-)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
@@ -51,9 +51,6 @@ instance Representable ((->) e) where
 	type Representation ((->) e) = e
 	(<#>) = (identity %)
 	tabulate = identity
-
-instance Divariant ((->)) where
-	(>->) ab cd bc = cd . bc . ab
 
 instance Divariant_ ((->)) (->) (->) (->) where
 	(->->-) ab cd bc = cd . bc . ab
