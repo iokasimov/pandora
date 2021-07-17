@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Divariant (Divariant_ ((>->)))
+import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Paradigm.Primary.Functor.Function ((!.), (%))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
@@ -43,7 +43,7 @@ instance Bindable (Environment e) where
 
 instance Monad (Environment e) where
 
-instance Divariant_ Environment (->) (->) (->) where
+instance Divariant Environment (->) (->) (->) where
 	(>->) ab cd bc = Environment $ ab >-> cd $ run bc
 
 instance Interpreted (Environment e) where

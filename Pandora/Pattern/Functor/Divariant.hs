@@ -20,5 +20,5 @@ infixl 4 >->
 --	dimap f g x = (f >-> g) x
 
 class (forall i . Contravariant_ (Flip v i) left target, forall i . Covariant_ (v i) right target) 
-	=> Divariant_ v left right target where
+	=> Divariant v left right target where
 	(>->) :: left a b -> right c d -> target (v b c) (v a d)
