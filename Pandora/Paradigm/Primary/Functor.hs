@@ -27,6 +27,8 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
 
+infixl 4 -<*>-
+
 type Equivalence = Convergence Boolean
 type Comparison = Convergence Ordering
 
@@ -42,5 +44,5 @@ instance Applicative_ ((->) e) (:*:) (->) (->) where
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
 match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
 
-(-<*>-) :: forall a b t v . (Applicative_ t v (->) (->), Adjoint (v (a -> b)) ((->) (a -> b)) (->) (->), Adjoint (v (t (a -> b))) ((->) (t (a -> b))) (->) (->)) => t (a -> b) -> t a -> t b
-(-<*>-) = (%) ((-|) @(v (t (a -> b))) (multiply @t @v @(->) @(->) ((&) |-)))
+(-<*>-) :: forall a b t . (Applicative_ t (:*:) (->) (->)) => t (a -> b) -> t a -> t b
+(-<*>-) = (%) ((-|) @((:*:) (t (a -> b))) (multiply @t @(:*:) @(->) @(->) ((&) |-)))
