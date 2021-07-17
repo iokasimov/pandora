@@ -6,7 +6,7 @@ import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)), Distributive_ ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive_ ((--<<-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
@@ -34,9 +34,6 @@ instance Contravariant_ (Flip (->) a) (->) (->) where
 
 instance Applicative ((->) e) where
 	(<*>) f g x = f x $ g x
-
-instance Distributive ((->) e) where
-	g >>- f = \e -> (f % e) -<$>- g
 
 instance Distributive_ ((->) e) (->) (->) where
 	f --<<- g = \e -> (f % e) -<$>- g

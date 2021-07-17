@@ -10,7 +10,6 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Distributive (Distributive ((>>-), distribute))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -55,9 +54,6 @@ instance Applicative t => Applicative (Jack t) where
 instance Traversable t => Traversable (Jack t) where
 	It x ->> f = It <$> f x
 	Other y ->> f = Other <$> y ->> f
-
-instance Distributive t => Distributive (Jack t) where
-	x >>- f = distribute $ f -<$>- x
 
 instance (Pointable t (->), Bindable t) => Bindable (Jack t) where
 	It x >>= f = f x

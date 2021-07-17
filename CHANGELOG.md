@@ -498,3 +498,4 @@
 * Rename experimental `Adjoint_` to `Adjoint`
 * Remove `Bivariant` typeclass
 * Rename experimental `Bivariant_` to `Bivariant`
+* Remove `Distributive` typeclass

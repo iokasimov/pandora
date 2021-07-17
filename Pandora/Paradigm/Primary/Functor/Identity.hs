@@ -6,7 +6,6 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -43,9 +42,6 @@ instance Applicative Identity where
 
 instance Traversable Identity where
 	Identity x ->> f = Identity <$> f x
-
-instance Distributive Identity where
-	x >>- f = Identity $ extract . f -<$>- x
 
 instance Bindable Identity where
 	Identity x >>= f = f x

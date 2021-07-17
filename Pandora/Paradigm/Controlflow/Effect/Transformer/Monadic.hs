@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Functor.Distributive (Distributive ((>>-)))
+import Pandora.Pattern.Functor.Distributive (Distributive_ ((--<<-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
@@ -50,8 +50,8 @@ instance Avoidable (Schematic Monad t u) => Avoidable (t :> u) where
 instance Traversable (Schematic Monad t u) => Traversable (t :> u) where
 	TM x ->> f = TM <$> x ->> f
 
-instance Distributive (Schematic Monad t u) => Distributive (t :> u) where
-	x >>- f = TM $ x >>- tm . f
+instance Distributive_ (Schematic Monad t u) (->) (->) => Distributive_ (t :> u) (->) (->) where
+	f --<<- x = TM $ tm . f --<<- x
 
 instance Bindable (Schematic Monad t u) => Bindable (t :> u) where
 	TM x >>= f = TM $ x >>= tm . f
