@@ -58,10 +58,6 @@ instance Alternative (Conclusion e) where
 	Failure _ <+> x = x
 	Success x <+> _ = Success x
 
-instance Traversable (Conclusion e) where
-	Failure y ->> _ = point $ Failure y
-	Success x ->> f = Success <$> f x
-
 instance Traversable_ (Conclusion e) (->) (->) where
 	_ -<<-- Failure y = point $ Failure y
 	f -<<-- Success x = Success -<$>- f x

@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Imprint (Imprint (..), Traceable) where
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Distributive (Distributive ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
@@ -26,7 +26,7 @@ instance Covariant_ (Imprint e) (->) (->) where
 	f -<$>- Imprint x = Imprint $ f . x
 
 instance Distributive (Imprint e) (->) (->) where
-	f --<<- g = Imprint $ (run -<$>- f) --<<- g
+	f -<< g = Imprint $ (run -<$>- f) -<< g
 
 instance Monoid e => Extractable (Imprint e) (->) where
 	extract (Imprint x) = x zero

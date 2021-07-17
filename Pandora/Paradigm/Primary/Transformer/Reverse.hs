@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Distributive (Distributive ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -37,7 +37,7 @@ instance Traversable t => Traversable (Reverse t) where
 	Reverse x ->> f = Reverse <$> run (x ->> Backwards . f)
 
 instance Distributive t (->) (->) => Distributive (Reverse t) (->) (->) where
-	f --<<- x = Reverse $ run . f --<<- x
+	f -<< x = Reverse $ run . f -<< x
 
 instance Contravariant t => Contravariant (Reverse t) where
 	f >$< Reverse x = Reverse # f >$< x

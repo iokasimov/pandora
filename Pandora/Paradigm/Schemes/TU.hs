@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)), Traversable_ ((-<<--)), (-<<-<<-))
-import Pandora.Pattern.Functor.Distributive (Distributive ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), join))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -59,7 +59,7 @@ instance (Traversable_ t (->) (->), Traversable_ u (->) (->)) => Traversable_ (t
 	f -<<-- x = TU -<$>- f -<<-<<- run x
 
 instance (Bindable t, Distributive t (->) (->), Covariant_ u (->) (->), Bindable u) => Bindable (t <:.> u) where
-	TU x >>= f = TU $ x >>= \i -> join -<$>- run . f --<<- i
+	TU x >>= f = TU $ x >>= \i -> join -<$>- run . f -<< i
 
 instance Pointable t (->) => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant_ u (->) (->) => u ~> t <:.> u

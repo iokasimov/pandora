@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Distributive (Distributive ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
@@ -47,7 +47,7 @@ instance Traversable (Schematic Comonad t u) => Traversable (t :< u) where
 	TC x ->> f = TC <$> x ->> f
 
 instance Distributive (Schematic Comonad t u) (->) (->) => Distributive (t :< u) (->) (->) where
-	f --<<- x = TC $ tc . f --<<- x
+	f -<< x = TC $ tc . f -<< x
 
 instance Bindable (Schematic Comonad t u) => Bindable (t :< u) where
 	TC x >>= f = TC $ x >>= tc . f

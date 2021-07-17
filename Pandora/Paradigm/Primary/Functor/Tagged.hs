@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
-import Pandora.Pattern.Functor.Distributive (Distributive ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -52,7 +52,7 @@ instance Traversable (Tagged tag) where
 	Tag x ->> f = Tag <$> f x
 
 instance Distributive (Tagged tag) (->) (->) where
-	f --<<- x = Tag $ extract . f -<$>- x
+	f -<< x = Tag $ extract . f -<$>- x
 
 instance Bindable (Tagged tag) where
 	Tag x >>= f = f x

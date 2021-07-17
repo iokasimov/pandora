@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), ($>>=)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), ($=>>)))
-import Pandora.Pattern.Functor.Distributive (Distributive ((--<<-)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -65,8 +65,8 @@ instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Adjoint t t' (->) (->
 
 instance (forall u . Covariant u, Adjoint t' t (->) (->), Distributive t(->) (->) ) => Liftable (t <:<.>:> t') where
 	lift :: Covariant_ u (->) (->) => u ~> t <:<.>:> t' := u
-	lift x = TUT $ (identity @(->) -|) --<<- x
+	lift x = TUT $ (identity @(->) -|) -<< x
 
 instance (forall u . Covariant u, Adjoint t t' (->) (->), Distributive t'(->) (->) ) => Lowerable (t <:<.>:> t') where
 	lower :: Covariant_ u (->) (->) => (t <:<.>:> t' := u) ~> u
-	lower (TUT x) = (identity @(->) --<<-) |- x
+	lower (TUT x) = (identity @(->) -<<) |- x
