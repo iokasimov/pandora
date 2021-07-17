@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Pattern.Functor.Bivariant ((<->))
-import Pandora.Pattern.Functor.Divariant ((->->-))
+import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Paradigm.Primary.Transformer (Flip)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
@@ -42,7 +42,7 @@ instance Bindable (State s) where
 instance Monad (State s) where
 
 instance Invariant (Flip State r) where
-	f <$< g = ((g ->->- ((<->) @_ @_ @(->) @(->) f identity) ||=) ||=)
+	f <$< g = ((g >-> ((<->) @_ @_ @(->) @(->) f identity) ||=) ||=)
 
 instance Interpreted (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a

@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
-import Pandora.Pattern.Functor.Divariant (Divariant_ ((->->-)))
+import Pandora.Pattern.Functor.Divariant (Divariant_ ((>->)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 
 newtype T_U ct cu p t u a = T_U (p (t a) (u a))
@@ -28,7 +28,7 @@ instance (forall i . Covariant_ (p i) (->) (->), Bivariant p (->) (->) (->), Cov
 	f -<$>- x = (f -<$>-) <-> (f -<$>-) ||= x
 
 instance (Divariant_ p (->) (->) (->), Contravariant t, Covariant u) => Covariant (t >:.:> u := p) where
-	f <$> x = (f >$<) ->->- (f <$>) ||= x
+	f <$> x = (f >$<) >-> (f <$>) ||= x
 
 instance (forall i . Covariant (p i), Bivariant p (->) (->) (->), Contravariant t, Contravariant u) => Contravariant (t >:.:< u := p) where
 	f >$< x = (f >$<) <-> (f >$<) ||= x
