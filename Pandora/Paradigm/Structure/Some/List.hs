@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Some.List where
 import Pandora.Core.Functor (type (:.), type (:=), type (:::))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Category ((.), ($), (#), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
@@ -29,6 +29,7 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Product (Product ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Functor ((-<*>-))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
@@ -167,8 +168,8 @@ type instance Combinative List = Comprehension Maybe
 
 type instance Zipper List (Left ::: Right) = Tap (List <:.:> List := (:*:))
 
-instance {-# OVERLAPS #-} Applicative (Tap (List <:.:> List := (:*:))) where
-	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
+--instance {-# OVERLAPS #-} Applicative (Tap (List <:.:> List := (:*:))) where
+	--Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
 
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) where
 	Tap x (T_U (future :*: past)) ->> f = (\past' x' future' -> Tap x' $ twosome # future' # run past')
@@ -228,11 +229,11 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Ma
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Tap (List <:.:> List := (:*:))
 	morphing (premorph -> zipper) = Tap # extract zipper $ lift <-> lift ||= lower zipper
 
-instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
-	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) =
-		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
-	morphing (premorph -> zipper) = let spread x y = (:*:) <$> x <*> y in TU $
-		Tap (extract zipper) . T_U <$> ((spread |-) . (run <-> run) . run $ lower zipper)
+--instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
+	--type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) =
+		--Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
+	--morphing (premorph -> zipper) = let spread x y = (:*:) -<$>- x -<*>- y in TU $
+		--Tap (extract zipper) . T_U -<$>- ((spread |-) . (run <-> run) . run $ lower zipper)
 
 instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe

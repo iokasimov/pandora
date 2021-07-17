@@ -5,8 +5,7 @@ module Pandora.Paradigm.Structure.Some.Splay where
 
 import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Applicative ((<*>))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Paradigm.Primary ()
@@ -14,6 +13,7 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Product (twosome)
 import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Functor ((-<*>-))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory.Optics (over)
@@ -54,7 +54,7 @@ instance Morphable (Rotate (Right (Zig Zag))) Binary where
 instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 	type Morphing (Rotate (Left Zig)) (Construction Wye) = Binary
 	morphing :: forall a . (:#) (Rotate (Left Zig)) <:.> Construction Wye := a -> Binary a
-	morphing (premorph -> Construct x xs) = TU $ Construct <$> parent <*> Just nodes where
+	morphing (premorph -> Construct x xs) = TU $ Construct -<$>- parent -<*>- Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (branch @Left xs) . Just . Construct x
@@ -67,7 +67,7 @@ instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	type Morphing (Rotate (Right Zig)) (Construction Wye) = Binary
 	morphing :: forall a . (:#) (Rotate (Right Zig)) <:.> Construction Wye := a -> Binary a
-	morphing (premorph -> Construct x xs) = TU $ Construct <$> parent <*> Just nodes where
+	morphing (premorph -> Construct x xs) = TU $ Construct -<$>- parent -<*>- Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (deconstruct <$> branch @Left xs >>= branch @Left) . Just . Construct x

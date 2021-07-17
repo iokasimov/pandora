@@ -43,10 +43,6 @@ instance Pointable Maybe (->) where
 instance Avoidable Maybe where
 	empty = Nothing
 
-instance Applicative Maybe where
-	Just f <*> x = f <$> x
-	Nothing <*> _ = Nothing
-
 instance Applicative_ Maybe (:*:) (->) (->) where
 	multiply f (Just x :*: Just y) = Just . f $ x :*: y
 	multiply _ (Nothing :*: _) = Nothing
@@ -66,7 +62,7 @@ instance Traversable Maybe where
 	Nothing ->> _ = point Nothing
 	Just x ->> f = Just <$> f x
 
-instance Traversable_ Maybe (->) (->) where
+instance (forall u . Pointable u (->)) => Traversable_ Maybe (->) (->) where
 	_ -<<-- Nothing = point Nothing
 	f -<<-- Just x = Just -<$>- f x
 
