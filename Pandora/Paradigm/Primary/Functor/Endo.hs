@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
-import Pandora.Paradigm.Primary.Functor.Function ()
+import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 newtype Endo a = Endo { endo :: a -> a }
 

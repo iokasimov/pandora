@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Functor.Product ((:*:))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
 newtype UT ct cu t u a = UT (u :. t := a)
 

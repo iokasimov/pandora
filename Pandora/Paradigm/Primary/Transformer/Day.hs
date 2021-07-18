@@ -10,8 +10,8 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Primary.Functor.Function ((!..), (-.#..-))
-import Pandora.Paradigm.Primary.Functor.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((!..), (-.#..-))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 
 data Day t u a = forall b c . Day (t b) (u c) (b -> c -> a)
 

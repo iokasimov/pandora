@@ -5,7 +5,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-import Pandora.Paradigm.Primary.Functor.Function ()
+import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 data These e a = This a | That e | These e a
 

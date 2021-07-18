@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor.Product where
+module Pandora.Paradigm.Primary.Algebraic.Product where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (#))

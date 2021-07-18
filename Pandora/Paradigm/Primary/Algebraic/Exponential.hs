@@ -1,6 +1,4 @@
-{-# OPTIONS_GHC -fno-warn-orphans #-}
-
-module Pandora.Paradigm.Primary.Functor.Function where
+module Pandora.Paradigm.Primary.Algebraic.Exponential where
 
 import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))

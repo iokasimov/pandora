@@ -1,7 +1,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match, (-<*>-)) where
+module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Convergence as Exports
@@ -16,33 +16,16 @@ import Pandora.Paradigm.Primary.Functor.Maybe as Exports
 import Pandora.Paradigm.Primary.Functor.Endo as Exports
 import Pandora.Paradigm.Primary.Functor.Proxy as Exports
 import Pandora.Paradigm.Primary.Functor.Tagged as Exports
-import Pandora.Paradigm.Primary.Functor.Product as Exports
 import Pandora.Paradigm.Primary.Functor.Constant as Exports
 import Pandora.Paradigm.Primary.Functor.Identity as Exports
-import Pandora.Paradigm.Primary.Functor.Function as Exports
 
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
-
-infixl 4 -<*>-
 
 type Equivalence = Convergence Boolean
 type Comparison = Convergence Ordering
 
-instance Adjoint ((:*:) s) ((->) s) (->) (->) where
-	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)
-	f -| x = \s -> f $ s :*: x
-	(|-) :: (a -> s -> b) -> (s :*: a) -> b
-	f |- ~(s :*: x) = f x s
-
-instance Applicative_ ((->) e) (:*:) (->) (->) where
-	multiply f (g :*: h) = \x -> f $ g x :*: h x
-
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
 match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
-
-(-<*>-) :: forall a b t . (Applicative_ t (:*:) (->) (->)) => t (a -> b) -> t a -> t b
-(-<*>-) = (%) ((-|) @((:*:) (t (a -> b))) (multiply @t @(:*:) @(->) @(->) ((&) |-)))

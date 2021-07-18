@@ -6,6 +6,7 @@ import Pandora.Paradigm.Primary.Linear as Exports
 import Pandora.Paradigm.Primary.Transformer as Exports
 import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
+import Pandora.Paradigm.Primary.Algebraic as Exports
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (Category ((.), ($), (#), identity))

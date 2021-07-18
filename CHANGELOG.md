@@ -503,3 +503,5 @@
 * Remove `Divariant` typeclass
 * Rename experimental `Divariant_` to `Divariant`
 * Rename `Product` type to `:*:`
+* Move `Paradigm.Primary.Functor.Function` module to `Paradigm.Primary.Algebraic.Exponential`
+* Move `Paradigm.Primary.Functor.Product` module to `Paradigm.Primary.Algebraic.Product`

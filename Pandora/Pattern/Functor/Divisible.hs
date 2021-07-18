@@ -2,7 +2,7 @@ module Pandora.Pattern.Functor.Divisible where
 
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Bivariant (Bivariant)
-import Pandora.Paradigm.Primary.Functor.Product ((:*:))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
 infixr 5 >*<
 

@@ -2,7 +2,7 @@ module Pandora.Paradigm.Structure.Ability.Monotonic where
 
 import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant ((.#..))
-import Pandora.Paradigm.Primary.Functor.Function ((!.))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.))
 
 class Monotonic a e where
 	{-# MINIMAL reduce #-}
