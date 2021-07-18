@@ -4,15 +4,16 @@ import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)), Applicative_)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), join))
+import Pandora.Pattern.Functor.Bindable (Bindable_ (join_, (-=<<-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Primary.Functor.Product ((:*:))
 
 newtype UT ct cu t u a = UT (u :. t := a)
 
@@ -40,8 +41,8 @@ instance (Applicative t, Applicative u) => Applicative (t <.:> u) where
 instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
 	point = UT . point . point
 
-instance (Traversable t, Bindable t, Applicative u, Monad u) => Bindable (t <.:> u) where
-	UT x >>= f = UT $ x >>= \i -> join <$> i ->> run . f
+instance (Traversable_ t (->) (->), Bindable_ t (->), Applicative_ u (:*:) (->) (->), Pointable u (->), Bindable_ u (->)) => Bindable_ (t <.:> u) (->) where
+	f -=<<- UT x = UT $ (join_ @_ @(->) -<$>-) . (run . f -<<--) -=<<- x
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where
 	extract = extract . extract . run

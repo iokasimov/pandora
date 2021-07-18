@@ -5,7 +5,7 @@ import Pandora.Pattern.Category ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 
 infixl 1 >>=
-infixr 1 =<<, <=<, >=>
+infixr 1 =<<, <=<, >=>, -=<<-
 
 {- |
 > When providing a new instance, you should ensure it satisfies :

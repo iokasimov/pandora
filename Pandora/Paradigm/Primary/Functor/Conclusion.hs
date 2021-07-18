@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_, (-=<<-)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -121,6 +121,6 @@ instance Catchable e (Conclusion e) where
 	catch (Failure e) handle = handle e
 	catch (Success x) _ = Success x
 
-instance Monad u => Catchable e (Conclusion e <.:> u) where
+instance (Pointable u (->), Bindable_ u (->)) => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = let conclude = conclusion # run . handle # point . Success
-		in UT $ x >>= conclude
+		in UT $ conclude -=<<- x
