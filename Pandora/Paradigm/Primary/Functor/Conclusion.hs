@@ -54,8 +54,8 @@ instance Alternative (Conclusion e) where
 	Failure _ <+> x = x
 	Success x <+> _ = Success x
 
-instance (forall u . Pointable u (->)) => Traversable_ (Conclusion e) (->) (->) where
-	(-<<--) :: Covariant_ u (->) (->)
+instance Traversable_ (Conclusion e) (->) (->) where
+	(-<<--) :: (Covariant_ u (->) (->), Pointable u (->), Applicative_ u (:*:) (->) (->))
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ -<<-- Failure y = point $ Failure y
 	f -<<-- Success x = Success -<$>- f x

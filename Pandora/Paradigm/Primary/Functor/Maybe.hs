@@ -62,7 +62,7 @@ instance Traversable Maybe where
 	Nothing ->> _ = point Nothing
 	Just x ->> f = Just <$> f x
 
-instance (forall u . Pointable u (->)) => Traversable_ Maybe (->) (->) where
+instance Traversable_ Maybe (->) (->) where
 	_ -<<-- Nothing = point Nothing
 	f -<<-- Just x = Just -<$>- f x
 

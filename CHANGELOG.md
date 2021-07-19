@@ -505,3 +505,4 @@
 * Rename `Product` type to `:*:`
 * Move `Paradigm.Primary.Functor.Function` module to `Paradigm.Primary.Algebraic.Exponential`
 * Move `Paradigm.Primary.Functor.Product` module to `Paradigm.Primary.Algebraic.Product`
+* Add `Covariant_`, `Pointable` and `Applicative_` constraints to `Traversable_` typeclass
