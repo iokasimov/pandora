@@ -1,15 +1,14 @@
 module Pandora.Paradigm.Schemes.UT where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)), Applicative_)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Bindable (Bindable_ (join_, (-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
-import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
@@ -42,7 +41,7 @@ instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
 	point = UT . point . point
 
 instance (Traversable_ t (->) (->), Bindable_ t (->), Applicative_ u (:*:) (->) (->), Pointable u (->), Bindable_ u (->)) => Bindable_ (t <.:> u) (->) where
-	f -=<<- UT x = UT $ (join_ @_ @(->) -<$>-) . (run . f -<<--) -=<<- x
+	f -=<<- UT x = UT $ ((identity -=<<-) -<$>-) . (run . f -<<--) -=<<- x
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where
 	extract = extract . extract . run

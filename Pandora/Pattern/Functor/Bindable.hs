@@ -37,7 +37,4 @@ class Covariant t => Bindable t where
 	x $>>= f = (>>= f) <$> x
 
 class Covariant_ t source source => Bindable_ t source where
-	join_ :: source (t (t a)) (t a)
-
 	(-=<<-) :: source a (t b) -> source (t a) (t b)
-	(-=<<-) f = join_ . (-<$>-) f

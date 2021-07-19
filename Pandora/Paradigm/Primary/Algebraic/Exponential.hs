@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ (join_))
+import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ ((-=<<-)))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -43,7 +43,7 @@ instance Bindable ((->) e) where
 	f >>= g = \x -> g # f x # x
 
 instance Bindable_ ((->) e) (->) where
-	join_ f = \x -> f x # x
+	f -=<<- g = \x -> f # g x # x
 
 instance Representable ((->) e) where
 	type Representation ((->) e) = e
