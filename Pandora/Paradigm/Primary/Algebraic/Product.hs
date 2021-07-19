@@ -5,7 +5,6 @@ import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)), Extendable_ (duplicate_))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
@@ -35,9 +34,6 @@ instance Covariant_ (Flip (:*:) a) (->) (->) where
 
 instance Extractable ((:*:) a) (->) where
 	extract ~(_ :*: y) = y
-
-instance Traversable ((:*:) s) where
-	x ->> f = (attached x :*:) <$> f (extract x)
 
 instance Extendable ((:*:) s) where
 	x =>> f = attached x :*: f (attached x :*: extract x)

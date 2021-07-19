@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Applicative where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)), Covariant_)
 import Pandora.Pattern.Functor.Bivariant (Bivariant)
 
 infixl 4 <*>, <*, *>
@@ -47,5 +47,5 @@ class Covariant t => Applicative t where
 		-> t :. u :. v :. w := b
 	f <****> x = (<***>) <$> f <*> x
 
-class Bivariant v source source target => Applicative_ t v source target where
+class (Covariant_ t source target, Bivariant v source source target) => Applicative_ t v source target where
 	multiply :: source (v a b) r -> target (v (t a) (t b)) (t r)

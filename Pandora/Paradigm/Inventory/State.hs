@@ -7,7 +7,7 @@ import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (*>)), Applicative_ (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -19,7 +19,7 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
-import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), type (:*:), delta)
+import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), delta)
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
@@ -32,6 +32,12 @@ instance Covariant_ (State s) (->) (->) where
 
 instance Applicative (State s) where
 	f <*> x = State $ ((<$>) |-) . (run x <-> identity @(->)) . run f
+
+instance Applicative_ (State s) (:*:) (->) (->) where
+	multiply f (State g :*: State h) = State $ \s -> 
+		let old :*: x = g s in
+		let new :*: y = h old in
+		new :*: f (x :*: y)
 
 instance Pointable (State s) (->) where
 	point = State . (identity @(->) -|)
