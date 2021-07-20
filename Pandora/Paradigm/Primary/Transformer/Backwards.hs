@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -35,8 +35,8 @@ instance Applicative_ t (:*:) (->) (->) => Applicative_ (Backwards t) (:*:) (->)
 	multiply f (Backwards x :*: Backwards y) = Backwards #
 		f .#.. ((:*:) %) -<$>- y -<*>- x
 
-instance Traversable t => Traversable (Backwards t) where
-	Backwards x ->> f = Backwards <$> x ->> f
+instance Traversable_ t (->) (->) => Traversable_ (Backwards t) (->) (->) where
+	f -<<-- Backwards x = Backwards -<$>- f -<<-- x
 
 instance Distributive t (->) (->) => Distributive (Backwards t) (->) (->) where
 	f -<< x = Backwards $ run . f -<< x

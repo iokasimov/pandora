@@ -7,7 +7,8 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>), (->>>)))
+import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)), (-<<-<<-))
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
 
 data Jet t a = Jet a (Jet t (t a))
 
@@ -17,8 +18,8 @@ instance Covariant t => Covariant (Jet t) where
 instance Covariant_ t (->) (->) => Covariant_ (Jet t) (->) (->) where
 	f -<$>- Jet x xs = Jet (f x) (f -<$$>- xs)
 
-instance Traversable t => Traversable (Jet t) where
-	Jet x xs ->> f = Jet <$> f x <*> xs ->>> f
+instance Traversable_ t (->) (->) => Traversable_ (Jet t) (->) (->) where
+	f -<<-- Jet x xs = Jet -<$>- f x -<*>- f -<<-<<- xs
 
 instance (forall u . Avoidable u, Covariant_ t (->) (->)) => Pointable (Jet t) (->) where
 	point x = Jet x empty
