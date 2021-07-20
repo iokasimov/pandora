@@ -7,7 +7,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)), (-<<-<<-))
+import Pandora.Pattern.Functor.Traversable (Traversable ((-<<--)), (-<<-<<-))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -31,7 +31,7 @@ instance Covariant t => Covariant (Prefixed t k) where
 instance Covariant_ t (->) (->) => Covariant_ (Prefixed t k) (->) (->) where
 	f -<$>- Prefixed x = Prefixed $ f -<$$>- x
 
-instance Traversable_ t (->) (->) => Traversable_ (Prefixed t k) (->) (->) where
+instance Traversable t (->) (->) => Traversable (Prefixed t k) (->) (->) where
 	f -<<-- Prefixed x = Prefixed -<$>- f -<<-<<- x
 
 instance (Monoid k, Pointable t (->)) => Pointable (Prefixed t k) (->) where

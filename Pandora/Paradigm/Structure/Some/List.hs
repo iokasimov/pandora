@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)), Covariant_ 
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
-import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((-<<--)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Bindable ((>>=))
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -117,7 +117,7 @@ instance Substructure Tail List where
 		Nothing -> Store $ Identity empty :*: lift . identity . extract
 
 -- | Transform any traversable structure into a stack
-linearize :: forall t a . Traversable_ t (->) (->) => t a -> List a
+linearize :: forall t a . Traversable t (->) (->) => t a -> List a
 linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just .#.. Construct)
 
 ----------------------------------------- Non-empty list -------------------------------------------
@@ -169,7 +169,7 @@ type instance Zipper List (Left ::: Right) = Tap (List <:.:> List := (:*:))
 --instance {-# OVERLAPS #-} Applicative (Tap (List <:.:> List := (:*:))) where
 	--Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
 
-instance {-# OVERLAPS #-} Traversable_ (Tap (List <:.:> List := (:*:))) (->) (->) where
+instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) (->) (->) where
 	f -<<-- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		-<$>- f -<<-- Reverse past -<*>- f x -<*>- f -<<-- future
 

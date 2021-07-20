@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)), (-<<-<<-))
+import Pandora.Pattern.Functor.Traversable (Traversable ((-<<--)), (-<<-<<-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), join))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -52,7 +52,7 @@ instance (Pointable t (->), Pointable u (->)) => Pointable (t <:.> u) (->) where
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <:.> u) (->) where
 	extract = extract . extract . run
 
-instance (Traversable_ t (->) (->), Traversable_ u (->) (->)) => Traversable_ (t <:.> u) (->) (->) where
+instance (Traversable t (->) (->), Traversable u (->) (->)) => Traversable (t <:.> u) (->) (->) where
 	f -<<-- x = TU -<$>- f -<<-<<- run x
 
 instance (Bindable t, Distributive t (->) (->), Covariant_ u (->) (->), Bindable u) => Bindable (t <:.> u) where

@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)), Applica
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((-<<--)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
@@ -40,7 +40,7 @@ instance (Applicative t, Applicative u) => Applicative (t <.:> u) where
 instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
 	point = UT . point . point
 
-instance (Traversable_ t (->) (->), Bindable_ t (->), Applicative_ u (:*:) (->) (->), Pointable u (->), Bindable_ u (->)) => Bindable_ (t <.:> u) (->) where
+instance (Traversable t (->) (->), Bindable_ t (->), Applicative_ u (:*:) (->) (->), Pointable u (->), Bindable_ u (->)) => Bindable_ (t <.:> u) (->) where
 	f -=<<- UT x = UT $ ((identity -=<<-) -<$>-) . (run . f -<<--) -=<<- x
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where

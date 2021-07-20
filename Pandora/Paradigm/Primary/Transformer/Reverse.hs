@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
-import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((-<<--)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -34,7 +34,7 @@ instance Extractable t (->) => Extractable (Reverse t) (->) where
 instance Applicative_ t (:*:) (->) (->) => Applicative_ (Reverse t) (:*:) (->) (->) where
 	multiply f (Reverse x :*: Reverse y) = Reverse . multiply f $ x :*: y
 
-instance Traversable_ t (->) (->) => Traversable_ (Reverse t) (->) (->) where
+instance Traversable t (->) (->) => Traversable (Reverse t) (->) (->) where
 	f -<<-- Reverse x = Reverse -<$>- run (Backwards . f -<<-- x)
 
 instance Distributive t (->) (->) => Distributive (Reverse t) (->) (->) where
