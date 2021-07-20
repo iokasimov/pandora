@@ -24,7 +24,7 @@ instance Pointable (These e) (->) where
 
 instance Traversable_ (These e) (->) (->) where
 	f -<<-- This x = This -<$>- f x
-	f -<<-- That y = point $ That y
+	_ -<<-- That y = point $ That y
 	f -<<-- These y x = These y -<$>- f x
 
 instance (Semigroup e, Semigroup a) => Semigroup (These e a) where

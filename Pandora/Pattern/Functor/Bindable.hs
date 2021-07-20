@@ -1,8 +1,7 @@
 module Pandora.Pattern.Functor.Bindable where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_)
 
 infixl 1 >>=
 infixr 1 =<<, <=<, >=>, -=<<-

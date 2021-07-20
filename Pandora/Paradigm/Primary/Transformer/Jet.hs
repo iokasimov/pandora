@@ -6,7 +6,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>), Covariant_ 
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)), (-<<-<<-))
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
 

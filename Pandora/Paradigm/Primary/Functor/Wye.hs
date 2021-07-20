@@ -3,8 +3,6 @@ module Pandora.Paradigm.Primary.Functor.Wye where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative ((<*>))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
