@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((-<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -47,7 +47,7 @@ instance Applicative t => Applicative (Tap t) where
 	Tap f fs <*> Tap x xs = Tap # f x # fs <*> xs
 
 instance Traversable t (->) (->) => Traversable (Tap t) (->) (->) where
-	f -<<-- Tap x xs = Tap -<$>- f x -<*>- f -<<-- xs
+	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
 
 instance (Extractable t (->), Alternative t, Bindable t) => Bindable (Tap t) where
 	Tap x xs >>= f = case f x of ~(Tap y ys) -> Tap y $ ys <+> (xs >>= lower . f)
@@ -65,8 +65,8 @@ instance {-# OVERLAPS #-} Applicative t => Applicative (Tap (t <:.:> t := (:*:))
 	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
 
 instance {-# OVERLAPS #-} Traversable t (->) (->) => Traversable (Tap (t <:.:> t := (:*:))) (->) (->) where
-	f -<<-- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
-		-<$>- f -<<-- Reverse past -<*>- f x -<*>- f -<<-- future
+	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
+		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
 
 instance (Covariant t, Covariant_ t (->) (->)) => Substructure Root (Tap (t <:.:> t := (:*:))) where
 	type Available Root (Tap (t <:.:> t := (:*:))) = Identity

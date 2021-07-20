@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Functor.Traversable (Traversable ((-<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -50,7 +50,7 @@ instance (Avoidable t, Alternative t) => Avoidable (Comprehension t) where
 	empty = Comprehension empty
 
 instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehension t) (->) (->) where
-	f -<<-- Comprehension x = Comprehension -<$>- f -<<-- x
+	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t, Pointable t (->), Avoidable t) => Applicative (Comprehension t) where
 	fs <*> xs = fs >>= \f -> xs >>= Comprehension . TU . point . point . f

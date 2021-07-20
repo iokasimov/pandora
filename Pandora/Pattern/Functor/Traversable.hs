@@ -10,18 +10,18 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 > Let p :: (Pointable t, Pointable g) => t a -> u a
 
 > When providing a new instance, you should ensure it satisfies:
-> * Numeratority of traversing: g . (f -<<---) ≡ (g . f -<<---)
-> * Numeratority of sequencing: f . (identity -<<---)= (identity -<<---) . (f -<$>-)
+> * Numeratority of traversing: g . (f <<--) ≡ (g . f <<--)
+> * Numeratority of sequencing: f . (identity <<--)= (identity <<--) . (f -<$>-)
 > * Preserving point: p (point x) ≡ point x
 > * Preserving apply: f (x -<*>- y) ≡ f x -<*>- f y
 -}
 
-infixl 5 -<<--, -<<-<<-
+infixl 5 <<-, -<<-<<-
 
 class Covariant_ t source target => Traversable t source target where
-	(-<<--) :: (Covariant_ u source target, Pointable u target, Applicative_ u (:*:) source target) => source a (u b) -> target (t a) (u (t b))
+	(<<-) :: (Covariant_ u source target, Pointable u target, Applicative_ u (:*:) source target) => source a (u b) -> target (t a) (u (t b))
 
 (-<<-<<-) :: forall t u v category a b . 
 	(Traversable t category category, Covariant_ u category category, Pointable u category, Applicative_ u (:*:) category category, Traversable v category category)
 	=> category a (u b) -> category (v (t a)) (u (v (t b)))
-(-<<-<<-) f = ((-<<--) ((-<<--) @t @category @category f))
+(-<<-<<-) f = ((<<-) ((<<-) @t @category @category f))

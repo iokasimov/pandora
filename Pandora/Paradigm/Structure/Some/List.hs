@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)), Covariant_ 
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
-import Pandora.Pattern.Functor.Traversable (Traversable ((-<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Bindable ((>>=))
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -170,8 +170,8 @@ type instance Zipper List (Left ::: Right) = Tap (List <:.:> List := (:*:))
 	--Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
 
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) (->) (->) where
-	f -<<-- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
-		-<$>- f -<<-- Reverse past -<*>- f x -<*>- f -<<-- future
+	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
+		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
 
 instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) where
 	z =>> f = let move rtt = TU . deconstruct $ run . rtt .-+ z in
@@ -196,13 +196,13 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 instance Morphable (Into List) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into List) (Tap (List <:.:> List := (:*:))) = List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
-		# modify . item @Push @List -<<-- past
+		# modify . item @Push @List <<- past
 		# item @Push x future
 
 instance Morphable (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:))) = Comprehension Maybe
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
-		# modify . item @Push @(Comprehension Maybe) -<<-- past
+		# modify . item @Push @(Comprehension Maybe) <<- past
 		# item @Push x (Comprehension future)
 
 ------------------------------------- Zipper of non-empty list -------------------------------------
@@ -236,13 +236,13 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Ma
 instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
-		# modify . item @Push @(Nonempty List) -<<-- past
+		# modify . item @Push @(Nonempty List) <<- past
 		# item @Push x future
 
 instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = List
 	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
-		# modify . item @Push @List -<<-- past
+		# modify . item @Push @List <<- past
 		# item @Push x (lift future)
 
 ------------------------------------ Zipper of combinative list ------------------------------------
