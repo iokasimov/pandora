@@ -36,9 +36,6 @@ instance Contravariant (Constant a) where
 instance Invariant (Constant a) where
 	_ <$< _ = \(Constant x) -> Constant x
 
-instance Traversable (Constant a) where
-	Constant x ->> _ = point $ Constant x
-
 instance Bivariant Constant (->) (->) (->)where
 	f <-> _ = \(Constant x) -> Constant $ f x
 

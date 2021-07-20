@@ -24,12 +24,6 @@ instance Covariant_ Wye (->) (->) where
 	f -<$>- Right y = Right # f y
 	f -<$>- Both x y = Both # f x # f y
 
-instance Traversable Wye where
-	End ->> _ = point End
-	Left x ->> f = Left <$> f x
-	Right y ->> f = Right <$> f y
-	Both x y ->> f = Both <$> f x <*> f y
-
 instance Monotonic a (Wye a) where
 	reduce f r (Left x) = f x r
 	reduce f r (Right x) = f x r
