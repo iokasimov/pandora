@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -53,13 +53,13 @@ instance Traversable (Schematic Monad t u) (->) (->) => Traversable (t :> u) (->
 instance Distributive (Schematic Monad t u) (->) (->) => Distributive (t :> u) (->) (->) where
 	f -<< x = TM $ tm . f -<< x
 
-instance Bindable (Schematic Monad t u) => Bindable (t :> u) where
-	TM x >>= f = TM $ x >>= tm . f
+instance Bindable_ (Schematic Monad t u) (->) => Bindable_ (t :> u) (->) where
+	f -=<<- TM x = TM $ tm . f -=<<- x
 
 instance Extendable (Schematic Monad t u) => Extendable (t :> u) where
 	TM x =>> f = TM $ x =>> f . TM
 
-instance (Covariant_ (Schematic Monad t u) (->) (->), Pointable (t :> u) (->), Bindable (t :> u)) => Monad (t :> u) where
+instance (Covariant_ (Schematic Monad t u) (->) (->), Pointable (t :> u) (->), Bindable_ (t :> u) (->)) => Monad (t :> u) where
 
 instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
 	lift = TM . lift

@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -43,9 +43,11 @@ instance Covariant t => Applicative (Instruction t) where
 	Enter f <*> Instruct y = Instruct $ f <$$> y
 	Instruct f <*> y = Instruct $ (<*> y) <$> f
 
-instance Covariant t => Bindable (Instruction t) where
-	Enter x >>= f = f x
-	Instruct xs >>= f = Instruct $ (>>= f) <$> xs
+instance Covariant_ t (->) (->) => Bindable_ (Instruction t) (->) where
+	f -=<<- Enter x = f x
+	f -=<<- Instruct xs = Instruct $ (f -=<<-) -<$>- xs
+
+instance Monad t => Monad (Instruction t) where
 
 instance Traversable t (->) (->) => Traversable (Instruction t) (->) (->) where
 	f <<- Enter x = Enter -<$>- f x
@@ -54,9 +56,9 @@ instance Traversable t (->) (->) => Traversable (Instruction t) (->) (->) where
 instance Liftable Instruction where
 	lift x = Instruct $ Enter -<$>- x
 
-instance (forall t . Monad t) => Lowerable Instruction where
+instance (forall t . Bindable_ t (->), forall t . Pointable t (->)) => Lowerable Instruction where
 	lower (Enter x) = point x
-	lower (Instruct xs) = xs >>= lower
+	lower (Instruct xs) = lower -=<<- xs
 
 instance (forall v . Covariant v) => Hoistable Instruction where
 	_ /|\ Enter x = Enter x

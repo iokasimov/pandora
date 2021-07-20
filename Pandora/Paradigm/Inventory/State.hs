@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Applicative_ (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -42,8 +42,8 @@ instance Applicative_ (State s) (:*:) (->) (->) where
 instance Pointable (State s) (->) where
 	point = State . (identity @(->) -|)
 
-instance Bindable (State s) where
-	x >>= f = State $ (run . f |-) <$> run x
+instance Bindable_ (State s) (->) where
+	f -=<<- x = State $ (run . f |-) -<$>- run x
 
 instance Monad (State s) where
 
@@ -74,8 +74,8 @@ modify f = adapt . State $ \s -> let r = f s in r :*: r
 replace :: Stateful s t => s -> t s
 replace s = adapt . State $ \_ -> s :*: s
 
-reconcile :: (Bindable t, Stateful s t, Adaptable u t) => (s -> u s) -> t s
-reconcile f = current >>= adapt . f >>= replace
+reconcile :: (Bindable_ t (->), Stateful s t, Adaptable u t) => (s -> u s) -> t s
+reconcile f = replace -=<<- adapt . f -=<<- current
 
 type Memorable s t = (Pointable t (->), Applicative_ t (:*:) (->) (->), Stateful s t)
 

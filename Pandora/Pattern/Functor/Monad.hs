@@ -1,8 +1,8 @@
 module Pandora.Pattern.Functor.Monad where
 
 import Pandora.Pattern.Functor.Covariant (Covariant_)
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Bindable (Bindable_)
+import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |
 > Let f :: (Pointable t, Bindable t) => a -> t a
@@ -15,15 +15,15 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 > * Associativity: h >>= (f >=> g) ≡ (h >>= f) >>= g
 -}
 
-infixl 1 >>=-, ->>=
-infixr 1 -=<<, =<<-
+--infixl 1 >>=-, ->>=
+--infixr 1 -=<<, =<<-
 
-class (Covariant_ t (->) (->), Pointable t (->), Bindable t) => Monad t where
-	(>>=-) :: t a -> t b -> t a
-	(>>=-) x y = x >>= \r -> y >>= \_ -> point r
-	(->>=) :: t a -> t b -> t b
-	(->>=) x y = x >>= \_ -> y >>= \r -> point r
-	(-=<<) :: t a -> t b -> t b
-	(-=<<) x y = x >>= \_ -> y >>= \r -> point r
-	(=<<-) :: t a -> t b -> t a
-	(=<<-) x y = x >>= \r -> y >>= \_ -> point r
+class (Covariant_ t (->) (->), Pointable t (->), Bindable_ t (->)) => Monad t where
+	--(>>=-) :: t a -> t b -> t a
+	--(>>=-) x y = x >>= \r -> y >>= \_ -> point r
+	--(->>=) :: t a -> t b -> t b
+	--(->>=) x y = x >>= \_ -> y >>= \r -> point r
+	--(-=<<) :: t a -> t b -> t b
+	--(-=<<) x y = x >>= \_ -> y >>= \r -> point r
+	--(=<<-) :: t a -> t b -> t a
+	--(=<<-) x y = x >>= \r -> y >>= \_ -> point r
