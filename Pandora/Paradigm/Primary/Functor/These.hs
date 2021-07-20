@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.These where
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
@@ -22,10 +22,10 @@ instance Covariant_ (These e) (->) (->) where
 instance Pointable (These e) (->) where
 	point = This
 
-instance Traversable (These e) where
-	This x ->> f = This <$> f x
-	That y ->> _ = point $ That y
-	These y x ->> f = These y <$> f x
+instance Traversable_ (These e) (->) (->) where
+	f -<<-- This x = This -<$>- f x
+	f -<<-- That y = point $ That y
+	f -<<-- These y x = These y -<$>- f x
 
 instance (Semigroup e, Semigroup a) => Semigroup (These e a) where
 	This x + This x' = This # x + x'

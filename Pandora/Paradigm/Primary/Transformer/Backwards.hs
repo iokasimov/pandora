@@ -1,17 +1,19 @@
 module Pandora.Paradigm.Primary.Transformer.Backwards where
 
 import Pandora.Pattern.Category ((.), ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((&))
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Backwards t a = Backwards (t a)
@@ -28,8 +30,10 @@ instance Pointable t (->) => Pointable (Backwards t) (->) where
 instance Extractable t (->) => Extractable (Backwards t) (->) where
 	extract (Backwards x) = extract x
 
-instance Applicative t => Applicative (Backwards t) where
-	Backwards f <*> Backwards x = Backwards # (&) <$> x <*> f
+-- TODO: check that effects evaluation goes in opposite order
+instance Applicative_ t (:*:) (->) (->) => Applicative_ (Backwards t) (:*:) (->) (->) where
+	multiply f (Backwards x :*: Backwards y) = Backwards #
+		f .#.. ((:*:) %) -<$>- y -<*>- x
 
 instance Traversable t => Traversable (Backwards t) where
 	Backwards x ->> f = Backwards <$> x ->> f

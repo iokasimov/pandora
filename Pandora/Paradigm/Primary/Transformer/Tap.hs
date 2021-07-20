@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((->>)))
+import Pandora.Pattern.Functor.Traversable (Traversable_ ((-<<--)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -18,6 +18,7 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run) 
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
@@ -45,8 +46,8 @@ instance (Covariant t, Covariant_ t (->) (->))  => Extractable (Tap t) (->) wher
 instance Applicative t => Applicative (Tap t) where
 	Tap f fs <*> Tap x xs = Tap # f x # fs <*> xs
 
-instance Traversable t => Traversable (Tap t) where
-	Tap x xs ->> f = Tap <$> f x <*> xs ->> f
+instance Traversable_ t (->) (->) => Traversable_ (Tap t) (->) (->) where
+	f -<<-- Tap x xs = Tap -<$>- f x -<*>- f -<<-- xs
 
 instance (Extractable t (->), Alternative t, Bindable t) => Bindable (Tap t) where
 	Tap x xs >>= f = case f x of ~(Tap y ys) -> Tap y $ ys <+> (xs >>= lower . f)
@@ -63,9 +64,9 @@ instance Hoistable Tap where
 instance {-# OVERLAPS #-} Applicative t => Applicative (Tap (t <:.:> t := (:*:))) where
 	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
 
-instance {-# OVERLAPS #-} Traversable t => Traversable (Tap (t <:.:> t := (:*:))) where
-	Tap x (T_U (future :*: past)) ->> f = (\past' x' future' -> Tap x' $ twosome # future' # run past')
-		<$> Reverse past ->> f <*> f x <*> future ->> f
+instance {-# OVERLAPS #-} Traversable_ t (->) (->) => Traversable_ (Tap (t <:.:> t := (:*:))) (->) (->) where
+	f -<<-- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
+		-<$>- f -<<-- Reverse past -<*>- f x -<*>- f -<<-- future
 
 instance (Covariant t, Covariant_ t (->) (->)) => Substructure Root (Tap (t <:.:> t := (:*:))) where
 	type Available Root (Tap (t <:.:> t := (:*:))) = Identity
