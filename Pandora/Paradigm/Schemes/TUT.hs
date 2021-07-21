@@ -50,7 +50,7 @@ instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Pointable u (->), Adj
 	point = unite . (point @_ @(->) -|)
 
 --instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable_ u (->)) => Bindable_ (t <:<.>:> t' := u) (->) where
---	f -=<<- x = TUT $ ((run . f |-) -=<<-) -<$>- x
+--	f =<< x = TUT $ ((run . f |-) =<<) -<$>- x
 
 instance (Covariant t', Covariant t, Adjoint t' t (->) (->), Extendable u) => Extendable (t' <:<.>:> t := u) where
 	x =>> f = TUT $ run x $=>> (f . unite -|)

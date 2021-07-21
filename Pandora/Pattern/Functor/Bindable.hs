@@ -2,7 +2,7 @@ module Pandora.Pattern.Functor.Bindable where
 
 import Pandora.Pattern.Functor.Covariant (Covariant_)
 
-infixr 1 -=<<-
+infixr 1 =<<
 
 {- |
 > When providing a new instance, you should ensure it satisfies :
@@ -10,4 +10,4 @@ infixr 1 -=<<-
 -}
 
 class Covariant_ t source source => Bindable_ t source where
-	(-=<<-) :: source a (t b) -> source (t a) (t b)
+	(=<<) :: source a (t b) -> source (t a) (t b)

@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -50,7 +50,7 @@ instance Traversable t (->) (->) => Traversable (Tap t) (->) (->) where
 	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
 
 instance (Extractable t (->), Alternative t, Bindable_ t (->)) => Bindable_ (Tap t) (->) where
-	f -=<<- Tap x xs = case f x of ~(Tap y ys) -> Tap y $ ys <+> (lower . f -=<<- xs)
+	f =<< Tap x xs = case f x of ~(Tap y ys) -> Tap y $ ys <+> (lower . f =<< xs)
 
 instance (Extendable t, Covariant_ t (->) (->)) => Extendable (Tap t) where
 	x =>> f = Tap # f x $ lower x =>> f . Tap (extract x)

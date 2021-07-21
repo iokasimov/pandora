@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
@@ -39,7 +39,7 @@ instance Distributive (Environment e) (->) (->) where
 	f -<< g = Environment $ (run -<$>- f) -<< g
 
 instance Bindable_ (Environment e) (->) where
-	f -=<<- Environment x = Environment $ \e -> (run % e) . f . x $ e
+	f =<< Environment x = Environment $ \e -> (run % e) . f . x $ e
 
 instance Monad (Environment e) where
 

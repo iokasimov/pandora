@@ -6,7 +6,7 @@ import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
@@ -32,12 +32,12 @@ instance Covariant t => Applicative (Continuation r t) where
 	f <*> x = Continuation $ \h -> run f $ \g -> run x # h . g
 
 instance Covariant_ t (->) (->) => Bindable_ (Continuation r t) (->) where
-	f -=<<- x = Continuation $ \g -> run x $ \y -> run # f y # g
+	f =<< x = Continuation $ \g -> run x $ \y -> run # f y # g
 
 instance Monad t => Monad (Continuation r t) where
 
 instance (forall u . Bindable_ u (->)) => Liftable (Continuation r) where
-	lift = Continuation . (%) (-=<<-)
+	lift = Continuation . (%) (=<<)
 
 -- | Call with current continuation
 cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a

@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -56,7 +56,7 @@ instance (Traversable t (->) (->), Traversable u (->) (->)) => Traversable (t <:
 	f <<- x = TU -<$>- f -<<-<<- run x
 
 instance (Bindable_ t (->), Distributive t (->) (->), Covariant_ u (->) (->), Bindable_ u (->)) => Bindable_ (t <:.> u) (->) where
-	f -=<<- TU x = TU $ (\i -> (identity -=<<-) -<$>- run . f -<< i) -=<<- x
+	f =<< TU x = TU $ (\i -> (identity =<<) -<$>- run . f -<< i) =<< x
 
 instance Pointable t (->) => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant_ u (->) (->) => u ~> t <:.> u

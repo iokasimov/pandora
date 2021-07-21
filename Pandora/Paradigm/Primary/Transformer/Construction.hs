@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), extend))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -50,7 +50,7 @@ instance Traversable t (->) (->) => Traversable (Construction t) (->) (->) where
 	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs
 
 instance (Covariant_ t (->) (->), Alternative t) => Bindable_ (Construction t) (->) where
-	f -=<<- ~(Construct x xs) = Construct # extract (f x) # deconstruct (f x) <+> ((f -=<<-) -<$>- xs)
+	f =<< ~(Construct x xs) = Construct # extract (f x) # deconstruct (f x) <+> ((f =<<) -<$>- xs)
 
 instance Covariant t => Extendable (Construction t) where
 	x =>> f = Construct # f x # extend f <$> deconstruct x

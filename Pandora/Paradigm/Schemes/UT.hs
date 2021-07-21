@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ 
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)), Applicative_)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -41,7 +41,7 @@ instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
 	point = UT . point . point
 
 instance (Traversable t (->) (->), Bindable_ t (->), Applicative_ u (:*:) (->) (->), Pointable u (->), Bindable_ u (->)) => Bindable_ (t <.:> u) (->) where
-	f -=<<- UT x = UT $ ((identity -=<<-) -<$>-) . (run . f <<-) -=<<- x
+	f =<< UT x = UT $ ((identity =<<) -<$>-) . (run . f <<-) =<< x
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where
 	extract = extract . extract . run

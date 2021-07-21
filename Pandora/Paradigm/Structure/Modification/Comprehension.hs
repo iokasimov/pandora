@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -53,10 +53,10 @@ instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehen
 	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable_ t (->), Pointable t (->), Avoidable t) => Applicative (Comprehension t) where
-	fs <*> xs = (\f -> Comprehension . TU . point . point . f -=<<- xs) -=<<- fs
+	fs <*> xs = (\f -> Comprehension . TU . point . point . f =<< xs) =<< fs
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable_ t (->)) => Bindable_ (Comprehension t) (->) where
-	f -=<<- Comprehension (TU t) = Comprehension . TU $ (\(Construct x xs) -> run . run $ f x + (f -=<<- Comprehension (TU xs))) -=<<- t
+	f =<< Comprehension (TU t) = Comprehension . TU $ (\(Construct x xs) -> run . run $ f x + (f =<< Comprehension (TU xs))) =<< t
 		-- t >>= \(Construct x xs) -> run . run $ f x + (Comprehension (TU xs) >>= f)
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Pointable t (->), Avoidable t, Bindable_ t (->)) => Monad (Comprehension t) where

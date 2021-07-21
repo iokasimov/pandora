@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -54,7 +54,7 @@ instance Distributive (Schematic Monad t u) (->) (->) => Distributive (t :> u) (
 	f -<< x = TM $ tm . f -<< x
 
 instance Bindable_ (Schematic Monad t u) (->) => Bindable_ (t :> u) (->) where
-	f -=<<- TM x = TM $ tm . f -=<<- x
+	f =<< TM x = TM $ tm . f =<< x
 
 instance Extendable (Schematic Monad t u) => Extendable (t :> u) where
 	TM x =>> f = TM $ x =>> f . TM

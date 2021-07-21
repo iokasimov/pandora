@@ -7,7 +7,7 @@ import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
 import Pandora.Paradigm.Primary.Algebraic.Product (twosome)
@@ -27,27 +27,27 @@ data Splay a = Zig a | Zag a
 
 instance Morphable (Rotate (Left Zig)) Binary where
 	type Morphing (Rotate (Left Zig)) Binary = Binary
-	morphing (premorph -> binary) = unite $ run . rotate @(Left Zig) -=<<- run binary
+	morphing (premorph -> binary) = unite $ run . rotate @(Left Zig) =<< run binary
 
 instance Morphable (Rotate (Right Zig)) Binary where
 	type Morphing (Rotate (Right Zig)) Binary = Binary
-	morphing (premorph -> binary) = unite $ run . rotate @(Right Zig) -=<<- run binary
+	morphing (premorph -> binary) = unite $ run . rotate @(Right Zig) =<< run binary
 
 instance Morphable (Rotate (Left (Zig Zig))) Binary where
 	type Morphing (Rotate (Left (Zig Zig))) Binary = Binary
-	morphing (premorph -> binary) = unite $ run . rotate @(Left (Zig Zig)) -=<<- run binary
+	morphing (premorph -> binary) = unite $ run . rotate @(Left (Zig Zig)) =<< run binary
 
 instance Morphable (Rotate (Right (Zig Zig))) Binary where
 	type Morphing (Rotate (Right (Zig Zig))) Binary = Binary
-	morphing (premorph -> binary) = unite $ run . rotate @(Right (Zig Zig)) -=<<- run binary
+	morphing (premorph -> binary) = unite $ run . rotate @(Right (Zig Zig)) =<< run binary
 
 instance Morphable (Rotate (Left (Zig Zag))) Binary where
 	type Morphing (Rotate (Left (Zig Zag))) Binary = Binary
-	morphing (premorph -> binary) = unite $ run . rotate @(Left (Zig Zag)) -=<<- run binary
+	morphing (premorph -> binary) = unite $ run . rotate @(Left (Zig Zag)) =<< run binary
 
 instance Morphable (Rotate (Right (Zig Zag))) Binary where
 	type Morphing (Rotate (Right (Zig Zag))) Binary = Binary
-	morphing (premorph -> binary) = unite $ run . rotate @(Right (Zig Zag)) -=<<- run binary
+	morphing (premorph -> binary) = unite $ run . rotate @(Right (Zig Zag)) =<< run binary
 
 -------------------------------------- Non-empty Splay tree ----------------------------------------
 
@@ -58,8 +58,8 @@ instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (branch @Left xs) . Just . Construct x
-			. into @Wye $ twosome (branch @Left -=<<- deconstruct <$> branch @Right xs)
-				(branch @Right -=<<- deconstruct <$> branch @Right xs)
+			. into @Wye $ twosome (branch @Left =<< deconstruct <$> branch @Right xs)
+				(branch @Right =<< deconstruct <$> branch @Right xs)
 
 		parent :: Maybe a
 		parent = extract <$> branch @Right xs
@@ -70,8 +70,8 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	morphing (premorph -> Construct x xs) = TU $ Construct -<$>- parent -<*>- Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
-		nodes = into @Wye . twosome (branch @Left -=<<- deconstruct <$> branch @Left xs) . Just . Construct x
-			. into @Wye $ twosome (branch @Right -=<<- deconstruct <$> branch @Left xs) # branch @Right xs
+		nodes = into @Wye . twosome (branch @Left =<< deconstruct <$> branch @Left xs) . Just . Construct x
+			. into @Wye $ twosome (branch @Right =<< deconstruct <$> branch @Left xs) # branch @Right xs
 
 		parent :: Maybe a
 		parent = extract <$> branch @Left xs
@@ -79,22 +79,22 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 -- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zig))) (Construction Wye) = Binary
-	morphing (premorph -> tree) = TU $ run . rotate @(Left Zig) -=<<- run # rotate @(Left Zig) tree
+	morphing (premorph -> tree) = TU $ run . rotate @(Left Zig) =<< run # rotate @(Left Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zig))) (Construction Wye) = Binary
-	morphing (premorph -> tree) = TU $ run . rotate @(Right Zig) -=<<- run # rotate @(Right Zig) tree
+	morphing (premorph -> tree) = TU $ run . rotate @(Right Zig) =<< run # rotate @(Right Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Binary
-	morphing = rotate @(Left Zig) . over (sub @Left) (run . rotate @(Right Zig) -=<<-) . premorph
+	morphing = rotate @(Left Zig) . over (sub @Left) (run . rotate @(Right Zig) =<<) . premorph
 
 -- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Binary
-	morphing = rotate @(Right Zig) . over (sub @Right) (run . rotate @(Left Zig) -=<<-) . premorph
+	morphing = rotate @(Right Zig) . over (sub @Right) (run . rotate @(Left Zig) =<<) . premorph
 
 branch :: forall b . Morphable (Into (b Maybe)) Wye => Wye ~> Morphing (Into (b Maybe)) Wye
 branch = into @(b Maybe)

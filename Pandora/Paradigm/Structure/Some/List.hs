@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -131,7 +131,7 @@ instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 instance Morphable (Find Element) (Construction Maybe) where
 	type Morphing (Find Element) (Construction Maybe) = Predicate <:.:> Maybe := (->)
 	morphing (premorph -> Construct x xs) = T_U $ \p ->
-		run p x ? Just x $ find @Element @(Nonempty List) @Maybe # p -=<<- xs
+		run p x ? Just x $ find @Element @(Nonempty List) @Maybe # p =<< xs
 
 instance Morphable (Into List) (Construction Maybe) where
 	type Morphing (Into List) (Construction Maybe) = List
@@ -256,11 +256,11 @@ instance {-# OVERLAPS #-} Applicative (Tap (Comprehension Maybe <:.:> Comprehens
 
 instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 	type Morphing (Lookup Key) (Prefixed List key) = (->) key <:.> Maybe
-	morphing (run . premorph -> list) = TU $ \key -> lookup @Key key -=<<- Prefixed -<$>- run list 
+	morphing (run . premorph -> list) = TU $ \key -> lookup @Key key =<< Prefixed -<$>- run list 
 
 ------------------------------------ Prefixed non-empty list ---------------------------------------
 
 instance Setoid key => Morphable (Lookup Key) (Prefixed (Construction Maybe) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Maybe) key) = (->) key <:.> Maybe
 	morphing (run . premorph -> Construct x xs) = TU $ \key -> extract <$> search key where
-		search key = key == attached x ? Just x $ find @Element # Predicate ((key ==) . attached) -=<<- xs
+		search key = key == attached x ? Just x $ find @Element # Predicate ((key ==) . attached) =<< xs
