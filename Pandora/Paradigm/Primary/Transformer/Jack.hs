@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -55,7 +55,7 @@ instance Traversable t (->) (->) => Traversable (Jack t) (->) (->) where
 	f <<- It x = It -<$>- f x
 	f <<- Other y = Other -<$>- f <<- y
 
-instance (Pointable t (->), Bindable_ t (->)) => Bindable_ (Jack t) (->) where
+instance (Pointable t (->), Bindable t (->)) => Bindable (Jack t) (->) where
 	f =<< It x = f x
 	f =<< Other x = Other $ jack point identity . f =<< x
 

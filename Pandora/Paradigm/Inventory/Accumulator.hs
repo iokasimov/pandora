@@ -6,7 +6,7 @@ import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -31,7 +31,7 @@ instance Semigroup e => Applicative (Accumulator e) where
 instance Monoid e => Pointable (Accumulator e) (->) where
 	point = Accumulator . (zero :*:)
 
-instance Semigroup e => Bindable_ (Accumulator e) (->) where
+instance Semigroup e => Bindable (Accumulator e) (->) where
 	f =<< Accumulator (e :*: x) = let e' :*: b = run $ f x in
 		Accumulator $ e + e':*: b
 
@@ -54,7 +54,7 @@ instance {-# OVERLAPS #-} (Semigroup e, Applicative u) => Applicative ((:*:) e <
 instance {-# OVERLAPS #-} (Pointable u (->), Monoid e) => Pointable ((:*:) e <.:> u) (->) where
 	point = UT . point . (zero :*:)
 
-instance {-# OVERLAPS #-} (Semigroup e, Pointable u (->), Bindable_ u (->)) => Bindable_ ((:*:) e <.:> u) (->) where
+instance {-# OVERLAPS #-} (Semigroup e, Pointable u (->), Bindable u (->)) => Bindable ((:*:) e <.:> u) (->) where
 	f =<< UT x = UT $ (\(acc :*: v) -> (\(acc' :*: y) -> (acc + acc' :*: y)) -<$>- run (f v)) =<< x
 
 gather :: Accumulated e t => e -> t ()

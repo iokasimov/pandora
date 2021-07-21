@@ -510,3 +510,4 @@
 * Remove `Traversable` typeclass
 * Rename experimental `Traversable_` to `Traversable`
 * Remove `Bindable` typeclass
+* Rename experimental `Bindable_` to `Bindable`

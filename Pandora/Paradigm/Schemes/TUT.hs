@@ -37,7 +37,7 @@ instance (Covariant t, Covariant t', Covariant u) => Covariant (t <:<.>:> t' := 
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:<.>:> t' := u) (->) (->)where
 	f -<$>- TUT x = TUT $ f -<$$$>- x
 
---instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable_ u (->)) => Applicative (t <:<.>:> t' := u) where
+--instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u (->)) => Applicative (t <:<.>:> t' := u) where
 --	f <*> x = TUT $ (>>= ((<$$$> run x) |-)) <$> run f
 
 --instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
@@ -49,7 +49,7 @@ instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Pointable u (->), Adjoint t' t (->) (->)) => Pointable (t <:<.>:> t' := u) (->) where
 	point = unite . (point @_ @(->) -|)
 
---instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable_ u (->)) => Bindable_ (t <:<.>:> t' := u) (->) where
+--instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
 --	f =<< x = TUT $ ((run . f |-) =<<) -<$>- x
 
 instance (Covariant t', Covariant t, Adjoint t' t (->) (->), Extendable u) => Extendable (t' <:<.>:> t := u) where

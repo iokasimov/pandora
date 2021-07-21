@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable_ ((=<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -49,7 +49,7 @@ instance Traversable (Schematic Comonad t u) (->) (->) => Traversable (t :< u) (
 instance Distributive (Schematic Comonad t u) (->) (->) => Distributive (t :< u) (->) (->) where
 	f -<< x = TC $ tc . f -<< x
 
-instance Bindable_ (Schematic Comonad t u) (->) => Bindable_ (t :< u) (->) where
+instance Bindable (Schematic Comonad t u) (->) => Bindable (t :< u) (->) where
 	f =<< TC x = TC $ tc . f =<< x
 
 instance Extendable (Schematic Comonad t u) => Extendable (t :< u) where
