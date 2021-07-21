@@ -509,3 +509,4 @@
 * Remove `join_` method from `Bindable_` typeclass
 * Remove `Traversable` typeclass
 * Rename experimental `Traversable_` to `Traversable`
+* Remove `Bindable` typeclass

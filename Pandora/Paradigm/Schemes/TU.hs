@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Schemes.TU where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), join))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -55,8 +55,8 @@ instance (Extractable t (->), Extractable u (->)) => Extractable (t <:.> u) (->)
 instance (Traversable t (->) (->), Traversable u (->) (->)) => Traversable (t <:.> u) (->) (->) where
 	f <<- x = TU -<$>- f -<<-<<- run x
 
-instance (Bindable t, Distributive t (->) (->), Covariant_ u (->) (->), Bindable u) => Bindable (t <:.> u) where
-	TU x >>= f = TU $ x >>= \i -> join -<$>- run . f -<< i
+instance (Bindable_ t (->), Distributive t (->) (->), Covariant_ u (->) (->), Bindable_ u (->)) => Bindable_ (t <:.> u) (->) where
+	f -=<<- TU x = TU $ (\i -> (identity -=<<-) -<$>- run . f -<< i) -=<<- x
 
 instance Pointable t (->) => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant_ u (->) (->) => u ~> t <:.> u
