@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=), ($>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), ($=>>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
@@ -42,20 +42,20 @@ instance (Covariant t, Covariant t', Covariant u) => Covariant (t <:<.>:> t' := 
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:<.>:> t' := u) (->) (->)where
 	f -<$>- TUT x = TUT $ f -<$$$>- x
 
-instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u) => Applicative (t <:<.>:> t' := u) where
-	f <*> x = TUT $ (>>= ((<$$$> run x) |-)) <$> run f
+--instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable_ u (->)) => Applicative (t <:<.>:> t' := u) where
+--	f <*> x = TUT $ (>>= ((<$$$> run x) |-)) <$> run f
 
-instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
-	x <+> y = TUT $ run x <*+> run y
+--instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
+--	x <+> y = TUT $ run x <*+> run y
 
-instance (Pointable t (->), Applicative t, Covariant t', Avoidable u) => Avoidable (t <:<.>:> t' := u) where
-	empty = TUT $ point empty
+--instance (Pointable t (->), Applicative t, Covariant t', Avoidable u) => Avoidable (t <:<.>:> t' := u) where
+--	empty = TUT $ point empty
 
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Pointable u (->), Adjoint t' t (->) (->)) => Pointable (t <:<.>:> t' := u) (->) where
 	point = unite . (point @_ @(->) -|)
 
-instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u) => Bindable (t <:<.>:> t' := u) where
-	x >>= f = TUT $ run x $>>= (run . f |-)
+--instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable_ u (->)) => Bindable_ (t <:<.>:> t' := u) (->) where
+--	f -=<<- x = TUT $ ((run . f |-) -=<<-) -<$>- x
 
 instance (Covariant t', Covariant t, Adjoint t' t (->) (->), Extendable u) => Extendable (t' <:<.>:> t := u) where
 	x =>> f = TUT $ run x $=>> (f . unite -|)

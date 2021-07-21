@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)), Bindable_ ((-=<<-)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -59,10 +59,6 @@ instance Traversable (Conclusion e) (->) (->) where
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success -<$>- f x
-
-instance Bindable (Conclusion e) where
-	Success x >>= f = f x
-	Failure y >>= _ = Failure y
 
 instance Bindable_ (Conclusion e) (->) where
 	f -=<<- Success x = f x

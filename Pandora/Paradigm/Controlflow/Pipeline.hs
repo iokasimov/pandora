@@ -2,7 +2,7 @@ module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, im
 
 import Pandora.Pattern.Category (($), (.), (#))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (!..))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
@@ -44,8 +44,8 @@ finish :: Pointable t (->) => Pipeline i o t () ()
 finish = Continuation (Pipe (point () !..) !.)
 
 -- | Do some effectful computation within pipeline
-impact :: Bindable t => t a -> Pipeline i o t a a
-impact action = Continuation $ \next -> Pipe $ \i o -> action >>= \x -> pipe (next x) i o
+impact :: Bindable_ t (->) => t a -> Pipeline i o t a a
+impact action = Continuation $ \next -> Pipe $ \i o -> (\x -> pipe (next x) i o) -=<<- action
 
 -- | Compose two pipelines into one
 (=*=) :: forall i e o t . Pointable t (->) => Pipeline i e t () () -> Pipeline e o t () () -> Pipeline i o t () ()
