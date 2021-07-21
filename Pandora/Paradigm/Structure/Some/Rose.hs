@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Functor.Bindable (Bindable ((>>=)))
+import Pandora.Pattern.Functor.Bindable (Bindable_ ((-=<<-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
@@ -101,7 +101,7 @@ instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) w
 
 find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose := k :*: a -> Maybe a
 find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? Just (extract $ extract tree) $ Nothing
-find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ? Nothing $ subtree >>= find_rose_sub_tree ks where
+find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ? Nothing $ find_rose_sub_tree ks -=<<- subtree where
 
 	subtree :: Maybe :. Nonempty Rose := k :*: a
 	subtree = find @Element # attached . extract >$< equate (extract ks) # deconstruct tree

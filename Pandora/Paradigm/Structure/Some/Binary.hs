@@ -7,7 +7,7 @@ import Pandora.Pattern.Category ((.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($$$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
-import Pandora.Pattern.Functor.Bindable ((>>=))
+import Pandora.Pattern.Functor.Bindable ((-=<<-))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -138,8 +138,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	morphing (run . run . premorph -> Nothing) = lift Nothing
 	morphing (run . run . premorph -> Just tree) = TU $ \key ->
 		let root = extract tree in key <=> attached root & order (Just # extract root)
-			(view # sub @Left # tree >>= lookup @Key key . Prefixed)
-			(view # sub @Right # tree >>= lookup @Key key . Prefixed)
+			(lookup @Key key . Prefixed -=<<- view # sub @Left # tree)
+			(lookup @Key key . Prefixed -=<<- view # sub @Right # tree)
 
 instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <:.> Identity) <:.:> Prefixed Binary k := (->)
@@ -157,8 +157,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <:.> Maybe
 	morphing (run . premorph -> Construct x xs) = TU $ \key ->
 		key <=> attached x & order (Just # extract x)
-			(view # sub @Left # xs >>= lookup @Key key . Prefixed . extract)
-			(view # sub @Right # xs >>= lookup @Key key . Prefixed . extract)
+			(lookup @Key key . Prefixed . extract -=<<- view # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract -=<<- view # sub @Left # xs)
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 
