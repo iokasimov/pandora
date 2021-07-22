@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)), Covariant_
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Extendable (Extendable ((=>>), ($=>>)))
+import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -52,8 +52,8 @@ instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Pointable u (->), Adj
 --instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
 --	f =<< x = TUT $ ((run . f |-) =<<) -<$>- x
 
-instance (Covariant t', Covariant t, Adjoint t' t (->) (->), Extendable u) => Extendable (t' <:<.>:> t := u) where
-	x =>> f = TUT $ run x $=>> (f . unite -|)
+instance (Covariant t', Covariant t, Adjoint t' t (->) (->), Extendable_ u (->)) => Extendable_ (t' <:<.>:> t := u) (->) where
+	f -<<=- x = TUT $ ((f . unite -|) -<<=-) -<$>- run x
 
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Adjoint t t' (->) (->), Extractable u (->)) => Extractable (t <:<.>:> t' := u) (->) where
 	extract = (extract @_ @(->) |-) . run
