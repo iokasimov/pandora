@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((-<<=-)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -52,7 +52,7 @@ instance Traversable t (->) (->) => Traversable (Construction t) (->) (->) where
 instance (Covariant_ t (->) (->), Alternative t) => Bindable (Construction t) (->) where
 	f =<< ~(Construct x xs) = Construct # extract (f x) # deconstruct (f x) <+> ((f =<<) -<$>- xs)
 
-instance Covariant_ t (->) (->) => Extendable_ (Construction t) (->) where
+instance Covariant_ t (->) (->) => Extendable (Construction t) (->) where
 	f -<<=- x = Construct # f x # (f -<<=-) -<$>- deconstruct x
 
 instance (Avoidable t, Alternative t, Covariant_ t (->) (->)) => Monad (Construction t) where

@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)), Covariant_ 
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
-import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((-<<=-)))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!..), (-.#..-))
@@ -31,7 +31,7 @@ instance (Applicative t, Applicative u) => Applicative (Day t u) where
 instance (Extractable t (->), Extractable u (->)) => Extractable (Day t u) (->) where
 	extract (Day tb uc bcad) = bcad # extract tb # extract uc
 
-instance (Extendable_ t (->), Extendable_ u (->)) => Extendable_ (Day t u) (->) where
+instance (Extendable t (->), Extendable u (->)) => Extendable (Day t u) (->) where
 	f -<<=- day@(Day tb uc _) = Day tb uc (f day !..)
 
 instance Extractable t (->) => Lowerable (Day t) where

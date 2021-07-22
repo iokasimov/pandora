@@ -513,3 +513,4 @@
 * Rename experimental `Bindable_` to `Bindable`
 * Use experimental `Extendable_` as superclass for `Comonad`
 * Remove `Extendable` typeclass
+* Rename experimental `Extendable_` to `Extendable`

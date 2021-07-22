@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((-<<=-)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
@@ -39,5 +39,5 @@ instance Bindable Proxy (->) where
 
 instance Monad Proxy
 
-instance Extendable_ Proxy (->) where
+instance Extendable Proxy (->) where
 	_ -<<=- _ = Proxy

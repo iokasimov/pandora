@@ -6,7 +6,7 @@ import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((-<<=-)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
@@ -29,7 +29,7 @@ instance Extractable (Equipment e) (->) where
 instance Traversable (Equipment e) (->) (->) where
 	f <<- Equipment x = Equipment -<$>- f <<- x
 
-instance Extendable_ (Equipment e) (->) where
+instance Extendable (Equipment e) (->) where
 	f -<<=- Equipment (e :*: x) = Equipment . (:*:) e . f . Equipment $ e :*: x
 
 instance Interpreted (Equipment e) where
@@ -44,7 +44,7 @@ instance Comonadic (Equipment e) where
 
 type Equipped e t = Adaptable t (Equipment e)
 
-instance {-# OVERLAPS #-} Extendable_ u (->) => Extendable_ ((:*:) e <:.> u) (->) where
+instance {-# OVERLAPS #-} Extendable u (->) => Extendable ((:*:) e <:.> u) (->) where
 	f -<<=- TU (e :*: x) = TU . (:*:) e $ f . TU . (:*:) e -<<=- x
 
 instance Comonad (Equipment e) (->) where

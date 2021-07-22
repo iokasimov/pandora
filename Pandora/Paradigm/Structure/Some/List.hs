@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((-<<=-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -173,7 +173,7 @@ instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) (->) (->)
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
 
-instance {-# OVERLAPS #-} Extendable_ (Tap (List <:.:> List := (:*:))) (->) where
+instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) (->) where
 	f -<<=- z = let move rtt = TU . deconstruct $ run . rtt .-+ z in
 		Tap # f z $ twosome # f -<$>- move (rotate @Left) # f -<$>- move (rotate @Right)
 

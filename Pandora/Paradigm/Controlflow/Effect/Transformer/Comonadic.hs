@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((-<<=-)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -52,10 +52,10 @@ instance Distributive (Schematic Comonad t u) (->) (->) => Distributive (t :< u)
 instance Bindable (Schematic Comonad t u) (->) => Bindable (t :< u) (->) where
 	f =<< TC x = TC $ tc . f =<< x
 
-instance Extendable_ (Schematic Comonad t u) (->) => Extendable_ (t :< u) (->) where
+instance Extendable (Schematic Comonad t u) (->) => Extendable (t :< u) (->) where
 	f -<<=- TC x = TC $ f . TC -<<=- x
 
-instance (Extractable (t :< u) (->), Extendable_ (t :< u) (->)) => Comonad (t :< u) (->) where
+instance (Extractable (t :< u) (->), Extendable (t :< u) (->)) => Comonad (t :< u) (->) where
 
 instance Lowerable (Schematic Comonad t) => Lowerable ((:<) t) where
 	lower (TC x) = lower x

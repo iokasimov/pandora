@@ -7,7 +7,7 @@ import Pandora.Pattern.Category (identity, (.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (.#..)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((-<<=-)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
@@ -33,7 +33,7 @@ instance Covariant_ (Store s) (->) (->) where
 instance Extractable (Store s) (->) where
 	extract = (($) |-) . run
 
-instance Extendable_ (Store s) (->) where
+instance Extendable (Store s) (->) where
 	f -<<=- Store x = Store $ f -<$$>- (Store .#.. (identity @(->) -|) -<$>- x)
 
 instance Comonad (Store s) (->) where
