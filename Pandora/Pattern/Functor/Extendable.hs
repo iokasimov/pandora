@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_)
 
 infixl 1 =>>
-infixr 1 <<=, =<=, =>=
+infixr 1 <<=, =<=, =>=, -<<=-
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -41,4 +41,4 @@ class Covariant t => Extendable t where
 	x <<=$ f = (=>> f) <$> x
 
 class Covariant_ t source source => Extendable_ t source where
-	duplicate_ :: source (t a) (t (t a))
+	(-<<=-) :: source (t a) b -> source (t a) (t b)

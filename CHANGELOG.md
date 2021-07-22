@@ -511,3 +511,4 @@
 * Rename experimental `Traversable_` to `Traversable`
 * Remove `Bindable` typeclass
 * Rename experimental `Bindable_` to `Bindable`
+* Use experimental `Extendable_` as superclass for `Comonad`

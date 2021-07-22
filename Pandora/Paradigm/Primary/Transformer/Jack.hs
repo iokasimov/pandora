@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -59,9 +59,9 @@ instance (Pointable t (->), Bindable t (->)) => Bindable (Jack t) (->) where
 	f =<< It x = f x
 	f =<< Other x = Other $ jack point identity . f =<< x
 
-instance Extendable t => Extendable (Jack t) where
-	It x =>> f = It . f $ It x
-	Other x =>> f = Other $ x =>> f . Other
+instance Extendable_ t (->) => Extendable_ (Jack t) (->) where
+	f -<<=- It x = It . f $ It x
+	f -<<=- Other x = Other $ f . Other -<<=- x
 
 instance Liftable Jack where
 	lift = Other

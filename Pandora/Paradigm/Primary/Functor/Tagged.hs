@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((=>>)))
+import Pandora.Pattern.Functor.Extendable (Extendable_ ((-<<=-)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
@@ -59,8 +59,8 @@ instance Bindable (Tagged tag) (->) where
 
 instance Monad (Tagged tag)
 
-instance Extendable (Tagged tag) where
-	x =>> f = Tag . f $ x
+instance Extendable_ (Tagged tag) (->) where
+	f -<<=- x = Tag . f $ x
 
 instance Comonad (Tagged tag) (->)
 

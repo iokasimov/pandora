@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Comonad where
 
 import Pandora.Pattern.Functor.Extractable (Extractable)
-import Pandora.Pattern.Functor.Extendable (Extendable)
+import Pandora.Pattern.Functor.Extendable (Extendable_)
 
 {- |
 > Let f :: (Pointable t, Bindable t) => t a -> b
@@ -13,4 +13,4 @@ import Pandora.Pattern.Functor.Extendable (Extendable)
 > * Associativity: extend f . extend g ≡ extend (f . extend g)
 -}
 
-class (Extractable t source, Extendable t) => Comonad t source
+class (Extractable t source, Extendable_ t (->)) => Comonad t source
