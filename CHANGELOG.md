@@ -515,3 +515,5 @@
 * Remove `Extendable` typeclass
 * Rename experimental `Extendable_` to `Extendable`
 * Rename experimental `Applicative_` to `Semimonoidal`
+
+# 0.4.5
