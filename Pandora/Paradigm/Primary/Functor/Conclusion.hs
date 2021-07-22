@@ -5,7 +5,7 @@ import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative_ (multiply))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -39,12 +39,12 @@ instance Covariant_ (Flip Conclusion e) (->) (->) where
 instance Pointable (Conclusion e) (->) where
 	point = Success
 
-instance Applicative_ (Conclusion e) (:*:) (->) (->) where
+instance Semimonoidal (Conclusion e) (:*:) (->) (->) where
 	multiply f (Success x :*: Success y) = Success . f $ x :*: y
 	multiply _ (Failure x :*: _) = Failure x
 	multiply _ (_ :*: Failure x) = Failure x
 
-instance Applicative_ (Conclusion e) Conclusion (->) (->) where
+instance Semimonoidal (Conclusion e) Conclusion (->) (->) where
 	multiply f (Failure (Success x)) = Success . f $ Failure x
 	multiply f (Success (Success y)) = Success . f $ Success y
 	multiply _ (Failure (Failure e)) = Failure e
@@ -55,7 +55,7 @@ instance Alternative (Conclusion e) where
 	Success x <+> _ = Success x
 
 instance Traversable (Conclusion e) (->) (->) where
-	(<<-) :: (Covariant_ u (->) (->), Pointable u (->), Applicative_ u (:*:) (->) (->))
+	(<<-) :: (Covariant_ u (->) (->), Pointable u (->), Semimonoidal u (:*:) (->) (->))
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success -<$>- f x

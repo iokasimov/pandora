@@ -514,3 +514,4 @@
 * Use experimental `Extendable_` as superclass for `Comonad`
 * Remove `Extendable` typeclass
 * Rename experimental `Extendable_` to `Extendable`
+* Rename experimental `Applicative_` to `Semimonoidal`

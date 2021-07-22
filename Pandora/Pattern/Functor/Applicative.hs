@@ -47,5 +47,5 @@ class Covariant t => Applicative t where
 		-> t :. u :. v :. w := b
 	f <****> x = (<***>) <$> f <*> x
 
-class (Covariant_ t source target, Bivariant v source source target) => Applicative_ t v source target where
+class (Covariant_ t source target, Bivariant v source source target) => Semimonoidal t v source target where
 	multiply :: source (v a b) r -> target (v (t a) (t b)) (t r)

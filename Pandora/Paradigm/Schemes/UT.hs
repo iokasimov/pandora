@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Category ((.), ($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)), Applicative_)
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)), Semimonoidal)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -40,7 +40,7 @@ instance (Applicative t, Applicative u) => Applicative (t <.:> u) where
 instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
 	point = UT . point . point
 
-instance (Traversable t (->) (->), Bindable t (->), Applicative_ u (:*:) (->) (->), Pointable u (->), Bindable u (->)) => Bindable (t <.:> u) (->) where
+instance (Traversable t (->) (->), Bindable t (->), Semimonoidal u (:*:) (->) (->), Pointable u (->), Bindable u (->)) => Bindable (t <.:> u) (->) where
 	f =<< UT x = UT $ ((identity =<<) -<$>-) . (run . f <<-) =<< x
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where
