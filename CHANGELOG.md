@@ -517,3 +517,4 @@
 * Rename experimental `Applicative_` to `Semimonoidal`
 
 # 0.4.5
+* Define `Endofunctor` type family

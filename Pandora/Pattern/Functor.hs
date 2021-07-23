@@ -22,6 +22,12 @@ import Pandora.Pattern.Functor.Covariant as Exports
 
 import Pandora.Core.Functor (type (:.), type (:=))
 
+type family Endofunctor constraint functor category where
+	Endofunctor Covariant_ t category = Covariant_ t category category
+	Endofunctor Contravariant_ t category = Contravariant_ t category category
+	Endofunctor Traversable t category = Traversable t category category
+	Endofunctor Distributive t category = Distributive t category category
+
 (<*+>) :: (Applicative t, Alternative u) => t :. u := a -> t :. u := a -> t :. u := a
 x <*+> y = (<+>) <$> x <*> y
 
