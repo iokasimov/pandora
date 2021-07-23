@@ -518,3 +518,4 @@
 
 # 0.4.5
 * Define `Endofunctor` type family
+* Define `Sum` module in `Algebraic` with `:+:` type
