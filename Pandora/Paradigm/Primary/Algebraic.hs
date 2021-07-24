@@ -6,7 +6,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
 import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 
-import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Category ((.), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply))
@@ -17,6 +17,11 @@ infixl 4 -<*>-
 
 instance Semimonoidal ((->) e) (:*:) (->) (->) where
 	multiply f (g :*: h) = \x -> f $ g x :*: h x
+
+instance Semimonoidal ((:+:) e) (:*:) (->) (->) where
+	multiply f (Adoption x :*: Adoption y) = Adoption . f $ x :*: y
+	multiply _ (Option x :*: _) = Option x
+	multiply _ (_ :*: Option x) = Option x
 
 instance Traversable ((:*:) s) (->) (->) where
 	f <<- x = (attached x :*:) -<$>- f (extract x)
