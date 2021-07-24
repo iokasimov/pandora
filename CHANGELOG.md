@@ -520,3 +520,4 @@
 * Define `Endofunctor` type family
 * Define `Sum` module in `Algebraic` with `:+:` type
 * Define experimental `Day_` transformer
+* Define experimental `Semimonoidal_` typeclass
