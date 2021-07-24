@@ -5,7 +5,7 @@ import Pandora.Pattern.Category (identity, (.), ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply), Semimonoidal_ (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -44,6 +44,11 @@ instance Semimonoidal (Conclusion e) (:*:) (->) (->) where
 	multiply f (Success x :*: Success y) = Success . f $ x :*: y
 	multiply _ (Failure x :*: _) = Failure x
 	multiply _ (_ :*: Failure x) = Failure x
+
+instance Semimonoidal_ (Conclusion e) (->) (:*:) (:*:) where
+	multiply_ (Success x :*: Success y) = Success $ x :*: y
+	multiply_ (Failure x :*: _) = Failure x
+	multiply_ (_ :*: Failure x) = Failure x
 
 instance Semimonoidal (Conclusion e) (:+:) (->) (->) where
 	multiply f (Option (Success x)) = Success . f $ Option x
