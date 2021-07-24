@@ -16,6 +16,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -44,11 +45,11 @@ instance Semimonoidal (Conclusion e) (:*:) (->) (->) where
 	multiply _ (Failure x :*: _) = Failure x
 	multiply _ (_ :*: Failure x) = Failure x
 
-instance Semimonoidal (Conclusion e) Conclusion (->) (->) where
-	multiply f (Failure (Success x)) = Success . f $ Failure x
-	multiply f (Success (Success y)) = Success . f $ Success y
-	multiply _ (Failure (Failure e)) = Failure e
-	multiply _ (Success (Failure e)) = Failure e
+instance Semimonoidal (Conclusion e) (:+:) (->) (->) where
+	multiply f (Option (Success x)) = Success . f $ Option x
+	multiply f (Adoption (Success y)) = Success . f $ Adoption y
+	multiply _ (Option (Failure e)) = Failure e
+	multiply _ (Adoption (Failure e)) = Failure e
 
 instance Alternative (Conclusion e) where
 	Failure _ <+> x = x
