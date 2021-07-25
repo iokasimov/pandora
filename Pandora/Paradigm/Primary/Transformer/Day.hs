@@ -40,5 +40,7 @@ instance Extractable t (->) => Lowerable (Day t) where
 instance Hoistable (Day t) where
 	g /|\ Day tb uc bca = Day tb # g uc # bca
 
-data Day_ p q t u r = forall a b .
-	Day_ (q (p a b -> r) (q (t a) (u b)))
+data Day_ category source target t u r = forall a b .
+	Day_ (target (category (source a b) r) (target (t a) (u b)))
+
+(-:*:-) = ()

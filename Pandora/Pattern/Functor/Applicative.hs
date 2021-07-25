@@ -51,5 +51,5 @@ class (Covariant_ t source target, Bivariant v source source target) => Semimono
 	multiply :: source (v a b) r -> target (v (t a) (t b)) (t r)
 
 -- FIXME: not actually a category, but a semigroupoid
-class (Covariant_ t category category) => Semimonoidal_ t category source target where
+class Semimonoidal_ t category source target where
 	multiply_ :: category (source (t a) (t b)) (t (target a b))
