@@ -42,5 +42,3 @@ instance Hoistable (Day t) where
 
 data Day_ category source target t u r = forall a b .
 	Day_ (target (category (source a b) r) (target (t a) (u b)))
-
-(-:*:-) = ()

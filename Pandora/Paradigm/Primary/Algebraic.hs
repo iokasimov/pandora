@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, (-<*>-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, (-<*>-), (-*-), (-+-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -42,8 +42,8 @@ instance Semimonoidal_ ((->) e) (->) (:*:) (:*:) where
 
 instance Semimonoidal_ ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
-	multiply_ (Option e :*: Option e') = Option e'
-	multiply_ (Option e :*: Adoption y) = Adoption $ Adoption y
+	multiply_ (Option _ :*: Option e') = Option e'
+	multiply_ (Option _ :*: Adoption y) = Adoption $ Adoption y
 	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
 type Applicative_ t = (Covariant_ t (->) (->), Semimonoidal_ t (->) (:*:) (:*:))
@@ -51,3 +51,6 @@ type Alternative_ t = (Covariant_ t (->) (->), Semimonoidal_ t (->) (:*:) (:+:))
 
 (-*-) :: Applicative_ t => t (a -> b) -> t a -> t b
 f -*- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)
+
+(-+-) :: Alternative_ t => t a -> t b -> (a :+: b -> r) -> t r
+x -+- y = \f -> f -<$>- multiply_ (x :*: y)
