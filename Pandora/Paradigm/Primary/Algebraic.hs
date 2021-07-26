@@ -17,20 +17,10 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 instance Semimonoidal ((->) e) (:*:) (->) (->) where
 	multiply f (g :*: h) = \x -> f $ g x :*: h x
 
-instance Semimonoidal_ ((->) e) (->) (:*:) (:*:) where
-	multiply_ :: ((e -> a) :*: (e -> b)) -> e -> (a :*: b)
-	multiply_ (g :*: h) = \x -> g x :*: h x
-
 instance Semimonoidal ((:+:) e) (:*:) (->) (->) where
 	multiply f (Adoption x :*: Adoption y) = Adoption . f $ x :*: y
 	multiply _ (Option x :*: _) = Option x
 	multiply _ (_ :*: Option x) = Option x
-
-instance Semimonoidal_ ((:+:) e) (->) (:*:) (:+:) where
-	multiply_ :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
-	multiply_ (Option e :*: Option e') = Option e'
-	multiply_ (Option e :*: Adoption y) = Adoption $ Adoption y
-	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
 instance Traversable ((:*:) s) (->) (->) where
 	f <<- x = (attached x :*:) -<$>- f (extract x)
@@ -45,3 +35,16 @@ infixl 4 -<*>-
 
 (-<*>-) :: forall a b t . (Semimonoidal t (:*:) (->) (->)) => t (a -> b) -> t a -> t b
 (-<*>-) = (%) ((-|) @((:*:) (t (a -> b))) (multiply @t @(:*:) @(->) @(->) ((&) |-)))
+
+instance Semimonoidal_ ((->) e) (->) (:*:) (:*:) where
+	multiply_ :: ((e -> a) :*: (e -> b)) -> e -> (a :*: b)
+	multiply_ (g :*: h) = \x -> g x :*: h x
+
+instance Semimonoidal_ ((:+:) e) (->) (:*:) (:+:) where
+	multiply_ :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
+	multiply_ (Option e :*: Option e') = Option e'
+	multiply_ (Option e :*: Adoption y) = Adoption $ Adoption y
+	multiply_ (Adoption x :*: _) = Adoption $ Option x
+
+type Applicative_ t = Semimonoidal_ t (->) (:*:) (:*:)
+type Alternative_ t = Semimonoidal_ t (->) (:*:) (:+:)
