@@ -523,3 +523,4 @@
 * Define experimental `Semimonoidal_` typeclass
 * Define `Semigroupoid` typeclass as generalization of `Category`
 * Define `Applicative_` and `Alternative_` type class aliases of `Semimonoidal_`
+* Define experimental `-*-` method of `Semonoidal_` typeclass

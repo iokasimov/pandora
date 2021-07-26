@@ -46,5 +46,8 @@ instance Semimonoidal_ ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ (Option e :*: Adoption y) = Adoption $ Adoption y
 	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
-type Applicative_ t = Semimonoidal_ t (->) (:*:) (:*:)
-type Alternative_ t = Semimonoidal_ t (->) (:*:) (:+:)
+type Applicative_ t = (Covariant_ t (->) (->), Semimonoidal_ t (->) (:*:) (:*:))
+type Alternative_ t = (Covariant_ t (->) (->), Semimonoidal_ t (->) (:*:) (:+:))
+
+(-*-) :: Applicative_ t => t (a -> b) -> t a -> t b
+f -*- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)
