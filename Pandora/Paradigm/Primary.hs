@@ -9,7 +9,8 @@ import Pandora.Paradigm.Primary.Object as Exports
 import Pandora.Paradigm.Primary.Algebraic as Exports
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
+import Pandora.Pattern.Category (Category (($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
@@ -23,9 +24,11 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
 
+instance Semigroupoid (Flip (->)) where
+	Flip f . Flip g = Flip $ \x -> g (f x)
+
 instance Category (Flip (->)) where
 	identity = Flip identity
-	Flip f . Flip g = Flip $ \x -> g (f x)
 
 instance Contravariant (Flip (->) r) where
 	f >$< g = (<$> f) ||= g

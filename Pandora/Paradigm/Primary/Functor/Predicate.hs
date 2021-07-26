@@ -1,7 +1,8 @@
 module Pandora.Paradigm.Primary.Functor.Predicate where
 
 import Pandora.Core.Functor (type (~>), type (:=>))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)), Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Divisible (Divisible ((>*<)), Divisible_ (divide))
 import Pandora.Pattern.Functor.Determinable (Determinable (determine))

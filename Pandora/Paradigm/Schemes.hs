@@ -14,7 +14,8 @@ import Pandora.Paradigm.Schemes.TUVW as Exports
 import Pandora.Paradigm.Schemes.TUT as Exports
 import Pandora.Paradigm.Schemes.TU as Exports
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)

@@ -2,7 +2,8 @@
 
 module Pandora.Paradigm.Primary.Algebraic.Exponential where
 
-import Pandora.Pattern.Category (Category ((.), ($), (#), identity))
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
+import Pandora.Pattern.Category (Category (($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
@@ -19,9 +20,11 @@ infixr 2 !.
 infixr 9 %
 infixl 1 &
 
+instance Semigroupoid (->) where
+	f . g = \x -> f (g x)
+
 instance Category (->) where
 	identity x = x
-	f . g = \x -> f (g x)
 
 instance Covariant ((->) a) where
 	(<$>) = (.)
@@ -58,7 +61,7 @@ instance Semigroup r => Semigroup (e -> r) where
 instance Ringoid r => Ringoid (e -> r) where
 	f * g = \e -> f e * g e
 
-(-.#..-) :: (Covariant_ (v a) (->) target, Category v) => v c d -> target (v a (v b c)) (v a (v b d))
+(-.#..-) :: (Covariant_ (v a) (->) target, Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (-.#..-) f = (-<$>-) (f .)
 
 {-# INLINE (!.) #-}

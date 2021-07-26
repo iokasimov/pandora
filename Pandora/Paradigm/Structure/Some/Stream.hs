@@ -3,7 +3,8 @@
 module Pandora.Paradigm.Structure.Some.Stream where
 
 import Pandora.Core.Functor (type (:=), type (:=>), type (:::))
-import Pandora.Pattern.Category ((.), ($), (#))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Pointable (point)
 import Pandora.Pattern.Functor.Extractable (extract)

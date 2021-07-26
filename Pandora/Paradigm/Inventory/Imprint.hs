@@ -2,7 +2,8 @@
 
 module Pandora.Paradigm.Inventory.Imprint (Imprint (..), Traceable) where
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))

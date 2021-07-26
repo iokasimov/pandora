@@ -6,7 +6,8 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
 import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply), Semimonoidal_ (multiply_))

@@ -3,7 +3,8 @@
 module Pandora.Paradigm.Inventory.Optics where
 
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
-import Pandora.Pattern.Category (Category (identity, (.), ($), (#)))
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
+import Pandora.Pattern.Category (Category (identity, ($), (#)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
@@ -31,9 +32,11 @@ instance Invariant (Flip (Lens available) tgt) where
 type family Convex lens where
 	Convex Lens = Lens Identity
 
+instance Semigroupoid (Lens Identity) where
+	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
+
 instance Category (Lens Identity) where
 	identity = imply @(Convex Lens _ _) identity ((%) (!.))
-	P_Q_T to . P_Q_T from = P_Q_T $ \source -> source <$ (to . extract @Identity . position $ from source)
 
 instance Impliable (P_Q_T (->) Store Identity source target) where
 	type Arguments (P_Q_T (->) Store Identity source target) =
@@ -48,11 +51,13 @@ instance Impliable (P_Q_T (->) Store Maybe source target) where
 		(source -> Maybe target) -> (source -> Maybe target -> source) -> Lens Maybe source target
 	imply getter setter = P_Q_T $ \source -> Store $ getter source :*: setter source
 
-instance Category (Lens Maybe) where
-	identity = imply @(Obscure Lens _ _) # Just # resolve identity
+instance Semigroupoid (Lens Maybe) where
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> case position # from source of
 		Nothing -> Store $ Nothing :*: (source !.)
 		Just between -> source <$ to between
+
+instance Category (Lens Maybe) where
+	identity = imply @(Obscure Lens _ _) # Just # resolve identity
 
 -- Lens as natural transformation
 type (#=@) source target available = forall a . Lens available (source a) (target a)

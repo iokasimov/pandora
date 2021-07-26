@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Ability.Measurable where
 
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 
 class Measurable f t where

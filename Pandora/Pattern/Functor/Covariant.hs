@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Covariant where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (<:=))
-import Pandora.Pattern.Category (Category ((.)))
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 
 infixl 4 <$>, -<$>-, <$, $>
 infixl 3 <$$>, -<<$$>-, -<$$>>-
@@ -65,15 +65,15 @@ class Covariant (t :: * -> *) where
 		=> t :. u :. v :. w := a -> (a -> b) -> t :. u :. v :. w := b
 	x <&&&&> f = f <$$$$> x
 
-	(.#..) :: (t ~ v a, Category v)
+	(.#..) :: (t ~ v a, Semigroupoid v)
 		=> v c d -> v a :. v b := c -> v a :. v b := d
 	f .#.. g = (f .) <$> g
 
-	(.#...) :: (t ~ v a, t ~ v b, Category v, Covariant (v a), Covariant (v b))
+	(.#...) :: (t ~ v a, t ~ v b, Semigroupoid v, Covariant (v a), Covariant (v b))
 		=> v d e -> v a :. v b :. v c := d -> v a :. v b :. v c := e
 	f .#... g = (f .) <$$> g
 
-	(.#....) :: (t ~ v a, t ~ v b, t ~ v c, Category v, Covariant (v a), Covariant (v b), Covariant (v c))
+	(.#....) :: (t ~ v a, t ~ v b, t ~ v c, Semigroupoid v, Covariant (v a), Covariant (v b), Covariant (v c))
 		=> v e f -> v a :. v b :. v c :. v d := e -> v a :. v b :. v c :. v d := f
 	f .#.... g = (f .) <$$$> g
 
@@ -95,7 +95,7 @@ class Covariant (t :: * -> *) where
 	($$$$>) :: (Covariant u, Covariant v, Covariant w) => t :. u :. v :. w := a -> b -> t :. u :. v :. w := b
 	s $$$$> x = (\_-> x) <$$$$> s
 
-class (Category source, Category target) => Covariant_ t source target where
+class (Semigroupoid source, Semigroupoid target) => Covariant_ t source target where
 	(-<$>-) :: source a b -> target (t a) (t b)
 	
 (-<$$>-) :: forall t u category a b 

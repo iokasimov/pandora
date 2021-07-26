@@ -1,7 +1,8 @@
 module Pandora.Paradigm.Controlflow.Observable (Observable, observe,
 	notify, follow, subscribe, watch, (.:~.), (.:~*), (*:~.), (*:~*)) where
 
-import Pandora.Pattern.Category ((.), ($), (#))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Applicative (Applicative (forever))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)

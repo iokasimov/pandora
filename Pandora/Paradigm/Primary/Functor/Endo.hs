@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Endo where
 
-import Pandora.Pattern.Category (identity, (.), (#))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (identity, (#))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))

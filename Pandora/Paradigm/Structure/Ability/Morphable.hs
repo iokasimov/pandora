@@ -3,7 +3,8 @@
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
 import Pandora.Core.Functor (type (:=), type (~>), type (:=:=>))
-import Pandora.Pattern.Category ((.), (#))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Setoid (Setoid)

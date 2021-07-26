@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Controlflow.Effect.Interpreted where
 
 import Pandora.Core.Functor (type (:.), type (:=))
-import Pandora.Pattern.Category ((.))
+import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (<$$$>), (<$$$$>)), Covariant_)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()

@@ -3,7 +3,8 @@
 module Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category ((.), ($))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))

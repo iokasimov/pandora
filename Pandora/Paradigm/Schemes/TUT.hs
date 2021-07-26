@@ -1,7 +1,8 @@
 module Pandora.Paradigm.Schemes.TUT where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
-import Pandora.Pattern.Category (identity, (.), ($))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)), Covariant_ ((-<$>-)), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))

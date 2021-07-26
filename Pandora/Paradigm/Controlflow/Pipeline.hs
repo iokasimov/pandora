@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, impact, (=*=), pipeline) where
 
-import Pandora.Pattern.Category (($), (.), (#))
+import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (!..))

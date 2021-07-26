@@ -130,7 +130,8 @@ library
     Pandora.Paradigm.Primary.Linear.Matrix
 
     Pandora.Pattern
-    -- Category typeclass
+	-- Algebra typeclasses
+    Pandora.Pattern.Semigroupoid
     Pandora.Pattern.Category
     -- Functor typeclassess
     Pandora.Pattern.Functor
