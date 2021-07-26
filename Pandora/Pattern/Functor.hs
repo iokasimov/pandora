@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor (module Exports, (<*+>), (<**+>), (<***+>)) where
+module Pandora.Pattern.Functor (module Exports, Endofunctor, (<*+>), (<**+>), (<***+>)) where
 
 import Pandora.Pattern.Functor.Bivariant as Exports
 import Pandora.Pattern.Functor.Divariant as Exports

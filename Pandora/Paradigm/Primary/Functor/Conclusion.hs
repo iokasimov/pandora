@@ -3,6 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($), (#))
+import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
@@ -62,7 +63,7 @@ instance Alternative (Conclusion e) where
 	Success x <+> _ = Success x
 
 instance Traversable (Conclusion e) (->) (->) where
-	(<<-) :: (Covariant_ u (->) (->), Pointable u (->), Semimonoidal u (:*:) (->) (->))
+	(<<-) :: (Endofunctor Covariant_ u (->), Pointable u (->), Semimonoidal u (:*:) (->) (->))
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success -<$>- f x

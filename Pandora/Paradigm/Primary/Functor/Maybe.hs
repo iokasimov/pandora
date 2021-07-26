@@ -26,6 +26,7 @@ import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (Failure, Success))
 
 data Maybe a = Nothing | Just a
@@ -49,16 +50,21 @@ instance Semimonoidal Maybe (:*:) (->) (->) where
 	multiply _ (Nothing :*: _) = Nothing
 	multiply _ (_ :*: Nothing) = Nothing
 
-instance Semimonoidal_ Maybe (->) (:*:) (:*:) where
-	multiply_ (Just x :*: Just y) = Just $ x :*: y
-	multiply_ (Nothing :*: _) = Nothing
-	multiply_ (_ :*: Nothing) = Nothing
-
 instance Semimonoidal Maybe Conclusion (->) (->) where
 	multiply f (Failure (Just x)) = Just . f $ Failure x
 	multiply f (Success (Just y)) = Just . f $ Success y
 	multiply _ (Failure Nothing) = Nothing
 	multiply _ (Success Nothing) = Nothing
+
+instance Semimonoidal_ Maybe (->) (:*:) (:*:) where
+	multiply_ (Just x :*: Just y) = Just $ x :*: y
+	multiply_ (Nothing :*: _) = Nothing
+	multiply_ (_ :*: Nothing) = Nothing
+
+instance Semimonoidal_ Maybe (->) (:*:) (:+:) where
+	multiply_ (Just x :*: Just y) = Just $ Option x
+	multiply_ (Nothing :*: Just y) = Just $ Adoption y
+	multiply_ (Nothing :*: Nothing) = Nothing
 
 instance Alternative Maybe where
 	Nothing <+> y = y

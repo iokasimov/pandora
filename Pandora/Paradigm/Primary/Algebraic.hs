@@ -8,6 +8,7 @@ import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply), Semimonoidal_ (multiply_))
@@ -46,8 +47,10 @@ instance Semimonoidal_ ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ (Option _ :*: Adoption y) = Adoption $ Adoption y
 	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
-type Applicative_ t = (Covariant_ t (->) (->), Semimonoidal_ t (->) (:*:) (:*:))
-type Alternative_ t = (Covariant_ t (->) (->), Semimonoidal_ t (->) (:*:) (:+:))
+-- TODO: Generalize over (->)
+
+type Applicative_ t = (Endofunctor Covariant_ t (->), Semimonoidal_ t (->) (:*:) (:*:))
+type Alternative_ t = (Endofunctor Covariant_ t (->), Semimonoidal_ t (->) (:*:) (:+:))
 
 (-*-) :: Applicative_ t => t (a -> b) -> t a -> t b
 f -*- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)
