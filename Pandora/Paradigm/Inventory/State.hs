@@ -8,7 +8,7 @@ import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Semimonoidal (multiply), Semimonoidal_ (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -39,6 +39,12 @@ instance Semimonoidal (State s) (:*:) (->) (->) where
 		let old :*: x = g s in
 		let new :*: y = h old in
 		new :*: f (x :*: y)
+
+instance Semimonoidal_ (State s) (->) (:*:) (:*:) where
+	multiply_ (State g :*: State h) = State $ \s -> 
+		let old :*: x = g s in 
+	  	let new :*: y = h old in
+		new :*: x :*: y
 
 instance Pointable (State s) (->) where
 	point = State . (identity @(->) -|)
