@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply), Semimonoidal_ (multiply_))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal_ (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -18,7 +18,6 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -42,21 +41,10 @@ instance Covariant_ (Flip Conclusion e) (->) (->) where
 instance Pointable (Conclusion e) (->) where
 	point = Success
 
-instance Semimonoidal (Conclusion e) (:*:) (->) (->) where
-	multiply f (Success x :*: Success y) = Success . f $ x :*: y
-	multiply _ (Failure x :*: _) = Failure x
-	multiply _ (_ :*: Failure x) = Failure x
-
 instance Semimonoidal_ (Conclusion e) (->) (:*:) (:*:) where
 	multiply_ (Success x :*: Success y) = Success $ x :*: y
 	multiply_ (Failure x :*: _) = Failure x
 	multiply_ (_ :*: Failure x) = Failure x
-
-instance Semimonoidal (Conclusion e) (:+:) (->) (->) where
-	multiply f (Option (Success x)) = Success . f $ Option x
-	multiply f (Adoption (Success y)) = Success . f $ Adoption y
-	multiply _ (Option (Failure e)) = Failure e
-	multiply _ (Adoption (Failure e)) = Failure e
 
 instance Alternative (Conclusion e) where
 	Failure _ <+> x = x

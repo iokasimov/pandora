@@ -8,13 +8,11 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Transformer.Backwards (Backwards (Backwards))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
@@ -31,9 +29,6 @@ instance Pointable t (->) => Pointable (Reverse t) (->) where
 
 instance Extractable t (->) => Extractable (Reverse t) (->) where
 	extract (Reverse x) = extract x
-
-instance Semimonoidal t (:*:) (->) (->) => Semimonoidal (Reverse t) (:*:) (->) (->) where
-	multiply f (Reverse x :*: Reverse y) = Reverse . multiply f $ x :*: y
 
 instance Traversable t (->) (->) => Traversable (Reverse t) (->) (->) where
 	f <<- Reverse x = Reverse -<$>- run (Backwards . f <<- x)

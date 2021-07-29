@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply), Semimonoidal_ (multiply_))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal_ (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -27,7 +27,6 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
-import Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (Failure, Success))
 
 data Maybe a = Nothing | Just a
 
@@ -44,17 +43,6 @@ instance Pointable Maybe (->) where
 
 instance Avoidable Maybe where
 	empty = Nothing
-
-instance Semimonoidal Maybe (:*:) (->) (->) where
-	multiply f (Just x :*: Just y) = Just . f $ x :*: y
-	multiply _ (Nothing :*: _) = Nothing
-	multiply _ (_ :*: Nothing) = Nothing
-
-instance Semimonoidal Maybe Conclusion (->) (->) where
-	multiply f (Failure (Just x)) = Just . f $ Failure x
-	multiply f (Success (Just y)) = Just . f $ Success y
-	multiply _ (Failure Nothing) = Nothing
-	multiply _ (Success Nothing) = Nothing
 
 instance Semimonoidal_ Maybe (->) (:*:) (:*:) where
 	multiply_ (Just x :*: Just y) = Just $ x :*: y
