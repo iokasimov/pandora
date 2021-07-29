@@ -526,3 +526,4 @@
 * Define experimental `-*-` method of `Semonoidal_` typeclass
 * Define experimental `-+-` method of `Semonoidal_` typeclass
 * Use experimental `Semimonoidal_` as superclass of `Traversable`
+* Remove `-<*>-` method of Semimonoidal typeclass
