@@ -15,6 +15,8 @@ import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply), Semimonoida
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
+infixl 4 -<*>-, -*-
+
 instance Semimonoidal ((->) e) (:*:) (->) (->) where
 	multiply f (g :*: h) = \x -> f $ g x :*: h x
 
@@ -31,8 +33,6 @@ instance Adjoint ((:*:) s) ((->) s) (->) (->) where
 	f -| x = \s -> f $ s :*: x
 	(|-) :: (a -> s -> b) -> (s :*: a) -> b
 	f |- ~(s :*: x) = f x s
-
-infixl 4 -<*>-
 
 (-<*>-) :: forall a b t . (Semimonoidal t (:*:) (->) (->)) => t (a -> b) -> t a -> t b
 (-<*>-) = (%) ((-|) @((:*:) (t (a -> b))) (multiply @t @(:*:) @(->) @(->) ((&) |-)))

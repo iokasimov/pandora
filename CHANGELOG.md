@@ -525,3 +525,4 @@
 * Define `Applicative_` and `Alternative_` type class aliases of `Semimonoidal_`
 * Define experimental `-*-` method of `Semonoidal_` typeclass
 * Define experimental `-+-` method of `Semonoidal_` typeclass
+* Use experimental `Semimonoidal_` as superclass of `Traversable`

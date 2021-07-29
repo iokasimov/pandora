@@ -63,7 +63,7 @@ instance Alternative (Conclusion e) where
 	Success x <+> _ = Success x
 
 instance Traversable (Conclusion e) (->) (->) where
-	(<<-) :: (Endofunctor Covariant_ u (->), Pointable u (->), Semimonoidal u (:*:) (->) (->))
+	(<<-) :: (Endofunctor Covariant_ u (->), Pointable u (->), Semimonoidal_ u (->) (:*:) (:*:))
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success -<$>- f x

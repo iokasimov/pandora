@@ -22,7 +22,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
+import Pandora.Paradigm.Primary.Algebraic ((-*-))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
@@ -48,7 +48,7 @@ instance Applicative t => Applicative (Construction t) where
 	~(Construct f fs) <*> ~(Construct x xs) = Construct # f x # fs <**> xs
 
 instance Traversable t (->) (->) => Traversable (Construction t) (->) (->) where
-	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs
+	f <<- ~(Construct x xs) = Construct -<$>- f x -*- f -<<-<<- xs
 
 instance (Covariant_ t (->) (->), Alternative t) => Bindable (Construction t) (->) where
 	f =<< ~(Construct x xs) = Construct # extract (f x) # deconstruct (f x) <+> ((f =<<) -<$>- xs)
