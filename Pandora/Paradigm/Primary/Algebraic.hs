@@ -10,7 +10,7 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal_ (multiply_))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
@@ -25,11 +25,11 @@ instance Adjoint ((:*:) s) ((->) s) (->) (->) where
 	(|-) :: (a -> s -> b) -> (s :*: a) -> b
 	f |- ~(s :*: x) = f x s
 
-instance Semimonoidal_ ((->) e) (->) (:*:) (:*:) where
+instance Semimonoidal ((->) e) (->) (:*:) (:*:) where
 	multiply_ :: ((e -> a) :*: (e -> b)) -> e -> (a :*: b)
 	multiply_ (g :*: h) = \x -> g x :*: h x
 
-instance Semimonoidal_ ((:+:) e) (->) (:*:) (:+:) where
+instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
 	multiply_ (Option _ :*: Option e') = Option e'
 	multiply_ (Option _ :*: Adoption y) = Adoption $ Adoption y
@@ -37,8 +37,8 @@ instance Semimonoidal_ ((:+:) e) (->) (:*:) (:+:) where
 
 -- TODO: Generalize over (->)
 
-type Applicative_ t = (Endofunctor Covariant_ t (->), Semimonoidal_ t (->) (:*:) (:*:))
-type Alternative_ t = (Endofunctor Covariant_ t (->), Semimonoidal_ t (->) (:*:) (:+:))
+type Applicative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:*:))
+type Alternative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:+:))
 
 (-*-) :: Applicative_ t => t (a -> b) -> t a -> t b
 f -*- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)

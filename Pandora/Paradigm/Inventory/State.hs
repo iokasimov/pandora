@@ -8,7 +8,7 @@ import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Semimonoidal_ (multiply_))
+import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -34,7 +34,7 @@ instance Covariant_ (State s) (->) (->) where
 instance Applicative (State s) where
 	f <*> x = State $ ((<$>) |-) . (run x <-> identity @(->)) . run f
 
-instance Semimonoidal_ (State s) (->) (:*:) (:*:) where
+instance Semimonoidal (State s) (->) (:*:) (:*:) where
 	multiply_ (State g :*: State h) = State $ \s -> 
 		let old :*: x = g s in 
 	  	let new :*: y = h old in
@@ -78,7 +78,7 @@ replace s = adapt . State $ \_ -> s :*: s
 reconcile :: (Bindable t (->), Stateful s t, Adaptable u t) => (s -> u s) -> t s
 reconcile f = replace =<< adapt . f =<< current
 
-type Memorable s t = (Pointable t (->), Semimonoidal_ t (->) (:*:) (:*:), Stateful s t)
+type Memorable s t = (Pointable t (->), Semimonoidal t (->) (:*:) (:*:), Stateful s t)
 
 fold :: (Traversable t (->) (->), Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = ((!.) %) -<$>- (modify . op <<- struct) -*- current

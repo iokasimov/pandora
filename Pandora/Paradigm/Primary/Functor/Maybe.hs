@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal_ (multiply_))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -44,12 +44,12 @@ instance Pointable Maybe (->) where
 instance Avoidable Maybe where
 	empty = Nothing
 
-instance Semimonoidal_ Maybe (->) (:*:) (:*:) where
+instance Semimonoidal Maybe (->) (:*:) (:*:) where
 	multiply_ (Just x :*: Just y) = Just $ x :*: y
 	multiply_ (Nothing :*: _) = Nothing
 	multiply_ (_ :*: Nothing) = Nothing
 
-instance Semimonoidal_ Maybe (->) (:*:) (:+:) where
+instance Semimonoidal Maybe (->) (:*:) (:+:) where
 	multiply_ (Just x :*: Just _) = Just $ Option x
 	multiply_ (Nothing :*: Just y) = Just $ Adoption y
 	multiply_ (Nothing :*: Nothing) = Nothing

@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal_ (multiply_))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -32,7 +32,7 @@ instance Extractable t (->) => Extractable (Backwards t) (->) where
 	extract (Backwards x) = extract x
 
 -- TODO: check that effects evaluation goes in opposite order
-instance (Semimonoidal_ t (->) (:*:) (:*:), Covariant_ t (->) (->)) => Semimonoidal_ (Backwards t) (->) (:*:) (:*:) where
+instance (Semimonoidal t (->) (:*:) (:*:), Covariant_ t (->) (->)) => Semimonoidal (Backwards t) (->) (:*:) (:*:) where
 	multiply_ (Backwards x :*: Backwards y) = Backwards #
 		((:*:) %) -<$>- y -*- x
 

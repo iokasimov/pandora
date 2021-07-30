@@ -528,3 +528,4 @@
 * Use experimental `Semimonoidal_` as superclass of `Traversable`
 * Remove `-<*>-` method of `Semimonoidal` typeclass
 * Remove `Semimonoidal` typeclass
+* Rename `Semimonoidal_` typeclass to `Semimonoidal`

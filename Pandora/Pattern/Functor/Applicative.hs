@@ -47,5 +47,5 @@ class Covariant t => Applicative t where
 	f <****> x = (<***>) <$> f <*> x
 
 -- FIXME: not actually a category, but a semigroupoid
-class Semimonoidal_ t category source target where
+class Semimonoidal t category source target where
 	multiply_ :: category (source (t a) (t b)) (t (target a b))
