@@ -23,7 +23,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
-import Pandora.Paradigm.Primary.Algebraic ((-*-))
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -173,7 +173,7 @@ type instance Zipper List (Left ::: Right) = Tap (List <:.:> List := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) (->) (->) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
-		-<$>- f <<- Reverse past -*- f x -*- f <<- future
+		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
 
 instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) (->) where
 	f <<= z = let move rtt = TU . deconstruct $ run . rtt .-+ z in
@@ -232,7 +232,7 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Ma
 instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) =
 		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
-	morphing (premorph -> zipper) = let spread x y = (:*:) -<$>- x -*- y in TU $
+	morphing (premorph -> zipper) = let spread x y = (:*:) -<$>- x -<*>- y in TU $
 		Tap (extract zipper) . T_U -<$>- ((spread |-) . (run <-> run) . run $ lower zipper)
 
 instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where

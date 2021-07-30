@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, (-*-), (-+-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, (-<*>-), (-+-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
-infixl 4 -*-
+infixl 4 -<*>-
 
 instance Traversable ((:*:) s) (->) (->) where
 	f <<- x = (attached x :*:) -<$>- f (extract x)
@@ -40,8 +40,8 @@ instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 type Applicative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:*:))
 type Alternative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:+:))
 
-(-*-) :: Applicative_ t => t (a -> b) -> t a -> t b
-f -*- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)
+(-<*>-) :: Applicative_ t => t (a -> b) -> t a -> t b
+f -<*>- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)
 
 (-+-) :: Alternative_ t => t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f -<$>- multiply_ (x :*: y)

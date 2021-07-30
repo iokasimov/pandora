@@ -529,3 +529,4 @@
 * Remove `-<*>-` method of `Semimonoidal` typeclass
 * Remove `Semimonoidal` typeclass
 * Rename `Semimonoidal_` typeclass to `Semimonoidal`
+* Rename `-*-` method of `Semimonoidal` to `-<*>-`
