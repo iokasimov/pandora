@@ -3,7 +3,7 @@ module Pandora.Paradigm.Controlflow.Observable (Observable, observe,
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Applicative (Applicative (forever))
+import Pandora.Paradigm.Primary.Algebraic (Applicative_, forever_)
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
@@ -23,26 +23,26 @@ notify r action = captured $ run r # Capture . action
 (.:~.) :: Observable t a r -> (a -> t r) -> t r
 (.:~.) = notify
 
--- | Listen only first event, call back forever
-follow :: Applicative t => Observable t a r -> (a -> t r) -> t r
-follow r action = captured $ run r # Capture . forever . action
+-- | Listen only first event, call back forever_
+follow :: Applicative_ t => Observable t a r -> (a -> t r) -> t r
+follow r action = captured $ run r # Capture . forever_ . action
 
 -- | Infix version of 'follow'
-(.:~*) :: Applicative t => Observable t a r -> (a -> t r) -> t r
+(.:~*) :: Applicative_ t => Observable t a r -> (a -> t r) -> t r
 (.:~*) = follow
 
 -- | Listen all events from action, call back just once
-subscribe :: Applicative t => Observable t a r -> (a -> t r) -> t r
-subscribe r action = forever $ captured $ run r # Capture . action
+subscribe :: Applicative_ t => Observable t a r -> (a -> t r) -> t r
+subscribe r action = forever_ $ captured $ run r # Capture . action
 
 -- | Infix version of 'subscribe'
-(*:~.) :: Applicative t => Observable t a r -> (a -> t r) -> t r
+(*:~.) :: Applicative_ t => Observable t a r -> (a -> t r) -> t r
 (*:~.) = subscribe
 
--- | Listen all events from action, call back forever
-watch :: Applicative t => Observable t a r -> (a -> t r) -> t r
-watch r action = forever $ captured $ run r # Capture . forever . action
+-- | Listen all events from action, call back forever_
+watch :: Applicative_ t => Observable t a r -> (a -> t r) -> t r
+watch r action = forever_ $ captured $ run r # Capture . forever_ . action
 
 -- | Infix version of 'watch'
-(*:~*) :: Applicative t => Observable t a r -> (a -> t r) -> t r
+(*:~*) :: Applicative_ t => Observable t a r -> (a -> t r) -> t r
 (*:~*) = watch

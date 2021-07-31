@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, (-<*>-), (-+-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, (-<*>-), (*>-), forever_, (-+-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -35,7 +35,6 @@ instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ (Option _ :*: Adoption y) = Adoption $ Adoption y
 	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
--- TODO: Generalize over (->)
 type Applicative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:*:))
 type Alternative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:+:))
 
