@@ -1,5 +1,6 @@
 module Pandora.Pattern.Functor.Applicative where
 
+import Pandora.Pattern.Semigroupoid (Semigroupoid)
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$)))
 
@@ -47,5 +48,5 @@ class Covariant t => Applicative t where
 	f <****> x = (<***>) <$> f <*> x
 
 -- FIXME: not actually a category, but a semigroupoid
-class Semimonoidal t category source target where
-	multiply_ :: category (source (t a) (t b)) (t (target a b))
+class Semigroupoid p => Semimonoidal t p source target where
+	multiply_ :: p (source (t a) (t b)) (t (target a b))

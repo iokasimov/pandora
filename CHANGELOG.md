@@ -530,3 +530,4 @@
 * Remove `Semimonoidal` typeclass
 * Rename `Semimonoidal_` typeclass to `Semimonoidal`
 * Rename `-*-` method of `Semimonoidal` to `-<*>-`
+* Use `Semigroupoid` as superclass for `Semimonoidal`
