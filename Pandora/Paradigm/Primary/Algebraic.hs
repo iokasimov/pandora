@@ -36,12 +36,17 @@ instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
 -- TODO: Generalize over (->)
-
 type Applicative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:*:))
 type Alternative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:+:))
 
 (-<*>-) :: Applicative_ t => t (a -> b) -> t a -> t b
 f -<*>- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)
+
+forever_ :: Applicative_ t => t a -> t b
+forever_ x = let r = x *>- r in r
+
+(*>-) :: Applicative_ t => t a -> t b -> t b
+x *>- y = ((!.) %) -<$>- x -<*>- y
 
 (-+-) :: Alternative_ t => t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f -<$>- multiply_ (x :*: y)

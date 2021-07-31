@@ -531,3 +531,4 @@
 * Rename `Semimonoidal_` typeclass to `Semimonoidal`
 * Rename `-*-` method of `Semimonoidal` to `-<*>-`
 * Use `Semigroupoid` as superclass for `Semimonoidal`
+* Define `*>-` and `forever_` methods of `Applicative_` typeclass
