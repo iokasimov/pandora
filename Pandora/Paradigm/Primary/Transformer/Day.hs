@@ -2,16 +2,14 @@
 
 module Pandora.Paradigm.Primary.Transformer.Day where
 
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!..), (-.#..-))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 
 data Day t u a = forall b c . Day (t b) (u c) (b -> c -> a)
 
@@ -23,10 +21,6 @@ instance Covariant_ (Day t u) (->) (->) where
 
 instance (Pointable t (->), Pointable u (->)) => Pointable (Day t u) (->) where
 	point x = Day # point () # point () # (x !..)
-
-instance (Applicative t, Applicative u) => Applicative (Day t u) where
-	Day tb uc bcad <*> Day vb wc bca = Day # (:*:) <$> tb <*> vb # (:*:) <$> uc <*> wc
-		$ \(b :*: b') (c :*: c') -> bcad b c $ bca b' c'
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (Day t u) (->) where
 	extract (Day tb uc bcad) = bcad # extract tb # extract uc

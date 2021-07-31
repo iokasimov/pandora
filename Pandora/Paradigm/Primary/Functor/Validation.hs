@@ -4,7 +4,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)), Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
@@ -41,12 +41,6 @@ instance Covariant_ (Flip Validation a) (->) (->) where
 
 instance Pointable (Validation e) (->) where
 	point = Validated
-
-instance Semigroup e => Applicative (Validation e) where
-	Flaws e <*> Flaws e' = Flaws $ e + e'
-	Flaws e <*> Validated _ = Flaws e
-	Validated _ <*> Flaws e' = Flaws e'
-	Validated f <*> Validated x = Validated $ f x
 
 instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:*:) where
 	multiply_ (Validated x :*: Validated y) = Validated $ x :*: y

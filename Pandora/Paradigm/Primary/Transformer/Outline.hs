@@ -7,11 +7,9 @@ import Pandora.Pattern.Category (identity, ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 data Outline t a where
 	Line :: a -> Outline t a
@@ -32,19 +30,9 @@ instance Extractable t (->) => Extractable (Outline t) (->) where
 	extract (Line x) = x
 	extract (Outlined x y) = extract y # extract x
 
-instance Applicative (Outline f) where
-	Line f <*> y = f <$> y
-	Outlined x y <*> z = Outlined x # (%) <$> y <*> z
-
 instance Liftable Outline where
 	lift t = Outlined t (Line identity)
 
 instance Hoistable Outline where
 	_ /|\ Line x = Line x
 	f /|\ Outlined x y = Outlined # f x # f /|\ y
-
-instance (Extractable t (->), Pointable t (->), Applicative t) => Interpreted (Outline t) where
-	type Primary (Outline t) a = t a
-	run (Line x) = point x
-	run (Outlined t f) = run f <*> t
-	unite = Line . extract

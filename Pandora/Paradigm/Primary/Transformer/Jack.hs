@@ -9,7 +9,6 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -45,12 +44,6 @@ instance Avoidable t => Avoidable (Jack t) where
 instance Extractable t (->) => Extractable (Jack t) (->) where
 	extract (It x) = x
 	extract (Other y) = extract y
-
-instance Applicative t => Applicative (Jack t) where
-	It f <*> It x = It $ f x
-	It f <*> Other y = Other $ f <$> y
-	Other f <*> It x = Other $ ($ x) <$> f
-	Other f <*> Other y = Other $ f <*> y
 
 instance Traversable t (->) (->) => Traversable (Jack t) (->) (->) where
 	f <<- It x = It -<$>- f x

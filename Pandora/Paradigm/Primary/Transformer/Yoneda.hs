@@ -7,7 +7,6 @@ import Pandora.Pattern.Category (identity, ($), (#))
 import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -26,9 +25,6 @@ instance Covariant_ (Yoneda t) (->) (->) where
 
 instance Alternative t => Alternative (Yoneda t) where
 	Yoneda f <+> Yoneda g = Yoneda (f <*+> g)
-
-instance Applicative t => Applicative (Yoneda t) where
-	Yoneda f <*> Yoneda x = Yoneda (\g -> f (g .) <*> x identity)
 
 instance Avoidable t => Avoidable (Yoneda t) where
 	empty = Yoneda (empty !.)

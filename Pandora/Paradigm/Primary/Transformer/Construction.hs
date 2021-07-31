@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -24,6 +24,7 @@ import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Schemes (type (<:.>))
@@ -44,8 +45,8 @@ instance (Avoidable t, Covariant_ t (->) (->)) => Pointable (Construction t) (->
 instance Covariant_ t (->) (->) => Extractable (Construction t) (->) where
 	extract ~(Construct x _) = x
 
-instance Applicative t => Applicative (Construction t) where
-	~(Construct f fs) <*> ~(Construct x xs) = Construct # f x # fs <**> xs
+instance (Covariant_ t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Construction t) (->) (:*:) (:*:) where
+	multiply_ (Construct x xs :*: Construct y ys) = Construct (x :*: y) (multiply_ @_ @(->) @(:*:) -<$>- multiply_ (xs :*: ys))
 
 instance Traversable t (->) (->) => Traversable (Construction t) (->) (->) where
 	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs
