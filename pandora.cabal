@@ -137,7 +137,7 @@ library
     Pandora.Pattern.Functor
     Pandora.Pattern.Functor.Adjoint
     Pandora.Pattern.Functor.Alternative
-    Pandora.Pattern.Functor.Applicative
+    Pandora.Pattern.Functor.Semimonoidal
     Pandora.Pattern.Functor.Bindable
     Pandora.Pattern.Functor.Comonad
     Pandora.Pattern.Functor.Contravariant
