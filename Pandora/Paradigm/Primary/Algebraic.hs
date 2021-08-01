@@ -10,7 +10,7 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 

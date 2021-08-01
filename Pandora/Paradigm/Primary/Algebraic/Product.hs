@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Algebraic.Product where
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
-import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)

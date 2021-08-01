@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Traversable where
 
 import Pandora.Pattern.Functor.Covariant (Covariant_)
-import Pandora.Pattern.Functor.Applicative (Semimonoidal)
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
