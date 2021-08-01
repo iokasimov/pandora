@@ -9,8 +9,8 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -44,8 +44,8 @@ instance (Avoidable t, Covariant_ t (->) (->)) => Pointable (Tap t) (->) where
 instance (Covariant_ t (->) (->)) => Extractable (Tap t) (->) where
 	extract (Tap x _) = x
 
-instance Applicative t => Applicative (Tap t) where
-	Tap f fs <*> Tap x xs = Tap # f x # fs <*> xs
+instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap t) (->) (:*:) (:*:) where
+	multiply_ (Tap x xs :*: Tap y ys) = Tap (x :*: y) $ multiply_ $ xs :*: ys
 
 instance Traversable t (->) (->) => Traversable (Tap t) (->) (->) where
 	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
@@ -62,8 +62,9 @@ instance Lowerable Tap where
 instance Hoistable Tap where
 	f /|\ Tap x xs = Tap x # f xs
 
-instance {-# OVERLAPS #-} Applicative t => Applicative (Tap (t <:.:> t := (:*:))) where
-	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
+instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap (t <:.:> t := (:*:))) (->) (:*:) (:*:) where
+	multiply_ (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
+		$ T_U $ multiply_ (xls :*: yls) :*: multiply_ (xrs :*: yrs)
 
 instance {-# OVERLAPS #-} Traversable t (->) (->) => Traversable (Tap (t <:.:> t := (:*:))) (->) (->) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')

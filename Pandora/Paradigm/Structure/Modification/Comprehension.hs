@@ -9,7 +9,7 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -27,6 +27,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 
 newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
 
@@ -53,12 +54,11 @@ instance (Avoidable t, Alternative t) => Avoidable (Comprehension t) where
 instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehension t) (->) (->) where
 	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
-instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t (->), Pointable t (->), Avoidable t) => Applicative (Comprehension t) where
-	fs <*> xs = (\f -> Comprehension . TU . point . point . f =<< xs) =<< fs
+instance (Covariant_ t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Comprehension t) (->) (:*:) (:*:) where
+	multiply_ (Comprehension x :*: Comprehension y) = Comprehension $ multiply_ (x :*: y)
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t (->)) => Bindable (Comprehension t) (->) where
 	f =<< Comprehension (TU t) = Comprehension . TU $ (\(Construct x xs) -> run . run $ f x + (f =<< Comprehension (TU xs))) =<< t
-		-- t >>= \(Construct x xs) -> run . run $ f x + (Comprehension (TU xs) >>= f)
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Pointable t (->), Avoidable t, Bindable t (->)) => Monad (Comprehension t) where
 

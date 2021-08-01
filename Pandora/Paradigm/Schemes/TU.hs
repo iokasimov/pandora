@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>), (<**>)))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -17,6 +17,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 
 newtype TU ct cu t u a = TU (t :. u := a)
 
@@ -38,8 +39,8 @@ instance (Covariant t, Covariant u) => Covariant (t <:.> u) where
 instance (Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:.> u) (->) (->) where
 	f -<$>- x = TU $ f -<$$>- run x
 
-instance (Applicative t, Applicative u) => Applicative (t <:.> u) where
-	TU f <*> TU x = TU $ f <**> x
+instance (Covariant_ t (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <:.> u) (->) (:*:) (:*:) where
+	multiply_ (TU x :*: TU y) = TU $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
 
 instance (Covariant u, Alternative t) => Alternative (t <:.> u) where
 	x <+> y = TU $ run x <+> run y

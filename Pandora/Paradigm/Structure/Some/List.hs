@@ -7,7 +7,7 @@ import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)), Covariant_ ((-<$>-)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Avoidable (empty)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -168,9 +168,6 @@ type instance Combinative List = Comprehension Maybe
 
 type instance Zipper List (Left ::: Right) = Tap (List <:.:> List := (:*:))
 
---instance {-# OVERLAPS #-} Applicative (Tap (List <:.:> List := (:*:))) where
-	--Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
-
 instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) (->) (->) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
@@ -251,8 +248,9 @@ instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe
 
 type instance Zipper (Comprehension Maybe) (Left ::: Right) = Tap (Comprehension Maybe <:.:> Comprehension Maybe := (:*:))
 
-instance {-# OVERLAPS #-} Applicative (Tap (Comprehension Maybe <:.:> Comprehension Maybe := (:*:))) where
-	Tap f (T_U (lfs :*: rfs)) <*> Tap x (T_U (ls :*: rs)) = Tap # f x # T_U (lfs <*> ls :*: rfs <*> rs)
+instance Semimonoidal (Tap (Comprehension Maybe <:.:> Comprehension Maybe := (:*:))) (->) (:*:) (:*:) where
+	multiply_ (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
+		$ T_U $ multiply_ (xls :*: yls) :*: multiply_ (xrs :*: yrs)
 
 ----------------------------------------- Prefixed list --------------------------------------------
 
