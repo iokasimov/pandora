@@ -3,8 +3,9 @@ module Pandora.Paradigm.Schemes.TUT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)), Covariant_ ((-<$>-)), (-<$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$$>)), Covariant_ ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -12,6 +13,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype TUT ct ct' cu t t' u a = TUT (t :. u :. t' := a)
@@ -35,23 +37,14 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 instance (Covariant t, Covariant t', Covariant u) => Covariant (t <:<.>:> t' := u) where
 	f <$> TUT x = TUT $ f <$$$> x
 
-instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:<.>:> t' := u) (->) (->)where
+instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:<.>:> t' := u) (->) (->) where
 	f -<$>- TUT x = TUT $ f -<$$$>- x
 
---instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u (->)) => Applicative (t <:<.>:> t' := u) where
---	f <*> x = TUT $ (>>= ((<$$$> run x) |-)) <$> run f
-
---instance (Applicative t, Covariant t', Alternative u) => Alternative (t <:<.>:> t' := u) where
---	x <+> y = TUT $ run x <*+> run y
-
---instance (Pointable t (->), Applicative t, Covariant t', Avoidable u) => Avoidable (t <:<.>:> t' := u) where
---	empty = TUT $ point empty
+instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (->) (:*:) (:*:) where
+	multiply_ (TUT x :*: TUT y) = TUT $ multiply_ @_ @(->) @(:*:) -<$$>- multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
 
 instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Pointable u (->), Adjoint t' t (->) (->)) => Pointable (t <:<.>:> t' := u) (->) where
 	point = unite . (point @_ @(->) -|)
-
---instance (Covariant t, Covariant t', Adjoint t' t (->) (->), Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
---	f =<< x = TUT $ ((run . f |-) =<<) -<$>- x
 
 instance (Covariant t', Covariant t, Adjoint t' t (->) (->), Extendable u (->)) => Extendable (t' <:<.>:> t := u) (->) where
 	f <<= x = TUT $ ((f . unite -|) <<=) -<$>- run x

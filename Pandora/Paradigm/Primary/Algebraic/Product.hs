@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Algebraic.Product where
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -69,8 +69,8 @@ instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 instance (Group s, Group a) => Group (s :*: a) where
 	invert x = invert # attached x :*: invert # extract x
 
-instance {-# OVERLAPS #-} Applicative t => Applicative (t <:.:> t := (:*:)) where
-	T_U (lfs :*: rfs) <*> T_U (ls :*: rs) = T_U $ lfs <*> ls :*: rfs <*> rs
+instance {-# OVERLAPS #-} Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (t <:.:> t := (:*:)) (->) (:*:) (:*:) where
+	multiply_ (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ multiply_ (xls :*: yls) :*: multiply_ (xrs :*: yrs)
 
 delta :: a -> a :*: a
 delta x = x :*: x
