@@ -5,13 +5,11 @@ module Pandora.Paradigm.Primary.Transformer.Yoneda where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 newtype Yoneda t a = Yoneda
 	{ yoneda :: forall b . (a -> b) -> t b }

@@ -20,7 +20,7 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
-import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (%), (!.), (-<*>-), (*>-), delta)
+import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (*>-), delta)
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)

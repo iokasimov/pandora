@@ -7,12 +7,14 @@ import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
+import Pandora.Paradigm.Primary.Algebraic ()
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -33,8 +35,8 @@ instance Contravariant_ (Flip Environment a) (->) (->) where
 instance Pointable (Environment e) (->) where
 	point x = Environment (x !.)
 
-instance Applicative (Environment e) where
-	f <*> x = Environment $ run f <*> run x
+instance Semimonoidal (Environment e) (->) (:*:) (:*:) where
+	multiply_ (x :*: y) = unite $ multiply_ $ run x :*: run y
 
 instance Distributive (Environment e) (->) (->) where
 	f -<< g = Environment $ (run -<$>- f) -<< g

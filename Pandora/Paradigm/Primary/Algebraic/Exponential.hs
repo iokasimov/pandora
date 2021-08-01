@@ -6,7 +6,6 @@ import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -34,9 +33,6 @@ instance Covariant_ ((->) a) (->) (->) where
 
 instance Contravariant_ (Flip (->) a) (->) (->) where
 	f ->$<- Flip g = Flip $ g . f
-
-instance Applicative ((->) e) where
-	(<*>) f g x = f x $ g x
 
 instance Distributive ((->) e) (->) (->) where
 	f -<< g = \e -> (f % e) -<$>- g
