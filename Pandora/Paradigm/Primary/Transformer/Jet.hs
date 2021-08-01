@@ -3,7 +3,6 @@
 module Pandora.Paradigm.Primary.Transformer.Jet where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>), Covariant_ ((-<$>-)), (-<$$>-))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
