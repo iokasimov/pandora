@@ -9,7 +9,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ 
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -51,13 +50,8 @@ instance (Covariant_ t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoid
 instance Traversable t (->) (->) => Traversable (Construction t) (->) (->) where
 	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs
 
-instance (Covariant_ t (->) (->), Alternative t) => Bindable (Construction t) (->) where
-	f =<< ~(Construct x xs) = Construct # extract (f x) # deconstruct (f x) <+> ((f =<<) -<$>- xs)
-
 instance Covariant_ t (->) (->) => Extendable (Construction t) (->) where
 	f <<= x = Construct # f x # (f <<=) -<$>- deconstruct x
-
-instance (Avoidable t, Alternative t, Covariant_ t (->) (->)) => Monad (Construction t) where
 
 instance (Covariant t, Covariant_ t (->) (->)) => Comonad (Construction t) (->) where
 

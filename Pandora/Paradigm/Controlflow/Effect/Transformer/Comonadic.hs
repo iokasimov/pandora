@@ -9,7 +9,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -41,9 +40,6 @@ instance Extractable (Schematic Comonad t u) (->) => Extractable (t :< u) (->) w
 
 instance Semimonoidal (Schematic Comonad t u) (->) (:*:) (:*:) => Semimonoidal (t :< u) (->) (:*:) (:*:) where
 	multiply_ (TC f :*: TC x) = TC $ multiply_ $ f :*: x
-
-instance Alternative (Schematic Comonad t u) => Alternative (t :< u) where
-	TC x <+> TC y = TC $ x <+> y
 
 instance Traversable (Schematic Comonad t u) (->) (->) => Traversable (t :< u) (->) (->) where
 	f <<- TC x = TC -<$>- f <<- x

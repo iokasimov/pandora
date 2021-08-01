@@ -10,7 +10,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ 
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic ()
@@ -37,12 +36,6 @@ instance Traversable t (->) (->) => Traversable (Prefixed t k) (->) (->) where
 
 instance (Monoid k, Pointable t (->)) => Pointable (Prefixed t k) (->) where
 	point = Prefixed . point . (:*:) zero
-
-instance Alternative t => Alternative (Prefixed t k) where
-	x <+> y = Prefixed $ run x <+> run y
-
-instance Avoidable t => Avoidable (Prefixed t k) where
-	empty = Prefixed empty
 
 instance Covariant t => Morphable (Into t) (Prefixed t k) where
 	type Morphing (Into t) (Prefixed t k) = t

@@ -7,8 +7,6 @@ import Pandora.Pattern.Category (identity, ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -32,14 +30,6 @@ instance Covariant_ t (->) (->) => Covariant_ (Jack t) (->) (->) where
 
 instance Covariant_ t (->) (->) => Pointable (Jack t) (->) where
 	point = It
-
-instance Alternative t => Alternative (Jack t) where
-	It x <+> _ = It x
-	Other _ <+> It y = It y
-	Other x <+> Other y = Other # x <+> y
-
-instance Avoidable t => Avoidable (Jack t) where
-	empty = Other empty
 
 instance Extractable t (->) => Extractable (Jack t) (->) where
 	extract (It x) = x

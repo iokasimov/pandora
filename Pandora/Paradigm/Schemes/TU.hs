@@ -6,9 +6,7 @@ import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -41,12 +39,6 @@ instance (Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:.> 
 
 instance (Covariant_ t (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <:.> u) (->) (:*:) (:*:) where
 	multiply_ (TU x :*: TU y) = TU $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
-
-instance (Covariant u, Alternative t) => Alternative (t <:.> u) where
-	x <+> y = TU $ run x <+> run y
-
-instance (Covariant u, Avoidable t) => Avoidable (t <:.> u) where
-	empty = TU empty
 
 instance (Pointable t (->), Pointable u (->)) => Pointable (t <:.> u) (->) where
 	point = TU . point . point

@@ -10,7 +10,6 @@ import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -49,9 +48,6 @@ instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap t) (->) (:*:) (:*:
 
 instance Traversable t (->) (->) => Traversable (Tap t) (->) (->) where
 	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
-
-instance (Extractable t (->), Alternative t, Bindable t (->)) => Bindable (Tap t) (->) where
-	f =<< Tap x xs = case f x of ~(Tap y ys) -> Tap y $ ys <+> (lower . f =<< xs)
 
 instance (Extendable t (->), Covariant_ t (->) (->)) => Extendable (Tap t) (->) where
 	f <<= x = Tap # f x $ f . Tap (extract x) <<= lower x

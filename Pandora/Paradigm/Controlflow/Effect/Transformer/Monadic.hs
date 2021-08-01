@@ -9,8 +9,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -42,12 +40,6 @@ instance Extractable (Schematic Monad t u) (->) => Extractable (t :> u) (->) whe
 
 instance Semimonoidal (Schematic Monad t u) (->) (:*:) (:*:) => Semimonoidal (t :> u) (->) (:*:) (:*:) where
 	multiply_ (TM f :*: TM x) = TM $ multiply_ $ f :*: x
-
-instance Alternative (Schematic Monad t u) => Alternative (t :> u) where
-	TM x <+> TM y = TM $ x <+> y
-
-instance Avoidable (Schematic Monad t u) => Avoidable (t :> u) where
-	empty = TM empty
 
 instance Traversable (Schematic Monad t u) (->) (->) => Traversable (t :> u) (->) (->) where
 	f <<- TM x = TM -<$>- f <<- x

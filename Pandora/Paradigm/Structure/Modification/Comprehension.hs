@@ -10,8 +10,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -42,15 +40,6 @@ instance Covariant (t <:.> Construction t) => Covariant (Comprehension t) where
 instance Covariant_ (t <:.> Construction t) (->) (->) => Covariant_ (Comprehension t) (->) (->) where
 	f -<$>- Comprehension x = Comprehension $ f -<$>- x
 
-instance (Avoidable t, Pointable t (->)) => Pointable (Comprehension t) (->) where
-	point = Comprehension . TU . point . Construct % empty
-
-instance Alternative t => Alternative (Comprehension t) where
-	Comprehension x <+> Comprehension y = Comprehension $ x <+> y
-
-instance (Avoidable t, Alternative t) => Avoidable (Comprehension t) where
-	empty = Comprehension empty
-
 instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehension t) (->) (->) where
 	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
@@ -59,8 +48,6 @@ instance (Covariant_ t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoid
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t (->)) => Bindable (Comprehension t) (->) where
 	f =<< Comprehension (TU t) = Comprehension . TU $ (\(Construct x xs) -> run . run $ f x + (f =<< Comprehension (TU xs))) =<< t
-
-instance (forall a . Semigroup (t <:.> Construction t := a), Pointable t (->), Avoidable t, Bindable t (->)) => Monad (Comprehension t) where
 
 instance Setoid (t <:.> Construction t := a) => Setoid (Comprehension t a) where
 	Comprehension ls == Comprehension rs = ls == rs

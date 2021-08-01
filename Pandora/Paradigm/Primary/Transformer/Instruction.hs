@@ -5,9 +5,7 @@ module Pandora.Paradigm.Primary.Transformer.Instruction where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -30,14 +28,6 @@ instance Covariant_ t (->) (->) => Covariant_ (Instruction t) (->) (->) where
 
 instance Covariant_ t (->) (->) => Pointable (Instruction t) (->) where
 	point = Enter
-
-instance Alternative t => Alternative (Instruction t) where
-	Enter x <+> _ = Enter x
-	_ <+> Enter y = Enter y
-	Instruct xs <+> Instruct ys = Instruct $ xs <+> ys
-
-instance Avoidable t => Avoidable (Instruction t) where
-	empty = Instruct empty
 
 instance (Covariant_ t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Instruction t) (->) (:*:) (:*:) where
 	multiply_ (Enter x :*: Enter y) = Enter $ x :*: y
