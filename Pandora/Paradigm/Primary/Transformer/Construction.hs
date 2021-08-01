@@ -6,7 +6,6 @@ import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
@@ -37,9 +36,6 @@ instance Covariant t => Covariant (Construction t) where
 
 instance Covariant_ t (->) (->) => Covariant_ (Construction t) (->) (->) where
 	f -<$>- ~(Construct x xs) = Construct # f x # f -<$$>- xs
-
-instance (Avoidable t, Covariant_ t (->) (->)) => Pointable (Construction t) (->) where
-	point x = Construct x empty
 
 instance Covariant_ t (->) (->) => Extractable (Construction t) (->) where
 	extract ~(Construct x _) = x

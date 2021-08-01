@@ -10,7 +10,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ 
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Extractable (extract)
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))

@@ -534,3 +534,6 @@
 * Define `*>-` and `forever_` methods of `Applicative_` typeclass
 * Remove `<+*>`, `<**+>`, `<***+>` methods
 * Remove `Applicative` typeclass
+* Remove `satisfy` method of `Predicate`
+* Remove `Alternative` typeclass
+* Remove `Avoidable` typeclass

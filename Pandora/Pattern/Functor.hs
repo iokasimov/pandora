@@ -13,9 +13,7 @@ import Pandora.Pattern.Functor.Traversable as Exports
 import Pandora.Pattern.Functor.Determinable as Exports
 import Pandora.Pattern.Functor.Extractable as Exports
 import Pandora.Pattern.Functor.Pointable as Exports
-import Pandora.Pattern.Functor.Avoidable as Exports
 import Pandora.Pattern.Functor.Semimonoidal as Exports
-import Pandora.Pattern.Functor.Alternative as Exports
 import Pandora.Pattern.Functor.Invariant as Exports
 import Pandora.Pattern.Functor.Contravariant as Exports
 import Pandora.Pattern.Functor.Covariant as Exports

@@ -7,7 +7,6 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)), Contravaria
 import Pandora.Pattern.Functor.Divisible (Divisible ((>*<)), Divisible_ (divide))
 import Pandora.Pattern.Functor.Determinable (Determinable (determine))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool, (?))
@@ -40,9 +39,6 @@ instance Determinable Predicate where
 
 equate :: Setoid a => a :=> Predicate
 equate x = Predicate (== x)
-
-satisfy :: (Pointable t (->), Avoidable t) => Predicate a -> a -> t a
-satisfy p x = run p x ? point x $ empty
 
 not :: Predicate ~> Predicate
 not (Predicate p) = Predicate $ bool True False . p
