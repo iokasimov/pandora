@@ -4,7 +4,6 @@ module Pandora.Paradigm.Primary.Transformer.Yoneda where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($), (#))
-import Pandora.Pattern.Functor ((<*+>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
@@ -22,12 +21,6 @@ instance Covariant (Yoneda t) where
 
 instance Covariant_ (Yoneda t) (->) (->) where
 	f -<$>- x = Yoneda (\k -> yoneda x (k . f))
-
-instance Alternative t => Alternative (Yoneda t) where
-	Yoneda f <+> Yoneda g = Yoneda (f <*+> g)
-
-instance Avoidable t => Avoidable (Yoneda t) where
-	empty = Yoneda (empty !.)
 
 instance Pointable t (->) => Pointable (Yoneda t) (->) where
 	point x = Yoneda (\f -> point $ f x)

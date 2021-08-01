@@ -8,7 +8,7 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Avoidable (Avoidable (empty))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -18,6 +18,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
 class Interpreted t => Monadic t where
@@ -39,8 +40,8 @@ instance Pointable (Schematic Monad t u) (->) => Pointable (t :> u) (->) where
 instance Extractable (Schematic Monad t u) (->) => Extractable (t :> u) (->) where
 	extract = extract . tm
 
-instance Applicative (Schematic Monad t u) => Applicative (t :> u) where
-	TM f <*> TM x = TM $ f <*> x
+instance Semimonoidal (Schematic Monad t u) (->) (:*:) (:*:) => Semimonoidal (t :> u) (->) (:*:) (:*:) where
+	multiply_ (TM f :*: TM x) = TM $ multiply_ $ f :*: x
 
 instance Alternative (Schematic Monad t u) => Alternative (t :> u) where
 	TM x <+> TM y = TM $ x <+> y

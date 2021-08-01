@@ -8,7 +8,7 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Applicative (Applicative ((<*>)))
+import Pandora.Pattern.Functor.Applicative (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -17,6 +17,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
 class Interpreted t => Comonadic t where
@@ -38,8 +39,8 @@ instance Pointable (Schematic Comonad t u) (->) => Pointable (t :< u) (->) where
 instance Extractable (Schematic Comonad t u) (->) => Extractable (t :< u) (->) where
 	extract = extract . tc
 
-instance Applicative (Schematic Comonad t u) => Applicative (t :< u) where
-	TC f <*> TC x = TC $ f <*> x
+instance Semimonoidal (Schematic Comonad t u) (->) (:*:) (:*:) => Semimonoidal (t :< u) (->) (:*:) (:*:) where
+	multiply_ (TC f :*: TC x) = TC $ multiply_ $ f :*: x
 
 instance Alternative (Schematic Comonad t u) => Alternative (t :< u) where
 	TC x <+> TC y = TC $ x <+> y

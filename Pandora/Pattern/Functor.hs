@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor (module Exports, Endofunctor, (<*+>), (<**+>), (<***+>)) where
+module Pandora.Pattern.Functor (module Exports, Endofunctor) where
 
 import Pandora.Pattern.Functor.Bivariant as Exports
 import Pandora.Pattern.Functor.Divariant as Exports
@@ -20,21 +20,8 @@ import Pandora.Pattern.Functor.Invariant as Exports
 import Pandora.Pattern.Functor.Contravariant as Exports
 import Pandora.Pattern.Functor.Covariant as Exports
 
-import Pandora.Core.Functor (type (:.), type (:=))
-
 type family Endofunctor constraint functor category where
 	Endofunctor Covariant_ t category = Covariant_ t category category
 	Endofunctor Contravariant_ t category = Contravariant_ t category category
 	Endofunctor Traversable t category = Traversable t category category
 	Endofunctor Distributive t category = Distributive t category category
-
-(<*+>) :: (Applicative t, Alternative u) => t :. u := a -> t :. u := a -> t :. u := a
-x <*+> y = (<+>) <$> x <*> y
-
-(<**+>) :: (Applicative t, Applicative u, Alternative v)
-	=> t :. u :. v := a -> t :. u :. v := a -> t :. u :. v := a
-x <**+> y = (<+>) <$$> x <**> y
-
-(<***+>) :: (Applicative t, Applicative u, Applicative v, Alternative w)
-	=> t :. u :. v :. w := a -> t :. u :. v :. w := a -> t :. u :. v :. w := a
-x <***+> y = (<+>) <$$$> x <***> y
