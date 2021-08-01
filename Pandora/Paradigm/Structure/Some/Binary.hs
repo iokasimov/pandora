@@ -189,27 +189,27 @@ instance Morphable (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor
 		lift $ twosome # Construct parent (resolve # Both focused # Left focused # run rest) # TU (TU next)
 	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
 		lift $ twosome # Construct parent (resolve # Both % focused # Right focused # run rest) # TU (TU next)
-	morphing (premorph -> T_U (_ :*: TU (TU Top))) = empty
+	morphing (premorph -> T_U (_ :*: TU (TU Top))) = TU Nothing
 
 instance Morphable (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
 	type Morphing (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing (run . premorph -> Construct x (Left lst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) empty # next
+		lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (TU Nothing) # next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
 		lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (lift rst) # next
-	morphing (run . premorph -> Construct _ (Right _) :*: _) = empty
-	morphing (run . premorph -> Construct _ End :*: _) = empty
+	morphing (run . premorph -> Construct _ (Right _) :*: _) = TU Nothing
+	morphing (run . premorph -> Construct _ End :*: _) = TU Nothing
 
 instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
 	type Morphing (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) =
-		lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) empty # next
+		lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (TU Nothing) # next
 	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
 		lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (lift lst) # next
-	morphing (run . premorph -> Construct _ (Left _) :*: _) = empty
-	morphing (run . premorph -> Construct _ End :*: _) = empty
+	morphing (run . premorph -> Construct _ (Left _) :*: _) = TU Nothing
+	morphing (run . premorph -> Construct _ End :*: _) = TU Nothing
 
 leaf :: a :=> Nonempty Binary
 leaf x = Construct x End

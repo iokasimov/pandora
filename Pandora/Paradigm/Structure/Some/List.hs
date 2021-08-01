@@ -66,7 +66,7 @@ instance Semigroup (List a) where
 		$ TU @Covariant @Covariant xs + TU @Covariant @Covariant ys
 
 instance Monoid (List a) where
-	zero = empty
+	zero = TU Nothing
 
 instance Morphable Push List where
 	type Morphing Push List = Identity <:.:> List := (->)
@@ -108,15 +108,15 @@ instance Substructure Root List where
 	type Available Root List = Maybe
 	type Substance Root List = Identity
 	substructure = P_Q_T $ \zipper -> case run # lower zipper of
-		Just (Construct x xs) -> Store $ Just (Identity x) :*: lift . resolve (lift . (Construct % xs) . extract @Identity) empty
-		Nothing -> Store $ Nothing :*: lift . resolve (lift . (Construct % empty) . extract @Identity) empty
+		Just (Construct x xs) -> Store $ Just (Identity x) :*: lift . resolve (lift . (Construct % xs) . extract @Identity) zero
+		Nothing -> Store $ Nothing :*: lift . resolve (lift . (Construct % Nothing) . extract @Identity) zero
 
 instance Substructure Tail List where
 	type Available Tail List = Identity
 	type Substance Tail List = List
 	substructure = P_Q_T $ \x -> case run . extract . run $ x of
 		Just ns -> lift . lift <$> run (sub @Tail) ns
-		Nothing -> Store $ Identity empty :*: lift . identity . extract
+		Nothing -> Store $ Identity zero :*: lift . identity . extract
 
 -- | Transform any traversable structure into a stack
 linearize :: forall t a . Traversable t (->) (->) => t a -> List a
@@ -220,7 +220,7 @@ instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Ma
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Tap (List <:.:> List := (:*:))
-	morphing (premorph -> ne) = Tap # extract ne $ twosome # extract (view # sub @Tail # ne) # empty
+	morphing (premorph -> ne) = Tap # extract ne $ twosome # extract (view # sub @Tail # ne) # zero
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Tap (List <:.:> List := (:*:))

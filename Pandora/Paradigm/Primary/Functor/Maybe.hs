@@ -41,9 +41,6 @@ instance Covariant_ Maybe (->) (->) where
 instance Pointable Maybe (->) where
 	point = Just
 
-instance Avoidable Maybe where
-	empty = Nothing
-
 instance Semimonoidal Maybe (->) (:*:) (:*:) where
 	multiply_ (Just x :*: Just y) = Just $ x :*: y
 	multiply_ (Nothing :*: _) = Nothing
@@ -53,10 +50,6 @@ instance Semimonoidal Maybe (->) (:*:) (:+:) where
 	multiply_ (Just x :*: Just _) = Just $ Option x
 	multiply_ (Nothing :*: Just y) = Just $ Adoption y
 	multiply_ (Nothing :*: Nothing) = Nothing
-
-instance Alternative Maybe where
-	Nothing <+> y = y
-	Just x <+> _ = Just x
 
 instance Traversable Maybe (->) (->) where
 	_ <<- Nothing = point Nothing

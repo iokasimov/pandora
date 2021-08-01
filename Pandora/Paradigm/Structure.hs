@@ -54,17 +54,17 @@ instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) whe
 
 instance Morphable (Into (Inorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Inorder (Construction Maybe))) (Construction Wye) = Construction Maybe
-	morphing (premorph -> Construct x End) = point x
-	morphing (premorph -> Construct x (Left lst)) = into @(Inorder (Nonempty List)) lst + point x
-	morphing (premorph -> Construct x (Right rst)) = point x + into @(Inorder (Nonempty List)) rst
-	morphing (premorph -> Construct x (Both lst rst)) = into @(Inorder (Nonempty List)) lst + point x + into @(Inorder (Nonempty List)) rst
+	morphing (premorph -> Construct x End) = Construct x Nothing
+	morphing (premorph -> Construct x (Left lst)) = into @(Inorder (Nonempty List)) lst + Construct x Nothing
+	morphing (premorph -> Construct x (Right rst)) = Construct x Nothing + into @(Inorder (Nonempty List)) rst
+	morphing (premorph -> Construct x (Both lst rst)) = into @(Inorder (Nonempty List)) lst + Construct x Nothing + into @(Inorder (Nonempty List)) rst
 
 instance Morphable (Into (Postorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Postorder (Construction Maybe))) (Construction Wye) = Construction Maybe
-	morphing (premorph -> Construct x End) = point x
-	morphing (premorph -> Construct x (Left lst)) = into @(Postorder (Nonempty List)) lst + point x
-	morphing (premorph -> Construct x (Right rst)) = into @(Postorder (Nonempty List)) rst + point x
-	morphing (premorph -> Construct x (Both lst rst)) = into @(Postorder (Nonempty List)) lst + into @(Postorder (Nonempty List)) rst + point x
+	morphing (premorph -> Construct x End) = Construct x Nothing
+	morphing (premorph -> Construct x (Left lst)) = into @(Postorder (Nonempty List)) lst + Construct x Nothing
+	morphing (premorph -> Construct x (Right rst)) = into @(Postorder (Nonempty List)) rst + Construct x Nothing
+	morphing (premorph -> Construct x (Both lst rst)) = into @(Postorder (Nonempty List)) lst + into @(Postorder (Nonempty List)) rst + Construct x Nothing
 
 instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
 	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
