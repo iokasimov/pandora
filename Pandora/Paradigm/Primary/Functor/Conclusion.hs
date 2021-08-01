@@ -6,7 +6,6 @@ import Pandora.Pattern.Category (identity, ($), (#))
 import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Alternative (Alternative ((<+>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -18,6 +17,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -46,9 +46,9 @@ instance Semimonoidal (Conclusion e) (->) (:*:) (:*:) where
 	multiply_ (Failure x :*: _) = Failure x
 	multiply_ (_ :*: Failure x) = Failure x
 
-instance Alternative (Conclusion e) where
-	Failure _ <+> x = x
-	Success x <+> _ = Success x
+instance Semigroup e => Semimonoidal (Conclusion e) (->) (:*:) (:+:) where
+	multiply_ (Failure _ :*: x) = Adoption -<$>- x
+	multiply_ (Success x :*: _) = Option -<$>- Success x
 
 instance Traversable (Conclusion e) (->) (->) where
 	(<<-) :: (Endofunctor Covariant_ u (->), Pointable u (->), Semimonoidal u (->) (:*:) (:*:))

@@ -13,6 +13,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
@@ -48,9 +49,9 @@ instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:*:) where
 	multiply_ (Validated _ :*: Flaws y) = Flaws y
 	multiply_ (Flaws x :*: Validated _) = Flaws x
 
-instance Alternative (Validation e) where
-	Flaws _ <+> x = x
-	Validated x <+> _ = Validated x
+instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:+:) where
+	multiply_ (Flaws _ :*: y) = Adoption -<$>- y
+	multiply_ (Validated x :*: _) = Option -<$>- Validated x
 
 instance Traversable (Validation e) (->) (->) where
 	f <<- Validated x = Validated -<$>- f x
