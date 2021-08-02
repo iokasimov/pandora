@@ -538,3 +538,4 @@
 * Remove `Alternative` typeclass
 * Remove `Avoidable` typeclass
 * Change `-<$$$>-`: works with endofunctors
+* Define `-<$$$$>-` operator of `Covariant_` typeclass

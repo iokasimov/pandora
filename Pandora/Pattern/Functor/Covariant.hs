@@ -120,3 +120,8 @@ class (Semigroupoid source, Semigroupoid target) => Covariant_ t source target w
 	. (Covariant_ t category category, Covariant_ u category category, Covariant_ v category category) 
 	=> category a b -> category (t (u (v a))) (t (u (v b)))
 (-<$$$>-) s = ((-<$>-) @t @category @category ((-<$>-) @u @category @category ((-<$>-) @v @category @category s)))
+
+(-<$$$$>-) :: forall t u v w category a b
+	. (Covariant_ t category category, Covariant_ u category category, Covariant_ v category category, Covariant_ w category category) 
+	=> category a b -> category (t (u (v (w a)))) (t (u (v (w b))))
+(-<$$$$>-) s = ((-<$>-) @t @category @category ((-<$>-) @u @category @category ((-<$>-) @v @category @category ((-<$>-) @w @category @category s))))
