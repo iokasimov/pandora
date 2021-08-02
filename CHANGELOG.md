@@ -539,3 +539,4 @@
 * Remove `Avoidable` typeclass
 * Change `-<$$$>-`: works with endofunctors
 * Define `-<$$$$>-` operator of `Covariant_` typeclass
+* Use experimental `Covariant_` in `Interpreted`
