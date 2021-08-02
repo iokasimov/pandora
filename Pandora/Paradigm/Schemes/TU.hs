@@ -31,9 +31,6 @@ instance Interpreted (TU ct cu t u) where
 	run ~(TU x) = x
 	unite = TU
 
-instance (Covariant t, Covariant u) => Covariant (t <:.> u) where
-	f <$> x = TU $ f <$$> run x
-
 instance (Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:.> u) (->) (->) where
 	f -<$>- x = TU $ f -<$$>- run x
 
