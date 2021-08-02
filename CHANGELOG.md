@@ -537,3 +537,4 @@
 * Remove `satisfy` method of `Predicate`
 * Remove `Alternative` typeclass
 * Remove `Avoidable` typeclass
+* Change `-<$$$>-`: works with endofunctors

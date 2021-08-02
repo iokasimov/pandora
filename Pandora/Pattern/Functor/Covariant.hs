@@ -115,7 +115,8 @@ class (Semigroupoid source, Semigroupoid target) => Covariant_ t source target w
 
 -- TODO: Figure out how to work with hidden type variables
 -- to put intermediate category `between`
-(-<$$$>-) :: forall t u v source target a b
-	. (Covariant_ u source source, Covariant_ t source target, Covariant_ v target target) 
-	=> source a b -> target (v (t (u a))) (v (t (u b)))
-(-<$$$>-) s = ((-<$>-) ((-<$>-) @t @source @target ((-<$>-) @u @source @source s)))
+
+(-<$$$>-) :: forall t u v category a b
+	. (Covariant_ t category category, Covariant_ u category category, Covariant_ v category category) 
+	=> category a b -> category (t (u (v a))) (t (u (v b)))
+(-<$$$>-) s = ((-<$>-) @t @category @category ((-<$>-) @u @category @category ((-<$>-) @v @category @category s)))
