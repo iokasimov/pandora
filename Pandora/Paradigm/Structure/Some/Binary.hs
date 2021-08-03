@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), ($$$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable ((=<<))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -15,6 +15,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&))
+import Pandora.Paradigm.Primary.Algebraic (($$$>-))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
@@ -147,7 +148,7 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
 		let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)
 		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
-			# over (sub @Root) ($$$> value) tree
+			# over (sub @Root) ($$$>- value) tree
 			# over (sub @Left) continue tree
 			# over (sub @Right) continue tree
 

@@ -71,7 +71,7 @@ set :: Lens available source target -> available target -> source -> source
 set lens new = look new . run lens
 
 -- | Modify focused target value
-over :: Covariant available => Lens available source target -> (available target -> available target) -> source -> source
+over :: Lens available source target -> (available target -> available target) -> source -> source
 over lens f = extract . retrofit f . run lens
 
 -- | Representable based lens

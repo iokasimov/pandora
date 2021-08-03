@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Identity where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), comap), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -24,9 +24,6 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 newtype Identity a = Identity a
-
-instance Covariant Identity where
-	f <$> Identity x = Identity $ f x
 
 instance Covariant_ Identity (->) (->) where
 	f -<$>- Identity x = Identity $ f x
@@ -57,7 +54,7 @@ instance Representable Identity where
 
 instance Adjoint Identity Identity (->) (->) where
 	f -| x = Identity . f . Identity $ x
-	g |- x = extract . extract . comap g $ x
+	g |- x = extract . extract . (g -<$>-) $ x
 
 instance Setoid a => Setoid (Identity a) where
 	Identity x == Identity y = x == y

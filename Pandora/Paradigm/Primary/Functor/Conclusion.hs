@@ -26,7 +26,6 @@ import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
 data Conclusion e a = Failure e | Success a
 
-
 instance Covariant_ (Conclusion e) (->) (->) where
 	f -<$>- Success x = Success $ f x
 	_ -<$>- Failure y = Failure y
