@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, (-<*>-), (*>-), forever_, (-+-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -8,13 +8,22 @@ import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor (Endofunctor)
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
 infixl 4 -<*>-
+
+($>-) :: Covariant_ t (->) (->) => t a -> b -> t b
+x $>- r = (r !.) -<$>- x
+
+($$>-) :: (Covariant_ t (->) (->), Covariant_ u (->) (->)) => t (u a) -> b -> t (u b)
+x $$>- r = (r !.) -<$$>- x
+
+($$$>-) :: (Covariant_ t (->) (->), Covariant_ u (->) (->), Covariant_ v (->) (->)) => t (u (v a)) -> b -> t (u (v b))
+x $$$>- r = (r !.) -<$$$>- x
 
 instance Traversable ((:*:) s) (->) (->) where
 	f <<- x = (attached x :*:) -<$>- f (extract x)

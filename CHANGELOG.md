@@ -540,3 +540,4 @@
 * Change `-<$$$>-`: works with endofunctors
 * Define `-<$$$$>-` operator of `Covariant_` typeclass
 * Use experimental `Covariant_` in `Interpreted`
+* Define `$>-`, `$$>-`, `$$$>-` methods of `Covariant_` typeclass
