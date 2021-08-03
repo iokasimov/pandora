@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Transformer.Backwards where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -18,9 +18,6 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Backwards t a = Backwards (t a)
-
-instance Covariant t => Covariant (Backwards t) where
-	f <$> Backwards x = Backwards $ f <$> x
 
 instance Covariant_ t (->) (->) => Covariant_ (Backwards t) (->) (->) where
 	f -<$>- Backwards x = Backwards $ f -<$>- x

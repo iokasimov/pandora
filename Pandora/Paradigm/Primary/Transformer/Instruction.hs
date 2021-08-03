@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Transformer.Instruction where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
@@ -17,10 +17,6 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
-
-instance Covariant t => Covariant (Instruction t) where
-	f <$> Enter x = Enter $ f x
-	f <$> Instruct xs = Instruct $ f <$$> xs
 
 instance Covariant_ t (->) (->) => Covariant_ (Instruction t) (->) (->) where
 	f -<$>- Enter x = Enter $ f x
@@ -52,6 +48,6 @@ instance (forall t . Bindable t (->), forall t . Pointable t (->)) => Lowerable 
 	lower (Enter x) = point x
 	lower (Instruct xs) = lower =<< xs
 
-instance (forall v . Covariant v) => Hoistable Instruction where
+instance (forall v . Covariant_ v (->) (->)) => Hoistable Instruction where
 	_ /|\ Enter x = Enter x
-	f /|\ Instruct xs = Instruct $ hoist f <$> f xs
+	f /|\ Instruct xs = Instruct $ hoist f -<$>- f xs
