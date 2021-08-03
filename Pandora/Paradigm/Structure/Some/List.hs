@@ -179,17 +179,17 @@ instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Tap (List <:.:> List := (:*:))
 	morphing (premorph -> Tap x (T_U (future :*: past))) =
 		let subtree = twosome # extract (view (sub @Tail) future) # item @Push x past in
-		TU $ (Tap . extract) % subtree <$> view (sub @Root) future
+		TU $ (Tap . extract) % subtree -<$>- view (sub @Root) future
 
 instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Tap (List <:.:> List := (:*:))
 	morphing (premorph -> Tap x (T_U (future :*: past))) =
 		let subtree = twosome # item @Push x future # extract (view (sub @Tail) past) in
-		TU $ (Tap . extract) % subtree <$> view (sub @Root) past
+		TU $ (Tap . extract) % subtree -<$>- view (sub @Root) past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Tap (List <:.:> List := (:*:))
-	morphing (premorph -> list) = (into @(Zipper List (Left ::: Right)) <$>) ||= list
+	morphing (premorph -> list) = (into @(Zipper List (Left ::: Right)) -<$>-) ||= list
 
 instance Morphable (Into List) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into List) (Tap (List <:.:> List := (:*:))) = List

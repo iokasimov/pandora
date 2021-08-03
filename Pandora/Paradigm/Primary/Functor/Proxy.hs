@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Proxy where
 
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -10,9 +10,6 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 data Proxy a = Proxy
-
-instance Covariant Proxy where
-	_ <$> Proxy = Proxy
 
 instance Covariant_ Proxy (->) (->) where
 	_ -<$>- Proxy = Proxy

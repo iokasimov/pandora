@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Tagged where
 import Pandora.Core.Functor (type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -29,9 +29,6 @@ newtype Tagged tag a = Tag a
 
 infixr 0 :#
 type (:#) tag = Tagged tag
-
-instance Covariant (Tagged tag) where
-	f <$> Tag x = Tag $ f x
 
 instance Covariant_ (Tagged tag) (->) (->) where
 	f -<$>- Tag x = Tag $ f x
