@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($), (#))
 import Pandora.Pattern.Functor (Endofunctor)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -26,9 +26,6 @@ import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
 data Conclusion e a = Failure e | Success a
 
-instance Covariant (Conclusion e) where
-	f <$> Success x = Success $ f x
-	_ <$> Failure y = Failure y
 
 instance Covariant_ (Conclusion e) (->) (->) where
 	f -<$>- Success x = Success $ f x
