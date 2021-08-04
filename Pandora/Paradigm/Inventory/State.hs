@@ -56,7 +56,7 @@ instance Interpreted (State s) where
 type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 
 instance Monadic (State s) where
-	wrap x = TM . TUT $ point <$> run x
+	wrap x = TM . TUT $ point @_ @(->) -<$>- run x
 
 type Stateful s = Adaptable (State s)
 

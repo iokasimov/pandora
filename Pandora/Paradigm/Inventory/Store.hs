@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Store where
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>), (.#..)), Covariant_ ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (-.#..-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
@@ -25,9 +25,6 @@ import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 -- | Context based computation on value
 newtype Store s a = Store ((:*:) s :. (->) s := a)
 
-instance Covariant (Store s) where
-	f <$> Store x = Store $ f <$$> x
-
 instance Covariant_ (Store s) (->) (->) where
 	f -<$>- Store x = Store $ f -<$$>- x
 
@@ -35,7 +32,7 @@ instance Extractable (Store s) (->) where
 	extract = (($) |-) . run
 
 instance Extendable (Store s) (->) where
-	f <<= Store x = Store $ f -<$$>- (Store .#.. (identity @(->) -|) -<$>- x)
+	f <<= Store x = Store $ f -<$$>- (Store -.#..- (identity @(->) -|) -<$>- x)
 
 instance Comonad (Store s) (->) where
 

@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (:::))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((.#..)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -22,7 +22,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-), (-.#..-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -119,7 +119,7 @@ instance Substructure Tail List where
 
 -- | Transform any traversable structure into a stack
 linearize :: forall t a . Traversable t (->) (->) => t a -> List a
-linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just .#.. Construct)
+linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just -.#..- Construct)
 
 ----------------------------------------- Non-empty list -------------------------------------------
 

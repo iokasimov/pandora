@@ -11,7 +11,7 @@ import Pandora.Paradigm.Primary.Algebraic as Exports
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -31,7 +31,7 @@ instance Category (Flip (->)) where
 	identity = Flip identity
 
 instance Contravariant (Flip (->) r) where
-	f >$< g = (<$> f) ||= g
+	f >$< g = (-<$>- f) ||= g
 
 instance Covariant (Flip (:*:) a) where
 	f <$> (Flip (x :*: y)) = Flip $ f x :*: y
