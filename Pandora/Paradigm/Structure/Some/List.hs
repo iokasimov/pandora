@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (:::))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (.#..)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((.#..)), Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -114,7 +114,7 @@ instance Substructure Tail List where
 	type Available Tail List = Identity
 	type Substance Tail List = List
 	substructure = P_Q_T $ \x -> case run . extract . run $ x of
-		Just ns -> lift . lift <$> run (sub @Tail) ns
+		Just ns -> lift . lift -<$>- run (sub @Tail) ns
 		Nothing -> Store $ Identity zero :*: lift . identity . extract
 
 -- | Transform any traversable structure into a stack
@@ -210,12 +210,12 @@ type instance Zipper (Construction Maybe) (Left ::: Right) = Tap (Construction M
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) =
 		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
-	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract future) . twosome % item @Push x past <$> deconstruct future
+	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract future) . twosome % item @Push x past -<$>- deconstruct future
 
 instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) =
 		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
-	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract past) . twosome (item @Push x future) <$> deconstruct past
+	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract past) . twosome (item @Push x future) -<$>- deconstruct past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Tap (List <:.:> List := (:*:))
@@ -261,5 +261,5 @@ instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 
 instance Setoid key => Morphable (Lookup Key) (Prefixed (Construction Maybe) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Maybe) key) = (->) key <:.> Maybe
-	morphing (run . premorph -> Construct x xs) = TU $ \key -> extract <$> search key where
+	morphing (run . premorph -> Construct x xs) = TU $ \key -> extract @_ @(->) -<$>- search key where
 		search key = key == attached x ? Just x $ find @Element # Predicate ((key ==) . attached) =<< xs
