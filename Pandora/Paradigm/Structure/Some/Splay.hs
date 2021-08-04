@@ -6,7 +6,7 @@ module Pandora.Paradigm.Structure.Some.Splay where
 import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Primary ()
@@ -59,11 +59,11 @@ instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (branch @Left xs) . Just . Construct x
-			. into @Wye $ twosome (branch @Left =<< deconstruct <$> branch @Right xs)
-				(branch @Right =<< deconstruct <$> branch @Right xs)
+			. into @Wye $ twosome (branch @Left =<< deconstruct -<$>- branch @Right xs)
+				(branch @Right =<< deconstruct -<$>- branch @Right xs)
 
 		parent :: Maybe a
-		parent = extract <$> branch @Right xs
+		parent = extract @_ @(->) -<$>- branch @Right xs
 
 instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	type Morphing (Rotate (Right Zig)) (Construction Wye) = Binary
@@ -71,11 +71,11 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	morphing (premorph -> Construct x xs) = TU $ Construct -<$>- parent -<*>- Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
-		nodes = into @Wye . twosome (branch @Left =<< deconstruct <$> branch @Left xs) . Just . Construct x
-			. into @Wye $ twosome (branch @Right =<< deconstruct <$> branch @Left xs) # branch @Right xs
+		nodes = into @Wye . twosome (branch @Left =<< deconstruct -<$>- branch @Left xs) . Just . Construct x
+			. into @Wye $ twosome (branch @Right =<< deconstruct -<$>- branch @Left xs) # branch @Right xs
 
 		parent :: Maybe a
-		parent = extract <$> branch @Left xs
+		parent = extract @_ @(->) -<$>- branch @Left xs
 
 -- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where
