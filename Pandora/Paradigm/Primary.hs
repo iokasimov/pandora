@@ -11,13 +11,12 @@ import Pandora.Paradigm.Primary.Algebraic as Exports
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
@@ -29,12 +28,6 @@ instance Semigroupoid (Flip (->)) where
 
 instance Category (Flip (->)) where
 	identity = Flip identity
-
-instance Contravariant (Flip (->) r) where
-	f >$< g = (-<$>- f) ||= g
-
-instance Covariant (Flip (:*:) a) where
-	f <$> (Flip (x :*: y)) = Flip $ f x :*: y
 
 instance Extractable (Flip (:*:) a) (->) where
 	extract (Flip (x :*: _)) = x

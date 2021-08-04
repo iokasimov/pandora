@@ -3,7 +3,7 @@ module Pandora.Paradigm.Schemes.UT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>), (<$$>)), Covariant_ ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_ ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -31,9 +31,6 @@ instance Interpreted (UT ct cu t u) where
 
 instance (Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <.:> u) (->) (->) where
 	f -<$>- x = UT $ f -<$$>- run x
-
-instance (Covariant t, Covariant u) => Covariant (t <.:> u) where
-	f <$> UT x = UT $ f <$$> x
 
 instance (Covariant_ u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <.:> u) (->) (:*:) (:*:) where
 	multiply_ (UT x :*: UT y) = UT $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
