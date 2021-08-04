@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, ga
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -18,9 +18,6 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
 newtype Accumulator e a = Accumulator (e :*: a)
-
-instance Covariant (Accumulator e) where
-	f <$> Accumulator x = Accumulator $ f <$> x
 
 instance Covariant_ (Accumulator e) (->) (->) where
 	f -<$>- Accumulator x = Accumulator $ f -<$>- x

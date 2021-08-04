@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Algebraic.Product where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -22,9 +22,6 @@ import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 infixr 0 :*:
 
 data (:*:) s a = s :*: a
-
-instance Covariant ((:*:) s) where
-	f <$> x = attached x :*: f # extract x
 
 instance Covariant_ ((:*:) s) (->) (->) where
 	f -<$>- x = attached x :*: f # extract x
