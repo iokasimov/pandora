@@ -5,7 +5,7 @@ module Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (..), (:
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
@@ -26,7 +26,7 @@ class Interpreted t => Monadic t where
 infixr 3 :>
 newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 
-instance Covariant_ (Schematic Monad t u) (->) (->) => Covariant_ (t :> u) (->) (->) where
+instance Covariant (Schematic Monad t u) (->) (->) => Covariant (t :> u) (->) (->) where
 	f -<$>- TM x = TM $ f -<$>- x
 
 instance Pointable (Schematic Monad t u) (->) => Pointable (t :> u) (->) where
@@ -50,7 +50,7 @@ instance Bindable (Schematic Monad t u) (->) => Bindable (t :> u) (->) where
 instance Extendable (Schematic Monad t u) (->) => Extendable (t :> u) (->) where
 	f <<= TM x = TM $ f . TM <<= x
 
-instance (Covariant_ (Schematic Monad t u) (->) (->), Pointable (t :> u) (->), Bindable (t :> u) (->)) => Monad (t :> u) where
+instance (Covariant (Schematic Monad t u) (->) (->), Pointable (t :> u) (->), Bindable (t :> u) (->)) => Monad (t :> u) where
 
 instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
 	lift = TM . lift

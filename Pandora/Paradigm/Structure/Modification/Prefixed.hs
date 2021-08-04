@@ -6,7 +6,7 @@ module Pandora.Paradigm.Structure.Modification.Prefixed where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Extractable (extract)
@@ -24,7 +24,7 @@ instance Interpreted (Prefixed t k) where
 	run ~(Prefixed x) = x
 	unite = Prefixed
 
-instance Covariant_ t (->) (->) => Covariant_ (Prefixed t k) (->) (->) where
+instance Covariant t (->) (->) => Covariant (Prefixed t k) (->) (->) where
 	f -<$>- Prefixed x = Prefixed $ f -<$$>- x
 
 instance Traversable t (->) (->) => Traversable (Prefixed t k) (->) (->) where
@@ -33,7 +33,7 @@ instance Traversable t (->) (->) => Traversable (Prefixed t k) (->) (->) where
 instance (Monoid k, Pointable t (->)) => Pointable (Prefixed t k) (->) where
 	point = Prefixed . point . (:*:) zero
 
-instance Covariant_ t (->) (->) => Morphable (Into t) (Prefixed t k) where
+instance Covariant t (->) (->) => Morphable (Into t) (Prefixed t k) where
 	type Morphing (Into t) (Prefixed t k) = t
 	morphing (run . premorph -> prefixed) = extract @_ @(->) -<$>- prefixed
 

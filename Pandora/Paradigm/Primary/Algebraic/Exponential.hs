@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Algebraic.Exponential where
 
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -16,6 +16,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 infixr 2 !.
+infixr 7 -.#..-
 infixr 9 %
 infixl 1 &
 
@@ -25,7 +26,7 @@ instance Semigroupoid (->) where
 instance Category (->) where
 	identity x = x
 
-instance Covariant_ ((->) a) (->) (->) where
+instance Covariant ((->) a) (->) (->) where
 	(-<$>-) = (.)
 
 instance Contravariant_ (Flip (->) a) (->) (->) where
@@ -54,7 +55,7 @@ instance Semigroup r => Semigroup (e -> r) where
 instance Ringoid r => Ringoid (e -> r) where
 	f * g = \e -> f e * g e
 
-(-.#..-) :: (Covariant_ (v a) (->) target, Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
+(-.#..-) :: (Covariant (v a) (->) target, Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (-.#..-) f = (-<$>-) (f .)
 
 {-# INLINE (!.) #-}

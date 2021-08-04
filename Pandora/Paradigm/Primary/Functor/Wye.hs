@@ -2,14 +2,14 @@ module Pandora.Paradigm.Primary.Functor.Wye where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((#))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
 data Wye a = End | Left a | Right a | Both a a
 
-instance Covariant_ Wye (->) (->) where
+instance Covariant Wye (->) (->) where
 	_ -<$>- End = End
 	f -<$>- Left x = Left # f x
 	f -<$>- Right y = Right # f y

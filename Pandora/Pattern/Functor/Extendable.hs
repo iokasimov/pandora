@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Extendable where
 
-import Pandora.Pattern.Functor.Covariant (Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant)
 
 infixr 1 <<=
 
@@ -10,5 +10,5 @@ infixr 1 <<=
 > * Extension interchange: (f <<=) ≡ (f -<$>-) . (identity <<=)
 -}
 
-class Covariant_ t source source => Extendable t source where
+class Covariant t source source => Extendable t source where
 	(<<=) :: source (t a) b -> source (t a) (t b)

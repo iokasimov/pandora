@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Distributive where
 
-import Pandora.Pattern.Functor.Covariant (Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |
 > Let f :: Distributive g => (a -> g b)
@@ -12,5 +12,5 @@ import Pandora.Pattern.Functor.Covariant (Covariant_)
 
 infixl 5 -<<
 
-class Covariant_ t source target => Distributive t source target where
-	(-<<) :: Covariant_ u source target => source a (t b) -> target (u a) (t (u b))
+class Covariant t source target => Distributive t source target where
+	(-<<) :: Covariant u source target => source a (t b) -> target (u a) (t (u b))

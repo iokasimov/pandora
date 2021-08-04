@@ -6,7 +6,7 @@ module Pandora.Paradigm.Structure.Modification.Comprehension where
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant ((>$<))
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
@@ -32,13 +32,13 @@ instance Interpreted (Comprehension t) where
 	run ~(Comprehension x) = x
 	unite = Comprehension
 
-instance Covariant_ (t <:.> Construction t) (->) (->) => Covariant_ (Comprehension t) (->) (->) where
+instance Covariant (t <:.> Construction t) (->) (->) => Covariant (Comprehension t) (->) (->) where
 	f -<$>- Comprehension x = Comprehension $ f -<$>- x
 
 instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehension t) (->) (->) where
 	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
-instance (Covariant_ t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Comprehension t) (->) (:*:) (:*:) where
+instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Comprehension t) (->) (:*:) (:*:) where
 	multiply_ (Comprehension x :*: Comprehension y) = Comprehension $ multiply_ (x :*: y)
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t (->)) => Bindable (Comprehension t) (->) where
@@ -53,7 +53,7 @@ instance Semigroup (t <:.> Construction t := a) => Semigroup (Comprehension t a)
 instance Monoid (t <:.> Construction t := a) => Monoid (Comprehension t a) where
 	zero = Comprehension zero
 
-instance (Covariant_ t (->) (->), Pointable t (->)) => Morphable Push (Comprehension t) where
+instance (Covariant t (->) (->), Pointable t (->)) => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 

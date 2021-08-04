@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Transformer.Kan where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 
@@ -21,7 +21,7 @@ instance Interpreted (Kan Left t u b) where
 
 data instance Kan Right t u b a = Ran ((a -> t b) -> u b)
 
-instance Covariant_ (Kan Right t u b) (->) (->) where
+instance Covariant (Kan Right t u b) (->) (->) where
 	f -<$>- Ran x = Ran $ x . (. f)
 
 instance Interpreted (Kan Right t u b) where

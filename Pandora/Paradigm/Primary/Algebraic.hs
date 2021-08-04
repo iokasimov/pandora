@@ -8,7 +8,7 @@ import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor (Endofunctor)
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)), (-<$$>-), (-<$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -16,13 +16,13 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 
 infixl 4 -<*>-
 
-($>-) :: Covariant_ t (->) (->) => t a -> b -> t b
+($>-) :: Covariant t (->) (->) => t a -> b -> t b
 x $>- r = (r !.) -<$>- x
 
-($$>-) :: (Covariant_ t (->) (->), Covariant_ u (->) (->)) => t (u a) -> b -> t (u b)
+($$>-) :: (Covariant t (->) (->), Covariant u (->) (->)) => t (u a) -> b -> t (u b)
 x $$>- r = (r !.) -<$$>- x
 
-($$$>-) :: (Covariant_ t (->) (->), Covariant_ u (->) (->), Covariant_ v (->) (->)) => t (u (v a)) -> b -> t (u (v b))
+($$$>-) :: (Covariant t (->) (->), Covariant u (->) (->), Covariant v (->) (->)) => t (u (v a)) -> b -> t (u (v b))
 x $$$>- r = (r !.) -<$$$>- x
 
 instance Traversable ((:*:) s) (->) (->) where
@@ -44,8 +44,8 @@ instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ (Option _ :*: Adoption y) = Adoption $ Adoption y
 	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
-type Applicative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:*:))
-type Alternative_ t = (Endofunctor Covariant_ t (->), Semimonoidal t (->) (:*:) (:+:))
+type Applicative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:))
+type Alternative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:+:))
 
 (-<*>-) :: Applicative_ t => t (a -> b) -> t a -> t b
 f -<*>- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)

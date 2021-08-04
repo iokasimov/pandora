@@ -3,7 +3,7 @@ module Pandora.Paradigm.Schemes.UT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_ ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -29,10 +29,10 @@ instance Interpreted (UT ct cu t u) where
 	run ~(UT x) = x
 	unite = UT
 
-instance (Covariant_ t (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <.:> u) (->) (->) where
+instance (Covariant t (->) (->), Covariant u (->) (->)) => Covariant (t <.:> u) (->) (->) where
 	f -<$>- x = UT $ f -<$$>- run x
 
-instance (Covariant_ u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <.:> u) (->) (:*:) (:*:) where
+instance (Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <.:> u) (->) (:*:) (:*:) where
 	multiply_ (UT x :*: UT y) = UT $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
 
 instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
@@ -45,9 +45,9 @@ instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->)
 	extract = extract . extract . run
 
 instance Pointable t (->) => Liftable (UT Covariant Covariant t) where
-	lift :: Covariant_ u (->) (->) => u ~> t <.:> u
+	lift :: Covariant u (->) (->) => u ~> t <.:> u
 	lift x = UT $ point @_ @(->) -<$>- x
 
 instance Extractable t (->) => Lowerable (UT Covariant Covariant t) where
-	lower :: Covariant_ u (->) (->) => t <.:> u ~> u
+	lower :: Covariant u (->) (->) => t <.:> u ~> u
 	lower (UT x) = extract @_ @(->) -<$>- x

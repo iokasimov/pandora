@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Store where
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -25,7 +25,7 @@ import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 -- | Context based computation on value
 newtype Store s a = Store ((:*:) s :. (->) s := a)
 
-instance Covariant_ (Store s) (->) (->) where
+instance Covariant (Store s) (->) (->) where
 	f -<$>- Store x = Store $ f -<$$>- x
 
 instance Extractable (Store s) (->) where

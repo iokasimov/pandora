@@ -3,7 +3,7 @@ module Pandora.Paradigm.Schemes.TUT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant_ ((-<$>-)), (-<$$>-), (-<$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
@@ -34,25 +34,25 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 	run ~(TUT x) = x
 	unite = TUT
 
-instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->)) => Covariant_ (t <:<.>:> t' := u) (->) (->) where
+instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->)) => Covariant (t <:<.>:> t' := u) (->) (->) where
 	f -<$>- TUT x = TUT $ f -<$$$>- x
 
-instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Covariant_ u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (->) (:*:) (:*:) where
+instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (->) (:*:) (:*:) where
 	multiply_ (TUT x :*: TUT y) = TUT $ multiply_ @_ @(->) @(:*:) -<$$>- multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
 
-instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Pointable u (->), Adjoint t' t (->) (->)) => Pointable (t <:<.>:> t' := u) (->) where
+instance (Covariant t (->) (->), Covariant t' (->) (->), Pointable u (->), Adjoint t' t (->) (->)) => Pointable (t <:<.>:> t' := u) (->) where
 	point = unite . (point @_ @(->) -|)
 
 instance (Adjoint t' t (->) (->), Extendable u (->)) => Extendable (t' <:<.>:> t := u) (->) where
 	f <<= x = TUT $ ((f . unite -|) <<=) -<$>- run x
 
-instance (Covariant_ t (->) (->), Covariant_ t' (->) (->), Adjoint t t' (->) (->), Extractable u (->)) => Extractable (t <:<.>:> t' := u) (->) where
+instance (Covariant t (->) (->), Covariant t' (->) (->), Adjoint t t' (->) (->), Extractable u (->)) => Extractable (t <:<.>:> t' := u) (->) where
 	extract = (extract @_ @(->) |-) . run
 
 instance (Adjoint t' t (->) (->), Distributive t(->) (->) ) => Liftable (t <:<.>:> t') where
-	lift :: Covariant_ u (->) (->) => u ~> t <:<.>:> t' := u
+	lift :: Covariant u (->) (->) => u ~> t <:<.>:> t' := u
 	lift x = TUT $ (identity @(->) -|) -<< x
 
 instance (Adjoint t t' (->) (->), Distributive t'(->) (->) ) => Lowerable (t <:<.>:> t') where
-	lower :: Covariant_ u (->) (->) => (t <:<.>:> t' := u) ~> u
+	lower :: Covariant u (->) (->) => (t <:<.>:> t' := u) ~> u
 	lower (TUT x) = (identity @(->) -<<) |- x

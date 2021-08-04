@@ -10,7 +10,7 @@ import Pandora.Paradigm.Structure.Some as Exports
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -38,7 +38,7 @@ instance Monotonic s a => Monotonic s (s :*: a) where
 instance Nullable Maybe where
 	null = Predicate $ \case { Just _ -> True ; _ -> False }
 
-instance (Covariant_ t (->) (->)) => Substructure Tail (Tap t) where
+instance (Covariant t (->) (->)) => Substructure Tail (Tap t) where
 	type Available Tail (Tap t) = Identity
 	type Substance Tail (Tap t) = t
 	substructure = P_Q_T $ \tap -> case extract # run tap of
@@ -90,13 +90,13 @@ instance Accessible a (s :*: a) where
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @b . access @a
 
-instance (Covariant_ t (->) (->)) => Substructure Left (t <:.:> t := (:*:)) where
+instance (Covariant t (->) (->)) => Substructure Left (t <:.:> t := (:*:)) where
 	type Available Left (t <:.:> t := (:*:)) = Identity
 	type Substance Left (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T $ \x -> case run # lower x of
 		ls :*: rs -> Store $ Identity ls :*: lift . (twosome % rs) . extract
 
-instance (Covariant_ t (->) (->)) => Substructure Right (t <:.:> t := (:*:)) where
+instance (Covariant t (->) (->)) => Substructure Right (t <:.:> t := (:*:)) where
 	type Available Right (t <:.:> t := (:*:)) = Identity
 	type Substance Right (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T $ \x -> case run # lower x of

@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Adjoint where
 
-import Pandora.Pattern.Functor.Covariant (Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant)
 
 type (-|) = Adjoint
 
@@ -14,6 +14,6 @@ infixl 3 -|, |-
 > * Right adjunction interchange: psi f ≡ epsilon . comap f
 -}
 
-class (Covariant_ t target source, Covariant_ u source target) => Adjoint t u source target where
+class (Covariant t target source, Covariant u source target) => Adjoint t u source target where
 	(-|) :: source (t a) b -> target a (u b)
 	(|-) :: target a (u b) -> source (t a) b

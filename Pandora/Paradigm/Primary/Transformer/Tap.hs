@@ -5,7 +5,7 @@ module Pandora.Paradigm.Primary.Transformer.Tap where
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -28,10 +28,10 @@ import Pandora.Paradigm.Structure.Ability.Substructure
 
 data Tap t a = Tap a (t a)
 
-instance Covariant_ t (->) (->) => Covariant_ (Tap t) (->) (->) where
+instance Covariant t (->) (->) => Covariant (Tap t) (->) (->) where
 	f -<$>- Tap x xs = Tap # f x # f -<$>- xs
 
-instance (Covariant_ t (->) (->)) => Extractable (Tap t) (->) where
+instance (Covariant t (->) (->)) => Extractable (Tap t) (->) where
 	extract (Tap x _) = x
 
 instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap t) (->) (:*:) (:*:) where
@@ -40,7 +40,7 @@ instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap t) (->) (:*:) (:*:
 instance Traversable t (->) (->) => Traversable (Tap t) (->) (->) where
 	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
 
-instance (Extendable t (->), Covariant_ t (->) (->)) => Extendable (Tap t) (->) where
+instance (Extendable t (->), Covariant t (->) (->)) => Extendable (Tap t) (->) where
 	f <<= x = Tap # f x $ f . Tap (extract x) <<= lower x
 
 instance Lowerable Tap where
@@ -57,19 +57,19 @@ instance {-# OVERLAPS #-} Traversable t (->) (->) => Traversable (Tap (t <:.:> t
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
 
-instance (Covariant_ t (->) (->)) => Substructure Root (Tap (t <:.:> t := (:*:))) where
+instance (Covariant t (->) (->)) => Substructure Root (Tap (t <:.:> t := (:*:))) where
 	type Available Root (Tap (t <:.:> t := (:*:))) = Identity
 	type Substance Root (Tap (t <:.:> t := (:*:))) = Identity
 	substructure = P_Q_T $ \zipper -> case lower zipper of
 		Tap x xs -> Store $ Identity (Identity x) :*: lift . (Tap % xs) . extract . extract
 
-instance (Covariant_ t (->) (->)) => Substructure Left (Tap (t <:.:> t := (:*:))) where
+instance (Covariant t (->) (->)) => Substructure Left (Tap (t <:.:> t := (:*:))) where
 	type Available Left (Tap (t <:.:> t := (:*:))) = Identity
 	type Substance Left (Tap (t <:.:> t := (:*:))) = t
 	substructure = P_Q_T $ \zipper -> case lower zipper of
 		Tap x (T_U (future :*: past)) -> Store $ Identity future :*: lift . Tap x . T_U . (:*: past) . extract
 
-instance (Covariant_ t (->) (->)) => Substructure Right (Tap (t <:.:> t := (:*:))) where
+instance (Covariant t (->) (->)) => Substructure Right (Tap (t <:.:> t := (:*:))) where
 	type Available Right (Tap (t <:.:> t := (:*:))) = Identity
 	type Substance Right (Tap (t <:.:> t := (:*:))) = t
 	substructure = P_Q_T $ \zipper -> case lower zipper of

@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Monad where
 
-import Pandora.Pattern.Functor.Covariant (Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Bindable (Bindable)
 import Pandora.Pattern.Functor.Pointable (Pointable)
 
@@ -18,7 +18,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 --infixl 1 >>=-, ->>=
 --infixr 1 -=<<, =<<-
 
-class (Covariant_ t (->) (->), Pointable t (->), Bindable t (->)) => Monad t where
+class (Covariant t (->) (->), Pointable t (->), Bindable t (->)) => Monad t where
 	--(>>=-) :: t a -> t b -> t a
 	--(>>=-) x y = x >>= \r -> y >>= \_ -> point r
 	--(->>=) :: t a -> t b -> t b

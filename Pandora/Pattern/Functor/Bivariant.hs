@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Bivariant where
 
-import Pandora.Pattern.Functor.Covariant (Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
 
 infixl 4 <->
@@ -11,6 +11,6 @@ infixl 4 <->
 > * Parametricity: (f . g) <-> (h . i) ≡ f <-> h . g <-> i
 -}
 
-class (forall i . Covariant_ (v i) left target, forall i . Covariant_ (Flip v i) right target)
+class (forall i . Covariant (v i) left target, forall i . Covariant (Flip v i) right target)
 	=> Bivariant v left right target where
 	(<->) :: left a b -> right c d -> target (v a c) (v b d) 

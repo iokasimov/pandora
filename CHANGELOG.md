@@ -541,3 +541,5 @@
 * Define `-<$$$$>-` operator of `Covariant_` typeclass
 * Use experimental `Covariant_` in `Interpreted`
 * Define `$>-`, `$$>-`, `$$$>-` methods of `Covariant_` typeclass
+* Remove `Covariant` typeclass
+* Rename experimental `Covariant_` to `Covariant`

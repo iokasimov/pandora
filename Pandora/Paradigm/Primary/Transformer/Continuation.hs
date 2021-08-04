@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Transformer.Continuation where
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -19,13 +19,13 @@ instance Interpreted (Continuation r t) where
 	run ~(Continuation x) = x
 	unite = Continuation
 
-instance Covariant_ t (->) (->) => Covariant_ (Continuation r t) (->) (->) where
+instance Covariant t (->) (->) => Covariant (Continuation r t) (->) (->) where
 	f -<$>- Continuation continuation = Continuation $ continuation . (. f)
 
-instance Covariant_ t (->) (->) => Pointable (Continuation r t) (->) where
+instance Covariant t (->) (->) => Pointable (Continuation r t) (->) where
 	point x = Continuation ($ x)
 
-instance Covariant_ t (->) (->) => Bindable (Continuation r t) (->) where
+instance Covariant t (->) (->) => Bindable (Continuation r t) (->) where
 	f =<< x = Continuation $ \g -> run x $ \y -> run # f y # g
 
 instance Monad t => Monad (Continuation r t) where

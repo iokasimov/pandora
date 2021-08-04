@@ -1,7 +1,7 @@
 module Pandora.Pattern.Transformer.Lowerable (Lowerable (..)) where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Functor.Covariant (Covariant_)
+import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |
 > When providing a new instance, you should ensure it satisfies one law:
@@ -9,4 +9,4 @@ import Pandora.Pattern.Functor.Covariant (Covariant_)
 -}
 
 class Lowerable t where
-	lower :: (Covariant_ u (->) (->)) => t u ~> u
+	lower :: (Covariant u (->) (->)) => t u ~> u

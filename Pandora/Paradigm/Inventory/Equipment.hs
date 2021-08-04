@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -18,7 +18,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Equipment e a = Equipment (e :*: a)
 
-instance Covariant_ (Equipment e) (->) (->) where
+instance Covariant (Equipment e) (->) (->) where
 	f -<$>- Equipment x = Equipment $ f -<$>- x
 
 instance Extractable (Equipment e) (->) where
