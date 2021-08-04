@@ -14,7 +14,6 @@ import Pandora.Paradigm.Inventory.Accumulator as Exports
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -46,7 +45,7 @@ zoom lens less = let restruct to = (to . Identity <-> identity @(->)) . run less
 (=<>) :: Stateful src t => Lens mode src tgt -> mode tgt -> t src
 lens =<> new = modify $ set lens new
 
-(~<>) :: Covariant mode => Stateful src t => Lens mode src tgt -> (mode tgt -> mode tgt) -> t src
+(~<>) :: Stateful src t => Lens mode src tgt -> (mode tgt -> mode tgt) -> t src
 lens ~<> f = modify $ over lens f
 
 magnify :: forall bg ls t . (Accessible ls bg, Stateful bg t) => t ls

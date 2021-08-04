@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable ((=<<))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -164,11 +164,6 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 -------------------------------------- Zipper of binary tree ---------------------------------------
 
 data Biforked a = Top | Leftward a | Rightward a
-
-instance Covariant Biforked where
-	_ <$> Top = Top
-	f <$> Leftward l = Leftward $ f l
-	f <$> Rightward r = Rightward $ f r
 
 instance Covariant_ Biforked (->) (->) where
 	_ -<$>- Top = Top
