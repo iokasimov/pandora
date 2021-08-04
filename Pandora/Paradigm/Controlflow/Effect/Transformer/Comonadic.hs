@@ -5,7 +5,7 @@ module Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (..)
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
@@ -25,9 +25,6 @@ class Interpreted t => Comonadic t where
 
 infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
-
-instance Covariant (Schematic Comonad t u) => Covariant (t :< u) where
-	f <$> TC x = TC $ f <$> x
 
 instance Covariant_ (Schematic Comonad t u) (->) (->) => Covariant_ (t :< u) (->) (->) where
 	f -<$>- TC x = TC $ f -<$>- x

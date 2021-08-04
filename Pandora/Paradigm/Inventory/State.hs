@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.State where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), Covariant_ ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant_ ((-<$>-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
@@ -24,9 +24,6 @@ import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (*>-), delta)
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
-
-instance Covariant (State s) where
-	f <$> x = State $ (<$>) f . run x
 
 instance Covariant_ (State s) (->) (->) where
 	f -<$>- x = State $ (-<$>-) f . run x
