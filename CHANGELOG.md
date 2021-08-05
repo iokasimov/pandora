@@ -543,3 +543,4 @@
 * Define `$>-`, `$$>-`, `$$$>-` methods of `Covariant_` typeclass
 * Remove `Covariant` typeclass
 * Rename experimental `Covariant_` to `Covariant`
+* Remove `Determinable` typeclass
