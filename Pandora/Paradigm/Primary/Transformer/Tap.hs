@@ -49,7 +49,7 @@ instance Lowerable Tap where
 instance Hoistable Tap where
 	f /|\ Tap x xs = Tap x # f xs
 
-instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap (t <:.:> t := (:*:))) (->) (:*:) (:*:) where
+instance {-# OVERLAPS #-} Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap (t <:.:> t := (:*:))) (->) (:*:) (:*:) where
 	multiply_ (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
 		$ T_U $ multiply_ (xls :*: yls) :*: multiply_ (xrs :*: yrs)
 
