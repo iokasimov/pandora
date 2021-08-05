@@ -5,7 +5,7 @@ module Pandora.Paradigm.Primary.Algebraic.Exponential where
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -29,7 +29,7 @@ instance Category (->) where
 instance Covariant ((->) a) (->) (->) where
 	(-<$>-) = (.)
 
-instance Contravariant_ (Flip (->) a) (->) (->) where
+instance Contravariant (Flip (->) a) (->) (->) where
 	f ->$<- Flip g = Flip $ g . f
 
 instance Distributive ((->) e) (->) (->) where

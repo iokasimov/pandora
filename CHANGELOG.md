@@ -544,3 +544,6 @@
 * Remove `Covariant` typeclass
 * Rename experimental `Covariant_` to `Covariant`
 * Remove `Determinable` typeclass
+* Remove `Divisible_` typeclass
+* Remove `Contravariant` typeclass
+* Rename experimental `Contravariant_` to `Contravariant`

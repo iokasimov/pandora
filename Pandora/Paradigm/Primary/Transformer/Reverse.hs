@@ -5,7 +5,7 @@ module Pandora.Paradigm.Primary.Transformer.Reverse where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -33,7 +33,7 @@ instance Traversable t (->) (->) => Traversable (Reverse t) (->) (->) where
 instance Distributive t (->) (->) => Distributive (Reverse t) (->) (->) where
 	f -<< x = Reverse $ run . f -<< x
 
-instance Contravariant_ t (->) (->) => Contravariant_ (Reverse t) (->) (->) where
+instance Contravariant t (->) (->) => Contravariant (Reverse t) (->) (->) where
 	f ->$<- Reverse x = Reverse # f ->$<- x
 
 instance Interpreted (Reverse t) where

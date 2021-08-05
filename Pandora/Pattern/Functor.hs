@@ -19,6 +19,6 @@ import Pandora.Pattern.Functor.Covariant as Exports
 
 type family Endofunctor constraint functor category where
 	Endofunctor Covariant t category = Covariant t category category
-	Endofunctor Contravariant_ t category = Contravariant_ t category category
+	Endofunctor Contravariant t category = Contravariant t category category
 	Endofunctor Traversable t category = Traversable t category category
 	Endofunctor Distributive t category = Distributive t category category

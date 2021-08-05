@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -26,7 +26,7 @@ newtype Environment e a = Environment (e -> a)
 instance Covariant (Environment e) (->) (->) where
 	f -<$>- Environment x = Environment $ f . x
 
-instance Contravariant_ (Flip Environment a) (->) (->) where
+instance Contravariant (Flip Environment a) (->) (->) where
 	f ->$<- Flip (Environment g) = Flip . Environment $ g . f
 
 instance Pointable (Environment e) (->) where

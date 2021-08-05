@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Imprint (Imprint (..), Traceable) where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant_ ((->$<-)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -25,7 +25,7 @@ newtype Imprint e a = Imprint (e -> a)
 instance Covariant (Imprint e) (->) (->) where
 	f -<$>- Imprint g = Imprint $ f . g
 
-instance Contravariant_ (Flip Imprint a) (->) (->) where
+instance Contravariant (Flip Imprint a) (->) (->) where
 	f ->$<- Flip (Imprint g) = Flip . Imprint $ g . f
 
 instance Distributive (Imprint e) (->) (->) where
