@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -24,6 +24,9 @@ x $$>- r = (r !.) -<$$>- x
 
 ($$$>-) :: (Covariant t (->) (->), Covariant u (->) (->), Covariant v (->) (->)) => t (u (v a)) -> b -> t (u (v b))
 x $$$>- r = (r !.) -<$$$>- x
+
+void :: Covariant t (->) (->) => t a -> t ()
+void x = x $>- ()
 
 instance Traversable ((:*:) s) (->) (->) where
 	f <<- x = (attached x :*:) -<$>- f (extract x)

@@ -549,3 +549,4 @@
 * Rename experimental `Contravariant_` to `Contravariant`
 
 # 0.4.6
+* Define `void` method in `Algebraic` module
