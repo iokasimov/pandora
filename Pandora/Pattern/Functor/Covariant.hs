@@ -1,7 +1,6 @@
 module Pandora.Pattern.Functor.Covariant where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (<:=))
-import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
+import Pandora.Pattern.Semigroupoid (Semigroupoid)
 
 infixl 4 -<$>-
 infixl 3 -<<$$>-, -<$$>>-
