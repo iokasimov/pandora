@@ -4,11 +4,10 @@ import Pandora.Pattern.Category (Category)
 
 infixl 4 ->$<-
 
--- TODO: use ->$<- instead of contramap here
 {- |
 > When providing a new instance, you should ensure it satisfies:
-> * Identity morphism: contramap identity ≡ identity
-> * Interpreted of morphisms: contramap f . contramap g ≡ contramap (g . f)
+> * Identity morphism: (identity ->$<-) ≡ identity
+> * Interpreted of morphisms: (f ->$<-) . (g ->$<-) ≡ (g . f ->$<-)
 -}
 
 class (Category source, Category target) => Contravariant t source target where

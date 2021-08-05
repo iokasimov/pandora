@@ -5,11 +5,10 @@ import Pandora.Pattern.Semigroupoid (Semigroupoid)
 infixl 4 -<$>-
 infixl 3 -<<$$>-, -<$$>>-
 
--- TODO: use -<$>- instead of comap here
 {- |
 > When providing a new instance, you should ensure it satisfies:
-> * Identity morphism: comap identity ≡ identity
-> * Interpreted of morphisms: comap (f . g) ≡ comap f . comap g
+> * Identity morphism: (identity -<$>-) ≡ identity
+> * Interpreted of morphisms: (f . g -<$>-) ≡ (f -<$>-) . (g -<$>-)
 -}
 
 class (Semigroupoid source, Semigroupoid target) => Covariant t source target where
