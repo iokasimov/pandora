@@ -547,3 +547,5 @@
 * Remove `Divisible_` typeclass
 * Remove `Contravariant` typeclass
 * Rename experimental `Contravariant_` to `Contravariant`
+
+# 0.4.6
