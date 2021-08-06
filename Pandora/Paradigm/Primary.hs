@@ -10,7 +10,7 @@ import Pandora.Paradigm.Primary.Algebraic as Exports
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (Category (($), (#), identity))
+import Pandora.Pattern.Category (Category (($), (#)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -22,9 +22,6 @@ import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>), type (<:.:
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
-
-instance Category (Flip (->)) where
-	identity = Flip identity
 
 instance Extractable (Flip (:*:) a) (->) where
 	extract (Flip (x :*: _)) = x

@@ -54,11 +54,14 @@ instance Ringoid r => Ringoid (e -> r) where
 
 type (<--) = Flip (->)
 
-instance Contravariant ((<--) a) (->) (->) where
-	f ->$<- Flip g = Flip $ g . f
-
 instance Semigroupoid (<--) where
 	Flip f . Flip g = Flip $ \x -> g (f x)
+
+instance Category (<--) where
+	identity = Flip identity
+
+instance Contravariant ((<--) a) (->) (->) where
+	f ->$<- Flip g = Flip $ g . f
 
 (-.#..-) :: (Covariant (v a) (->) target, Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (-.#..-) f = (-<$>-) (f .)
