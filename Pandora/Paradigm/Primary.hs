@@ -23,9 +23,6 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
 
-instance Semigroupoid (Flip (->)) where
-	Flip f . Flip g = Flip $ \x -> g (f x)
-
 instance Category (Flip (->)) where
 	identity = Flip identity
 

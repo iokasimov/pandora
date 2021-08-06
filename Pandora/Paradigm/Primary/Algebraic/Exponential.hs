@@ -20,8 +20,6 @@ infixr 7 -.#..-
 infixr 9 %
 infixl 1 &
 
-type (<--) = Flip (->)
-
 instance Semigroupoid (->) where
 	f . g = \x -> f (g x)
 
@@ -30,9 +28,6 @@ instance Category (->) where
 
 instance Covariant ((->) a) (->) (->) where
 	(-<$>-) = (.)
-
-instance Contravariant ((<--) a) (->) (->) where
-	f ->$<- Flip g = Flip $ g . f
 
 instance Distributive ((->) e) (->) (->) where
 	f -<< g = \e -> (f % e) -<$>- g
@@ -56,6 +51,14 @@ instance Semigroup r => Semigroup (e -> r) where
 
 instance Ringoid r => Ringoid (e -> r) where
 	f * g = \e -> f e * g e
+
+type (<--) = Flip (->)
+
+instance Contravariant ((<--) a) (->) (->) where
+	f ->$<- Flip g = Flip $ g . f
+
+instance Semigroupoid (<--) where
+	Flip f . Flip g = Flip $ \x -> g (f x)
 
 (-.#..-) :: (Covariant (v a) (->) target, Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (-.#..-) f = (-<$>-) (f .)
