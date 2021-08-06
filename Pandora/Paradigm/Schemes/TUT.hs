@@ -10,6 +10,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -39,6 +40,9 @@ instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->)) 
 
 instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (->) (:*:) (:*:) where
 	multiply_ (TUT x :*: TUT y) = TUT $ multiply_ @_ @(->) @(:*:) -<$$>- multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
+
+instance (Covariant t (->) (->), Covariant t' (->) (->), Adjoint t' t (->) (->), Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
+	f =<< x = TUT $ ((run . f |-) =<<) -<$>- run x
 
 instance (Covariant t (->) (->), Covariant t' (->) (->), Pointable u (->), Adjoint t' t (->) (->)) => Pointable (t <:<.>:> t' := u) (->) where
 	point = unite . (point @_ @(->) -|)
