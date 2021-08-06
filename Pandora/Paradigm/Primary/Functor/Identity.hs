@@ -6,6 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -22,6 +23,7 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 
 newtype Identity a = Identity a
 
@@ -33,6 +35,9 @@ instance Pointable Identity (->) where
 
 instance Extractable Identity (->) where
 	extract (Identity x) = x
+
+instance Semimonoidal Identity (->) (:*:) (:*:) where
+	multiply_ (Identity x :*: Identity y) = Identity $ x :*: y
 
 instance Traversable Identity (->) (->) where
 	f <<- Identity x = Identity -<$>- f x
