@@ -554,3 +554,4 @@
 * Define `Zero` module in `Algebraic` directory
 * Define `One` module in `Algebraic` directory
 * Rename `One` constructor in `Denumerator` to `Single`
+* Define `Unit` type family
