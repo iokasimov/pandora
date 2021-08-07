@@ -551,3 +551,4 @@
 # 0.4.6
 * Define `void` method in `Algebraic` module
 * Define `<--` type synonymous for reverted arrows
+* Define `Void` module in `Algebraic` directory
