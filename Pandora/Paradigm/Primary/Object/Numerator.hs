@@ -8,7 +8,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Equal, Greater))
-import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
+import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (Single))
 
 data Numerator = Zero | Numerator Denumerator
 
@@ -37,4 +37,4 @@ instance Monoid Numerator where
 	zero = Zero
 
 instance Quasiring Numerator where
-	one = Numerator One
+	one = Numerator Single

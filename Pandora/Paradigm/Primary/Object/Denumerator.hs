@@ -7,23 +7,23 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Equal, Greater))
 
-data Denumerator = One | Denumerator Denumerator
+data Denumerator = Single | Denumerator Denumerator
 
 instance Setoid Denumerator where
-	One == One = True
+	Single == Single = True
 	Denumerator n == Denumerator m = n == m
 	_ == _ = False
 
 instance Chain Denumerator where
-	One <=> One = Equal
-	One <=> Denumerator _ = Less
-	Denumerator _ <=> One = Greater
+	Single <=> Single = Equal
+	Single <=> Denumerator _ = Less
+	Denumerator _ <=> Single = Greater
 	Denumerator n <=> Denumerator m = n <=> m
 
 instance Semigroup Denumerator where
-	One + m = Denumerator m
+	Single + m = Denumerator m
 	Denumerator n + m = Denumerator (n + m)
 
 instance Ringoid Denumerator where
-	One * n = n
+	Single * n = n
 	Denumerator n * m = m + n * m

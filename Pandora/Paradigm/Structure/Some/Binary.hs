@@ -19,7 +19,7 @@ import Pandora.Paradigm.Primary.Algebraic (($$$>-))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
-import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
+import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (Single))
 import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
@@ -101,10 +101,10 @@ instance Morphable Insert (Construction Wye) where
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
-	measurement (deconstruct . extract -> End) = One
-	measurement (deconstruct . extract -> Left lst) = One + measure @Heighth lst
-	measurement (deconstruct . extract -> Right rst) = One + measure @Heighth rst
-	measurement (deconstruct . extract -> Both lst rst) = One +
+	measurement (deconstruct . extract -> End) = Single
+	measurement (deconstruct . extract -> Left lst) = Single + measure @Heighth lst
+	measurement (deconstruct . extract -> Right rst) = Single + measure @Heighth rst
+	measurement (deconstruct . extract -> Both lst rst) = Single +
 		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
 		in lm <=> rm & order lm rm lm
 

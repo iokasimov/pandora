@@ -20,7 +20,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
-import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (One))
+import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (Single))
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-), (-.#..-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
@@ -143,8 +143,8 @@ instance Morphable Push (Construction Maybe) where
 
 instance Measurable Length (Construction Maybe) where
 	type Measural Length (Construction Maybe) a = Denumerator
-	measurement (deconstruct . extract -> Nothing) = One
-	measurement (deconstruct . extract -> Just xs) = One + measure @Length xs
+	measurement (deconstruct . extract -> Nothing) = Single
+	measurement (deconstruct . extract -> Just xs) = Single + measure @Length xs
 
 instance Substructure Root (Construction Maybe) where
 	type Available Root (Construction Maybe) = Identity
