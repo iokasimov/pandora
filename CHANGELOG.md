@@ -552,3 +552,4 @@
 * Define `void` method in `Algebraic` module
 * Define `<--` type synonymous for reverted arrows
 * Define `Void` module in `Algebraic` directory
+* Define `Unit` module in `Algebraic` directory
