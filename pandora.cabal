@@ -32,8 +32,8 @@ library
     Pandora.Paradigm.Primary.Algebraic.Exponential
     Pandora.Paradigm.Primary.Algebraic.Product
     Pandora.Paradigm.Primary.Algebraic.Sum
-    Pandora.Paradigm.Primary.Algebraic.Void
-    Pandora.Paradigm.Primary.Algebraic.Unit
+    Pandora.Paradigm.Primary.Algebraic.Zero
+    Pandora.Paradigm.Primary.Algebraic.One
     Pandora.Paradigm.Primary.Object.Boolean
     Pandora.Paradigm.Primary.Object.Ordering
     Pandora.Paradigm.Primary.Object.Numerator

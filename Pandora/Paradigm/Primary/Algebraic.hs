@@ -5,8 +5,8 @@ module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alterna
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
 import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
-import Pandora.Paradigm.Primary.Algebraic.Void as Exports
-import Pandora.Paradigm.Primary.Algebraic.Unit as Exports
+import Pandora.Paradigm.Primary.Algebraic.Zero as Exports
+import Pandora.Paradigm.Primary.Algebraic.One as Exports
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor (Endofunctor)

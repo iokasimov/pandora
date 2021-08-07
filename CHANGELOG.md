@@ -551,5 +551,6 @@
 # 0.4.6
 * Define `void` method in `Algebraic` module
 * Define `<--` type synonymous for reverted arrows
-* Define `Void` module in `Algebraic` directory
-* Define `Unit` module in `Algebraic` directory
+* Define `Zero` module in `Algebraic` directory
+* Define `One` module in `Algebraic` directory
+* Rename `One` constructor in `Denumerator` to `Single`
