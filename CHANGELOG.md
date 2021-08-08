@@ -557,3 +557,4 @@
 * Define `Unit` type family
 * Define `Monoidal` typeclass
 * Define `absurd` method
+* Define `empty` method

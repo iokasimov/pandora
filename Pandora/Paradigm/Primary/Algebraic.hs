@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void, empty) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -13,9 +13,10 @@ import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Monoidal (Unit)
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
@@ -67,3 +68,6 @@ x *>- y = ((!.) %) -<$>- x -<*>- y
 
 (-+-) :: Alternative_ t => t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f -<$>- multiply_ (x :*: y)
+
+empty :: Monoidal t (->) (->) (:*:) (:+:) => t a
+empty = unit (Proxy @(:*:)) absurd

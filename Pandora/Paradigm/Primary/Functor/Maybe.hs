@@ -48,10 +48,10 @@ instance Semimonoidal Maybe (->) (:*:) (:+:) where
 	multiply_ (Nothing :*: Nothing) = Nothing
 
 instance Monoidal Maybe (->) (->) (:*:) (:*:) where
-	unit f = Just $ f One
+	unit _ f = Just $ f One
 
 instance Monoidal Maybe (->) (->) (:*:) (:+:) where
-	unit _ = Nothing
+	unit _ _ = Nothing
 
 instance Traversable Maybe (->) (->) where
 	_ <<- Nothing = point Nothing
