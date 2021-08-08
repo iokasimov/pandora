@@ -558,3 +558,4 @@
 * Define `Monoidal` typeclass
 * Define `absurd` method
 * Define `empty` method
+* Define `sum` method

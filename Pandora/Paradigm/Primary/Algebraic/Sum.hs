@@ -27,3 +27,7 @@ instance Bivariant (:+:) (->) (->) (->) where
 instance Covariant (Flip (:+:) a) (->) (->) where
 	_ -<$>- Flip (Adoption x) = Flip $ Adoption x
 	f -<$>- Flip (Option y) = Flip . Option $ f y
+
+sum :: (e -> r) -> (a -> r) -> e :+: a -> r
+sum f _ (Option x) = f x
+sum _ s (Adoption x) = s x
