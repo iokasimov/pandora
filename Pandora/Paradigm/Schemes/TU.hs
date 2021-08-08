@@ -6,6 +6,7 @@ import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
@@ -15,7 +16,8 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
 import Pandora.Paradigm.Primary.Algebraic (empty)
 
 newtype TU ct cu t u a = TU (t :. u := a)
@@ -38,7 +40,10 @@ instance (Covariant t (->) (->), Covariant u (->) (->)) => Covariant (t <:.> u) 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <:.> u) (->) (:*:) (:*:) where
 	multiply_ (TU x :*: TU y) = TU $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
 
-instance Monoidal t (->) (->) (:*:) (:+:) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
+instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:+:), Semimonoidal u (->) (:*:) (:+:)) => Semimonoidal (t <:.> u) (->) (:*:) (:+:) where
+	multiply_ (TU x :*: TU y) = TU $ sum (Option -<$>-) (Adoption -<$>-) -<$>- multiply_ @_ @(->) @(:*:) @(:+:) (x :*: y)
+
+instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:+:), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
 	unit _ _ = TU empty
 
 instance (Pointable t (->), Pointable u (->)) => Pointable (t <:.> u) (->) where
