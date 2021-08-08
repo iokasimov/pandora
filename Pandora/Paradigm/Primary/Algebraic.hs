@@ -20,7 +20,6 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
 
-
 infixl 4 -<*>-
 
 ($>-) :: Covariant t (->) (->) => t a -> b -> t b

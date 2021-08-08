@@ -1,6 +1,3 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports

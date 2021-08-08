@@ -556,3 +556,4 @@
 * Rename `One` constructor in `Denumerator` to `Single`
 * Define `Unit` type family
 * Define `Monoidal` typeclass
+* Define `absurd` method
