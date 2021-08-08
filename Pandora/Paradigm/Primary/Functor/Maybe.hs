@@ -6,6 +6,7 @@ import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -25,6 +26,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 
 data Maybe a = Nothing | Just a
 
@@ -44,6 +46,12 @@ instance Semimonoidal Maybe (->) (:*:) (:+:) where
 	multiply_ (Just x :*: Just _) = Just $ Option x
 	multiply_ (Nothing :*: Just y) = Just $ Adoption y
 	multiply_ (Nothing :*: Nothing) = Nothing
+
+instance Monoidal Maybe (->) (->) (:*:) (:*:) where
+	unit f = Just $ f One
+
+instance Monoidal Maybe (->) (->) (:*:) (:+:) where
+	unit _ = Nothing
 
 instance Traversable Maybe (->) (->) where
 	_ <<- Nothing = point Nothing
