@@ -40,10 +40,10 @@ instance (Covariant t (->) (->), Covariant u (->) (->)) => Covariant (t <:.> u) 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <:.> u) (->) (:*:) (:*:) where
 	multiply_ (TU x :*: TU y) = TU $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
 
-instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:+:), Semimonoidal u (->) (:*:) (:+:)) => Semimonoidal (t <:.> u) (->) (:*:) (:+:) where
+instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (t <:.> u) (->) (:*:) (:+:) where
 	multiply_ (TU x :*: TU y) = TU $ sum (Option -<$>-) (Adoption -<$>-) -<$>- multiply_ @_ @(->) @(:*:) @(:+:) (x :*: y)
 
-instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:+:), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
+instance (Covariant t (->) (->), Covariant u (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
 	unit _ _ = TU empty
 
 instance (Pointable t (->), Pointable u (->)) => Pointable (t <:.> u) (->) where

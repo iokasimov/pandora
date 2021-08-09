@@ -10,6 +10,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant ((->$<-))
 import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -24,6 +25,8 @@ import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
+import Pandora.Paradigm.Primary.Algebraic (empty)
 
 newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
 
@@ -40,6 +43,12 @@ instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehen
 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Comprehension t) (->) (:*:) (:*:) where
 	multiply_ (Comprehension x :*: Comprehension y) = Comprehension $ multiply_ (x :*: y)
+
+instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (Comprehension t) (->) (:*:) (:+:) where
+	multiply_ (Comprehension x :*: Comprehension y) = Comprehension $ multiply_ (x :*: y)
+
+instance (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (Comprehension t) (->) (->) (:*:) (:+:) where
+	unit _ _ = Comprehension empty
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t (->)) => Bindable (Comprehension t) (->) where
 	f =<< Comprehension (TU t) = Comprehension . TU $ (\(Construct x xs) -> run . run $ f x + (f =<< Comprehension (TU xs))) =<< t
