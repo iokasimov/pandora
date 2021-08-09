@@ -559,3 +559,4 @@
 * Define `absurd` method
 * Define `empty` method
 * Define `sum` method
+* Add `Monoidal` constraint to `Applicative` and `Alternative` constraints

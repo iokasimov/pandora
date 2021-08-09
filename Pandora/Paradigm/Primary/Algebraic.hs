@@ -54,19 +54,21 @@ instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ (Option _ :*: Adoption y) = Adoption $ Adoption y
 	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
-type Applicative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:))
-type Alternative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:+:))
+type Applicative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:))
+type Alternative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:+:), Monoidal t (->) (->) (:*:) (:+:))
 
-(-<*>-) :: Applicative_ t => t (a -> b) -> t a -> t b
+(-<*>-) :: (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:))
+	=> t (a -> b) -> t a -> t b
 f -<*>- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply_ @_ @_ @_ @(:*:) (f :*: x)
 
-forever_ :: Applicative_ t => t a -> t b
+forever_ :: (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:)) => t a -> t b
 forever_ x = let r = x *>- r in r
 
-(*>-) :: Applicative_ t => t a -> t b -> t b
+(*>-) :: (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:)) => t a -> t b -> t b
 x *>- y = ((!.) %) -<$>- x -<*>- y
 
-(-+-) :: Alternative_ t => t a -> t b -> (a :+: b -> r) -> t r
+(-+-) :: (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:+:))
+	  => t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f -<$>- multiply_ (x :*: y)
 
 empty :: Monoidal t (->) (->) (:*:) (:+:) => t a
