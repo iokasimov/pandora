@@ -71,5 +71,8 @@ x *>- y = ((!.) %) -<$>- x -<*>- y
 	  => t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f -<$>- multiply_ (x :*: y)
 
+point_ :: Monoidal t (->) (->) (:*:) (:*:) => a -> t a
+point_ x = unit (Proxy @(:*:)) (\One -> x)
+
 empty :: Monoidal t (->) (->) (:*:) (:+:) => t a
 empty = unit (Proxy @(:*:)) absurd

@@ -560,3 +560,4 @@
 * Define `empty` method
 * Define `sum` method
 * Add `Monoidal` constraint to `Applicative` and `Alternative` constraints
+* Define `point_` method
