@@ -18,7 +18,8 @@ import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
-import Pandora.Paradigm.Primary.Algebraic (empty)
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic (empty, point_)
 
 newtype TU ct cu t u a = TU (t :. u := a)
 
@@ -42,6 +43,9 @@ instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (t <:.> u) (->) (:*:) (:+:) where
 	multiply_ (TU x :*: TU y) = TU $ sum (Option -<$>-) (Adoption -<$>-) -<$>- multiply_ @_ @(->) @(:*:) @(:+:) (x :*: y)
+
+instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:*:) where
+	unit _ f = TU . point_ . point_ $ f One
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
 	unit _ _ = TU empty
