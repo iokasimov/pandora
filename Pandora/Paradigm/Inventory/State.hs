@@ -9,6 +9,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -21,6 +22,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (*>-), delta)
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
@@ -33,6 +35,9 @@ instance Semimonoidal (State s) (->) (:*:) (:*:) where
 		let old :*: x = g s in 
 	  	let new :*: y = h old in
 		new :*: x :*: y
+
+instance Monoidal (State s) (->) (->) (:*:) (:*:) where
+	unit _ f = State . (identity @(->) -|) $ f One
 
 instance Pointable (State s) (->) where
 	point = State . (identity @(->) -|)
@@ -72,7 +77,7 @@ replace s = adapt . State $ \_ -> s :*: s
 reconcile :: (Bindable t (->), Stateful s t, Adaptable u t) => (s -> u s) -> t s
 reconcile f = replace =<< adapt . f =<< current
 
-type Memorable s t = (Pointable t (->), Semimonoidal t (->) (:*:) (:*:), Stateful s t)
+type Memorable s t = (Pointable t (->), Semimonoidal t (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Stateful s t)
 
 fold :: (Traversable t (->) (->), Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = (modify . op <<- struct) *>- current

@@ -6,6 +6,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic (point_)
 
 data These e a = This a | That e | These e a
 
@@ -19,7 +20,7 @@ instance Pointable (These e) (->) where
 
 instance Traversable (These e) (->) (->) where
 	f <<- This x = This -<$>- f x
-	_ <<- That y = point $ That y
+	_ <<- That y = point_ $ That y
 	f <<- These y x = These y -<$>- f x
 
 instance (Semigroup e, Semigroup a) => Semigroup (These e a) where

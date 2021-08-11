@@ -7,6 +7,7 @@ import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -23,6 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 
 data Conclusion e a = Failure e | Success a
 
@@ -47,9 +49,9 @@ instance Semigroup e => Semimonoidal (Conclusion e) (->) (:*:) (:+:) where
 	multiply_ (Success x :*: _) = Option -<$>- Success x
 
 instance Traversable (Conclusion e) (->) (->) where
-	(<<-) :: (Endofunctor Covariant u (->), Pointable u (->), Semimonoidal u (->) (:*:) (:*:))
+	(<<-) :: (Endofunctor Covariant u (->), Monoidal u (->) (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:))
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
-	_ <<- Failure y = point $ Failure y
+	_ <<- Failure y = point_ $ Failure y
 	f <<- Success x = Success -<$>- f x
 
 instance Bindable (Conclusion e) (->) where

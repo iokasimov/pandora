@@ -6,6 +6,7 @@ import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
@@ -38,7 +39,7 @@ instance (Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u
 instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
 	point = UT . point . point
 
-instance (Traversable t (->) (->), Bindable t (->), Semimonoidal u (->) (:*:) (:*:), Pointable u (->), Bindable u (->)) => Bindable (t <.:> u) (->) where
+instance (Traversable t (->) (->), Bindable t (->), Semimonoidal u (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:), Bindable u (->)) => Bindable (t <.:> u) (->) where
 	f =<< UT x = UT $ ((identity =<<) -<$>-) . (run . f <<-) =<< x
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where

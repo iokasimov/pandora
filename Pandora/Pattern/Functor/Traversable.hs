@@ -1,8 +1,7 @@
 module Pandora.Pattern.Functor.Traversable where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal)
-import Pandora.Pattern.Functor.Pointable (Pointable)
+import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
 {- |
@@ -19,9 +18,9 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 infixl 5 <<-, -<<-<<-
 
 class Covariant t source target => Traversable t source target where
-	(<<-) :: (Covariant u source target, Pointable u target, Semimonoidal u target (:*:) (:*:)) => source a (u b) -> target (t a) (u (t b))
+	(<<-) :: (Covariant u source target, Monoidal u source target (:*:) (:*:)) => source a (u b) -> target (t a) (u (t b))
 
 (-<<-<<-) :: forall t u v category a b .
-	(Traversable t category category, Covariant u category category, Pointable u category, Semimonoidal u category (:*:) (:*:), Traversable v category category)
+	(Traversable t category category, Covariant u category category, Monoidal u category category (:*:) (:*:), Traversable v category category)
 	=> category a (u b) -> category (v (t a)) (u (v (t b)))
 (-<<-<<-) f = ((<<-) ((<<-) @t @category @category f))

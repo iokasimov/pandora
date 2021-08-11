@@ -27,6 +27,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 
 data Maybe a = Nothing | Just a
 
@@ -54,7 +55,7 @@ instance Monoidal Maybe (->) (->) (:*:) (:+:) where
 	unit _ _ = Nothing
 
 instance Traversable Maybe (->) (->) where
-	_ <<- Nothing = point Nothing
+	_ <<- Nothing = point_ Nothing
 	f <<- Just x = Just -<$>- f x
 
 instance Bindable Maybe (->) where
