@@ -8,7 +8,6 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant ((->$<-))
-import Pandora.Pattern.Functor.Pointable (Pointable)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -24,7 +23,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Primary.Algebraic (empty)
 
@@ -62,7 +61,7 @@ instance Semigroup (t <:.> Construction t := a) => Semigroup (Comprehension t a)
 instance Monoid (t <:.> Construction t := a) => Monoid (Comprehension t a) where
 	zero = Comprehension zero
 
-instance (Covariant t (->) (->), Pointable t (->)) => Morphable Push (Comprehension t) where
+instance (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:*:)) => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 

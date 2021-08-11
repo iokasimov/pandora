@@ -35,9 +35,6 @@ instance Covariant Maybe (->) (->) where
 	f -<$>- Just x = Just $ f x
 	_ -<$>- Nothing = Nothing
 
-instance Pointable Maybe (->) where
-	point = Just
-
 instance Semimonoidal Maybe (->) (:*:) (:*:) where
 	multiply_ (Just x :*: Just y) = Just $ x :*: y
 	multiply_ (Nothing :*: _) = Nothing
@@ -62,7 +59,7 @@ instance Bindable Maybe (->) where
 	f =<< Just x = f x
 	_ =<< Nothing = Nothing
 
-instance Monad Maybe where
+--instance Monad Maybe where
 
 instance Setoid a => Setoid (Maybe a) where
 	Just x == Just y = x == y

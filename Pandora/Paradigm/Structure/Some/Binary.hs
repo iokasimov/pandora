@@ -136,7 +136,7 @@ instance Substructure Right (Construction Wye) where
 
 instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	type Morphing (Lookup Key) (Prefixed Binary k) = (->) k <:.> Maybe
-	morphing (run . run . premorph -> Nothing) = lift Nothing
+	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
 	morphing (run . run . premorph -> Just tree) = TU $ \key ->
 		let root = extract tree in key <=> attached root & order (Just # extract root)
 			(lookup @Key key . Prefixed =<< view # sub @Left # tree)

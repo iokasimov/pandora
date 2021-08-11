@@ -4,6 +4,8 @@ import Pandora.Core.Functor (type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -23,6 +25,9 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Tagged tag a = Tag a
@@ -36,11 +41,17 @@ instance Covariant (Tagged tag) (->) (->) where
 instance Covariant (Flip Tagged a) (->) (->) where
 	_ -<$>- Flip (Tag x) = Flip $ Tag x
 
+instance Semimonoidal (Tagged tag) (->) (:*:) (:*:) where
+	multiply_ (x :*: y) = Tag $ extract x :*: extract y
+
+instance Monoidal (Tagged tag) (->) (->) (:*:) (:*:) where
+	unit _ f = Tag $ f One
+
 instance Pointable (Tagged tag) (->) where
 	point = Tag
 
 instance Extractable (Tagged tag) (->) where
-	extract (Tag x) = x
+	extract ~(Tag x) = x
 
 instance Traversable (Tagged tag) (->) (->) where
 	f <<- Tag x = Tag -<$>- f x
