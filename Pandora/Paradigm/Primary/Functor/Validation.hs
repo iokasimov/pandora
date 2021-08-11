@@ -5,6 +5,7 @@ import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -13,6 +14,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point_)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
@@ -44,6 +46,9 @@ instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:*:) where
 	multiply_ (Flaws x :*: Flaws y) = Flaws $ x + y
 	multiply_ (Validated _ :*: Flaws y) = Flaws y
 	multiply_ (Flaws x :*: Validated _) = Flaws x
+
+instance Semigroup e => Monoidal (Validation e) (->) (->) (:*:) (:*:) where
+	unit _ f = Validated $ f One
 
 instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:+:) where
 	multiply_ (Flaws _ :*: y) = Adoption -<$>- y

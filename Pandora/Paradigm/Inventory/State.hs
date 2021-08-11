@@ -39,13 +39,10 @@ instance Semimonoidal (State s) (->) (:*:) (:*:) where
 instance Monoidal (State s) (->) (->) (:*:) (:*:) where
 	unit _ f = State . (identity @(->) -|) $ f One
 
-instance Pointable (State s) (->) where
-	point = State . (identity @(->) -|)
-
 instance Bindable (State s) (->) where
 	f =<< x = State $ (run . f |-) -<$>- run x
 
-instance Monad (State s) where
+--instance Monad (State s) where
 
 instance Invariant (Flip State r) where
 	f <$< g = ((g >-> ((<->) @_ @_ @(->) @(->) f identity) ||=) ||=)
@@ -77,7 +74,7 @@ replace s = adapt . State $ \_ -> s :*: s
 reconcile :: (Bindable t (->), Stateful s t, Adaptable u t) => (s -> u s) -> t s
 reconcile f = replace =<< adapt . f =<< current
 
-type Memorable s t = (Pointable t (->), Semimonoidal t (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Stateful s t)
+type Memorable s t = (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:*:), Stateful s t)
 
 fold :: (Traversable t (->) (->), Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = (modify . op <<- struct) *>- current

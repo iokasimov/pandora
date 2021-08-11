@@ -6,8 +6,7 @@ import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Monoidal (Monoidal)
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -15,6 +14,8 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 
 newtype UT ct cu t u a = UT (u :. t := a)
 
@@ -36,8 +37,8 @@ instance (Covariant t (->) (->), Covariant u (->) (->)) => Covariant (t <.:> u) 
 instance (Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <.:> u) (->) (:*:) (:*:) where
 	multiply_ (UT x :*: UT y) = UT $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
 
-instance (Pointable t (->), Pointable u (->)) => Pointable (t <.:> u) (->) where
-	point = UT . point . point
+instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <.:> u) (->) (->) (:*:) (:*:) where
+	unit _ f = UT . point_ . point_ $ f One
 
 instance (Traversable t (->) (->), Bindable t (->), Semimonoidal u (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:), Bindable u (->)) => Bindable (t <.:> u) (->) where
 	f =<< UT x = UT $ ((identity =<<) -<$>-) . (run . f <<-) =<< x
@@ -45,9 +46,9 @@ instance (Traversable t (->) (->), Bindable t (->), Semimonoidal u (->) (:*:) (:
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where
 	extract = extract . extract . run
 
-instance Pointable t (->) => Liftable (UT Covariant Covariant t) where
+instance Monoidal t (->) (->) (:*:) (:*:) => Liftable (UT Covariant Covariant t) where
 	lift :: Covariant u (->) (->) => u ~> t <.:> u
-	lift x = UT $ point @_ @(->) -<$>- x
+	lift x = UT $ point_ -<$>- x
 
 instance Extractable t (->) => Lowerable (UT Covariant Covariant t) where
 	lower :: Covariant u (->) (->) => t <.:> u ~> u
