@@ -5,7 +5,6 @@ import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -24,9 +23,6 @@ newtype Backwards t a = Backwards (t a)
 
 instance Covariant t (->) (->) => Covariant (Backwards t) (->) (->) where
 	f -<$>- Backwards x = Backwards $ f -<$>- x
-
-instance Pointable t (->) => Pointable (Backwards t) (->) where
-	point = Backwards . point
 
 instance Extractable t (->) => Extractable (Backwards t) (->) where
 	extract (Backwards x) = extract x

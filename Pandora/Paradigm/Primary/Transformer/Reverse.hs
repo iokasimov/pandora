@@ -6,14 +6,18 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Transformer.Backwards (Backwards (Backwards))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Reverse t a = Reverse (t a)
@@ -21,8 +25,11 @@ newtype Reverse t a = Reverse (t a)
 instance Covariant t (->) (->) => Covariant (Reverse t) (->) (->) where
 	f -<$>- Reverse x = Reverse # f -<$>- x
 
-instance Pointable t (->) => Pointable (Reverse t) (->) where
-	point = Reverse . point
+instance (Semimonoidal t (->) (:*:) (:*:), Covariant t (->) (->)) => Semimonoidal (Reverse t) (->) (:*:) (:*:) where
+	multiply_ (Reverse x :*: Reverse y) = Reverse # multiply_ (x :*: y)
+
+instance (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:*:)) => Monoidal (Reverse t) (->) (->) (:*:) (:*:) where
+	unit _ f = Reverse . point_ $ f One
 
 instance Extractable t (->) => Extractable (Reverse t) (->) where
 	extract (Reverse x) = extract x
