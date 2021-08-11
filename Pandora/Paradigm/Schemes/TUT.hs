@@ -6,7 +6,7 @@ import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -15,7 +15,9 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 
 newtype TUT ct ct' cu t t' u a = TUT (t :. u :. t' := a)
 
@@ -44,8 +46,8 @@ instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->), 
 instance (Covariant t (->) (->), Covariant t' (->) (->), Adjoint t' t (->) (->), Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
 	f =<< x = TUT $ ((run . f |-) =<<) -<$>- run x
 
-instance (Covariant t (->) (->), Covariant t' (->) (->), Pointable u (->), Adjoint t' t (->) (->)) => Pointable (t <:<.>:> t' := u) (->) where
-	point = unite . (point @_ @(->) -|)
+instance (Covariant t (->) (->), Covariant u (->) (->), Covariant t' (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:), Adjoint t' t (->) (->)) => Monoidal (t <:<.>:> t' := u) (->) (->) (:*:) (:*:) where
+	unit _ f = unite . (point_ -|) . f $ One
 
 instance (Adjoint t' t (->) (->), Extendable u (->)) => Extendable (t' <:<.>:> t := u) (->) where
 	f <<= x = TUT $ ((f . unite -|) <<=) -<$>- run x
