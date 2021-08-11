@@ -3,7 +3,6 @@ module Pandora.Paradigm.Primary.Functor.Validation where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -37,9 +36,6 @@ instance Covariant (Flip Validation a) (->) (->) where
 	_ -<$>- Flip (Validated x) = Flip $ Validated x
 	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
 	_ -<$>- Flip (Validated x) = Flip $ Validated x
-
-instance Pointable (Validation e) (->) where
-	point = Validated
 
 instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:*:) where
 	multiply_ (Validated x :*: Validated y) = Validated $ x :*: y

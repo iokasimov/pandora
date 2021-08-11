@@ -7,12 +7,11 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
-import Pandora.Pattern.Functor.Monad (Monad)
+--import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -47,9 +46,6 @@ instance Semimonoidal (Tagged tag) (->) (:*:) (:*:) where
 instance Monoidal (Tagged tag) (->) (->) (:*:) (:*:) where
 	unit _ f = Tag $ f One
 
-instance Pointable (Tagged tag) (->) where
-	point = Tag
-
 instance Extractable (Tagged tag) (->) where
 	extract ~(Tag x) = x
 
@@ -62,7 +58,7 @@ instance Distributive (Tagged tag) (->) (->) where
 instance Bindable (Tagged tag) (->) where
 	f =<< Tag x = f x
 
-instance Monad (Tagged tag)
+--instance Monad (Tagged tag)
 
 instance Extendable (Tagged tag) (->) where
 	f <<= x = Tag . f $ x

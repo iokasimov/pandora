@@ -2,7 +2,6 @@ module Pandora.Paradigm.Primary.Functor.Wedge where
 
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic (point_)
@@ -13,9 +12,6 @@ instance Covariant (Wedge e) (->) (->) where
 	_ -<$>- Nowhere = Nowhere
 	_ -<$>- Here x = Here x
 	f -<$>- There x = There $ f x
-
-instance Pointable (Wedge e) (->) where
-	point = There
 
 instance Traversable (Wedge e) (->) (->) where
 	_ <<- Nowhere = point_ Nowhere

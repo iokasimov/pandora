@@ -4,14 +4,14 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
-import Pandora.Pattern.Functor.Monad (Monad)
+--import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
+--import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -24,14 +24,13 @@ import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic ()
 
 newtype Identity a = Identity a
 
 instance Covariant Identity (->) (->) where
 	f -<$>- Identity x = Identity $ f x
-
-instance Pointable Identity (->) where
-	point = Identity
 
 instance Extractable Identity (->) where
 	extract (Identity x) = x
@@ -39,23 +38,26 @@ instance Extractable Identity (->) where
 instance Semimonoidal Identity (->) (:*:) (:*:) where
 	multiply_ (Identity x :*: Identity y) = Identity $ x :*: y
 
+instance Monoidal Identity (->) (->) (:*:) (:*:) where
+	unit _ f = Identity $ f One
+
 instance Traversable Identity (->) (->) where
 	f <<- Identity x = Identity -<$>- f x
 
 instance Bindable Identity (->) where
 	f =<< Identity x = f x	
 
-instance Monad Identity
+--instance Monad Identity
 
 instance Extendable Identity (->) where
 	f <<= x = Identity . f $ x
 
 instance Comonad Identity (->)
 
-instance Representable Identity where
-	type Representation Identity = ()
-	() <#> Identity x = x
-	tabulate f = Identity $ f ()
+--instance Representable Identity where
+	--type Representation Identity = ()
+	--() <#> Identity x = x
+	--tabulate f = Identity $ f ()
 
 instance Adjoint Identity Identity (->) (->) where
 	f -| x = Identity . f . Identity $ x
