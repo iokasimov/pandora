@@ -54,6 +54,14 @@ instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ (Option _ :*: Adoption y) = Adoption $ Adoption y
 	multiply_ (Adoption x :*: _) = Adoption $ Option x
 
+instance Semimonoidal ((:+:) e) (->) (:*:) (:*:) where
+	multiply_ (Adoption x :*: Adoption y) = Adoption $ x :*: y
+	multiply_ (Option e :*: _) = Option e
+	multiply_ (_ :*: Option e) = Option e
+
+instance Monoidal ((:+:) e) (->) (->) (:*:) (:*:) where
+	unit _ f = Adoption $ f One
+
 type Applicative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:))
 type Alternative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:+:), Monoidal t (->) (->) (:*:) (:+:))
 
