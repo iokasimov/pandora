@@ -8,13 +8,15 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -29,11 +31,11 @@ instance Covariant (Environment e) (->) (->) where
 instance Contravariant (Flip Environment a) (->) (->) where
 	f ->$<- Flip (Environment g) = Flip . Environment $ g . f
 
-instance Pointable (Environment e) (->) where
-	point x = Environment (x !.)
-
 instance Semimonoidal (Environment e) (->) (:*:) (:*:) where
 	multiply_ (x :*: y) = unite $ multiply_ $ run x :*: run y
+
+instance Monoidal (Environment e) (->) (->) (:*:) (:*:) where
+	unit _ f = Environment $ \_ -> f One
 
 instance Distributive (Environment e) (->) (->) where
 	f -<< g = Environment $ (run -<$>- f) -<< g
@@ -41,7 +43,7 @@ instance Distributive (Environment e) (->) (->) where
 instance Bindable (Environment e) (->) where
 	f =<< Environment x = Environment $ \e -> (run % e) . f . x $ e
 
-instance Monad (Environment e) where
+--instance Monad (Environment e) where
 
 instance Divariant Environment (->) (->) (->) where
 	(>->) ab cd bc = Environment $ ab >-> cd $ run bc

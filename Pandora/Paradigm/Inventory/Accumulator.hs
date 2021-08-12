@@ -26,9 +26,6 @@ instance Semigroup e => Semimonoidal (Accumulator e) (->) (:*:) (:*:) where
 	multiply_ (x :*: y) = Accumulator $ k # run x # run y where
 		k ~(ex :*: x') ~(ey :*: y') = ex + ey :*: x' :*: y'
 
-instance Monoid e => Pointable (Accumulator e) (->) where
-	point = Accumulator . (zero :*:)
-
 instance Semigroup e => Bindable (Accumulator e) (->) where
 	f =<< Accumulator (e :*: x) = let e' :*: b = run $ f x in
 		Accumulator $ e + e':*: b
