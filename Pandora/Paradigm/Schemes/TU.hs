@@ -7,7 +7,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -49,9 +48,6 @@ instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
 	unit _ _ = TU empty
-
-instance (Pointable t (->), Pointable u (->)) => Pointable (t <:.> u) (->) where
-	point = TU . point . point
 
 instance (Extractable t (->), Extractable u (->)) => Extractable (t <:.> u) (->) where
 	extract = extract . extract . run

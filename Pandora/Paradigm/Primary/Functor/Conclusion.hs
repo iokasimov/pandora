@@ -111,6 +111,6 @@ instance Catchable e (Conclusion e) where
 	catch (Failure e) handle = handle e
 	catch (Success x) _ = Success x
 
-instance (Pointable u (->), Bindable u (->)) => Catchable e (Conclusion e <.:> u) where
-	catch (UT x) handle = let conclude = conclusion # run . handle # point . Success
+instance (Monoidal u (->) (->) (:*:) (:*:), Bindable u (->)) => Catchable e (Conclusion e <.:> u) where
+	catch (UT x) handle = let conclude = conclusion # run . handle # point_ . Success
 		in UT $ conclude =<< x

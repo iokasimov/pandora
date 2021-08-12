@@ -5,7 +5,6 @@ module Pandora.Paradigm.Primary.Transformer.Outline where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -18,9 +17,6 @@ data Outline t a where
 instance Covariant (Outline t) (->) (->) where
 	f -<$>- Line a = Line $ f a
 	f -<$>- Outlined x y = Outlined x # (.) f -<$>- y
-
-instance Pointable (Outline t) (->) where
-	point = Line
 
 instance Extractable t (->) => Extractable (Outline t) (->) where
 	extract (Line x) = x
