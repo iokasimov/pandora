@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -38,7 +39,7 @@ instance Interpreted (Accumulator e) where
 	unite = Accumulator
 
 instance Monoid e => Monadic (Accumulator e) where
-	wrap = TM . UT . point . run
+	wrap = TM . UT . point_ . run
 
 type Accumulated e t = Adaptable (Accumulator e) t
 

@@ -5,7 +5,6 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($), (#))
 import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -97,7 +96,7 @@ instance Interpreted (Conclusion e) where
 type instance Schematic Monad (Conclusion e) = (<.:>) (Conclusion e)
 
 instance Monadic (Conclusion e) where
-	wrap = TM . UT . point
+	wrap = TM . UT . point_
 
 type Failable e = Adaptable (Conclusion e)
 

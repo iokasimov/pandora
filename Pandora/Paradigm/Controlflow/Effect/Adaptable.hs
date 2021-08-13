@@ -6,11 +6,12 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant)
-import Pandora.Pattern.Functor.Pointable (Pointable)
+import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower), Hoistable (hoist))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer (Monadic, Comonadic, wrap, bring, (:>), (:<))
 
@@ -20,7 +21,7 @@ class Adaptable t u where
 
 type Lifting t u = (Monadic t, Liftable (Schematic Monad t), Covariant u (->) (->))
 type Lowering t u = (Comonadic t, Lowerable (Schematic Comonad t), Covariant u (->) (->))
-type Wrappable t u = (Monadic t, Pointable u (->))
+type Wrappable t u = (Monadic t, Monoidal u (->) (->) (:*:) (:*:))
 type Bringable t u = (Comonadic t, Extractable u (->))
 
 instance Adaptable t t where

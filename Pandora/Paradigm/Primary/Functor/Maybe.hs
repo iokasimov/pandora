@@ -4,7 +4,6 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -100,7 +99,7 @@ instance Interpreted Maybe where
 	unite = identity
 
 instance Monadic Maybe where
-	wrap = TM . UT . point
+	wrap = TM . UT . point_
 
 instance Monotonic a (Maybe a) where
 	reduce f r (Just x) = f x r

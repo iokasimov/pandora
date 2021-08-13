@@ -7,7 +7,6 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -23,6 +22,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (*>-), delta)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
@@ -55,7 +55,7 @@ instance Interpreted (State s) where
 type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 
 instance Monadic (State s) where
-	wrap x = TM . TUT $ point @_ @(->) -<$>- run x
+	wrap x = TM . TUT $ point_ -<$>- run x
 
 type Stateful s = Adaptable (State s)
 
