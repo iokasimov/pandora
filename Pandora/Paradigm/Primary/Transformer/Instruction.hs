@@ -7,6 +7,7 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -15,6 +16,8 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\), hoist))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic ()
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 
@@ -30,6 +33,9 @@ instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoida
 	multiply_ (Enter x :*: Instruct y) = (x :*:) -<$>- Instruct y
 	multiply_ (Instruct x :*: Enter y) = (:*: y) -<$>- Instruct x
 	multiply_ (Instruct x :*: Instruct y) = Instruct $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
+
+instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Monoidal (Instruction t) (->) (->) (:*:) (:*:) where
+	unit _ f = Enter $ f One
 
 instance Covariant t (->) (->) => Bindable (Instruction t) (->) where
 	f =<< Enter x = f x

@@ -562,3 +562,4 @@
 * Add `Monoidal` constraint to `Applicative` and `Alternative` constraints
 * Define `point_` method
 * Use `Monoidal` superclass in `Traversable` instead of `Pointable`
+* Use `Monoidal` superclass in `Monad` instead of `Pointable`

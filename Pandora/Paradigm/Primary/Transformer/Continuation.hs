@@ -5,12 +5,15 @@ import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 
 newtype Continuation r t a = Continuation ((->) ::|:. a :. t := r)
 
@@ -28,7 +31,7 @@ instance Covariant t (->) (->) => Pointable (Continuation r t) (->) where
 instance Covariant t (->) (->) => Bindable (Continuation r t) (->) where
 	f =<< x = Continuation $ \g -> run x $ \y -> run # f y # g
 
-instance Monad t => Monad (Continuation r t) where
+--instance Monad t => Monad (Continuation r t) where
 
 instance (forall u . Bindable u (->)) => Liftable (Continuation r) where
 	lift = Continuation . (%) (=<<)
@@ -39,11 +42,11 @@ cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . (!.) . g
 
 -- | Delimit the continuation of any 'shift'
 reset :: (forall u . Bindable u (->), Monad t) => Continuation r t r -> Continuation s t r
-reset = lift . (run % point)
+reset = lift . (run % point_)
 
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it
-shift :: Pointable t (->) => ((a -> t r) -> Continuation r t r) -> Continuation r t a
-shift f = Continuation $ (run % point) . f
+shift :: Monoidal t (->) (->) (:*:) (:*:) => ((a -> t r) -> Continuation r t r) -> Continuation r t a
+shift f = Continuation $ (run % point_) . f
 
-interruptable :: Pointable t (->) => ((a -> Continuation a t a) -> Continuation a t a) -> t a
-interruptable = (run % point) . cwcc
+interruptable :: Monoidal t (->) (->) (:*:) (:*:) => ((a -> Continuation a t a) -> Continuation a t a) -> t a
+interruptable = (run % point_) . cwcc

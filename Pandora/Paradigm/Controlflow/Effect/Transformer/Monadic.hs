@@ -6,7 +6,6 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -32,9 +31,6 @@ newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 instance Covariant (Schematic Monad t u) (->) (->) => Covariant (t :> u) (->) (->) where
 	f -<$>- TM x = TM $ f -<$>- x
 
-instance (Covariant (Schematic Monad t u) (->) (->), Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:)) => Pointable (t :> u) (->) where
-	point = TM . point_
-
 instance Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:) => Monoidal (t :> u) (->) (->) (:*:) (:*:) where
 	unit _ f = TM . point_ $ f One
 
@@ -56,7 +52,7 @@ instance Bindable (Schematic Monad t u) (->) => Bindable (t :> u) (->) where
 instance Extendable (Schematic Monad t u) (->) => Extendable (t :> u) (->) where
 	f <<= TM x = TM $ f . TM <<= x
 
-instance (Covariant (Schematic Monad t u) (->) (->), Pointable (t :> u) (->), Bindable (t :> u) (->)) => Monad (t :> u) where
+instance (Covariant (Schematic Monad t u) (->) (->), Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:), Bindable (t :> u) (->)) => Monad (t :> u) where
 
 instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
 	lift = TM . lift
