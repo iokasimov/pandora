@@ -24,7 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 
 data Conclusion e a = Failure e | Success a
 
@@ -51,7 +51,7 @@ instance Semigroup e => Semimonoidal (Conclusion e) (->) (:*:) (:+:) where
 instance Traversable (Conclusion e) (->) (->) where
 	(<<-) :: (Endofunctor Covariant u (->), Monoidal u (->) (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:))
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
-	_ <<- Failure y = point_ $ Failure y
+	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success -<$>- f x
 
 instance Bindable (Conclusion e) (->) where
@@ -96,7 +96,7 @@ instance Interpreted (Conclusion e) where
 type instance Schematic Monad (Conclusion e) = (<.:>) (Conclusion e)
 
 instance Monadic (Conclusion e) where
-	wrap = TM . UT . point_
+	wrap = TM . UT . point
 
 type Failable e = Adaptable (Conclusion e)
 
@@ -111,5 +111,5 @@ instance Catchable e (Conclusion e) where
 	catch (Success x) _ = Success x
 
 instance (Monoidal u (->) (->) (:*:) (:*:), Bindable u (->)) => Catchable e (Conclusion e <.:> u) where
-	catch (UT x) handle = let conclude = conclusion # run . handle # point_ . Success
+	catch (UT x) handle = let conclude = conclusion # run . handle # point . Success
 		in UT $ conclude =<< x

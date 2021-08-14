@@ -16,7 +16,7 @@ import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\), hoist))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 
@@ -47,7 +47,7 @@ instance Liftable Instruction where
 	lift x = Instruct $ Enter -<$>- x
 
 instance (forall t . Bindable t (->), forall t . Monoidal t (->) (->) (:*:) (:*:)) => Lowerable Instruction where
-	lower (Enter x) = point_ x
+	lower (Enter x) = point x
 	lower (Instruct xs) = lower =<< xs
 
 instance (forall v . Covariant v (->) (->)) => Hoistable Instruction where

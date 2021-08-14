@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (!..))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 
@@ -44,7 +44,7 @@ yield v = Continuation $ \next -> Pipe $ \i (Consumer o) -> o v # pause next i
 
 -- | Pipeline that does nothing
 finish :: Monoidal t (->) (->) (:*:) (:*:) => Pipeline i o t () ()
-finish = Continuation (Pipe (point_ () !..) !.)
+finish = Continuation (Pipe (point () !..) !.)
 
 -- | Do some effectful computation within pipeline
 impact :: Bindable t (->) => t a -> Pipeline i o t a a
@@ -55,11 +55,11 @@ impact action = Continuation $ \next -> Pipe $ \i o -> (\x -> pipe (next x) i o)
 p =*= q = Continuation $ \_ -> Pipe $ \i -> pipe # run q end # pause (run p end !.) i where
 
 	end :: b -> Pipe c d () t ()
-	end _ = Pipe (point_ () !..)
+	end _ = Pipe (point () !..)
 
 -- | Run pipeline and get result
 pipeline :: Monoidal t (->) (->) (:*:) (:*:) => Pipeline i o t () () -> t ()
-pipeline p = pipe # run p (Pipe . (!..) . point_) # i # o where
+pipeline p = pipe # run p (Pipe . (!..) . point) # i # o where
 
 	i :: Producer i t ()
 	i = Producer $ \o' -> produce i o'

@@ -18,7 +18,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (empty, point_)
+import Pandora.Paradigm.Primary.Algebraic (empty, point)
 
 newtype TU ct cu t u a = TU (t :. u := a)
 
@@ -44,7 +44,7 @@ instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:
 	multiply_ (TU x :*: TU y) = TU $ sum (Option -<$>-) (Adoption -<$>-) -<$>- multiply_ @_ @(->) @(:*:) @(:+:) (x :*: y)
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:*:) where
-	unit _ f = TU . point_ . point_ $ f One
+	unit _ f = TU . point . point $ f One
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
 	unit _ _ = TU empty
@@ -60,7 +60,7 @@ instance (Bindable t (->), Distributive t (->) (->), Covariant u (->) (->), Bind
 
 instance Monoidal t (->) (->) (:*:) (:*:) => Liftable (TU Covariant Covariant t) where
 	lift :: Covariant u (->) (->) => u ~> t <:.> u
-	lift = TU . point_
+	lift = TU . point
 
 instance Extractable t (->) => Lowerable (TU Covariant Covariant t) where
 	lower :: t <:.> u ~> u

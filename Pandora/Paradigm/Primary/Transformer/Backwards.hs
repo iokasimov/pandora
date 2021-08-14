@@ -16,7 +16,7 @@ import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Backwards t a = Backwards (t a)
@@ -33,7 +33,7 @@ instance (Semimonoidal t (->) (:*:) (:*:), Covariant t (->) (->)) => Semimonoida
 		((:*:) %) -<$>- y -<*>- x
 
 instance (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:*:)) => Monoidal (Backwards t) (->) (->) (:*:) (:*:) where
-	unit _ f = Backwards . point_ $ f One
+	unit _ f = Backwards . point $ f One
 
 instance Traversable t (->) (->) => Traversable (Backwards t) (->) (->) where
 	f <<- Backwards x = Backwards -<$>- f <<- x

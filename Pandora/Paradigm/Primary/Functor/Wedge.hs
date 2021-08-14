@@ -4,7 +4,7 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 
 data Wedge e a = Nowhere | Here e | There a
 
@@ -14,8 +14,8 @@ instance Covariant (Wedge e) (->) (->) where
 	f -<$>- There x = There $ f x
 
 instance Traversable (Wedge e) (->) (->) where
-	_ <<- Nowhere = point_ Nowhere
-	_ <<- Here x = point_ $ Here x
+	_ <<- Nowhere = point Nowhere
+	_ <<- Here x = point $ Here x
 	f <<- There x = There -<$>- f x
 
 wedge :: (e -> r) -> (a -> r) -> r -> Wedge e a -> r

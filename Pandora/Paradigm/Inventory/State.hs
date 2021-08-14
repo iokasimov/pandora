@@ -22,7 +22,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (*>-), delta)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
@@ -55,7 +55,7 @@ instance Interpreted (State s) where
 type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 
 instance Monadic (State s) where
-	wrap x = TM . TUT $ point_ -<$>- run x
+	wrap x = TM . TUT $ point -<$>- run x
 
 type Stateful s = Adaptable (State s)
 

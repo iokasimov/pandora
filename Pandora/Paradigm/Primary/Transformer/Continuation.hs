@@ -12,7 +12,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 
 newtype Continuation r t a = Continuation ((->) ::|:. a :. t := r)
 
@@ -38,11 +38,11 @@ cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . (!.) . g
 
 -- | Delimit the continuation of any 'shift'
 reset :: (forall u . Bindable u (->), Monad t) => Continuation r t r -> Continuation s t r
-reset = lift . (run % point_)
+reset = lift . (run % point)
 
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it
 shift :: Monoidal t (->) (->) (:*:) (:*:) => ((a -> t r) -> Continuation r t r) -> Continuation r t a
-shift f = Continuation $ (run % point_) . f
+shift f = Continuation $ (run % point) . f
 
 interruptable :: Monoidal t (->) (->) (:*:) (:*:) => ((a -> Continuation a t a) -> Continuation a t a) -> t a
-interruptable = (run % point_) . cwcc
+interruptable = (run % point) . cwcc

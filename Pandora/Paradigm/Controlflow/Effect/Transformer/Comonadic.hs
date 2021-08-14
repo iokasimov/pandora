@@ -18,7 +18,7 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
 class Interpreted t => Comonadic t where
@@ -35,7 +35,7 @@ instance Semimonoidal (Schematic Comonad t u) (->) (:*:) (:*:) => Semimonoidal (
 	multiply_ (TC f :*: TC x) = TC $ multiply_ $ f :*: x
 
 instance Monoidal (Schematic Comonad t u) (->) (->) (:*:) (:*:) => Monoidal (t :< u) (->) (->) (:*:) (:*:) where
-	unit _ f = TC . point_ $ f One
+	unit _ f = TC . point $ f One
 
 instance Extractable (Schematic Comonad t u) (->) => Extractable (t :< u) (->) where
 	extract = extract . tc

@@ -16,7 +16,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 
@@ -36,7 +36,7 @@ instance Traversable t (->) (->) => Traversable (Jack t) (->) (->) where
 
 instance (Monoidal t (->) (->) (:*:) (:*:), Bindable t (->)) => Bindable (Jack t) (->) where
 	f =<< It x = f x
-	f =<< Other x = Other $ jack point_ identity . f =<< x
+	f =<< Other x = Other $ jack point identity . f =<< x
 
 instance Extendable t (->) => Extendable (Jack t) (->) where
 	f <<= It x = It . f $ It x

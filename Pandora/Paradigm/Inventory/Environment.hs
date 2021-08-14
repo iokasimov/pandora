@@ -16,7 +16,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -56,7 +56,7 @@ instance Interpreted (Environment e) where
 type instance Schematic Monad (Environment e) = (<:.>) ((->) e)
 
 instance Monadic (Environment e) where
-	wrap x = TM . TU $ point_ -<$>- run x
+	wrap x = TM . TU $ point -<$>- run x
 
 type Configured e = Adaptable (Environment e)
 

@@ -14,7 +14,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
@@ -52,7 +52,7 @@ instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:+:) where
 
 instance Traversable (Validation e) (->) (->) where
 	f <<- Validated x = Validated -<$>- f x
-	_ <<- Flaws e = point_ $ Flaws e
+	_ <<- Flaws e = point $ Flaws e
 
 instance Bivariant Validation (->) (->) (->) where
 	f <-> g = validation # Flaws . f # Validated . g

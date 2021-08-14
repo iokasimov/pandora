@@ -15,7 +15,7 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point_)
+import Pandora.Paradigm.Primary.Algebraic (point)
 
 newtype UT ct cu t u a = UT (u :. t := a)
 
@@ -38,7 +38,7 @@ instance (Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u
 	multiply_ (UT x :*: UT y) = UT $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <.:> u) (->) (->) (:*:) (:*:) where
-	unit _ f = UT . point_ . point_ $ f One
+	unit _ f = UT . point . point $ f One
 
 instance (Traversable t (->) (->), Bindable t (->), Semimonoidal u (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:), Bindable u (->)) => Bindable (t <.:> u) (->) where
 	f =<< UT x = UT $ ((identity =<<) -<$>-) . (run . f <<-) =<< x
@@ -48,7 +48,7 @@ instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->)
 
 instance Monoidal t (->) (->) (:*:) (:*:) => Liftable (UT Covariant Covariant t) where
 	lift :: Covariant u (->) (->) => u ~> t <.:> u
-	lift x = UT $ point_ -<$>- x
+	lift x = UT $ point -<$>- x
 
 instance Extractable t (->) => Lowerable (UT Covariant Covariant t) where
 	lower :: Covariant u (->) (->) => t <.:> u ~> u
