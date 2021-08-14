@@ -5,11 +5,10 @@ module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, ga
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Object.Monoid (Monoid (zero))
+import Pandora.Pattern.Object.Monoid (Monoid)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic (point_)
@@ -42,12 +41,6 @@ instance Monoid e => Monadic (Accumulator e) where
 	wrap = TM . UT . point_ . run
 
 type Accumulated e t = Adaptable (Accumulator e) t
-
-instance {-# OVERLAPS #-} (Pointable u (->), Monoid e) => Pointable ((:*:) e <.:> u) (->) where
-	point = UT . point . (zero :*:)
-
-instance {-# OVERLAPS #-} (Semigroup e, Pointable u (->), Bindable u (->)) => Bindable ((:*:) e <.:> u) (->) where
-	f =<< UT x = UT $ (\(acc :*: v) -> (\(acc' :*: y) -> (acc + acc' :*: y)) -<$>- run (f v)) =<< x
 
 gather :: Accumulated e t => e -> t ()
 gather x = adapt . Accumulator $ x :*: ()
