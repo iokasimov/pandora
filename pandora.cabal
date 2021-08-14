@@ -149,7 +149,6 @@ library
     Pandora.Pattern.Functor.Extractable
     Pandora.Pattern.Functor.Invariant
     Pandora.Pattern.Functor.Monad
-    Pandora.Pattern.Functor.Pointable
     Pandora.Pattern.Functor.Representable
     Pandora.Pattern.Functor.Traversable
     Pandora.Pattern.Functor.Divariant

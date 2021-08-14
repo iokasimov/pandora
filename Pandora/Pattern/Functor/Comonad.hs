@@ -4,8 +4,8 @@ import Pandora.Pattern.Functor.Extractable (Extractable)
 import Pandora.Pattern.Functor.Extendable (Extendable)
 
 {- |
-> Let f :: (Pointable t, Bindable t) => t a -> b
-> Let g :: (Pointable t, Bindable t) => t a -> b
+> Let f :: (Extendable t, Extractable t) => t a -> b
+> Let g :: (Extendable t, Extractable t) => t a -> b
 
 > When providing a new instance, you should ensure it satisfies:
 > * Left identity: extend extract ≡ identity

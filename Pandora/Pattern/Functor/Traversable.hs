@@ -6,7 +6,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
 {- |
 > Let f :: (Applicative t, Applicative g) => t a -> u a
-> Let p :: (Pointable t, Pointable g) => t a -> u a
+> Let p :: (Monoidal u category category (:*:) (:*:), Monoidal u category category (:*:) (:*:)) => t a -> u a
 
 > When providing a new instance, you should ensure it satisfies:
 > * Numeratority of traversing: g . (f <<--) ≡ (g . f <<--)

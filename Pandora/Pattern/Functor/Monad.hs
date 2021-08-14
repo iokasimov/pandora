@@ -6,9 +6,9 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
 {- |
-> Let f :: (Pointable t, Bindable t) => a -> t a
-> Let g :: (Pointable t, Bindable t) => a -> t a
-> Let h :: (Pointable t, Bindable t) => t a
+> Let f :: (Monoidal t (->) (->) (:*:) (:*:), Bindable t) => a -> t a
+> Let g :: (Monoidal t (->) (->) (:*:) (:*:), Bindable t) => a -> t a
+> Let h :: (Monoidal t (->) (->) (:*:) (:*:), Bindable t) => t a
 
 > When providing a new instance, you should ensure it satisfies:
 > * Left identity: point a >>= f ≡ f a
