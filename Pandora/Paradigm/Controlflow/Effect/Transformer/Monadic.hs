@@ -31,14 +31,14 @@ newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 instance Covariant (Schematic Monad t u) (->) (->) => Covariant (t :> u) (->) (->) where
 	f -<$>- TM x = TM $ f -<$>- x
 
+instance Semimonoidal (Schematic Monad t u) (->) (:*:) (:*:) => Semimonoidal (t :> u) (->) (:*:) (:*:) where
+	multiply_ (TM f :*: TM x) = TM $ multiply_ $ f :*: x
+
 instance Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:) => Monoidal (t :> u) (->) (->) (:*:) (:*:) where
 	unit _ f = TM . point_ $ f One
 
 instance Extractable (Schematic Monad t u) (->) => Extractable (t :> u) (->) where
 	extract = extract . tm
-
-instance Semimonoidal (Schematic Monad t u) (->) (:*:) (:*:) => Semimonoidal (t :> u) (->) (:*:) (:*:) where
-	multiply_ (TM f :*: TM x) = TM $ multiply_ $ f :*: x
 
 instance Traversable (Schematic Monad t u) (->) (->) => Traversable (t :> u) (->) (->) where
 	f <<- TM x = TM -<$>- f <<- x

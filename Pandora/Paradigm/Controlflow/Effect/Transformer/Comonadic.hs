@@ -6,9 +6,9 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
+import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -17,6 +17,8 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic (point_)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
 class Interpreted t => Comonadic t where
@@ -29,14 +31,14 @@ newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
 instance Covariant (Schematic Comonad t u) (->) (->) => Covariant (t :< u) (->) (->) where
 	f -<$>- TC x = TC $ f -<$>- x
 
-instance Pointable (Schematic Comonad t u) (->) => Pointable (t :< u) (->) where
-	point = TC . point
+instance Semimonoidal (Schematic Comonad t u) (->) (:*:) (:*:) => Semimonoidal (t :< u) (->) (:*:) (:*:) where
+	multiply_ (TC f :*: TC x) = TC $ multiply_ $ f :*: x
+
+instance Monoidal (Schematic Comonad t u) (->) (->) (:*:) (:*:) => Monoidal (t :< u) (->) (->) (:*:) (:*:) where
+	unit _ f = TC . point_ $ f One
 
 instance Extractable (Schematic Comonad t u) (->) => Extractable (t :< u) (->) where
 	extract = extract . tc
-
-instance Semimonoidal (Schematic Comonad t u) (->) (:*:) (:*:) => Semimonoidal (t :< u) (->) (:*:) (:*:) where
-	multiply_ (TC f :*: TC x) = TC $ multiply_ $ f :*: x
 
 instance Traversable (Schematic Comonad t u) (->) (->) => Traversable (t :< u) (->) (->) where
 	f <<- TC x = TC -<$>- f <<- x
