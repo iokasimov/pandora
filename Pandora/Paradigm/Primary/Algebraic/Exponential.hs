@@ -7,9 +7,7 @@ import Pandora.Pattern.Category (Category (($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
-import Pandora.Pattern.Functor.Pointable (Pointable (point))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
@@ -32,16 +30,8 @@ instance Covariant ((->) a) (->) (->) where
 instance Distributive ((->) e) (->) (->) where
 	f -<< g = \e -> (f % e) -<$>- g
 
-instance Pointable ((->) e) (->) where
-	point = (!.)
-
 instance Bindable ((->) e) (->) where
 	f =<< g = \x -> f # g x # x
-
-instance Representable ((->) e) where
-	type Representation ((->) e) = e
-	(<#>) = (identity %)
-	tabulate = identity
 
 instance Divariant ((->)) (->) (->) (->) where
 	(>->) ab cd bc = cd . bc . ab

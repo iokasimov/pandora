@@ -1,7 +1,6 @@
 module Pandora.Pattern.Functor.Representable where
 
 import Pandora.Core.Functor (type (<:=))
-import Pandora.Pattern.Functor.Pointable (Pointable)
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -13,7 +12,7 @@ import Pandora.Pattern.Functor.Pointable (Pointable)
 
 infixr 6 <#>
 
-class Pointable t (->) => Representable t where
+class Representable t where
 	{-# MINIMAL (<#>), tabulate #-}
 	type Representation t :: *
 	-- | Infix and flipped version of 'index'
