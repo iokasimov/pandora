@@ -15,7 +15,7 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run) 
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract_)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
@@ -61,16 +61,16 @@ instance (Covariant t (->) (->)) => Substructure Root (Tap (t <:.:> t := (:*:)))
 	type Available Root (Tap (t <:.:> t := (:*:))) = Identity
 	type Substance Root (Tap (t <:.:> t := (:*:))) = Identity
 	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x xs -> Store $ Identity (Identity x) :*: lift . (Tap % xs) . extract . extract
+		Tap x xs -> Store $ Identity (Identity x) :*: lift . (Tap % xs) . extract_ . extract_
 
 instance (Covariant t (->) (->)) => Substructure Left (Tap (t <:.:> t := (:*:))) where
 	type Available Left (Tap (t <:.:> t := (:*:))) = Identity
 	type Substance Left (Tap (t <:.:> t := (:*:))) = t
 	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store $ Identity future :*: lift . Tap x . T_U . (:*: past) . extract
+		Tap x (T_U (future :*: past)) -> Store $ Identity future :*: lift . Tap x . T_U . (:*: past) . extract_
 
 instance (Covariant t (->) (->)) => Substructure Right (Tap (t <:.:> t := (:*:))) where
 	type Available Right (Tap (t <:.:> t := (:*:))) = Identity
 	type Substance Right (Tap (t <:.:> t := (:*:))) = t
 	substructure = P_Q_T $ \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store $ Identity past :*: lift . Tap x . T_U . (future :*:) . extract
+		Tap x (T_U (future :*: past)) -> Store $ Identity past :*: lift . Tap x . T_U . (future :*:) . extract_

@@ -20,6 +20,7 @@ import Pandora.Paradigm.Inventory.Optics ()
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
+import Pandora.Paradigm.Primary.Algebraic (extract_)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -42,7 +43,7 @@ instance (Covariant t (->) (->)) => Substructure Tail (Tap t) where
 	type Available Tail (Tap t) = Identity
 	type Substance Tail (Tap t) = t
 	substructure = P_Q_T $ \tap -> case extract # run tap of
-		Tap x xs -> Store $ Identity xs :*: lift . Tap x . extract
+								  Tap x xs -> Store $ Identity xs :*: lift . Tap x . extract_
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
@@ -73,19 +74,19 @@ instance Substructure Left (Flip (:*:) a) where
 	type Available Left (Flip (:*:) a) = Identity
 	type Substance Left (Flip (:*:) a) = Identity
 	substructure = P_Q_T $ \product -> case run # lower product of
-		s :*: x -> Store $ Identity (Identity s) :*: lift . Flip . (:*: x) . extract . extract
+		s :*: x -> Store $ Identity (Identity s) :*: lift . Flip . (:*: x) . extract_ . extract_
 
 instance Substructure Right ((:*:) s) where
 	type Available Right ((:*:) s) = Identity
 	type Substance Right ((:*:) s) = Identity
 	substructure = P_Q_T $ \product -> case lower product of
-		s :*: x -> Store $ Identity (Identity x) :*: lift . (s :*:) . extract . extract
+		s :*: x -> Store $ Identity (Identity x) :*: lift . (s :*:) . extract_ . extract_
 
 instance Accessible s (s :*: a) where
-	access = P_Q_T $ \(s :*: x) -> Store $ Identity s :*: (:*: x) . extract
+	access = P_Q_T $ \(s :*: x) -> Store $ Identity s :*: (:*: x) . extract_
 
 instance Accessible a (s :*: a) where
-	access = P_Q_T $ \(s :*: x) -> Store $ Identity x :*: (s :*:) . extract
+	access = P_Q_T $ \(s :*: x) -> Store $ Identity x :*: (s :*:) . extract_
 
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @b . access @a
@@ -94,10 +95,10 @@ instance (Covariant t (->) (->)) => Substructure Left (t <:.:> t := (:*:)) where
 	type Available Left (t <:.:> t := (:*:)) = Identity
 	type Substance Left (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T $ \x -> case run # lower x of
-		ls :*: rs -> Store $ Identity ls :*: lift . (twosome % rs) . extract
+		ls :*: rs -> Store $ Identity ls :*: lift . (twosome % rs) . extract_
 
 instance (Covariant t (->) (->)) => Substructure Right (t <:.:> t := (:*:)) where
 	type Available Right (t <:.:> t := (:*:)) = Identity
 	type Substance Right (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T $ \x -> case run # lower x of
-		ls :*: rs -> Store $ Identity rs :*: lift . (twosome ls) . extract
+		ls :*: rs -> Store $ Identity rs :*: lift . (twosome ls) . extract_

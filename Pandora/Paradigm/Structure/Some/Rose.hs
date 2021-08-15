@@ -14,6 +14,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
+import Pandora.Paradigm.Primary.Algebraic (extract_)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
@@ -58,13 +59,13 @@ type instance Nonempty Rose = Construction List
 instance Substructure Root (Construction List) where
 	type Available Root (Construction List) = Identity
 	type Substance Root (Construction List) = Identity
-	substructure = P_Q_T $ \rose -> Store $ Identity (Identity # extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
+	substructure = P_Q_T $ \rose -> Store $ Identity (Identity # extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract_ . extract_
 
 instance Substructure Tail (Construction List) where
 	type Available Tail (Construction List) = Identity
 	type Substance Tail (Construction List) = List <:.> Construction List
 	substructure = P_Q_T $ \rose -> case extract # run rose of
-		Construct x xs -> Store $ Identity (TU xs) :*: lift . Construct x . run . extract
+		Construct x xs -> Store $ Identity (TU xs) :*: lift . Construct x . run . extract_
 
 --------------------------------------- Prefixed rose tree -----------------------------------------
 

@@ -15,7 +15,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&))
-import Pandora.Paradigm.Primary.Algebraic (($$$>-))
+import Pandora.Paradigm.Primary.Algebraic (($$$>-), extract_)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
@@ -112,7 +112,7 @@ instance Substructure Root (Construction Wye) where
 	type Available Root (Construction Wye) = Identity
 	type Substance Root (Construction Wye) = Identity
 	substructure = P_Q_T $ \bintree -> case lower bintree of
-		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract . extract
+		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract_ . extract_
 
 instance Substructure Left (Construction Wye) where
 	type Available Left (Construction Wye) = Maybe
@@ -158,8 +158,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <:.> Maybe
 	morphing (run . premorph -> Construct x xs) = TU $ \key ->
 		key <=> attached x & order (Just # extract x)
-			(lookup @Key key . Prefixed . extract =<< view # sub @Left # xs)
-			(lookup @Key key . Prefixed . extract =<< view # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract_ =<< view # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract_ =<< view # sub @Left # xs)
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 

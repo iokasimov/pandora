@@ -21,7 +21,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
 import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (Single))
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-), (-.#..-))
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-), (-.#..-), extract_)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -68,7 +68,7 @@ instance Monoid (List a) where
 
 instance Morphable Push List where
 	type Morphing Push List = Identity <:.:> List := (->)
-	morphing (premorph -> xs) = T_U $ lift . (Construct % run xs) . extract
+	morphing (premorph -> xs) = T_U $ lift . (Construct % run xs) . extract_
 
 instance Morphable Pop List where
 	type Morphing Pop List = List
@@ -106,15 +106,15 @@ instance Substructure Root List where
 	type Available Root List = Maybe
 	type Substance Root List = Identity
 	substructure = P_Q_T $ \zipper -> case run # lower zipper of
-		Just (Construct x xs) -> Store $ Just (Identity x) :*: lift . resolve (lift . (Construct % xs) . extract @Identity) zero
-		Nothing -> Store $ Nothing :*: lift . resolve (lift . (Construct % Nothing) . extract @Identity) zero
+		Just (Construct x xs) -> Store $ Just (Identity x) :*: lift . resolve (lift . (Construct % xs) . extract_ @Identity) zero
+		Nothing -> Store $ Nothing :*: lift . resolve (lift . (Construct % Nothing) . extract_ @Identity) zero
 
 instance Substructure Tail List where
 	type Available Tail List = Identity
 	type Substance Tail List = List
 	substructure = P_Q_T $ \x -> case run . extract . run $ x of
 		Just ns -> lift . lift -<$>- run (sub @Tail) ns
-		Nothing -> Store $ Identity zero :*: lift . identity . extract
+		Nothing -> Store $ Identity zero :*: lift . identity . extract_
 
 -- | Transform any traversable structure into a stack
 linearize :: forall t a . Traversable t (->) (->) => t a -> List a
@@ -150,7 +150,7 @@ instance Substructure Root (Construction Maybe) where
 	type Available Root (Construction Maybe) = Identity
 	type Substance Root (Construction Maybe) = Identity
 	substructure = imply @(Convex Lens _ _) (Identity . extract . lower)
-		(\source target -> lift $ Construct # extract target # deconstruct (lower source))
+		(\source target -> lift $ Construct # extract_ target # deconstruct (lower source))
 
 instance Substructure Tail (Construction Maybe) where
 	type Available Tail (Construction Maybe) = Identity
@@ -177,14 +177,14 @@ instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) (->) where
 instance Morphable (Rotate Left) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Left) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Tap (List <:.:> List := (:*:))
 	morphing (premorph -> Tap x (T_U (future :*: past))) =
-		let subtree = twosome # extract (view (sub @Tail) future) # item @Push x past in
-		TU $ (Tap . extract) % subtree -<$>- view (sub @Root) future
+		let subtree = twosome # extract_ (view (sub @Tail) future) # item @Push x past in
+		TU $ (Tap . extract_) % subtree -<$>- view (sub @Root) future
 
 instance Morphable (Rotate Right) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Rotate Right) (Tap (List <:.:> List := (:*:))) = Maybe <:.> Tap (List <:.:> List := (:*:))
 	morphing (premorph -> Tap x (T_U (future :*: past))) =
-		let subtree = twosome # item @Push x future # extract (view (sub @Tail) past) in
-		TU $ (Tap . extract) % subtree -<$>- view (sub @Root) past
+		let subtree = twosome # item @Push x future # extract_ (view (sub @Tail) past) in
+		TU $ (Tap . extract_) % subtree -<$>- view (sub @Root) past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) List = Maybe <:.> Tap (List <:.:> List := (:*:))
@@ -218,7 +218,7 @@ instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Ma
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Tap (List <:.:> List := (:*:))
-	morphing (premorph -> ne) = Tap # extract ne $ twosome # extract (view # sub @Tail # ne) # zero
+	morphing (premorph -> ne) = Tap # extract ne $ twosome # extract_ (view # sub @Tail # ne) # zero
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Tap (List <:.:> List := (:*:))

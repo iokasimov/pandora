@@ -3,14 +3,13 @@ module Pandora.Paradigm.Primary.Functor.Identity where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 --import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Comonad (Comonad)
+--import Pandora.Pattern.Functor.Comonad (Comonad)
 --import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -25,16 +24,13 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic ()
+import Pandora.Paradigm.Primary.Algebraic (extract_)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Identity a = Identity a
 
 instance Covariant Identity (->) (->) where
 	f -<$>- Identity x = Identity $ f x
-
-instance Extractable Identity (->) where
-	extract (Identity x) = x
 
 instance Semimonoidal Identity (->) (:*:) (:*:) where
 	multiply_ (Identity x :*: Identity y) = Identity $ x :*: y
@@ -59,7 +55,7 @@ instance Bindable Identity (->) where
 instance Extendable Identity (->) where
 	f <<= x = Identity . f $ x
 
-instance Comonad Identity (->)
+--instance Comonad Identity (->)
 
 --instance Representable Identity where
 	--type Representation Identity = ()
@@ -68,7 +64,7 @@ instance Comonad Identity (->)
 
 instance Adjoint Identity Identity (->) (->) where
 	f -| x = Identity . f . Identity $ x
-	g |- x = extract . extract . (g -<$>-) $ x
+	g |- x = extract_ . extract_ . (g -<$>-) $ x
 
 instance Setoid a => Setoid (Identity a) where
 	Identity x == Identity y = x == y
