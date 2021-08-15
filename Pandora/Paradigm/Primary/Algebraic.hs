@@ -17,6 +17,7 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
@@ -84,3 +85,6 @@ point x = unit (Proxy @(:*:)) (\One -> x)
 
 empty :: Monoidal t (->) (->) (:*:) (:+:) => t a
 empty = unit (Proxy @(:*:)) absurd
+
+extract_ :: Monoidal t (<--) (->) (:*:) (:*:) => t a -> a
+extract_ j = let Flip f = unit @_ @(<--) @(->) @(:*:) @(:*:) Proxy in f j $ One

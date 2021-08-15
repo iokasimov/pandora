@@ -565,3 +565,4 @@
 * Use `Monoidal` superclass in `Monad` instead of `Pointable`
 * Remove `Pointable` typeclass
 * Rename `point_` to `point`
+* Define `extract_` method
