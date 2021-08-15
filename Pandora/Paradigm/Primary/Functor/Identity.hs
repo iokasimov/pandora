@@ -22,10 +22,11 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic ()
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Identity a = Identity a
 
@@ -40,6 +41,12 @@ instance Semimonoidal Identity (->) (:*:) (:*:) where
 
 instance Monoidal Identity (->) (->) (:*:) (:*:) where
 	unit _ f = Identity $ f One
+
+instance Semimonoidal Identity (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \(Identity (x :*: y)) -> Identity x :*: Identity y
+
+instance Monoidal Identity (<--) (->) (:*:) (:*:) where
+	unit _ = Flip $ \(Identity x) -> (\_ -> x)
 
 instance Traversable Identity (->) (->) where
 	f <<- Identity x = Identity -<$>- f x
