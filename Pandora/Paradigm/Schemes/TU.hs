@@ -15,10 +15,11 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (empty, point)
+import Pandora.Paradigm.Primary.Algebraic (empty, point, extract_)
 
 newtype TU ct cu t u a = TU (t :. u := a)
 
@@ -62,9 +63,9 @@ instance Monoidal t (->) (->) (:*:) (:*:) => Liftable (TU Covariant Covariant t)
 	lift :: Covariant u (->) (->) => u ~> t <:.> u
 	lift = TU . point
 
-instance Extractable t (->) => Lowerable (TU Covariant Covariant t) where
+instance Monoidal t (<--) (->) (:*:) (:*:) => Lowerable (TU Covariant Covariant t) where
 	lower :: t <:.> u ~> u
-	lower (TU x) = extract x
+	lower (TU x) = extract_ x
 
 instance Covariant t (->) (->) => Hoistable (TU Covariant Covariant t) where
 	(/|\) :: u ~> v -> (t <:.> u ~> t <:.> v)

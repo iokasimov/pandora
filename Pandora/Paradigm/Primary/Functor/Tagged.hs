@@ -6,13 +6,12 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 --import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Comonad (Comonad)
+--import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -23,10 +22,10 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic ()
+import Pandora.Paradigm.Primary.Algebraic (extract_)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Tagged tag a = Tag a
@@ -41,19 +40,22 @@ instance Covariant (Flip Tagged a) (->) (->) where
 	_ -<$>- Flip (Tag x) = Flip $ Tag x
 
 instance Semimonoidal (Tagged tag) (->) (:*:) (:*:) where
-	multiply_ (x :*: y) = Tag $ extract x :*: extract y
+	multiply_ (x :*: y) = Tag $ extract_ x :*: extract_ y
 
 instance Monoidal (Tagged tag) (->) (->) (:*:) (:*:) where
 	unit _ f = Tag $ f One
 
-instance Extractable (Tagged tag) (->) where
-	extract ~(Tag x) = x
+instance Semimonoidal (Tagged tag) (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \(Tag (x :*: y)) -> Tag x :*: Tag y
+
+instance Monoidal (Tagged tag) (<--) (->) (:*:) (:*:) where
+	unit _ = Flip $ \(Tag x) -> (\_ -> x)
 
 instance Traversable (Tagged tag) (->) (->) where
 	f <<- Tag x = Tag -<$>- f x
 
 instance Distributive (Tagged tag) (->) (->) where
-	f -<< x = Tag $ extract . f -<$>- x
+	f -<< x = Tag $ extract_ . f -<$>- x
 
 instance Bindable (Tagged tag) (->) where
 	f =<< Tag x = f x
@@ -63,9 +65,9 @@ instance Bindable (Tagged tag) (->) where
 instance Extendable (Tagged tag) (->) where
 	f <<= x = Tag . f $ x
 
-instance Comonad (Tagged tag) (->)
+--instance Comonad (Tagged tag) (->)
 
-instance Bivariant Tagged (->) (->) (->)where
+instance Bivariant Tagged (->) (->) (->) where
 	_ <-> g = \(Tag x) -> Tag $ g x
 
 instance Setoid a => Setoid (Tagged tag a) where

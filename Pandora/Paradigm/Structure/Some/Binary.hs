@@ -61,8 +61,8 @@ instance Morphable Insert Binary where
 
 instance Measurable Heighth Binary where
 	type Measural Heighth Binary a = Numerator
-	measurement (run . extract -> Just bt) = Numerator $ measure @Heighth bt
-	measurement (run . extract -> Nothing) = Zero
+	measurement (run . extract_ -> Just bt) = Numerator $ measure @Heighth bt
+	measurement (run . extract_ -> Nothing) = Zero
 
 instance Nullable Binary where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
@@ -77,7 +77,7 @@ instance Substructure Left Binary where
 instance Substructure Right Binary where
 	type Available Right Binary = Maybe
 	type Substance Right Binary = Construction Wye
-	substructure = P_Q_T $ \bintree -> case run . extract . run # bintree of
+	substructure = P_Q_T $ \bintree -> case run . extract_ . run # bintree of
 		Nothing -> Store $ Nothing :*: lift . TU
 		Just tree -> lift . lift -<$>- run (sub @Right) tree
 
@@ -101,10 +101,10 @@ instance Morphable Insert (Construction Wye) where
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
-	measurement (deconstruct . extract -> End) = Single
-	measurement (deconstruct . extract -> Left lst) = Single + measure @Heighth lst
-	measurement (deconstruct . extract -> Right rst) = Single + measure @Heighth rst
-	measurement (deconstruct . extract -> Both lst rst) = Single +
+	measurement (deconstruct . extract_ -> End) = Single
+	measurement (deconstruct . extract_ -> Left lst) = Single + measure @Heighth lst
+	measurement (deconstruct . extract_ -> Right rst) = Single + measure @Heighth rst
+	measurement (deconstruct . extract_ -> Both lst rst) = Single +
 		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
 		in lm <=> rm & order lm rm lm
 
@@ -117,7 +117,7 @@ instance Substructure Root (Construction Wye) where
 instance Substructure Left (Construction Wye) where
 	type Available Left (Construction Wye) = Maybe
 	type Substance Left (Construction Wye) = Construction Wye
-	substructure = P_Q_T $ \bintree -> case extract # run bintree of
+	substructure = P_Q_T $ \bintree -> case extract_ # run bintree of
 		Construct x End -> Store $ Nothing :*: lift . resolve (Construct x . Left) (leaf x)
 		Construct x (Left lst) -> Store $ Just lst :*: lift . Construct x . resolve Left End
 		Construct x (Right rst) -> Store $ Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst)
@@ -126,7 +126,7 @@ instance Substructure Left (Construction Wye) where
 instance Substructure Right (Construction Wye) where
 	type Available Right (Construction Wye) = Maybe
 	type Substance Right (Construction Wye) = Construction Wye
-	substructure = P_Q_T $ \bintree -> case extract # run bintree of
+	substructure = P_Q_T $ \bintree -> case extract_ # run bintree of
 		Construct x End -> Store $ Nothing :*: lift . resolve (Construct x . Right) (leaf x)
 		Construct x (Left lst) -> Store $ Nothing :*: lift . Construct x . resolve (Both lst) (Left lst)
 		Construct x (Right rst) -> Store $ Just rst :*: lift . Construct x . resolve Right End

@@ -5,10 +5,10 @@ module Pandora.Paradigm.Structure.Ability.Morphable where
 import Pandora.Core.Functor (type (:=), type (~>), type (:=:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((#))
-import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Setoid (Setoid)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic (extract_)
 import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
@@ -29,7 +29,7 @@ morph :: forall mod struct . Morphable mod struct => struct ~> Morphing mod stru
 morph = morphing . TU . Tag @mod
 
 premorph :: Morphable mod struct => Tagged mod <:.> struct ~> struct
-premorph = extract . run
+premorph = extract_ . run
 
 data Walk a = Preorder a | Inorder a | Postorder a | Levelorder a
 

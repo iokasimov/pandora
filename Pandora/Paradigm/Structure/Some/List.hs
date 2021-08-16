@@ -96,8 +96,8 @@ instance Stack List where
 
 instance Measurable Length List where
 	type Measural Length List a = Numerator
-	measurement (run . extract -> Nothing) = zero
-	measurement (run . extract -> Just xs) = Numerator $ measure @Length xs
+	measurement (run . extract_ -> Nothing) = zero
+	measurement (run . extract_ -> Just xs) = Numerator $ measure @Length xs
 
 instance Nullable List where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
@@ -112,7 +112,7 @@ instance Substructure Root List where
 instance Substructure Tail List where
 	type Available Tail List = Identity
 	type Substance Tail List = List
-	substructure = P_Q_T $ \x -> case run . extract . run $ x of
+	substructure = P_Q_T $ \x -> case run . extract_ . run $ x of
 		Just ns -> lift . lift -<$>- run (sub @Tail) ns
 		Nothing -> Store $ Identity zero :*: lift . identity . extract_
 
@@ -143,8 +143,8 @@ instance Morphable Push (Construction Maybe) where
 
 instance Measurable Length (Construction Maybe) where
 	type Measural Length (Construction Maybe) a = Denumerator
-	measurement (deconstruct . extract -> Nothing) = Single
-	measurement (deconstruct . extract -> Just xs) = Single + measure @Length xs
+	measurement (deconstruct . extract_ -> Nothing) = Single
+	measurement (deconstruct . extract_ -> Just xs) = Single + measure @Length xs
 
 instance Substructure Root (Construction Maybe) where
 	type Available Root (Construction Maybe) = Identity

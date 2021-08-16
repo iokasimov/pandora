@@ -42,7 +42,7 @@ instance Nullable Maybe where
 instance (Covariant t (->) (->)) => Substructure Tail (Tap t) where
 	type Available Tail (Tap t) = Identity
 	type Substance Tail (Tap t) = t
-	substructure = P_Q_T $ \tap -> case extract # run tap of
+	substructure = P_Q_T $ \tap -> case extract_ # run tap of
 								  Tap x xs -> Store $ Identity xs :*: lift . Tap x . extract_
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where

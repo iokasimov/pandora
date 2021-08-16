@@ -64,7 +64,7 @@ instance Substructure Root (Construction List) where
 instance Substructure Tail (Construction List) where
 	type Available Tail (Construction List) = Identity
 	type Substance Tail (Construction List) = List <:.> Construction List
-	substructure = P_Q_T $ \rose -> case extract # run rose of
+	substructure = P_Q_T $ \rose -> case extract_ # run rose of
 		Construct x xs -> Store $ Identity (TU xs) :*: lift . Construct x . run . extract_
 
 --------------------------------------- Prefixed rose tree -----------------------------------------
