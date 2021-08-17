@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Primary ()
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract_)
 import Pandora.Paradigm.Primary.Algebraic.Product (twosome)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
@@ -63,7 +63,7 @@ instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 				(branch @Right =<< deconstruct -<$>- branch @Right xs)
 
 		parent :: Maybe a
-		parent = extract @_ @(->) -<$>- branch @Right xs
+		parent = extract_ -<$>- branch @Right xs
 
 instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	type Morphing (Rotate (Right Zig)) (Construction Wye) = Binary
