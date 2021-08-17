@@ -7,7 +7,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -58,8 +57,8 @@ instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal 
 		let Flip g = multiply_ @t @(<--) @(:*:) @(:*:) in
 		(TU <-> TU) $ g (f -<$>- xys) where
 
-instance (Extractable t (->), Extractable u (->)) => Extractable (t <:.> u) (->) where
-	extract = extract . extract . run
+instance (Covariant t (->) (->), Monoidal t (<--) (->) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (<--) (->) (:*:) (:*:) where
+	unit _ = Flip $ \(TU x) -> (\_ -> extract_ $ extract_ x)
 
 instance (Traversable t (->) (->), Traversable u (->) (->)) => Traversable (t <:.> u) (->) (->) where
 	f <<- x = TU -<$>- f -<<-<<- run x
