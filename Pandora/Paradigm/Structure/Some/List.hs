@@ -222,13 +222,13 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) 
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Tap (List <:.:> List := (:*:))
-	morphing (premorph -> zipper) = Tap # extract zipper $ lift <-> lift ||= lower zipper
+	morphing (premorph -> zipper) = Tap # extract_ zipper $ lift <-> lift ||= lower zipper
 
 instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) =
 		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 	morphing (premorph -> zipper) = let spread x y = (:*:) -<$>- x -<*>- y in TU $
-		Tap (extract zipper) . T_U -<$>- ((spread |-) . (run <-> run) . run $ lower zipper)
+		Tap (extract_ zipper) . T_U -<$>- ((spread |-) . (run <-> run) . run $ lower zipper)
 
 instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe

@@ -11,6 +11,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\), hoist))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -18,8 +19,9 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Schemes (type (<:.>))
@@ -36,6 +38,12 @@ instance Covariant t (->) (->) => Extractable (Construction t) (->) where
 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Construction t) (->) (:*:) (:*:) where
 	multiply_ (Construct x xs :*: Construct y ys) = Construct (x :*: y) (multiply_ @_ @(->) @(:*:) -<$>- multiply_ (xs :*: ys))
+
+instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:)) => Semimonoidal (Construction t) (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \(Construct (x :*: y) xys) ->
+		let Flip f = multiply_ @_ @(<--) @(:*:) @(:*:) in
+		let Flip g = multiply_ @_ @(<--) @(:*:) @(:*:) in
+		(Construct x <-> Construct y) $ f $ g -<$>- xys
 
 instance Traversable t (->) (->) => Traversable (Construction t) (->) (->) where
 	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs

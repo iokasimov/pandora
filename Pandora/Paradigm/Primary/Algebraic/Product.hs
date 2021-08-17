@@ -16,6 +16,7 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
@@ -68,6 +69,15 @@ instance (Group s, Group a) => Group (s :*: a) where
 
 instance {-# OVERLAPS #-} Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (t <:.:> t := (:*:)) (->) (:*:) (:*:) where
 	multiply_ (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ multiply_ (xls :*: yls) :*: multiply_ (xrs :*: yrs)
+
+-- TODO: Generalize (:*:) as Bivariant p
+instance (Semimonoidal t (<--) (:*:) (:*:), Semimonoidal u (<--) (:*:) (:*:)) => Semimonoidal (t <:.:> u := (:*:)) (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \(T_U (lxys :*: rxys)) ->
+		let Flip f = multiply_ @_ @(<--) @(:*:) @(:*:) in
+		let Flip g = multiply_ @_ @(<--) @(:*:) @(:*:) in
+		let (lxs :*: lys) = f lxys in
+		let (rxs :*: rys) = g rxys in
+		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
 delta :: a -> a :*: a
 delta x = x :*: x

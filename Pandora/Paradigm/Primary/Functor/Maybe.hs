@@ -22,11 +22,12 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 data Maybe a = Nothing | Just a
 
@@ -49,6 +50,12 @@ instance Monoidal Maybe (->) (->) (:*:) (:*:) where
 
 instance Monoidal Maybe (->) (->) (:*:) (:+:) where
 	unit _ _ = Nothing
+
+-- TODO: Check laws
+instance Semimonoidal Maybe (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \case
+		Just (x :*: y) -> Just x :*: Just y
+		Nothing -> Nothing :*: Nothing
 
 instance Traversable Maybe (->) (->) where
 	_ <<- Nothing = point Nothing

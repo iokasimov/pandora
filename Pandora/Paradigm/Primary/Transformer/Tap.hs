@@ -6,8 +6,8 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -17,9 +17,10 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run) 
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract_)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), (%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
@@ -31,17 +32,22 @@ data Tap t a = Tap a (t a)
 instance Covariant t (->) (->) => Covariant (Tap t) (->) (->) where
 	f -<$>- Tap x xs = Tap # f x # f -<$>- xs
 
-instance (Covariant t (->) (->)) => Extractable (Tap t) (->) where
-	extract (Tap x _) = x
-
 instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap t) (->) (:*:) (:*:) where
 	multiply_ (Tap x xs :*: Tap y ys) = Tap (x :*: y) $ multiply_ $ xs :*: ys
+
+instance Semimonoidal t (<--) (:*:) (:*:) => Semimonoidal (Tap t) (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \(Tap (x :*: y) xys) -> 
+		let Flip f = multiply_ @_ @(<--) @(:*:) @(:*:) in
+		let (xs :*: ys) = f xys in Tap x xs :*: Tap y ys
+
+instance Semimonoidal t (<--) (:*:) (:*:) => Monoidal (Tap t) (<--) (->) (:*:) (:*:) where
+	unit _ = Flip $ \(Tap x _) -> (\_ -> x)
 
 instance Traversable t (->) (->) => Traversable (Tap t) (->) (->) where
 	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
 
-instance (Extendable t (->), Covariant t (->) (->)) => Extendable (Tap t) (->) where
-	f <<= x = Tap # f x $ f . Tap (extract x) <<= lower x
+instance (Semimonoidal t (<--) (:*:) (:*:), Extendable t (->), Covariant t (->) (->)) => Extendable (Tap t) (->) where
+	f <<= x = Tap # f x $ f . Tap (extract_ x) <<= lower x
 
 instance Lowerable Tap where
 	lower (Tap _ xs) = xs
