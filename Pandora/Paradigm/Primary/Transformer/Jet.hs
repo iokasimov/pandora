@@ -3,7 +3,6 @@
 module Pandora.Paradigm.Primary.Transformer.Jet where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
 
@@ -14,6 +13,3 @@ instance Covariant t (->) (->) => Covariant (Jet t) (->) (->) where
 
 instance Traversable t (->) (->) => Traversable (Jet t) (->) (->) where
 	f <<- Jet x xs = Jet -<$>- f x -<*>- f -<<-<<- xs
-
-instance Covariant t (->) (->) => Extractable (Jet t) (->) where
-	extract (Jet x _) = x

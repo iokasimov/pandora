@@ -41,7 +41,7 @@ instance Semimonoidal Maybe (->) (:*:) (:*:) where
 	multiply_ (_ :*: Nothing) = Nothing
 
 instance Semimonoidal Maybe (->) (:*:) (:+:) where
-	multiply_ (Just x :*: Just _) = Just $ Option x
+	multiply_ (Just x :*: _) = Just $ Option x
 	multiply_ (Nothing :*: Just y) = Just $ Adoption y
 	multiply_ (Nothing :*: Nothing) = Nothing
 

@@ -8,14 +8,15 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), point, extract_)
+import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype UT ct cu t u a = UT (u :. t := a)
 
@@ -43,13 +44,19 @@ instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:
 instance (Traversable t (->) (->), Bindable t (->), Semimonoidal u (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:), Bindable u (->)) => Bindable (t <.:> u) (->) where
 	f =<< UT x = UT $ ((identity =<<) -<$>-) . (run . f <<-) =<< x
 
-instance (Extractable t (->), Extractable u (->)) => Extractable (t <.:> u) (->) where
-	extract = extract . extract . run
+instance (Covariant u (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal u (<--) (:*:) (:*:)) => Semimonoidal (t <.:> u) (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \(UT xys) ->
+		let Flip f = multiply_ @u @(<--) @(:*:) @(:*:) in
+		let Flip g = multiply_ @t @(<--) @(:*:) @(:*:) in
+		(UT <-> UT) $ f (g -<$>- xys) where
+
+instance (Covariant u (->) (->), Monoidal t (<--) (->) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:)) => Monoidal (t <.:> u) (<--) (->) (:*:) (:*:) where
+	unit _ = Flip $ \(UT x) -> (\_ -> extract_ $ extract_ x)
 
 instance Monoidal t (->) (->) (:*:) (:*:) => Liftable (UT Covariant Covariant t) where
 	lift :: Covariant u (->) (->) => u ~> t <.:> u
 	lift x = UT $ point -<$>- x
 
-instance Extractable t (->) => Lowerable (UT Covariant Covariant t) where
+instance Monoidal t (<--) (->) (:*:) (:*:) => Lowerable (UT Covariant Covariant t) where
 	lower :: Covariant u (->) (->) => t <.:> u ~> u
-	lower (UT x) = extract @_ @(->) -<$>- x
+	lower (UT x) = extract_ -<$>- x

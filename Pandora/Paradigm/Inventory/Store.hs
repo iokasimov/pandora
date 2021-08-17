@@ -6,6 +6,8 @@ import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -13,7 +15,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (-.#..-))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), (%), (!.), (-.#..-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
@@ -27,6 +29,14 @@ newtype Store s a = Store ((:*:) s :. (->) s := a)
 
 instance Covariant (Store s) (->) (->) where
 	f -<$>- Store x = Store $ f -<$$>- x
+
+instance Semimonoidal (Store s) (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \(Store (s :*: f)) -> 
+		let (x :*: y) = f s in
+		Store (s :*: (x !.)) :*: Store (s :*: (y !.))
+
+instance Monoidal (Store s) (<--) (->) (:*:) (:*:) where
+	unit _ = Flip $ \(Store (s :*: f)) -> (\_ -> f s)
 
 instance Extractable (Store s) (->) where
 	extract = (($) |-) . run
