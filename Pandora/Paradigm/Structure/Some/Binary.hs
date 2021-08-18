@@ -6,7 +6,6 @@ import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bindable ((=<<))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -44,10 +43,10 @@ import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 type Binary = Maybe <:.> Construction Wye
 
 rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
-rebalance (Both x y) = extract x <=> extract y & order
-	# Construct (extract x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
-	# Construct (extract y) (Both # x # rebalance (deconstruct y))
-	# Construct (extract x) (Both # rebalance (deconstruct x) # y)
+rebalance (Both x y) = extract_ x <=> extract_ y & order
+	# Construct (extract_ x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
+	# Construct (extract_ y) (Both # x # rebalance (deconstruct y))
+	# Construct (extract_ x) (Both # rebalance (deconstruct x) # y)
 
 instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
@@ -55,7 +54,7 @@ instance Morphable Insert Binary where
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
 		let change = Just . resolve continue (leaf x) in
-		lift $ f x # extract ne & order # ne
+		lift $ f x # extract_ ne & order # ne
 			# over (sub @Left) change ne
 			# over (sub @Right) change ne
 
@@ -97,7 +96,7 @@ instance Morphable Insert (Construction Wye) where
 		order # nonempty_list
 			# over (sub @Left) change nonempty_list
 			# over (sub @Right) change nonempty_list
-			# f x (extract nonempty_list)
+			# f x (extract_ nonempty_list)
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
@@ -138,7 +137,7 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	type Morphing (Lookup Key) (Prefixed Binary k) = (->) k <:.> Maybe
 	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
 	morphing (run . run . premorph -> Just tree) = TU $ \key ->
-		let root = extract tree in key <=> attached root & order (Just # extract root)
+		let root = extract_ tree in key <=> attached root & order (Just # extract_ root)
 			(lookup @Key key . Prefixed =<< view # sub @Left # tree)
 			(lookup @Key key . Prefixed =<< view # sub @Right # tree)
 
@@ -147,7 +146,7 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
 	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
 		let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)
-		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
+		in let root = extract_ tree in Prefixed . lift $ key <=> attached root & order
 			# over (sub @Root) ($$$>- value) tree
 			# over (sub @Left) continue tree
 			# over (sub @Right) continue tree
@@ -157,7 +156,7 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <:.> Maybe
 	morphing (run . premorph -> Construct x xs) = TU $ \key ->
-		key <=> attached x & order (Just # extract x)
+		key <=> attached x & order (Just # extract_ x)
 			(lookup @Key key . Prefixed . extract_ =<< view # sub @Left # xs)
 			(lookup @Key key . Prefixed . extract_ =<< view # sub @Left # xs)
 

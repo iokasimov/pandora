@@ -7,7 +7,6 @@ import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -118,7 +117,7 @@ instance Substructure Tail List where
 
 -- | Transform any traversable structure into a stack
 linearize :: forall t a . Traversable t (->) (->) => t a -> List a
-linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just -.#..- Construct)
+linearize = TU . extract_ . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just -.#..- Construct)
 
 ----------------------------------------- Non-empty list -------------------------------------------
 
@@ -149,14 +148,14 @@ instance Measurable Length (Construction Maybe) where
 instance Substructure Root (Construction Maybe) where
 	type Available Root (Construction Maybe) = Identity
 	type Substance Root (Construction Maybe) = Identity
-	substructure = imply @(Convex Lens _ _) (Identity . extract . lower)
+	substructure = imply @(Convex Lens _ _) (Identity . extract_ . lower)
 		(\source target -> lift $ Construct # extract_ target # deconstruct (lower source))
 
 instance Substructure Tail (Construction Maybe) where
 	type Available Tail (Construction Maybe) = Identity
 	type Substance Tail (Construction Maybe) = List
 	substructure = imply @(Convex Lens _ _) (TU . deconstruct . lower)
-		(\source target -> lift $ Construct # extract (lower source) # run target)
+		(\source target -> lift $ Construct # extract_ (lower source) # run target)
 
 ---------------------------------------- Combinative list ------------------------------------------
 
@@ -209,16 +208,16 @@ type instance Zipper (Construction Maybe) (Left ::: Right) = Tap (Construction M
 instance Morphable (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) =
 		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
-	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract future) . twosome % item @Push x past -<$>- deconstruct future
+	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract_ future) . twosome % item @Push x past -<$>- deconstruct future
 
 instance Morphable (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Rotate Right) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) =
 		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
-	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract past) . twosome (item @Push x future) -<$>- deconstruct past
+	morphing (premorph -> Tap x (T_U (future :*: past))) = TU $ Tap (extract_ past) . twosome (item @Push x future) -<$>- deconstruct past
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) = Tap (List <:.:> List := (:*:))
-	morphing (premorph -> ne) = Tap # extract ne $ twosome # extract_ (view # sub @Tail # ne) # zero
+	morphing (premorph -> ne) = Tap # extract_ ne $ twosome # extract_ (view # sub @Tail # ne) # zero
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Tap (List <:.:> List := (:*:))
@@ -256,5 +255,5 @@ instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 
 instance Setoid key => Morphable (Lookup Key) (Prefixed (Construction Maybe) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Maybe) key) = (->) key <:.> Maybe
-	morphing (run . premorph -> Construct x xs) = TU $ \key -> extract @_ @(->) -<$>- search key where
+	morphing (run . premorph -> Construct x xs) = TU $ \key -> extract_ -<$>- search key where
 		search key = key == attached x ? Just x $ find @Element # Predicate ((key ==) . attached) =<< xs

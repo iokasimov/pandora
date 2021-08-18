@@ -6,7 +6,6 @@ import Pandora.Core.Functor (type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
 import Pandora.Paradigm.Primary.Algebraic (extract_)
@@ -25,12 +24,12 @@ type instance Zipper (Construction Identity) (Left ::: Right) = Tap (Stream <:.:
 
 instance Morphable (Rotate Left) (Tap (Stream <:.:> Stream := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Stream <:.:> Stream := (:*:))) = Tap (Stream <:.:> Stream := (:*:))
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = Tap # extract bs
+	morphing (premorph -> Tap x (T_U (bs :*: fs))) = Tap # extract_ bs
 		$ twosome # extract_ (deconstruct bs) # Construct x (point fs)
 
 instance Morphable (Rotate Right) (Tap (Stream <:.:> Stream := (:*:))) where
 	type Morphing (Rotate Right) (Tap (Stream <:.:> Stream := (:*:))) = Tap (Stream <:.:> Stream := (:*:))
-	morphing (premorph -> Tap x (T_U (bs :*: fs))) = Tap # extract fs
+	morphing (premorph -> Tap x (T_U (bs :*: fs))) = Tap # extract_ fs
 		$ twosome # Construct x (point bs) # extract_ (deconstruct fs)
 
 instance {-# OVERLAPS #-} Extendable (Tap (Stream <:.:> Stream := (:*:))) (->) where
