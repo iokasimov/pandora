@@ -49,6 +49,9 @@ instance Semimonoidal ((->) e) (->) (:*:) (:*:) where
 	multiply_ :: ((e -> a) :*: (e -> b)) -> e -> (a :*: b)
 	multiply_ (g :*: h) = \x -> g x :*: h x
 
+instance Semimonoidal ((->) e) (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \f -> (\e -> attached $ f e) :*: (\e -> extract_ $ f e)
+
 instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
 	multiply_ (Option _ :*: Option e') = Option e'

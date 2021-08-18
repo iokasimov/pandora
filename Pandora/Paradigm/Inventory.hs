@@ -15,7 +15,6 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#), identity)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
@@ -29,7 +28,7 @@ instance Adjoint (Store s) (State s) (->) (->) where
 	(-|) :: (Store s a -> b) -> a -> State s b
 	f -| x = State $ \s -> (:*:) s . f . Store $ s :*: (x !.)
 	(|-) :: (a -> State s b) -> Store s a -> b
-	g |- Store (s :*: f) = extract . (run % s) . g $ f s
+	g |- Store (s :*: f) = extract_ . (run % s) . g $ f s
 
 instance Adjoint (Accumulator e) (Imprint e) (->) (->) where
 	f -| x = Imprint $ f . Accumulator -| x

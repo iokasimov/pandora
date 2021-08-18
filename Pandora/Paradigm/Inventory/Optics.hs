@@ -6,7 +6,6 @@ import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity, ($), (#)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
@@ -73,7 +72,7 @@ set lens new = look new . run lens
 
 -- | Modify focused target value
 over :: Lens available source target -> (available target -> available target) -> source -> source
-over lens f = extract . retrofit f . run lens
+over lens f = extract_ . retrofit f . run lens
 
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
