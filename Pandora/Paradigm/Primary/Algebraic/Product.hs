@@ -5,7 +5,6 @@ import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
---import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -31,8 +30,6 @@ instance Covariant (Flip (:*:) a) (->) (->) where
 
 instance Extendable ((:*:) s) (->) where
 	f <<= ~(s :*: x) = s :*: f (s :*: x)
-
---instance Comonad ((:*:) s) (->) where
 
 instance Bivariant (:*:) (->) (->) (->) where
 	f <-> g = \ ~(s :*: x) -> f s :*: g x

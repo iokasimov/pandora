@@ -40,7 +40,7 @@ instance Monoidal (Store s) (<--) (->) (:*:) (:*:) where
 instance Extendable (Store s) (->) where
 	f <<= Store x = Store $ f -<$$>- (Store -.#..- (identity @(->) -|) -<$>- x)
 
---instance Comonad (Store s) (->) where
+instance Comonad (Store s) (->) where
 
 instance Invariant (Flip Store r) where
 	f <$< g = \(Flip x) -> Flip $ (<->) @_ @_ @(->) f (g >-> identity @(->)) ||= x

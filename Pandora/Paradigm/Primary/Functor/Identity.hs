@@ -8,8 +8,8 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
---import Pandora.Pattern.Functor.Monad (Monad)
---import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Comonad (Comonad)
 --import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -50,12 +50,12 @@ instance Traversable Identity (->) (->) where
 instance Bindable Identity (->) where
 	f =<< Identity x = f x	
 
---instance Monad Identity
+instance Monad Identity
 
 instance Extendable Identity (->) where
 	f <<= x = Identity . f $ x
 
---instance Comonad Identity (->)
+instance Comonad Identity (->)
 
 --instance Representable Identity where
 	--type Representation Identity = ()

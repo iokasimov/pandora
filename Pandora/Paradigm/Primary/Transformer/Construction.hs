@@ -51,7 +51,7 @@ instance Traversable t (->) (->) => Traversable (Construction t) (->) (->) where
 instance Covariant t (->) (->) => Extendable (Construction t) (->) where
 	f <<= x = Construct # f x # (f <<=) -<$>- deconstruct x
 
---instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:)) => Comonad (Construction t) (->) where
+instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:)) => Comonad (Construction t) (->) where
 
 instance (forall u . Semimonoidal u (<--) (:*:) (:*:)) => Lowerable Construction where
 	lower x = extract -<$>- deconstruct x

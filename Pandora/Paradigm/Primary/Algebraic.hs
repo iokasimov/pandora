@@ -13,6 +13,7 @@ import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
+import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
@@ -70,6 +71,8 @@ instance Semimonoidal ((:*:) s) (<--) (:*:) (:*:) where
 
 instance Monoidal ((:*:) s) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(_ :*: x) -> (\_ -> x)
+
+instance Comonad ((:*:) s) (->) where
 
 instance Semimonoidal (Flip (:*:) a) (<--) (:*:) (:*:) where
 	multiply_ = Flip $ \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)

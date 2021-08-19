@@ -10,8 +10,8 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
---import Pandora.Pattern.Functor.Monad (Monad)
---import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -60,12 +60,12 @@ instance Distributive (Tagged tag) (->) (->) where
 instance Bindable (Tagged tag) (->) where
 	f =<< Tag x = f x
 
---instance Monad (Tagged tag)
+instance Monad (Tagged tag)
 
 instance Extendable (Tagged tag) (->) where
 	f <<= x = Tag . f $ x
 
---instance Comonad (Tagged tag) (->)
+instance Comonad (Tagged tag) (->)
 
 instance Bivariant Tagged (->) (->) (->) where
 	_ <-> g = \(Tag x) -> Tag $ g x
