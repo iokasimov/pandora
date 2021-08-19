@@ -8,7 +8,6 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -18,12 +17,12 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Primary.Algebraic (Extractable_, point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
 class Interpreted t => Comonadic t where
 	{-# MINIMAL bring #-}
-	bring :: Extractable u (->) => t :< u ~> t
+	bring :: Extractable_ u => t :< u ~> t
 
 infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
@@ -37,9 +36,6 @@ instance Semimonoidal (Schematic Comonad t u) (->) (:*:) (:*:) => Semimonoidal (
 instance Monoidal (Schematic Comonad t u) (->) (->) (:*:) (:*:) => Monoidal (t :< u) (->) (->) (:*:) (:*:) where
 	unit _ f = TC . point $ f One
 
-instance Extractable (Schematic Comonad t u) (->) => Extractable (t :< u) (->) where
-	extract = extract . tc
-
 instance Traversable (Schematic Comonad t u) (->) (->) => Traversable (t :< u) (->) (->) where
 	f <<- TC x = TC -<$>- f <<- x
 
@@ -52,7 +48,7 @@ instance Bindable (Schematic Comonad t u) (->) => Bindable (t :< u) (->) where
 instance Extendable (Schematic Comonad t u) (->) => Extendable (t :< u) (->) where
 	f <<= TC x = TC $ f . TC <<= x
 
-instance (Extractable (t :< u) (->), Extendable (t :< u) (->)) => Comonad (t :< u) (->) where
+--instance (Extractable_ (t :< u), Extendable (t :< u) (->)) => Comonad (t :< u) (->) where
 
 instance Lowerable (Schematic Comonad t) => Lowerable ((:<) t) where
 	lower (TC x) = lower x

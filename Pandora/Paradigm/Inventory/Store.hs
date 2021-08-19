@@ -9,7 +9,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -54,7 +53,7 @@ instance Interpreted (Store s) where
 type instance Schematic Comonad (Store s) = (:*:) s <:<.>:> (->) s
 
 instance Comonadic (Store s) where
-	bring (TC (TUT (s :*: f))) = Store $ s :*: extract f
+	bring (TC (TUT (s :*: f))) = Store $ s :*: extract_ f
 
 type Storable s x = Adaptable x (Store s)
 

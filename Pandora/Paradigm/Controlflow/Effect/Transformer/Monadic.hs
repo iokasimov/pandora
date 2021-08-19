@@ -6,7 +6,6 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -36,9 +35,6 @@ instance Semimonoidal (Schematic Monad t u) (->) (:*:) (:*:) => Semimonoidal (t 
 
 instance Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:) => Monoidal (t :> u) (->) (->) (:*:) (:*:) where
 	unit _ f = TM . point $ f One
-
-instance Extractable (Schematic Monad t u) (->) => Extractable (t :> u) (->) where
-	extract = extract . tm
 
 instance Traversable (Schematic Monad t u) (->) (->) => Traversable (t :> u) (->) (->) where
 	f <<- TM x = TM -<$>- f <<- x
