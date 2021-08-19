@@ -1,7 +1,9 @@
 module Pandora.Pattern.Functor.Comonad where
 
-import Pandora.Pattern.Functor.Extractable (Extractable)
+import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Extendable (Extendable)
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
 {- |
 > Let f :: (Extendable t, Extractable t) => t a -> b
@@ -13,4 +15,4 @@ import Pandora.Pattern.Functor.Extendable (Extendable)
 > * Associativity: extend f . extend g ≡ extend (f . extend g)
 -}
 
-class (Extractable t source, Extendable t (->)) => Comonad t source
+class (Monoidal t (<--) source (:*:) (:*:), Extendable t source) => Comonad t source

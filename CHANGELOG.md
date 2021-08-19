@@ -568,3 +568,4 @@
 * Define `extract_` method
 * Remove `Extractable` typeclass
 * Rename `extract_` to `extract`
+* Use `Monoidal` as superclass of `Comonad`
