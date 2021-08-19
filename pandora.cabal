@@ -146,7 +146,6 @@ library
     Pandora.Pattern.Functor.Covariant
     Pandora.Pattern.Functor.Distributive
     Pandora.Pattern.Functor.Extendable
-    Pandora.Pattern.Functor.Extractable
     Pandora.Pattern.Functor.Invariant
     Pandora.Pattern.Functor.Monad
     Pandora.Pattern.Functor.Representable

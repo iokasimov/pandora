@@ -10,7 +10,6 @@ import Pandora.Pattern.Functor.Extendable as Exports
 import Pandora.Pattern.Functor.Bindable as Exports
 import Pandora.Pattern.Functor.Distributive as Exports
 import Pandora.Pattern.Functor.Traversable as Exports
-import Pandora.Pattern.Functor.Extractable as Exports
 import Pandora.Pattern.Functor.Monoidal as Exports
 import Pandora.Pattern.Functor.Semimonoidal as Exports
 import Pandora.Pattern.Functor.Invariant as Exports
