@@ -4,9 +4,8 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
-import Pandora.Pattern.Functor.Comonad (Comonad)
+--import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -25,47 +24,44 @@ infixr 0 :*:
 data (:*:) s a = s :*: a
 
 instance Covariant ((:*:) s) (->) (->) where
-	f -<$>- x = attached x :*: f # extract x
+	f -<$>- ~(s :*: x) = s :*: f x
 
 instance Covariant (Flip (:*:) a) (->) (->) where
 	f -<$>- (Flip (x :*: y)) = Flip $ f x :*: y
 
-instance Extractable ((:*:) a) (->) where
-	extract ~(_ :*: y) = y
-
 instance Extendable ((:*:) s) (->) where
-	f <<= x = attached x :*: f (attached x :*: extract x)
+	f <<= ~(s :*: x) = s :*: f (s :*: x)
 
-instance Comonad ((:*:) s) (->) where
+--instance Comonad ((:*:) s) (->) where
 
 instance Bivariant (:*:) (->) (->) (->) where
 	f <-> g = \ ~(s :*: x) -> f s :*: g x
 
 instance (Setoid s, Setoid a) => Setoid (s :*: a) where
-	x == y = (attached x == attached y) * (extract x == extract y)
+	~(sx :*: x) == ~(sy :*: y) = (sx == sy) * (x == y)
 
 instance (Semigroup s, Semigroup a) => Semigroup (s :*: a) where
-	x + y = attached x + attached y :*: extract x + extract y
+	~(sx :*: x) + ~(sy :*: y) = sx + sy :*: x + y
 
 instance (Monoid s, Monoid a) => Monoid (s :*: a) where
 	zero = zero :*: zero
 
 instance (Ringoid s, Ringoid a) => Ringoid (s :*: a) where
-	x * y = attached x * attached y :*: extract x * extract y
+	~(sx :*: x) * ~(sy :*: y) = sx * sy :*: x * y
 
 instance (Quasiring s, Quasiring a) => Quasiring (s :*: a) where
 	one = one :*: one
 
 instance (Infimum s, Infimum a) => Infimum (s :*: a) where
-	x /\ y = attached x /\ attached y :*: extract x /\ extract y
+	~(sx :*: x) /\ ~(sy :*: y) = sx /\ sy :*: x /\ y
 
 instance (Supremum s, Supremum a) => Supremum (s :*: a) where
-	x \/ y = attached x \/ attached y :*: extract x \/ extract y
+	~(sx :*: x) \/ ~(sy :*: y) = sx \/ sy :*: x \/ y
 
 instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 
 instance (Group s, Group a) => Group (s :*: a) where
-	invert x = invert # attached x :*: invert # extract x
+	invert ~(s :*: x) = invert # s :*: invert # x
 
 instance {-# OVERLAPS #-} Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (t <:.:> t := (:*:)) (->) (:*:) (:*:) where
 	multiply_ (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ multiply_ (xls :*: yls) :*: multiply_ (xrs :*: yrs)

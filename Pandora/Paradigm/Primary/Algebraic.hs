@@ -71,6 +71,12 @@ instance Semimonoidal ((:*:) s) (<--) (:*:) (:*:) where
 instance Monoidal ((:*:) s) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(_ :*: x) -> (\_ -> x)
 
+instance Semimonoidal (Flip (:*:) a) (<--) (:*:) (:*:) where
+	multiply_ = Flip $ \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
+
+instance Monoidal (Flip (:*:) a) (<--) (->) (:*:) (:*:) where
+	unit _ = Flip $ \(Flip (s :*: _)) -> (\_ -> s)
+
 type Applicative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:))
 type Alternative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:+:), Monoidal t (->) (->) (:*:) (:+:))
 
