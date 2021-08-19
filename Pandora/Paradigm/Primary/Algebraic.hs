@@ -11,7 +11,6 @@ import Pandora.Paradigm.Primary.Algebraic.One as Exports
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
-import Pandora.Pattern.Functor.Extractable (Extractable (extract))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -37,7 +36,7 @@ void :: Covariant t (->) (->) => t a -> t ()
 void x = x $>- ()
 
 instance Traversable ((:*:) s) (->) (->) where
-	f <<- x = (attached x :*:) -<$>- f (extract x)
+	f <<- x = (attached x :*:) -<$>- f (extract_ x)
 
 instance Adjoint ((:*:) s) ((->) s) (->) (->) where
 	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)

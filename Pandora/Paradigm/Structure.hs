@@ -11,7 +11,6 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Extractable (extract)
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup ((+))
@@ -34,7 +33,7 @@ import Pandora.Paradigm.Schemes.T_U ( type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 
 instance Monotonic s a => Monotonic s (s :*: a) where
-	reduce f r x = reduce f # f (attached x) r # extract x
+	reduce f r x = reduce f # f (attached x) r # extract_ x
 
 instance Nullable Maybe where
 	null = Predicate $ \case { Just _ -> True ; _ -> False }
@@ -43,7 +42,7 @@ instance (Covariant t (->) (->)) => Substructure Tail (Tap t) where
 	type Available Tail (Tap t) = Identity
 	type Substance Tail (Tap t) = t
 	substructure = P_Q_T $ \tap -> case extract_ # run tap of
-								  Tap x xs -> Store $ Identity xs :*: lift . Tap x . extract_
+		Tap x xs -> Store $ Identity xs :*: lift . Tap x . extract_
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
