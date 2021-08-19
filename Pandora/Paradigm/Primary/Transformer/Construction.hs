@@ -18,7 +18,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract_)
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
@@ -54,16 +54,16 @@ instance Covariant t (->) (->) => Extendable (Construction t) (->) where
 --instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:)) => Comonad (Construction t) (->) where
 
 instance (forall u . Semimonoidal u (<--) (:*:) (:*:)) => Lowerable Construction where
-	lower x = extract_ -<$>- deconstruct x
+	lower x = extract -<$>- deconstruct x
 
 instance (forall u . Semimonoidal u (<--) (:*:) (:*:)) => Hoistable Construction where
-	f /|\ x = Construct # extract_ x $ f # hoist f -<$>- deconstruct x
+	f /|\ x = Construct # extract x $ f # hoist f -<$>- deconstruct x
 
 instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:)) => Setoid (Construction t a) where
-	x == y = (extract_ x == extract_ y) * (deconstruct x == deconstruct y)
+	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)
 
 instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:)) => Semigroup (Construction t a) where
-	x + y = Construct # extract_ x + extract_ y # deconstruct x + deconstruct y
+	x + y = Construct # extract x + extract y # deconstruct x + deconstruct y
 
 instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:)) => Monoid (Construction t a) where
 	zero = Construct zero zero
@@ -82,4 +82,4 @@ deconstruct ~(Construct _ xs) = xs
 f .-+ x = Construct x $ (f .-+) -<$>- f x
 
 section :: (Comonad t (->), Monoidal t (<--) (->) (:*:) (:*:)) => t ~> Construction t
-section xs = Construct # extract_ xs $ section <<= xs
+section xs = Construct # extract xs $ section <<= xs

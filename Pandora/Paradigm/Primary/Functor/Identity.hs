@@ -24,7 +24,7 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (extract_)
+import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Identity a = Identity a
@@ -64,7 +64,7 @@ instance Extendable Identity (->) where
 
 instance Adjoint Identity Identity (->) (->) where
 	f -| x = Identity . f . Identity $ x
-	g |- x = extract_ . extract_ . (g -<$>-) $ x
+	g |- x = extract . extract . (g -<$>-) $ x
 
 instance Setoid a => Setoid (Identity a) where
 	Identity x == Identity y = x == y

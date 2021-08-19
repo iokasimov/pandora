@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, Extractable_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void, empty, point, extract_) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, Extractable_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void, empty, point, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -36,7 +36,7 @@ void :: Covariant t (->) (->) => t a -> t ()
 void x = x $>- ()
 
 instance Traversable ((:*:) s) (->) (->) where
-	f <<- x = (attached x :*:) -<$>- f (extract_ x)
+	f <<- x = (attached x :*:) -<$>- f (extract x)
 
 instance Adjoint ((:*:) s) ((->) s) (->) (->) where
 	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)
@@ -49,7 +49,7 @@ instance Semimonoidal ((->) e) (->) (:*:) (:*:) where
 	multiply_ (g :*: h) = \x -> g x :*: h x
 
 instance Semimonoidal ((->) e) (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \f -> (\e -> attached $ f e) :*: (\e -> extract_ $ f e)
+	multiply_ = Flip $ \f -> (\e -> attached $ f e) :*: (\e -> extract $ f e)
 
 instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
 	multiply_ :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
@@ -102,5 +102,5 @@ empty = unit (Proxy @(:*:)) absurd
 
 type Extractable_ t = Monoidal t (<--) (->) (:*:) (:*:)
 
-extract_ :: Extractable_ t => t a -> a
-extract_ j = let Flip f = unit @_ @(<--) @(->) @(:*:) @(:*:) Proxy in f j $ One
+extract :: Extractable_ t => t a -> a
+extract j = let Flip f = unit @_ @(<--) @(->) @(:*:) @(:*:) Proxy in f j $ One

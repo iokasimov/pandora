@@ -16,7 +16,7 @@ import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Adjoint ((-|))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), (%), (!.), (-.#..-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
-import Pandora.Paradigm.Primary.Algebraic (extract_)
+import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
@@ -53,7 +53,7 @@ instance Interpreted (Store s) where
 type instance Schematic Comonad (Store s) = (:*:) s <:<.>:> (->) s
 
 instance Comonadic (Store s) where
-	bring (TC (TUT (s :*: f))) = Store $ s :*: extract_ f
+	bring (TC (TUT (s :*: f))) = Store $ s :*: extract f
 
 type Storable s x = Adaptable x (Store s)
 
@@ -63,7 +63,7 @@ position = attached . run @(Store _) . adapt
 
 -- | Given an index return value
 look :: Storable s t => s -> a <:= t
-look s = (extract_ % s) . run @(Store _) . adapt
+look s = (extract % s) . run @(Store _) . adapt
 
 -- | Change index with function
 retrofit :: (s -> s) -> Store s ~> Store s

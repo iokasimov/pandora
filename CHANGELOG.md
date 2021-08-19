@@ -567,3 +567,4 @@
 * Rename `point_` to `point`
 * Define `extract_` method
 * Remove `Extractable` typeclass
+* Rename `extract_` to `extract`

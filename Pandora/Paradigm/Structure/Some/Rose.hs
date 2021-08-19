@@ -13,7 +13,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
-import Pandora.Paradigm.Primary.Algebraic (extract_)
+import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
@@ -39,15 +39,15 @@ instance Nullable Rose where
 --	type Available Root Rose = Maybe
 --	type Substance Root Rose = Identity
 --	substructure = P_Q_T $ \rose -> case run # lower rose of
---		Nothing -> Store $ Nothing :*: TU . Tag . TU . ((Construct % empty) . extract_ <$>)
---		Just nonempty_rose -> Store $ Just (Identity # extract_ nonempty_rose) :*: \case
+--		Nothing -> Store $ Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <$>)
+--		Just nonempty_rose -> Store $ Just (Identity # extract nonempty_rose) :*: \case
 --			Just (Identity new) -> lift . TU . Just . Construct new $ deconstruct nonempty_rose
 --			Nothing -> lift empty
 
 --instance Substructure Just Rose where
 --	type Available Just Rose = Identity
 --	type Substance Just Rose = List <:.> Construction List
---	substructure = P_Q_T $ \rose -> case run . extract_ . run # rose of
+--	substructure = P_Q_T $ \rose -> case run . extract . run # rose of
 --		Nothing -> Store $ Identity empty :*: (lift empty !.)
 --		Just (Construct x xs) -> Store $ Identity (TU xs) :*: lift . lift . Construct x . run . extract
 
@@ -58,13 +58,13 @@ type instance Nonempty Rose = Construction List
 instance Substructure Root (Construction List) where
 	type Available Root (Construction List) = Identity
 	type Substance Root (Construction List) = Identity
-	substructure = P_Q_T $ \rose -> Store $ Identity (Identity # extract_ (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract_ . extract_
+	substructure = P_Q_T $ \rose -> Store $ Identity (Identity # extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
 
 instance Substructure Tail (Construction List) where
 	type Available Tail (Construction List) = Identity
 	type Substance Tail (Construction List) = List <:.> Construction List
-	substructure = P_Q_T $ \rose -> case extract_ # run rose of
-		Construct x xs -> Store $ Identity (TU xs) :*: lift . Construct x . run . extract_
+	substructure = P_Q_T $ \rose -> case extract # run rose of
+		Construct x xs -> Store $ Identity (TU xs) :*: lift . Construct x . run . extract
 
 --------------------------------------- Prefixed rose tree -----------------------------------------
 
@@ -98,8 +98,8 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 --			$ Construct (key :*: value) . lift $ vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value =||$> subtree
 
 find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose := k :*: a -> Maybe a
-find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract_ tree) ? Just (extract_ $ extract_ tree) $ Nothing
-find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract_ tree) ? Nothing $ find_rose_sub_tree ks =<< subtree where
+find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? Just (extract $ extract tree) $ Nothing
+find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ? Nothing $ find_rose_sub_tree ks =<< subtree where
 
 	subtree :: Maybe :. Nonempty Rose := k :*: a
-	subtree = find @Element # attached . extract_ ->$<- equate (extract_ ks) # deconstruct tree
+	subtree = find @Element # attached . extract ->$<- equate (extract ks) # deconstruct tree

@@ -19,7 +19,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (empty, point, extract_)
+import Pandora.Paradigm.Primary.Algebraic (empty, point, extract)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype TU ct cu t u a = TU (t :. u := a)
@@ -58,7 +58,7 @@ instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal 
 		(TU <-> TU) $ g (f -<$>- xys) where
 
 instance (Covariant t (->) (->), Monoidal t (<--) (->) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (<--) (->) (:*:) (:*:) where
-	unit _ = Flip $ \(TU x) -> (\_ -> extract_ $ extract_ x)
+	unit _ = Flip $ \(TU x) -> (\_ -> extract $ extract x)
 
 instance (Traversable t (->) (->), Traversable u (->) (->)) => Traversable (t <:.> u) (->) (->) where
 	f <<- x = TU -<$>- f -<<-<<- run x
@@ -72,7 +72,7 @@ instance Monoidal t (->) (->) (:*:) (:*:) => Liftable (TU Covariant Covariant t)
 
 instance Monoidal t (<--) (->) (:*:) (:*:) => Lowerable (TU Covariant Covariant t) where
 	lower :: t <:.> u ~> u
-	lower (TU x) = extract_ x
+	lower (TU x) = extract x
 
 instance Covariant t (->) (->) => Hoistable (TU Covariant Covariant t) where
 	(/|\) :: u ~> v -> (t <:.> u ~> t <:.> v)

@@ -25,7 +25,7 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (extract_)
+import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Tagged tag a = Tag a
@@ -40,7 +40,7 @@ instance Covariant (Flip Tagged a) (->) (->) where
 	_ -<$>- Flip (Tag x) = Flip $ Tag x
 
 instance Semimonoidal (Tagged tag) (->) (:*:) (:*:) where
-	multiply_ (x :*: y) = Tag $ extract_ x :*: extract_ y
+	multiply_ (x :*: y) = Tag $ extract x :*: extract y
 
 instance Monoidal (Tagged tag) (->) (->) (:*:) (:*:) where
 	unit _ f = Tag $ f One
@@ -55,7 +55,7 @@ instance Traversable (Tagged tag) (->) (->) where
 	f <<- Tag x = Tag -<$>- f x
 
 instance Distributive (Tagged tag) (->) (->) where
-	f -<< x = Tag $ extract_ . f -<$>- x
+	f -<< x = Tag $ extract . f -<$>- x
 
 instance Bindable (Tagged tag) (->) where
 	f =<< Tag x = f x

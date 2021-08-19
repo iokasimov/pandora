@@ -9,7 +9,7 @@ import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Primary ()
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract_)
+import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product (twosome)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
@@ -62,7 +62,7 @@ instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 				(branch @Right =<< deconstruct -<$>- branch @Right xs)
 
 		parent :: Maybe a
-		parent = extract_ -<$>- branch @Right xs
+		parent = extract -<$>- branch @Right xs
 
 instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	type Morphing (Rotate (Right Zig)) (Construction Wye) = Binary
@@ -74,7 +74,7 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 			. into @Wye $ twosome (branch @Right =<< deconstruct -<$>- branch @Left xs) # branch @Right xs
 
 		parent :: Maybe a
-		parent = extract_ -<$>- branch @Left xs
+		parent = extract -<$>- branch @Left xs
 
 -- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where

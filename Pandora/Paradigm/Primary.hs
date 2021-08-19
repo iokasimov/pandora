@@ -89,16 +89,16 @@ instance Substructure Left Wye where
 	type Available Left Wye = Maybe
 	type Substance Left Wye = Identity
 	substructure = P_Q_T $ \new -> case lower new of
-		End -> Store $ Nothing :*: lift . resolve Left End . (extract_ -<$>-)
-		Left x -> Store $ Just (Identity x) :*: lift . resolve Left End . (extract_ -<$>-)
-		Right y -> Store $ Nothing :*: (lift # Right y !.) . (extract_ -<$>-)
-		Both x y -> Store $ Just (Identity x) :*: lift . resolve (Both % y) (Right y) . (extract_ -<$>-)
+		End -> Store $ Nothing :*: lift . resolve Left End . (extract -<$>-)
+		Left x -> Store $ Just (Identity x) :*: lift . resolve Left End . (extract -<$>-)
+		Right y -> Store $ Nothing :*: (lift # Right y !.) . (extract -<$>-)
+		Both x y -> Store $ Just (Identity x) :*: lift . resolve (Both % y) (Right y) . (extract -<$>-)
 
 instance Substructure Right Wye where
 	type Available Right Wye = Maybe
 	type Substance Right Wye = Identity
 	substructure = P_Q_T $ \new -> case lower new of
-		End -> Store $ Nothing :*: lift . resolve Right End . (extract_ -<$>-)
-		Left x -> Store $ Nothing :*: (lift # Left x !.) . (extract_ -<$>-)
-		Right y -> Store $ Just (Identity y) :*: lift . resolve Right End . (extract_ -<$>-)
-		Both x y -> Store $ Just (Identity y) :*: lift . resolve (Both x) (Left x) . (extract_ -<$>-)
+		End -> Store $ Nothing :*: lift . resolve Right End . (extract -<$>-)
+		Left x -> Store $ Nothing :*: (lift # Left x !.) . (extract -<$>-)
+		Right y -> Store $ Just (Identity y) :*: lift . resolve Right End . (extract -<$>-)
+		Both x y -> Store $ Just (Identity y) :*: lift . resolve (Both x) (Left x) . (extract -<$>-)

@@ -8,7 +8,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
-import Pandora.Paradigm.Primary.Algebraic (extract_)
+import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
@@ -29,6 +29,6 @@ instance Traversable t (->) (->) => Traversable (Prefixed t k) (->) (->) where
 
 instance Covariant t (->) (->) => Morphable (Into t) (Prefixed t k) where
 	type Morphing (Into t) (Prefixed t k) = t
-	morphing (run . premorph -> prefixed) = extract_ -<$>- prefixed
+	morphing (run . premorph -> prefixed) = extract -<$>- prefixed
 
 type instance Nonempty (Prefixed t k) = Prefixed (Nonempty t) k

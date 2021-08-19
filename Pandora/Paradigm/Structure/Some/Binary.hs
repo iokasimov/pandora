@@ -14,7 +14,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&))
-import Pandora.Paradigm.Primary.Algebraic (($$$>-), extract_)
+import Pandora.Paradigm.Primary.Algebraic (($$$>-), extract)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
@@ -43,10 +43,10 @@ import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 type Binary = Maybe <:.> Construction Wye
 
 rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
-rebalance (Both x y) = extract_ x <=> extract_ y & order
-	# Construct (extract_ x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
-	# Construct (extract_ y) (Both # x # rebalance (deconstruct y))
-	# Construct (extract_ x) (Both # rebalance (deconstruct x) # y)
+rebalance (Both x y) = extract x <=> extract y & order
+	# Construct (extract x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
+	# Construct (extract y) (Both # x # rebalance (deconstruct y))
+	# Construct (extract x) (Both # rebalance (deconstruct x) # y)
 
 instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
@@ -54,14 +54,14 @@ instance Morphable Insert Binary where
 	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
 		let change = Just . resolve continue (leaf x) in
-		lift $ f x # extract_ ne & order # ne
+		lift $ f x # extract ne & order # ne
 			# over (sub @Left) change ne
 			# over (sub @Right) change ne
 
 instance Measurable Heighth Binary where
 	type Measural Heighth Binary a = Numerator
-	measurement (run . extract_ -> Just bt) = Numerator $ measure @Heighth bt
-	measurement (run . extract_ -> Nothing) = Zero
+	measurement (run . extract -> Just bt) = Numerator $ measure @Heighth bt
+	measurement (run . extract -> Nothing) = Zero
 
 instance Nullable Binary where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
@@ -76,7 +76,7 @@ instance Substructure Left Binary where
 instance Substructure Right Binary where
 	type Available Right Binary = Maybe
 	type Substance Right Binary = Construction Wye
-	substructure = P_Q_T $ \bintree -> case run . extract_ . run # bintree of
+	substructure = P_Q_T $ \bintree -> case run . extract . run # bintree of
 		Nothing -> Store $ Nothing :*: lift . TU
 		Just tree -> lift . lift -<$>- run (sub @Right) tree
 
@@ -96,14 +96,14 @@ instance Morphable Insert (Construction Wye) where
 		order # nonempty_list
 			# over (sub @Left) change nonempty_list
 			# over (sub @Right) change nonempty_list
-			# f x (extract_ nonempty_list)
+			# f x (extract nonempty_list)
 
 instance Measurable Heighth (Construction Wye) where
 	type Measural Heighth (Construction Wye) a = Denumerator
-	measurement (deconstruct . extract_ -> End) = Single
-	measurement (deconstruct . extract_ -> Left lst) = Single + measure @Heighth lst
-	measurement (deconstruct . extract_ -> Right rst) = Single + measure @Heighth rst
-	measurement (deconstruct . extract_ -> Both lst rst) = Single +
+	measurement (deconstruct . extract -> End) = Single
+	measurement (deconstruct . extract -> Left lst) = Single + measure @Heighth lst
+	measurement (deconstruct . extract -> Right rst) = Single + measure @Heighth rst
+	measurement (deconstruct . extract -> Both lst rst) = Single +
 		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
 		in lm <=> rm & order lm rm lm
 
@@ -111,12 +111,12 @@ instance Substructure Root (Construction Wye) where
 	type Available Root (Construction Wye) = Identity
 	type Substance Root (Construction Wye) = Identity
 	substructure = P_Q_T $ \bintree -> case lower bintree of
-		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract_ . extract_
+		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract . extract
 
 instance Substructure Left (Construction Wye) where
 	type Available Left (Construction Wye) = Maybe
 	type Substance Left (Construction Wye) = Construction Wye
-	substructure = P_Q_T $ \bintree -> case extract_ # run bintree of
+	substructure = P_Q_T $ \bintree -> case extract # run bintree of
 		Construct x End -> Store $ Nothing :*: lift . resolve (Construct x . Left) (leaf x)
 		Construct x (Left lst) -> Store $ Just lst :*: lift . Construct x . resolve Left End
 		Construct x (Right rst) -> Store $ Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst)
@@ -125,7 +125,7 @@ instance Substructure Left (Construction Wye) where
 instance Substructure Right (Construction Wye) where
 	type Available Right (Construction Wye) = Maybe
 	type Substance Right (Construction Wye) = Construction Wye
-	substructure = P_Q_T $ \bintree -> case extract_ # run bintree of
+	substructure = P_Q_T $ \bintree -> case extract # run bintree of
 		Construct x End -> Store $ Nothing :*: lift . resolve (Construct x . Right) (leaf x)
 		Construct x (Left lst) -> Store $ Nothing :*: lift . Construct x . resolve (Both lst) (Left lst)
 		Construct x (Right rst) -> Store $ Just rst :*: lift . Construct x . resolve Right End
@@ -137,7 +137,7 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	type Morphing (Lookup Key) (Prefixed Binary k) = (->) k <:.> Maybe
 	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
 	morphing (run . run . premorph -> Just tree) = TU $ \key ->
-		let root = extract_ tree in key <=> attached root & order (Just # extract_ root)
+		let root = extract tree in key <=> attached root & order (Just # extract root)
 			(lookup @Key key . Prefixed =<< view # sub @Left # tree)
 			(lookup @Key key . Prefixed =<< view # sub @Right # tree)
 
@@ -146,7 +146,7 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
 	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
 		let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)
-		in let root = extract_ tree in Prefixed . lift $ key <=> attached root & order
+		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
 			# over (sub @Root) ($$$>- value) tree
 			# over (sub @Left) continue tree
 			# over (sub @Right) continue tree
@@ -156,9 +156,9 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <:.> Maybe
 	morphing (run . premorph -> Construct x xs) = TU $ \key ->
-		key <=> attached x & order (Just # extract_ x)
-			(lookup @Key key . Prefixed . extract_ =<< view # sub @Left # xs)
-			(lookup @Key key . Prefixed . extract_ =<< view # sub @Left # xs)
+		key <=> attached x & order (Just # extract x)
+			(lookup @Key key . Prefixed . extract =<< view # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract =<< view # sub @Left # xs)
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 

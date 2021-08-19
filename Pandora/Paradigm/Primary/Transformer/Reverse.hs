@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Transformer.Backwards (Backwards (Backwards))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point, extract_)
+import Pandora.Paradigm.Primary.Algebraic (point, extract)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
@@ -39,7 +39,7 @@ instance (Semimonoidal t (<--) (:*:) (:*:), Covariant t (->) (->)) => Semimonoid
 		(Reverse <-> Reverse) $ f x
 
 instance (Covariant t (->) (->), Monoidal t (<--) (->) (:*:) (:*:)) => Monoidal (Reverse t) (<--) (->) (:*:) (:*:) where
-	unit _ = Flip $ \(Reverse x) -> (\_ -> extract_ x)
+	unit _ = Flip $ \(Reverse x) -> (\_ -> extract x)
 
 instance Traversable t (->) (->) => Traversable (Reverse t) (->) (->) where
 	f <<- Reverse x = Reverse -<$>- run (Backwards . f <<- x)

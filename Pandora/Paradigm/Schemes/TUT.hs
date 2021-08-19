@@ -17,7 +17,7 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point, extract_)
+import Pandora.Paradigm.Primary.Algebraic (point, extract)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
@@ -53,7 +53,7 @@ instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:), Covariant u (
 		(TUT <-> TUT) $ f (g -<$>- (h -<$$>- xys)) where
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal t' (<--) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:), Adjoint t t' (->) (->)) => Monoidal (t <:<.>:> t' := u) (<--) (->) (:*:) (:*:) where
-	unit _ = Flip $ \(TUT xys) -> (\_ -> (extract_ |-) xys)
+	unit _ = Flip $ \(TUT xys) -> (\_ -> (extract |-) xys)
 
 instance (Covariant t (->) (->), Covariant t' (->) (->), Adjoint t' t (->) (->), Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
 	f =<< x = TUT $ ((run . f |-) =<<) -<$>- run x

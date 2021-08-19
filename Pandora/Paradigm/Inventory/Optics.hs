@@ -13,7 +13,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
-import Pandora.Paradigm.Primary.Algebraic (($>-), extract_)
+import Pandora.Paradigm.Primary.Algebraic (($>-), extract)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
@@ -33,7 +33,7 @@ type family Convex lens where
 	Convex Lens = Lens Identity
 
 instance Semigroupoid (Lens Identity) where
-	P_Q_T to . P_Q_T from = P_Q_T $ \source -> (to . extract_ @Identity . position $ from source) $>- source
+	P_Q_T to . P_Q_T from = P_Q_T $ \source -> (to . extract @Identity . position $ from source) $>- source
 
 instance Category (Lens Identity) where
 	identity = imply @(Convex Lens _ _) identity ((%) (!.))
@@ -41,7 +41,7 @@ instance Category (Lens Identity) where
 instance Impliable (P_Q_T (->) Store Identity source target) where
 	type Arguments (P_Q_T (->) Store Identity source target) =
 		(source -> target) -> (source -> target -> source) -> Lens Identity source target
-	imply getter setter = P_Q_T $ \source -> Store $ Identity # getter source :*: setter source . extract_
+	imply getter setter = P_Q_T $ \source -> Store $ Identity # getter source :*: setter source . extract
 
 type family Obscure lens where
 	Obscure Lens = Lens Maybe
@@ -72,7 +72,7 @@ set lens new = look new . run lens
 
 -- | Modify focused target value
 over :: Lens available source target -> (available target -> available target) -> source -> source
-over lens f = extract_ . retrofit f . run lens
+over lens f = extract . retrofit f . run lens
 
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
