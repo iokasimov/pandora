@@ -4,7 +4,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -33,13 +33,13 @@ instance Covariant Identity (->) (->) where
 	f -<$>- Identity x = Identity $ f x
 
 instance Semimonoidal Identity (->) (:*:) (:*:) where
-	multiply_ (Identity x :*: Identity y) = Identity $ x :*: y
+	multiply (Identity x :*: Identity y) = Identity $ x :*: y
 
 instance Monoidal Identity (->) (->) (:*:) (:*:) where
 	unit _ f = Identity $ f One
 
 instance Semimonoidal Identity (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \(Identity (x :*: y)) -> Identity x :*: Identity y
+	multiply = Flip $ \(Identity (x :*: y)) -> Identity x :*: Identity y
 
 instance Monoidal Identity (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Identity x) -> (\_ -> x)

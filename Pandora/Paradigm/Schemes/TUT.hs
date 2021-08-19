@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -43,13 +43,13 @@ instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->)) 
 	f -<$>- TUT x = TUT $ f -<$$$>- x
 
 instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (->) (:*:) (:*:) where
-	multiply_ (TUT x :*: TUT y) = TUT $ multiply_ @_ @(->) @(:*:) -<$$>- multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
+	multiply (TUT x :*: TUT y) = TUT $ multiply @_ @(->) @(:*:) -<$$>- multiply @_ @(->) @(:*:) -<$>- multiply (x :*: y)
 
 instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:), Covariant u (->) (->), Semimonoidal u (<--) (:*:) (:*:), Covariant t' (->) (->), Semimonoidal t' (<--) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \(TUT xys) ->
-		let Flip f = multiply_ @t @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply_ @u @(<--) @(:*:) @(:*:) in
-		let Flip h = multiply_ @t' @(<--) @(:*:) @(:*:) in
+	multiply = Flip $ \(TUT xys) ->
+		let Flip f = multiply @t @(<--) @(:*:) @(:*:) in
+		let Flip g = multiply @u @(<--) @(:*:) @(:*:) in
+		let Flip h = multiply @t' @(<--) @(:*:) @(:*:) in
 		(TUT <-> TUT) $ f (g -<$>- (h -<$$>- xys)) where
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal t' (<--) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:), Adjoint t t' (->) (->)) => Monoidal (t <:<.>:> t' := u) (<--) (->) (:*:) (:*:) where

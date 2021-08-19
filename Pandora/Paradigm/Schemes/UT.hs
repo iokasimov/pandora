@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -36,7 +36,7 @@ instance (Covariant t (->) (->), Covariant u (->) (->)) => Covariant (t <.:> u) 
 	f -<$>- x = UT $ f -<$$>- run x
 
 instance (Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <.:> u) (->) (:*:) (:*:) where
-	multiply_ (UT x :*: UT y) = UT $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
+	multiply (UT x :*: UT y) = UT $ multiply @_ @(->) @(:*:) -<$>- multiply (x :*: y)
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <.:> u) (->) (->) (:*:) (:*:) where
 	unit _ f = UT . point . point $ f One
@@ -45,9 +45,9 @@ instance (Traversable t (->) (->), Bindable t (->), Semimonoidal u (->) (:*:) (:
 	f =<< UT x = UT $ ((identity =<<) -<$>-) . (run . f <<-) =<< x
 
 instance (Covariant u (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal u (<--) (:*:) (:*:)) => Semimonoidal (t <.:> u) (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \(UT xys) ->
-		let Flip f = multiply_ @u @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply_ @t @(<--) @(:*:) @(:*:) in
+	multiply = Flip $ \(UT xys) ->
+		let Flip f = multiply @u @(<--) @(:*:) @(:*:) in
+		let Flip g = multiply @t @(<--) @(:*:) @(:*:) in
 		(UT <-> UT) $ f (g -<$>- xys) where
 
 instance (Covariant u (->) (->), Monoidal t (<--) (->) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:)) => Monoidal (t <.:> u) (<--) (->) (:*:) (:*:) where

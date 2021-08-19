@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Algebraic.Product where
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -61,13 +61,13 @@ instance (Group s, Group a) => Group (s :*: a) where
 	invert ~(s :*: x) = invert # s :*: invert # x
 
 instance {-# OVERLAPS #-} Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (t <:.:> t := (:*:)) (->) (:*:) (:*:) where
-	multiply_ (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ multiply_ (xls :*: yls) :*: multiply_ (xrs :*: yrs)
+	multiply (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ multiply (xls :*: yls) :*: multiply (xrs :*: yrs)
 
 -- TODO: Generalize (:*:) as Bivariant p
 instance (Semimonoidal t (<--) (:*:) (:*:), Semimonoidal u (<--) (:*:) (:*:)) => Semimonoidal (t <:.:> u := (:*:)) (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \(T_U (lxys :*: rxys)) ->
-		let Flip f = multiply_ @_ @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply_ @_ @(<--) @(:*:) @(:*:) in
+	multiply = Flip $ \(T_U (lxys :*: rxys)) ->
+		let Flip f = multiply @_ @(<--) @(:*:) @(:*:) in
+		let Flip g = multiply @_ @(<--) @(:*:) @(:*:) in
 		let (lxs :*: lys) = f lxys in
 		let (rxs :*: rys) = g rxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)

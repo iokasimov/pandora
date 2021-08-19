@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, ga
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Monoid (Monoid)
@@ -23,7 +23,7 @@ instance Covariant (Accumulator e) (->) (->) where
 	f -<$>- Accumulator x = Accumulator $ f -<$>- x
 
 instance Semigroup e => Semimonoidal (Accumulator e) (->) (:*:) (:*:) where
-	multiply_ (x :*: y) = Accumulator $ k # run x # run y where
+	multiply (x :*: y) = Accumulator $ k # run x # run y where
 		k ~(ex :*: x') ~(ey :*: y') = ex + ey :*: x' :*: y'
 
 instance Semigroup e => Bindable (Accumulator e) (->) where

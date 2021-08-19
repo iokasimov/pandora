@@ -6,7 +6,7 @@ import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -30,7 +30,7 @@ instance Covariant (Store s) (->) (->) where
 	f -<$>- Store x = Store $ f -<$$>- x
 
 instance Semimonoidal (Store s) (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \(Store (s :*: f)) -> 
+	multiply = Flip $ \(Store (s :*: f)) -> 
 		let (x :*: y) = f s in
 		Store (s :*: (x !.)) :*: Store (s :*: (y !.))
 

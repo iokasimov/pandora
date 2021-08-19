@@ -569,3 +569,4 @@
 * Remove `Extractable` typeclass
 * Rename `extract_` to `extract`
 * Use `Monoidal` as superclass of `Comonad`
+* Rename `multiply_` to `multiply`

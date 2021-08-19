@@ -5,7 +5,7 @@ module Pandora.Paradigm.Primary.Transformer.Instruction where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -25,10 +25,10 @@ instance Covariant t (->) (->) => Covariant (Instruction t) (->) (->) where
 	f -<$>- Instruct xs = Instruct $ f -<$$>- xs
 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Instruction t) (->) (:*:) (:*:) where
-	multiply_ (Enter x :*: Enter y) = Enter $ x :*: y
-	multiply_ (Enter x :*: Instruct y) = (x :*:) -<$>- Instruct y
-	multiply_ (Instruct x :*: Enter y) = (:*: y) -<$>- Instruct x
-	multiply_ (Instruct x :*: Instruct y) = Instruct $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
+	multiply (Enter x :*: Enter y) = Enter $ x :*: y
+	multiply (Enter x :*: Instruct y) = (x :*:) -<$>- Instruct y
+	multiply (Instruct x :*: Enter y) = (:*: y) -<$>- Instruct x
+	multiply (Instruct x :*: Instruct y) = Instruct $ multiply @_ @(->) @(:*:) -<$>- multiply (x :*: y)
 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Monoidal (Instruction t) (->) (->) (:*:) (:*:) where
 	unit _ f = Enter $ f One

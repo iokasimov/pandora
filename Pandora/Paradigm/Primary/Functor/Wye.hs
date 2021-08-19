@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Wye where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((#), ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
@@ -20,7 +20,7 @@ instance Covariant Wye (->) (->) where
 	f -<$>- Both x y = Both # f x # f y
 
 instance Semimonoidal Wye (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \case
+	multiply = Flip $ \case
 		End -> End :*: End
 		Left (x :*: y) -> Left x :*: Left y
 		Right (x :*: y) -> Right x :*: Right y

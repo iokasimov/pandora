@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -40,21 +40,21 @@ instance (Covariant t (->) (->), Covariant u (->) (->)) => Covariant (t <:.> u) 
 	f -<$>- x = TU $ f -<$$>- run x
 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <:.> u) (->) (:*:) (:*:) where
-	multiply_ (TU x :*: TU y) = TU $ multiply_ @_ @(->) @(:*:) -<$>- multiply_ (x :*: y)
+	multiply (TU x :*: TU y) = TU $ multiply @_ @(->) @(:*:) -<$>- multiply (x :*: y)
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:*:) where
 	unit _ f = TU . point . point $ f One
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (t <:.> u) (->) (:*:) (:+:) where
-	multiply_ (TU x :*: TU y) = TU $ sum (Option -<$>-) (Adoption -<$>-) -<$>- multiply_ @_ @(->) @(:*:) @(:+:) (x :*: y)
+	multiply (TU x :*: TU y) = TU $ sum (Option -<$>-) (Adoption -<$>-) -<$>- multiply @_ @(->) @(:*:) @(:+:) (x :*: y)
 
 instance (Covariant t (->) (->), Covariant u (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
 	unit _ _ = TU empty
 
 instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal u (<--) (:*:) (:*:)) => Semimonoidal (t <:.> u) (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \(TU xys) ->
-		let Flip f = multiply_ @u @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply_ @t @(<--) @(:*:) @(:*:) in
+	multiply = Flip $ \(TU xys) ->
+		let Flip f = multiply @u @(<--) @(:*:) @(:*:) in
+		let Flip g = multiply @t @(<--) @(:*:) @(:*:) in
 		(TU <-> TU) $ g (f -<$>- xys) where
 
 instance (Covariant t (->) (->), Monoidal t (<--) (->) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (<--) (->) (:*:) (:*:) where

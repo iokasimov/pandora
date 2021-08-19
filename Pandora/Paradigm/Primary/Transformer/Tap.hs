@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -33,11 +33,11 @@ instance Covariant t (->) (->) => Covariant (Tap t) (->) (->) where
 	f -<$>- Tap x xs = Tap # f x # f -<$>- xs
 
 instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap t) (->) (:*:) (:*:) where
-	multiply_ (Tap x xs :*: Tap y ys) = Tap (x :*: y) $ multiply_ $ xs :*: ys
+	multiply (Tap x xs :*: Tap y ys) = Tap (x :*: y) $ multiply $ xs :*: ys
 
 instance Semimonoidal t (<--) (:*:) (:*:) => Semimonoidal (Tap t) (<--) (:*:) (:*:) where
-	multiply_ = Flip $ \(Tap (x :*: y) xys) -> 
-		let Flip f = multiply_ @_ @(<--) @(:*:) @(:*:) in
+	multiply = Flip $ \(Tap (x :*: y) xys) -> 
+		let Flip f = multiply @_ @(<--) @(:*:) @(:*:) in
 		let (xs :*: ys) = f xys in Tap x xs :*: Tap y ys
 
 instance Semimonoidal t (<--) (:*:) (:*:) => Monoidal (Tap t) (<--) (->) (:*:) (:*:) where
@@ -56,8 +56,8 @@ instance Hoistable Tap where
 	f /|\ Tap x xs = Tap x # f xs
 
 instance {-# OVERLAPS #-} Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap (t <:.:> t := (:*:))) (->) (:*:) (:*:) where
-	multiply_ (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
-		$ T_U $ multiply_ (xls :*: yls) :*: multiply_ (xrs :*: yrs)
+	multiply (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
+		$ T_U $ multiply (xls :*: yls) :*: multiply (xrs :*: yrs)
 
 instance {-# OVERLAPS #-} Traversable t (->) (->) => Traversable (Tap (t <:.:> t := (:*:))) (->) (->) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')

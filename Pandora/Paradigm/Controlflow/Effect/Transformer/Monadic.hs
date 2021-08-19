@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -31,7 +31,7 @@ instance Covariant (Schematic Monad t u) (->) (->) => Covariant (t :> u) (->) (-
 	f -<$>- TM x = TM $ f -<$>- x
 
 instance Semimonoidal (Schematic Monad t u) (->) (:*:) (:*:) => Semimonoidal (t :> u) (->) (:*:) (:*:) where
-	multiply_ (TM f :*: TM x) = TM $ multiply_ $ f :*: x
+	multiply (TM f :*: TM x) = TM $ multiply $ f :*: x
 
 instance Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:) => Monoidal (t :> u) (->) (->) (:*:) (:*:) where
 	unit _ f = TM . point $ f One

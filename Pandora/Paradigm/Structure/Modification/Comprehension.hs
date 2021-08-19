@@ -8,7 +8,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Contravariant ((->$<-))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply_))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -41,10 +41,10 @@ instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehen
 	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Comprehension t) (->) (:*:) (:*:) where
-	multiply_ (Comprehension x :*: Comprehension y) = Comprehension $ multiply_ (x :*: y)
+	multiply (Comprehension x :*: Comprehension y) = Comprehension $ multiply (x :*: y)
 
 instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (Comprehension t) (->) (:*:) (:+:) where
-	multiply_ (Comprehension x :*: Comprehension y) = Comprehension $ multiply_ (x :*: y)
+	multiply (Comprehension x :*: Comprehension y) = Comprehension $ multiply (x :*: y)
 
 instance (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (Comprehension t) (->) (->) (:*:) (:+:) where
 	unit _ _ = Comprehension empty
