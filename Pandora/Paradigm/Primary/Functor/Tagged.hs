@@ -33,10 +33,10 @@ newtype Tagged tag a = Tag a
 infixr 0 :#
 type (:#) tag = Tagged tag
 
-instance Covariant (Tagged tag) (->) (->) where
+instance Covariant (->) (->) (Tagged tag) where
 	f -<$>- Tag x = Tag $ f x
 
-instance Covariant (Flip Tagged a) (->) (->) where
+instance Covariant (->) (->) (Flip Tagged a) where
 	_ -<$>- Flip (Tag x) = Flip $ Tag x
 
 instance Semimonoidal (Tagged tag) (->) (:*:) (:*:) where

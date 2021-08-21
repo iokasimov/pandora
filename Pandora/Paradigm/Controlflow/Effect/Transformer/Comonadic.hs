@@ -27,7 +27,7 @@ class Interpreted t => Comonadic t where
 infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
 
-instance Covariant (Schematic Comonad t u) (->) (->) => Covariant (t :< u) (->) (->) where
+instance Covariant (->) (->) (Schematic Comonad t u) => Covariant (->) (->) (t :< u) where
 	f -<$>- TC x = TC $ f -<$>- x
 
 instance Semimonoidal (Schematic Comonad t u) (->) (:*:) (:*:) => Semimonoidal (t :< u) (->) (:*:) (:*:) where

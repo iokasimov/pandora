@@ -21,7 +21,7 @@ import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 
 data Validation e a = Flaws e | Validated a
 
-instance Covariant (Validation e) (->) (->) where
+instance Covariant (->) (->) (Validation e) where
 	_ -<$>- Flaws e = Flaws e
 	f -<$>- Validated x = Validated $ f x
 	_ -<$>- Flaws e = Flaws e
@@ -29,7 +29,7 @@ instance Covariant (Validation e) (->) (->) where
 	_ -<$>- Flaws e = Flaws e
 	f -<$>- Validated x = Validated $ f x
 
-instance Covariant (Flip Validation a) (->) (->) where
+instance Covariant (->) (->) (Flip Validation a) where
 	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
 	_ -<$>- Flip (Validated x) = Flip $ Validated x
 	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e

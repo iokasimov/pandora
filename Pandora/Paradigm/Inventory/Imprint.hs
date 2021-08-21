@@ -19,7 +19,7 @@ import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
 newtype Imprint e a = Imprint (e -> a)
 
-instance Covariant (Imprint e) (->) (->) where
+instance Covariant (->) (->) (Imprint e) where
 	f -<$>- Imprint g = Imprint $ f . g
 
 instance Contravariant (Flip Imprint a) (->) (->) where

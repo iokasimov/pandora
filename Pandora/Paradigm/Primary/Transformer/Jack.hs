@@ -21,7 +21,7 @@ import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 
 data Jack t a = It a | Other (t a)
 
-instance Covariant t (->) (->) => Covariant (Jack t) (->) (->) where
+instance Covariant (->) (->) t => Covariant (->) (->) (Jack t) where
 	f -<$>- It x = It $ f x
 	f -<$>- Other y = Other $ f -<$>- y
 

@@ -36,44 +36,44 @@ instance Interpreted (TU ct cu t u) where
 	run ~(TU x) = x
 	unite = TU
 
-instance (Covariant t (->) (->), Covariant u (->) (->)) => Covariant (t <:.> u) (->) (->) where
+instance (Covariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (t <:.> u) where
 	f -<$>- x = TU $ f -<$$>- run x
 
-instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <:.> u) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:)) => Semimonoidal (t <:.> u) (->) (:*:) (:*:) where
 	multiply (TU x :*: TU y) = TU $ multiply @_ @(->) @(:*:) -<$>- multiply (x :*: y)
 
-instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal u (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal u (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:*:) where
 	unit _ f = TU . point . point $ f One
 
-instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (t <:.> u) (->) (:*:) (:+:) where
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (t <:.> u) (->) (:*:) (:+:) where
 	multiply (TU x :*: TU y) = TU $ sum (Option -<$>-) (Adoption -<$>-) -<$>- multiply @_ @(->) @(:*:) @(:+:) (x :*: y)
 
-instance (Covariant t (->) (->), Covariant u (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (t <:.> u) (->) (->) (:*:) (:+:) where
 	unit _ _ = TU empty
 
-instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal u (<--) (:*:) (:*:)) => Semimonoidal (t <:.> u) (<--) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal t (<--) (:*:) (:*:), Semimonoidal u (<--) (:*:) (:*:)) => Semimonoidal (t <:.> u) (<--) (:*:) (:*:) where
 	multiply = Flip $ \(TU xys) ->
 		let Flip f = multiply @u @(<--) @(:*:) @(:*:) in
 		let Flip g = multiply @t @(<--) @(:*:) @(:*:) in
 		(TU <-> TU) $ g (f -<$>- xys) where
 
-instance (Covariant t (->) (->), Monoidal t (<--) (->) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (<--) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Monoidal t (<--) (->) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(TU x) -> (\_ -> extract $ extract x)
 
 instance (Traversable t (->) (->), Traversable u (->) (->)) => Traversable (t <:.> u) (->) (->) where
 	f <<- x = TU -<$>- f -<<-<<- run x
 
-instance (Bindable t (->), Distributive t (->) (->), Covariant u (->) (->), Bindable u (->)) => Bindable (t <:.> u) (->) where
+instance (Bindable t (->), Distributive t (->) (->), Covariant (->) (->) u, Bindable u (->)) => Bindable (t <:.> u) (->) where
 	f =<< TU x = TU $ (\i -> (identity =<<) -<$>- run . f -<< i) =<< x
 
 instance Monoidal t (->) (->) (:*:) (:*:) => Liftable (TU Covariant Covariant t) where
-	lift :: Covariant u (->) (->) => u ~> t <:.> u
+	lift :: Covariant (->) (->) u => u ~> t <:.> u
 	lift = TU . point
 
 instance Monoidal t (<--) (->) (:*:) (:*:) => Lowerable (TU Covariant Covariant t) where
 	lower :: t <:.> u ~> u
 	lower (TU x) = extract x
 
-instance Covariant t (->) (->) => Hoistable (TU Covariant Covariant t) where
+instance Covariant (->) (->) t => Hoistable (TU Covariant Covariant t) where
 	(/|\) :: u ~> v -> (t <:.> u ~> t <:.> v)
 	f /|\ TU x = TU $ f -<$>- x

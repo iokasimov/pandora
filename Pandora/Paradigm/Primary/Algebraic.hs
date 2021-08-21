@@ -9,7 +9,6 @@ import Pandora.Paradigm.Primary.Algebraic.Zero as Exports
 import Pandora.Paradigm.Primary.Algebraic.One as Exports
 
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
@@ -24,16 +23,16 @@ type instance Unit (:+:) = Zero
 
 infixl 4 -<*>-
 
-($>-) :: Covariant t (->) (->) => t a -> b -> t b
+($>-) :: Covariant (->) (->) t => t a -> b -> t b
 x $>- r = (r !.) -<$>- x
 
-($$>-) :: (Covariant t (->) (->), Covariant u (->) (->)) => t (u a) -> b -> t (u b)
+($$>-) :: (Covariant (->) (->) t, Covariant (->) (->) u) => t (u a) -> b -> t (u b)
 x $$>- r = (r !.) -<$$>- x
 
-($$$>-) :: (Covariant t (->) (->), Covariant u (->) (->), Covariant v (->) (->)) => t (u (v a)) -> b -> t (u (v b))
+($$$>-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) v) => t (u (v a)) -> b -> t (u (v b))
 x $$$>- r = (r !.) -<$$$>- x
 
-void :: Covariant t (->) (->) => t a -> t ()
+void :: Covariant (->) (->) t => t a -> t ()
 void x = x $>- ()
 
 instance Traversable ((:*:) s) (->) (->) where
@@ -80,20 +79,20 @@ instance Semimonoidal (Flip (:*:) a) (<--) (:*:) (:*:) where
 instance Monoidal (Flip (:*:) a) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Flip (s :*: _)) -> (\_ -> s)
 
-type Applicative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:))
-type Alternative_ t = (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:+:), Monoidal t (->) (->) (:*:) (:+:))
+type Applicative_ t = (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:))
+type Alternative_ t = (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:+:), Monoidal t (->) (->) (:*:) (:+:))
 
-(-<*>-) :: (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:))
+(-<*>-) :: (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:))
 	=> t (a -> b) -> t a -> t b
 f -<*>- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply @_ @_ @_ @(:*:) (f :*: x)
 
-forever_ :: (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:)) => t a -> t b
+forever_ :: (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => t a -> t b
 forever_ x = let r = x *>- r in r
 
-(*>-) :: (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:*:)) => t a -> t b -> t b
+(*>-) :: (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => t a -> t b -> t b
 x *>- y = ((!.) %) -<$>- x -<*>- y
 
-(-+-) :: (Endofunctor Covariant t (->), Semimonoidal t (->) (:*:) (:+:))
+(-+-) :: (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:+:))
 	  => t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f -<$>- multiply (x :*: y)
 

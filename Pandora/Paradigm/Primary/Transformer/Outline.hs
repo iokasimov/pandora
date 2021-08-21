@@ -13,7 +13,7 @@ data Outline t a where
 	Line :: a -> Outline t a
 	Outlined :: t a -> Outline t (a -> b) -> Outline t b
 
-instance Covariant (Outline t) (->) (->) where
+instance Covariant (->) (->) (Outline t) where
 	f -<$>- Line a = Line $ f a
 	f -<$>- Outlined x y = Outlined x # (.) f -<$>- y
 

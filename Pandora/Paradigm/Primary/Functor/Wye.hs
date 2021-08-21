@@ -13,7 +13,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
 data Wye a = End | Left a | Right a | Both a a
 
-instance Covariant Wye (->) (->) where
+instance Covariant (->) (->) Wye where
 	_ -<$>- End = End
 	f -<$>- Left x = Left # f x
 	f -<$>- Right y = Right # f y

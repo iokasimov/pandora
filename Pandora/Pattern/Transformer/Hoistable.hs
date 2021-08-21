@@ -13,7 +13,7 @@ infixr 5 /|\
 
 class Hoistable t where
 	{-# MINIMAL (/|\) #-}
-	(/|\) :: (Covariant u (->) (->)) => u ~> v -> t u ~> t v
+	(/|\) :: (Covariant (->) (->) u) => u ~> v -> t u ~> t v
 
-	hoist :: (Covariant u (->) (->)) => u ~> v -> t u ~> t v
+	hoist :: (Covariant (->) (->) u) => u ~> v -> t u ~> t v
 	hoist = (/|\)

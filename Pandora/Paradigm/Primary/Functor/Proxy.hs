@@ -10,7 +10,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 data Proxy a = Proxy
 
-instance Covariant Proxy (->) (->) where
+instance Covariant (->) (->) Proxy where
 	_ -<$>- Proxy = Proxy
 
 instance Contravariant Proxy (->) (->) where

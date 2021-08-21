@@ -16,7 +16,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Equipment e a = Equipment (e :*: a)
 
-instance Covariant (Equipment e) (->) (->) where
+instance Covariant (->) (->) (Equipment e) where
 	f -<$>- Equipment x = Equipment $ f -<$>- x
 
 instance Traversable (Equipment e) (->) (->) where

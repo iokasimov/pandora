@@ -34,19 +34,19 @@ instance Interpreted (Comprehension t) where
 	run ~(Comprehension x) = x
 	unite = Comprehension
 
-instance Covariant (t <:.> Construction t) (->) (->) => Covariant (Comprehension t) (->) (->) where
+instance Covariant (->) (->) (t <:.> Construction t) => Covariant (->) (->) (Comprehension t) where
 	f -<$>- Comprehension x = Comprehension $ f -<$>- x
 
 instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehension t) (->) (->) where
 	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
-instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Comprehension t) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Comprehension t) (->) (:*:) (:*:) where
 	multiply (Comprehension x :*: Comprehension y) = Comprehension $ multiply (x :*: y)
 
-instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (Comprehension t) (->) (:*:) (:+:) where
+instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (Comprehension t) (->) (:*:) (:+:) where
 	multiply (Comprehension x :*: Comprehension y) = Comprehension $ multiply (x :*: y)
 
-instance (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (Comprehension t) (->) (->) (:*:) (:+:) where
+instance (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (Comprehension t) (->) (->) (:*:) (:+:) where
 	unit _ _ = Comprehension empty
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t (->)) => Bindable (Comprehension t) (->) where
@@ -61,7 +61,7 @@ instance Semigroup (t <:.> Construction t := a) => Semigroup (Comprehension t a)
 instance Monoid (t <:.> Construction t := a) => Monoid (Comprehension t a) where
 	zero = Comprehension zero
 
-instance (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:*:)) => Morphable Push (Comprehension t) where
+instance (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:)) => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 

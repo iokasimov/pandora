@@ -20,10 +20,10 @@ import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Constant a b = Constant a
 
-instance Covariant (Constant a) (->) (->) where
+instance Covariant (->) (->) (Constant a) where
 	_ -<$>- Constant x = Constant x
 
-instance Covariant (Flip Constant b) (->) (->) where
+instance Covariant (->) (->) (Flip Constant b) where
 	f -<$>- Flip (Constant x) = Flip . Constant $ f x
 
 instance Contravariant (Constant a) (->) (->) where

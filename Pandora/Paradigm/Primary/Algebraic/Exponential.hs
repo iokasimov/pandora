@@ -24,7 +24,7 @@ instance Semigroupoid (->) where
 instance Category (->) where
 	identity x = x
 
-instance Covariant ((->) a) (->) (->) where
+instance Covariant (->) (->) ((->) a) where
 	(-<$>-) = (.)
 
 instance Distributive ((->) e) (->) (->) where
@@ -53,7 +53,7 @@ instance Category (<--) where
 instance Contravariant ((<--) a) (->) (->) where
 	f ->$<- Flip g = Flip $ g . f
 
-(-.#..-) :: (Covariant (v a) (->) target, Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
+(-.#..-) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (-.#..-) f = (-<$>-) (f .)
 
 {-# INLINE (!.) #-}

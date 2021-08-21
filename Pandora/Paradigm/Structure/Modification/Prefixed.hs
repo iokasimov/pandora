@@ -21,13 +21,13 @@ instance Interpreted (Prefixed t k) where
 	run ~(Prefixed x) = x
 	unite = Prefixed
 
-instance Covariant t (->) (->) => Covariant (Prefixed t k) (->) (->) where
+instance Covariant (->) (->) t => Covariant (->) (->) (Prefixed t k) where
 	f -<$>- Prefixed x = Prefixed $ f -<$$>- x
 
 instance Traversable t (->) (->) => Traversable (Prefixed t k) (->) (->) where
 	f <<- Prefixed x = Prefixed -<$>- f -<<-<<- x
 
-instance Covariant t (->) (->) => Morphable (Into t) (Prefixed t k) where
+instance Covariant (->) (->) t => Morphable (Into t) (Prefixed t k) where
 	type Morphing (Into t) (Prefixed t k) = t
 	morphing (run . premorph -> prefixed) = extract -<$>- prefixed
 

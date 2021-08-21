@@ -11,7 +11,7 @@ infixr 0 :+:
 
 data (:+:) s a = Option s | Adoption a
 
-instance Covariant ((:+:) s) (->) (->) where
+instance Covariant (->) (->) ((:+:) s) where
 	_ -<$>- Option s = Option s
 	f -<$>- Adoption x = Adoption $ f x
 
@@ -20,7 +20,7 @@ instance Bivariant (:+:) (->) (->) (->) where
 		Option s -> Option $ f s
 		Adoption x -> Adoption $ g x
 
-instance Covariant (Flip (:+:) a) (->) (->) where
+instance Covariant (->) (->) (Flip (:+:) a) where
 	_ -<$>- Flip (Adoption x) = Flip $ Adoption x
 	f -<$>- Flip (Option y) = Flip . Option $ f y
 

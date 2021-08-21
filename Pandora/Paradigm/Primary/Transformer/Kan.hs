@@ -21,7 +21,7 @@ instance Interpreted (Kan Left t u b) where
 
 data instance Kan Right t u b a = Ran ((a -> t b) -> u b)
 
-instance Covariant (Kan Right t u b) (->) (->) where
+instance Covariant (->) (->) (Kan Right t u b) where
 	f -<$>- Ran x = Ran $ x . (. f)
 
 instance Interpreted (Kan Right t u b) where

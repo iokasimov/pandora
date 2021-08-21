@@ -9,4 +9,4 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 -}
 
 class Lowerable t where
-	lower :: (Covariant u (->) (->)) => t u ~> u
+	lower :: (Covariant (->) (->) u) => t u ~> u

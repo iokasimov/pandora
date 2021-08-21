@@ -8,7 +8,7 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 
 data Edges a = Empty | Leap a | Connect a | Overlay a
 
-instance Covariant Edges (->) (->) where
+instance Covariant (->) (->) Edges where
 	_ -<$>- Empty = Empty
 	f -<$>- Connect x = Connect $ f x
 	f -<$>- Overlay x = Overlay $ f x

@@ -25,7 +25,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Environment e a = Environment (e -> a)
 
-instance Covariant (Environment e) (->) (->) where
+instance Covariant (->) (->) (Environment e) where
 	f -<$>- Environment x = Environment $ f . x
 
 instance Contravariant (Flip Environment a) (->) (->) where

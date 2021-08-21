@@ -29,7 +29,7 @@ import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 newtype Identity a = Identity a
 
-instance Covariant Identity (->) (->) where
+instance Covariant (->) (->) Identity where
 	f -<$>- Identity x = Identity $ f x
 
 instance Semimonoidal Identity (->) (:*:) (:*:) where

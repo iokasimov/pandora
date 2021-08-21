@@ -31,7 +31,7 @@ import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 
 data Maybe a = Nothing | Just a
 
-instance Covariant Maybe (->) (->) where
+instance Covariant (->) (->) Maybe where
 	f -<$>- Just x = Just $ f x
 	_ -<$>- Nothing = Nothing
 

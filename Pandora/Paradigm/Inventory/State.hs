@@ -27,7 +27,7 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
 
-instance Covariant (State s) (->) (->) where
+instance Covariant (->) (->) (State s) where
 	f -<$>- x = State $ (-<$>-) f . run x
 
 instance Semimonoidal (State s) (->) (:*:) (:*:) where
@@ -74,7 +74,7 @@ replace s = adapt . State $ \_ -> s :*: s
 reconcile :: (Bindable t (->), Stateful s t, Adaptable u t) => (s -> u s) -> t s
 reconcile f = replace =<< adapt . f =<< current
 
-type Memorable s t = (Covariant t (->) (->), Monoidal t (->) (->) (:*:) (:*:), Stateful s t)
+type Memorable s t = (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:), Stateful s t)
 
 fold :: (Traversable t (->) (->), Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = (modify . op <<- struct) *>- current

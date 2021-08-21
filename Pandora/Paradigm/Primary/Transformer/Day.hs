@@ -10,7 +10,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ((!..), (-.#..-))
 
 data Day t u a = forall b c . Day (t b) (u c) (b -> c -> a)
 
-instance Covariant (Day t u) (->) (->) where
+instance Covariant (->) (->) (Day t u) where
 	f -<$>- Day tb uc g = Day tb uc # f -.#..- g
 
 instance (Extendable t (->), Extendable u (->)) => Extendable (Day t u) (->) where

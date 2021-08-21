@@ -9,7 +9,7 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 
 data These e a = This a | That e | These e a
 
-instance Covariant (These e) (->) (->) where
+instance Covariant (->) (->) (These e) where
 	f -<$>- This x = This $ f x
 	_ -<$>- That y = That y
 	f -<$>- These y x = These y $ f x

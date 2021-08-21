@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($), (#))
-import Pandora.Pattern.Functor (Endofunctor)
+--import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -28,11 +28,11 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 
 data Conclusion e a = Failure e | Success a
 
-instance Covariant (Conclusion e) (->) (->) where
+instance Covariant (->) (->) (Conclusion e) where
 	f -<$>- Success x = Success $ f x
 	_ -<$>- Failure y = Failure y
 
-instance Covariant (Flip Conclusion e) (->) (->) where
+instance Covariant (->) (->) (Flip Conclusion e) where
 	_ -<$>- Flip (Success x) = Flip $ Success x
 	f -<$>- Flip (Failure y) = Flip . Failure $ f y
 
@@ -49,7 +49,7 @@ instance Semigroup e => Semimonoidal (Conclusion e) (->) (:*:) (:+:) where
 	multiply (Success x :*: _) = Option -<$>- Success x
 
 instance Traversable (Conclusion e) (->) (->) where
-	(<<-) :: (Endofunctor Covariant u (->), Monoidal u (->) (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:))
+	(<<-) :: (Covariant (->) (->) u, Monoidal u (->) (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:))
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success -<$>- f x

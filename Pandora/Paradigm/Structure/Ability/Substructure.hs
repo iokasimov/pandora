@@ -23,5 +23,5 @@ class Substructure segment (structure :: * -> *) where
 	type Substance segment structure :: * -> *
 	substructure :: (Tagged segment <:.> structure) #=@ Substance segment structure := Available segment structure
 
-	sub :: (Covariant structure (->) (->)) => structure #=@ Substance segment structure := Available segment structure
+	sub :: (Covariant (->) (->) structure) => structure #=@ Substance segment structure := Available segment structure
 	sub = lift >-> (lower -<$>-) ||= substructure @segment @structure

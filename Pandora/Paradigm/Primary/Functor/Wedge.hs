@@ -8,7 +8,7 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 
 data Wedge e a = Nowhere | Here e | There a
 
-instance Covariant (Wedge e) (->) (->) where
+instance Covariant (->) (->) (Wedge e) where
 	_ -<$>- Nowhere = Nowhere
 	_ -<$>- Here x = Here x
 	f -<$>- There x = There $ f x

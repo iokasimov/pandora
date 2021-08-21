@@ -21,10 +21,10 @@ instance Interpreted (Continuation r t) where
 	run ~(Continuation x) = x
 	unite = Continuation
 
-instance Covariant t (->) (->) => Covariant (Continuation r t) (->) (->) where
+instance Covariant (->) (->) t => Covariant (->) (->) (Continuation r t) where
 	f -<$>- Continuation continuation = Continuation $ continuation . (. f)
 
-instance Covariant t (->) (->) => Bindable (Continuation r t) (->) where
+instance Covariant (->) (->) t => Bindable (Continuation r t) (->) where
 	f =<< x = Continuation $ \g -> run x $ \y -> run # f y # g
 
 --instance Monad t => Monad (Continuation r t) where

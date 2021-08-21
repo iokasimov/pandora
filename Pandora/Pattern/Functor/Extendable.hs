@@ -10,5 +10,5 @@ infixr 1 <<=
 > * Extension interchange: (f <<=) ≡ (f -<$>-) . (identity <<=)
 -}
 
-class Covariant t source source => Extendable t source where
+class Covariant source source t => Extendable t source where
 	(<<=) :: source (t a) b -> source (t a) (t b)

@@ -164,7 +164,7 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 
 data Biforked a = Top | Leftward a | Rightward a
 
-instance Covariant Biforked (->) (->) where
+instance Covariant (->) (->) Biforked where
 	_ -<$>- Top = Top
 	f -<$>- Leftward l = Leftward $ f l
 	f -<$>- Rightward r = Rightward $ f r

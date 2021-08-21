@@ -17,10 +17,10 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
 infixl 5 <<-, -<<-<<-
 
-class Covariant t source target => Traversable t source target where
-	(<<-) :: (Covariant u source target, Monoidal u source target (:*:) (:*:)) => source a (u b) -> target (t a) (u (t b))
+class Covariant source target t => Traversable t source target where
+	(<<-) :: (Covariant source target u, Monoidal u source target (:*:) (:*:)) => source a (u b) -> target (t a) (u (t b))
 
 (-<<-<<-) :: forall t u v category a b .
-	(Traversable t category category, Covariant u category category, Monoidal u category category (:*:) (:*:), Traversable v category category)
+	(Traversable t category category, Covariant category category u, Monoidal u category category (:*:) (:*:), Traversable v category category)
 	=> category a (u b) -> category (v (t a)) (u (v (t b)))
 (-<<-<<-) f = ((<<-) ((<<-) @t @category @category f))

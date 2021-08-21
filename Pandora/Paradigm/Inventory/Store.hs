@@ -26,7 +26,7 @@ import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 -- | Context based computation on value
 newtype Store s a = Store ((:*:) s :. (->) s := a)
 
-instance Covariant (Store s) (->) (->) where
+instance Covariant (->) (->) (Store s) where
 	f -<$>- Store x = Store $ f -<$$>- x
 
 instance Semimonoidal (Store s) (<--) (:*:) (:*:) where

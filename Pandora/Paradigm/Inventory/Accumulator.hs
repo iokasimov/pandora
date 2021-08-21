@@ -19,7 +19,7 @@ import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
 newtype Accumulator e a = Accumulator (e :*: a)
 
-instance Covariant (Accumulator e) (->) (->) where
+instance Covariant (->) (->) (Accumulator e) where
 	f -<$>- Accumulator x = Accumulator $ f -<$>- x
 
 instance Semigroup e => Semimonoidal (Accumulator e) (->) (:*:) (:*:) where

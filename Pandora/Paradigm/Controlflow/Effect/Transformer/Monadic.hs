@@ -27,7 +27,7 @@ class Interpreted t => Monadic t where
 infixr 3 :>
 newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 
-instance Covariant (Schematic Monad t u) (->) (->) => Covariant (t :> u) (->) (->) where
+instance Covariant (->) (->) (Schematic Monad t u) => Covariant (->) (->) (t :> u) where
 	f -<$>- TM x = TM $ f -<$>- x
 
 instance Semimonoidal (Schematic Monad t u) (->) (:*:) (:*:) => Semimonoidal (t :> u) (->) (:*:) (:*:) where
@@ -48,7 +48,7 @@ instance Bindable (Schematic Monad t u) (->) => Bindable (t :> u) (->) where
 instance Extendable (Schematic Monad t u) (->) => Extendable (t :> u) (->) where
 	f <<= TM x = TM $ f . TM <<= x
 
-instance (Covariant (Schematic Monad t u) (->) (->), Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:), Bindable (t :> u) (->)) => Monad (t :> u) where
+instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:), Bindable (t :> u) (->)) => Monad (t :> u) where
 
 instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
 	lift = TM . lift

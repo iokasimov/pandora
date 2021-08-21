@@ -20,20 +20,20 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 
-instance Covariant t (->) (->) => Covariant (Instruction t) (->) (->) where
+instance Covariant (->) (->) t => Covariant (->) (->) (Instruction t) where
 	f -<$>- Enter x = Enter $ f x
 	f -<$>- Instruct xs = Instruct $ f -<$$>- xs
 
-instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Instruction t) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Instruction t) (->) (:*:) (:*:) where
 	multiply (Enter x :*: Enter y) = Enter $ x :*: y
 	multiply (Enter x :*: Instruct y) = (x :*:) -<$>- Instruct y
 	multiply (Instruct x :*: Enter y) = (:*: y) -<$>- Instruct x
 	multiply (Instruct x :*: Instruct y) = Instruct $ multiply @_ @(->) @(:*:) -<$>- multiply (x :*: y)
 
-instance (Covariant t (->) (->), Semimonoidal t (->) (:*:) (:*:)) => Monoidal (Instruction t) (->) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => Monoidal (Instruction t) (->) (->) (:*:) (:*:) where
 	unit _ f = Enter $ f One
 
-instance Covariant t (->) (->) => Bindable (Instruction t) (->) where
+instance Covariant (->) (->) t => Bindable (Instruction t) (->) where
 	f =<< Enter x = f x
 	f =<< Instruct xs = Instruct $ (f =<<) -<$>- xs
 
@@ -50,6 +50,6 @@ instance (forall t . Bindable t (->), forall t . Monoidal t (->) (->) (:*:) (:*:
 	lower (Enter x) = point x
 	lower (Instruct xs) = lower =<< xs
 
-instance (forall v . Covariant v (->) (->)) => Hoistable Instruction where
+instance (forall v . Covariant (->) (->) v) => Hoistable Instruction where
 	_ /|\ Enter x = Enter x
 	f /|\ Instruct xs = Instruct $ hoist f -<$>- f xs

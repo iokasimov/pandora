@@ -39,35 +39,35 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 	run ~(TUT x) = x
 	unite = TUT
 
-instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->)) => Covariant (t <:<.>:> t' := u) (->) (->) where
+instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u) => Covariant (->) (->) (t <:<.>:> t' := u) where
 	f -<$>- TUT x = TUT $ f -<$$$>- x
 
-instance (Covariant t (->) (->), Covariant t' (->) (->), Covariant u (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u, Semimonoidal t (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (->) (:*:) (:*:) where
 	multiply (TUT x :*: TUT y) = TUT $ multiply @_ @(->) @(:*:) -<$$>- multiply @_ @(->) @(:*:) -<$>- multiply (x :*: y)
 
-instance (Covariant t (->) (->), Semimonoidal t (<--) (:*:) (:*:), Covariant u (->) (->), Semimonoidal u (<--) (:*:) (:*:), Covariant t' (->) (->), Semimonoidal t' (<--) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (<--) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal t (<--) (:*:) (:*:), Covariant (->) (->) u, Semimonoidal u (<--) (:*:) (:*:), Covariant (->) (->) t', Semimonoidal t' (<--) (:*:) (:*:)) => Semimonoidal (t <:<.>:> t' := u) (<--) (:*:) (:*:) where
 	multiply = Flip $ \(TUT xys) ->
 		let Flip f = multiply @t @(<--) @(:*:) @(:*:) in
 		let Flip g = multiply @u @(<--) @(:*:) @(:*:) in
 		let Flip h = multiply @t' @(<--) @(:*:) @(:*:) in
 		(TUT <-> TUT) $ f (g -<$>- (h -<$$>- xys)) where
 
-instance (Covariant t (->) (->), Covariant u (->) (->), Semimonoidal t (<--) (:*:) (:*:), Semimonoidal t' (<--) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:), Adjoint t t' (->) (->)) => Monoidal (t <:<.>:> t' := u) (<--) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal t (<--) (:*:) (:*:), Semimonoidal t' (<--) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:), Adjoint t t' (->) (->)) => Monoidal (t <:<.>:> t' := u) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(TUT xys) -> (\_ -> (extract |-) xys)
 
-instance (Covariant t (->) (->), Covariant t' (->) (->), Adjoint t' t (->) (->), Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
+instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint t' t (->) (->), Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
 	f =<< x = TUT $ ((run . f |-) =<<) -<$>- run x
 
-instance (Covariant t (->) (->), Covariant u (->) (->), Covariant t' (->) (->), Semimonoidal t (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:), Adjoint t' t (->) (->)) => Monoidal (t <:<.>:> t' := u) (->) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal t (->) (:*:) (:*:), Semimonoidal t' (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:), Adjoint t' t (->) (->)) => Monoidal (t <:<.>:> t' := u) (->) (->) (:*:) (:*:) where
 	unit _ f = unite . (point -|) . f $ One
 
 instance (Adjoint t' t (->) (->), Extendable u (->)) => Extendable (t' <:<.>:> t := u) (->) where
 	f <<= x = TUT $ ((f . unite -|) <<=) -<$>- run x
 
 instance (Adjoint t' t (->) (->), Distributive t(->) (->) ) => Liftable (t <:<.>:> t') where
-	lift :: Covariant u (->) (->) => u ~> t <:<.>:> t' := u
+	lift :: Covariant (->) (->) u => u ~> t <:<.>:> t' := u
 	lift x = TUT $ (identity @(->) -|) -<< x
 
 instance (Adjoint t t' (->) (->), Distributive t'(->) (->) ) => Lowerable (t <:<.>:> t') where
-	lower :: Covariant u (->) (->) => (t <:<.>:> t' := u) ~> u
+	lower :: Covariant (->) (->) u => (t <:<.>:> t' := u) ~> u
 	lower (TUT x) = (identity @(->) -<<) |- x

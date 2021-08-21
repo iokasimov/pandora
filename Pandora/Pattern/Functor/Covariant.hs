@@ -11,33 +11,33 @@ infixl 3 -<<$$>-, -<$$>>-
 > * Interpreted of morphisms: (f . g -<$>-) ≡ (f -<$>-) . (g -<$>-)
 -}
 
-class (Semigroupoid source, Semigroupoid target) => Covariant t source target where
+class (Semigroupoid source, Semigroupoid target) => Covariant source target t where
 	(-<$>-) :: source a b -> target (t a) (t b)
 	
 (-<$$>-) :: forall t u category a b 
-	. (Covariant u category category, Covariant t category category) 
+	. (Covariant category category u, Covariant category category t) 
 	=> category a b -> category (t (u a)) (t (u b))
-(-<$$>-) s = ((-<$>-) ((-<$>-) @u @category @category s))
+(-<$$>-) s = ((-<$>-) ((-<$>-) @category @category @u s))
 
 (-<<$$>-) :: forall t u source target a b 
-	. (Covariant u source source, Covariant t source target) 
+	. (Covariant source source u, Covariant source target t) 
 	=> source a b -> target (t (u a)) (t (u b))
-(-<<$$>-) s = ((-<$>-) ((-<$>-) @u @source @source s))
+(-<<$$>-) s = ((-<$>-) ((-<$>-) @source @source @u s))
 
-(-<$$>>-) :: forall t u source target a b 
-	. (Covariant u source target, Covariant t target target) 
+(-<$$>>-) :: forall source target t u a b 
+	. (Covariant source target u, Covariant target target t) 
 	=> source a b -> target (t (u a)) (t (u b))
-(-<$$>>-) s = ((-<$>-) ((-<$>-) @u @source @target s))
+(-<$$>>-) s = ((-<$>-) ((-<$>-) @source @target @u s))
 
 -- TODO: Figure out how to work with hidden type variables
 -- to put intermediate category `between`
 
 (-<$$$>-) :: forall t u v category a b
-	. (Covariant t category category, Covariant u category category, Covariant v category category) 
+	. (Covariant category category t, Covariant category category u, Covariant category category v) 
 	=> category a b -> category (t (u (v a))) (t (u (v b)))
-(-<$$$>-) s = ((-<$>-) @t @category @category ((-<$>-) @u @category @category ((-<$>-) @v @category @category s)))
+(-<$$$>-) s = ((-<$>-) @category @category @t ((-<$>-) @category @category @u ((-<$>-) @category @category @v s)))
 
-(-<$$$$>-) :: forall t u v w category a b
-	. (Covariant t category category, Covariant u category category, Covariant v category category, Covariant w category category) 
+(-<$$$$>-) :: forall category t u v w a b
+	. (Covariant category category t, Covariant category category u, Covariant category category v, Covariant category category w) 
 	=> category a b -> category (t (u (v (w a)))) (t (u (v (w b))))
-(-<$$$$>-) s = ((-<$>-) @t @category @category ((-<$>-) @u @category @category ((-<$>-) @v @category @category ((-<$>-) @w @category @category s))))
+(-<$$$$>-) s = ((-<$>-) @category @category @t ((-<$>-) @category @category @u ((-<$>-) @category @category @v ((-<$>-) @category @category @w s))))

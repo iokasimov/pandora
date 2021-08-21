@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor (module Exports, Endofunctor) where
+module Pandora.Pattern.Functor (module Exports) where
 
 import Pandora.Pattern.Functor.Bivariant as Exports
 import Pandora.Pattern.Functor.Divariant as Exports
@@ -16,8 +16,8 @@ import Pandora.Pattern.Functor.Invariant as Exports
 import Pandora.Pattern.Functor.Contravariant as Exports
 import Pandora.Pattern.Functor.Covariant as Exports
 
-type family Endofunctor constraint functor category where
-	Endofunctor Covariant t category = Covariant t category category
-	Endofunctor Contravariant t category = Contravariant t category category
-	Endofunctor Traversable t category = Traversable t category category
-	Endofunctor Distributive t category = Distributive t category category
+--type family Endofunctor constraint functor category where
+	--Endofunctor Covariant t category = Covariant category category t
+	--Endofunctor Contravariant t category = Contravariant t category category
+	--Endofunctor Traversable t category = Traversable t category category
+	--Endofunctor Distributive t category = Distributive t category category
