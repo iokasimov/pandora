@@ -12,6 +12,6 @@ infixl 4 >->
 > * Interpreted: f . g >-> h . i ≡ g >-> h . f >-> i
 -}
 
-class (forall i . Contravariant (Flip v i) left target, forall i . Covariant right target (v i)) 
+class (forall i . Contravariant left target (Flip v i), forall i . Covariant right target (v i)) 
 	=> Divariant v left right target where
 	(>->) :: left a b -> right c d -> target (v b c) (v a d)

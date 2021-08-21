@@ -26,7 +26,7 @@ instance Covariant (->) (->) (Constant a) where
 instance Covariant (->) (->) (Flip Constant b) where
 	f -<$>- Flip (Constant x) = Flip . Constant $ f x
 
-instance Contravariant (Constant a) (->) (->) where
+instance Contravariant (->) (->) (Constant a) where
 	_ ->$<- Constant x = Constant x
 
 instance Invariant (Constant a) where

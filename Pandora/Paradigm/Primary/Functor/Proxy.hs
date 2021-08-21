@@ -13,7 +13,7 @@ data Proxy a = Proxy
 instance Covariant (->) (->) Proxy where
 	_ -<$>- Proxy = Proxy
 
-instance Contravariant Proxy (->) (->) where
+instance Contravariant (->) (->) Proxy where
 	_ ->$<- _ = Proxy
 
 instance Distributive Proxy (->) (->) where

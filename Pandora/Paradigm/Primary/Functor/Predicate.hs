@@ -15,7 +15,7 @@ instance Interpreted Predicate where
 	run ~(Predicate f) = f
 	unite = Predicate
 
-instance Contravariant Predicate (->) (->) where
+instance Contravariant (->) (->) Predicate where
 	f ->$<- Predicate g = Predicate $ g . f
 
 equate :: Setoid a => a :=> Predicate

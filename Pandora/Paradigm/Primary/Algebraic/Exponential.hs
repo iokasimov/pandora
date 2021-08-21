@@ -50,7 +50,7 @@ instance Semigroupoid (<--) where
 instance Category (<--) where
 	identity = Flip identity
 
-instance Contravariant ((<--) a) (->) (->) where
+instance Contravariant (->) (->) ((<--) a) where
 	f ->$<- Flip g = Flip $ g . f
 
 (-.#..-) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))

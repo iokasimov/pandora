@@ -22,7 +22,7 @@ newtype Imprint e a = Imprint (e -> a)
 instance Covariant (->) (->) (Imprint e) where
 	f -<$>- Imprint g = Imprint $ f . g
 
-instance Contravariant (Flip Imprint a) (->) (->) where
+instance Contravariant (->) (->) (Flip Imprint a) where
 	f ->$<- Flip (Imprint g) = Flip . Imprint $ g . f
 
 instance Distributive (Imprint e) (->) (->) where

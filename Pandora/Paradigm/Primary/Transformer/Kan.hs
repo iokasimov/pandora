@@ -11,7 +11,7 @@ data family Kan (v :: * -> k) (t :: * -> *) (u :: * -> *) b a
 
 data instance Kan Left t u b a = Lan ((t b -> a) -> u b)
 
-instance Contravariant (Kan Left t u b) (->) (->) where
+instance Contravariant (->) (->) (Kan Left t u b) where
 	f ->$<- Lan x = Lan $ x . (f .)
 
 instance Interpreted (Kan Left t u b) where

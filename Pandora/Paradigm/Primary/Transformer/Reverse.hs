@@ -47,7 +47,7 @@ instance Traversable t (->) (->) => Traversable (Reverse t) (->) (->) where
 instance Distributive t (->) (->) => Distributive (Reverse t) (->) (->) where
 	f -<< x = Reverse $ run . f -<< x
 
-instance Contravariant t (->) (->) => Contravariant (Reverse t) (->) (->) where
+instance Contravariant (->) (->) t => Contravariant (->) (->) (Reverse t) where
 	f ->$<- Reverse x = Reverse # f ->$<- x
 
 instance Interpreted (Reverse t) where

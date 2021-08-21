@@ -571,3 +571,4 @@
 * Use `Monoidal` as superclass of `Comonad`
 * Rename `multiply_` to `multiply`
 * Rearrange type parameters in `Covariant` typeclass
+* Rearrange type parameters in `Contravariant` typeclass

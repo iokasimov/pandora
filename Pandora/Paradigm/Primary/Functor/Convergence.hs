@@ -6,5 +6,5 @@ import Pandora.Paradigm.Primary.Algebraic ()
 
 data Convergence r a = Convergence (a -> a -> r)
 
-instance Contravariant (Convergence r) (->) (->) where
+instance Contravariant (->) (->) (Convergence r) where
 	f ->$<- Convergence g = Convergence $ \x y -> g # f x # f y

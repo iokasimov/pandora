@@ -10,5 +10,5 @@ infixl 4 ->$<-
 > * Interpreted of morphisms: (f ->$<-) . (g ->$<-) ≡ (g . f ->$<-)
 -}
 
-class (Category source, Category target) => Contravariant t source target where
+class (Category source, Category target) => Contravariant source target t where
 	(->$<-) :: source a b -> target (t b) (t a)
