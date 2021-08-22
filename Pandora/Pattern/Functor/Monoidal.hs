@@ -5,5 +5,5 @@ import Pandora.Paradigm.Primary.Functor.Proxy (Proxy)
 
 type family Unit (p :: * -> * -> *) = r | r -> p
 
-class Semimonoidal t p source target => Monoidal t p q source target where
+class Semimonoidal p source target t => Monoidal t p q source target where
 	unit :: Proxy source -> p (q (Unit target) a) (t a)

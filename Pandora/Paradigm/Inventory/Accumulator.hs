@@ -22,7 +22,7 @@ newtype Accumulator e a = Accumulator (e :*: a)
 instance Covariant (->) (->) (Accumulator e) where
 	f -<$>- Accumulator x = Accumulator $ f -<$>- x
 
-instance Semigroup e => Semimonoidal (Accumulator e) (->) (:*:) (:*:) where
+instance Semigroup e => Semimonoidal (->) (:*:) (:*:) (Accumulator e) where
 	multiply (x :*: y) = Accumulator $ k # run x # run y where
 		k ~(ex :*: x') ~(ey :*: y') = ex + ey :*: x' :*: y'
 

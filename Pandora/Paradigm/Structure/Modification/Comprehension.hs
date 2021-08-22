@@ -40,10 +40,10 @@ instance Covariant (->) (->) (t <:.> Construction t) => Covariant (->) (->) (Com
 instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehension t) (->) (->) where
 	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
-instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Comprehension t) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Semimonoidal (->) (:*:) (:*:) (Comprehension t) where
 	multiply (Comprehension x :*: Comprehension y) = Comprehension $ multiply (x :*: y)
 
-instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:+:)) => Semimonoidal (Comprehension t) (->) (:*:) (:+:) where
+instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t) => Semimonoidal (->) (:*:) (:+:) (Comprehension t) where
 	multiply (Comprehension x :*: Comprehension y) = Comprehension $ multiply (x :*: y)
 
 instance (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (Comprehension t) (->) (->) (:*:) (:+:) where

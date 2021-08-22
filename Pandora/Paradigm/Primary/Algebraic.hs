@@ -44,20 +44,20 @@ instance Adjoint ((:*:) s) ((->) s) (->) (->) where
 	(|-) :: (a -> s -> b) -> (s :*: a) -> b
 	f |- ~(s :*: x) = f x s
 
-instance Semimonoidal ((->) e) (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) ((->) e) where
 	multiply :: ((e -> a) :*: (e -> b)) -> e -> (a :*: b)
 	multiply (g :*: h) = \x -> g x :*: h x
 
-instance Semimonoidal ((->) e) (<--) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) ((->) e) where
 	multiply = Flip $ \f -> (\e -> attached $ f e) :*: (\e -> extract $ f e)
 
-instance Semimonoidal ((:+:) e) (->) (:*:) (:+:) where
+instance Semimonoidal (->) (:*:) (:+:) ((:+:) e) where
 	multiply :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
 	multiply (Option _ :*: Option e') = Option e'
 	multiply (Option _ :*: Adoption y) = Adoption $ Adoption y
 	multiply (Adoption x :*: _) = Adoption $ Option x
 
-instance Semimonoidal ((:+:) e) (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) ((:+:) e) where
 	multiply (Adoption x :*: Adoption y) = Adoption $ x :*: y
 	multiply (Option e :*: _) = Option e
 	multiply (_ :*: Option e) = Option e
@@ -65,7 +65,7 @@ instance Semimonoidal ((:+:) e) (->) (:*:) (:*:) where
 instance Monoidal ((:+:) e) (->) (->) (:*:) (:*:) where
 	unit _ f = Adoption $ f One
 
-instance Semimonoidal ((:*:) s) (<--) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
 	multiply = Flip $ \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
 
 instance Monoidal ((:*:) s) (<--) (->) (:*:) (:*:) where
@@ -73,26 +73,26 @@ instance Monoidal ((:*:) s) (<--) (->) (:*:) (:*:) where
 
 instance Comonad ((:*:) s) (->) where
 
-instance Semimonoidal (Flip (:*:) a) (<--) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
 	multiply = Flip $ \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
 
 instance Monoidal (Flip (:*:) a) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Flip (s :*: _)) -> (\_ -> s)
 
-type Applicative_ t = (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:), Monoidal t (->) (->) (:*:) (:*:))
-type Alternative_ t = (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:+:), Monoidal t (->) (->) (:*:) (:+:))
+type Applicative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal t (->) (->) (:*:) (:*:))
+type Alternative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, Monoidal t (->) (->) (:*:) (:+:))
 
-(-<*>-) :: (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:))
+(-<*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
 	=> t (a -> b) -> t a -> t b
-f -<*>- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply @_ @_ @_ @(:*:) (f :*: x)
+f -<*>- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply @_ @_ @(:*:) (f :*: x)
 
-forever_ :: (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => t a -> t b
+forever_ :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b
 forever_ x = let r = x *>- r in r
 
-(*>-) :: (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => t a -> t b -> t b
+(*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b -> t b
 x *>- y = ((!.) %) -<$>- x -<*>- y
 
-(-+-) :: (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:+:))
+(-+-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t)
 	  => t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f -<$>- multiply (x :*: y)
 

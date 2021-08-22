@@ -27,15 +27,15 @@ newtype Reverse t a = Reverse (t a)
 instance Covariant (->) (->) t => Covariant (->) (->) (Reverse t) where
 	f -<$>- Reverse x = Reverse # f -<$>- x
 
-instance (Semimonoidal t (->) (:*:) (:*:), Covariant (->) (->) t) => Semimonoidal (Reverse t) (->) (:*:) (:*:) where
+instance (Semimonoidal (->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (->) (:*:) (:*:) (Reverse t) where
 	multiply (Reverse x :*: Reverse y) = Reverse # multiply (x :*: y)
 
 instance (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:)) => Monoidal (Reverse t) (->) (->) (:*:) (:*:) where
 	unit _ f = Reverse . point $ f One
 
-instance (Semimonoidal t (<--) (:*:) (:*:), Covariant (->) (->) t) => Semimonoidal (Reverse t) (<--) (:*:) (:*:) where
+instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
 	multiply = Flip $ \(Reverse x) -> 
-		let Flip f = multiply @_ @(<--) @(:*:) @(:*:) in
+		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		(Reverse <-> Reverse) $ f x
 
 instance (Covariant (->) (->) t, Monoidal t (<--) (->) (:*:) (:*:)) => Monoidal (Reverse t) (<--) (->) (:*:) (:*:) where

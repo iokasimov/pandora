@@ -30,7 +30,7 @@ newtype State s a = State ((->) s :. (:*:) s := a)
 instance Covariant (->) (->) (State s) where
 	f -<$>- x = State $ (-<$>-) f . run x
 
-instance Semimonoidal (State s) (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) (State s) where
 	multiply (State g :*: State h) = State $ \s -> 
 		let old :*: x = g s in 
 	  	let new :*: y = h old in
@@ -42,7 +42,7 @@ instance Monoidal (State s) (->) (->) (:*:) (:*:) where
 instance Bindable (State s) (->) where
 	f =<< x = State $ (run . f |-) -<$>- run x
 
---instance Monad (State s) where
+instance Monad (State s) where
 
 instance Invariant (Flip State r) where
 	f <$< g = ((g >-> ((<->) @_ @_ @(->) @(->) f identity) ||=) ||=)

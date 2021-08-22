@@ -30,7 +30,7 @@ newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
 instance Covariant (->) (->) (Schematic Comonad t u) => Covariant (->) (->) (t :< u) where
 	f -<$>- TC x = TC $ f -<$>- x
 
-instance Semimonoidal (Schematic Comonad t u) (->) (:*:) (:*:) => Semimonoidal (t :< u) (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (->) (:*:) (:*:) (t :< u) where
 	multiply (TC f :*: TC x) = TC $ multiply $ f :*: x
 
 instance Monoidal (Schematic Comonad t u) (->) (->) (:*:) (:*:) => Monoidal (t :< u) (->) (->) (:*:) (:*:) where

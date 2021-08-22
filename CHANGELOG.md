@@ -572,3 +572,4 @@
 * Rename `multiply_` to `multiply`
 * Rearrange type parameters in `Covariant` typeclass
 * Rearrange type parameters in `Contravariant` typeclass
+* Rearrange type parameters in `Semimonoidal` typeclass

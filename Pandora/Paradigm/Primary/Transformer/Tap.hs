@@ -32,21 +32,21 @@ data Tap t a = Tap a (t a)
 instance Covariant (->) (->) t => Covariant (->) (->) (Tap t) where
 	f -<$>- Tap x xs = Tap # f x # f -<$>- xs
 
-instance Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap t) (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (Tap t) where
 	multiply (Tap x xs :*: Tap y ys) = Tap (x :*: y) $ multiply $ xs :*: ys
 
-instance Semimonoidal t (<--) (:*:) (:*:) => Semimonoidal (Tap t) (<--) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
 	multiply = Flip $ \(Tap (x :*: y) xys) -> 
-		let Flip f = multiply @_ @(<--) @(:*:) @(:*:) in
+		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		let (xs :*: ys) = f xys in Tap x xs :*: Tap y ys
 
-instance Semimonoidal t (<--) (:*:) (:*:) => Monoidal (Tap t) (<--) (->) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (Tap t) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Tap x _) -> (\_ -> x)
 
 instance Traversable t (->) (->) => Traversable (Tap t) (->) (->) where
 	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
 
-instance (Semimonoidal t (<--) (:*:) (:*:), Extendable t (->), Covariant (->) (->) t) => Extendable (Tap t) (->) where
+instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable t (->), Covariant (->) (->) t) => Extendable (Tap t) (->) where
 	f <<= x = Tap # f x $ f . Tap (extract x) <<= lower x
 
 instance Lowerable Tap where
@@ -55,7 +55,7 @@ instance Lowerable Tap where
 instance Hoistable Tap where
 	f /|\ Tap x xs = Tap x # f xs
 
-instance {-# OVERLAPS #-} Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (Tap (t <:.:> t := (:*:))) (->) (:*:) (:*:) where
+instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (Tap (t <:.:> t := (:*:))) where
 	multiply (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
 		$ T_U $ multiply (xls :*: yls) :*: multiply (xrs :*: yrs)
 

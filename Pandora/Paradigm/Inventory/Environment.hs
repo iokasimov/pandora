@@ -31,7 +31,7 @@ instance Covariant (->) (->) (Environment e) where
 instance Contravariant (->) (->) (Flip Environment a) where
 	f ->$<- Flip (Environment g) = Flip . Environment $ g . f
 
-instance Semimonoidal (Environment e) (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) (Environment e) where
 	multiply (x :*: y) = unite $ multiply $ run x :*: run y
 
 instance Monoidal (Environment e) (->) (->) (:*:) (:*:) where

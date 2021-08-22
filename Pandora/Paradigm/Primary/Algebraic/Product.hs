@@ -60,14 +60,14 @@ instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 instance (Group s, Group a) => Group (s :*: a) where
 	invert ~(s :*: x) = invert # s :*: invert # x
 
-instance {-# OVERLAPS #-} Semimonoidal t (->) (:*:) (:*:) => Semimonoidal (t <:.:> t := (:*:)) (->) (:*:) (:*:) where
+instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (t <:.:> t := (:*:)) where
 	multiply (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ multiply (xls :*: yls) :*: multiply (xrs :*: yrs)
 
 -- TODO: Generalize (:*:) as Bivariant p
-instance (Semimonoidal t (<--) (:*:) (:*:), Semimonoidal u (<--) (:*:) (:*:)) => Semimonoidal (t <:.:> u := (:*:)) (<--) (:*:) (:*:) where
+instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	multiply = Flip $ \(T_U (lxys :*: rxys)) ->
-		let Flip f = multiply @_ @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply @_ @(<--) @(:*:) @(:*:) in
+		let Flip f = multiply @(<--) @(:*:) @(:*:) in
+		let Flip g = multiply @(<--) @(:*:) @(:*:) in
 		let (lxs :*: lys) = f lxys in
 		let (rxs :*: rys) = g rxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)

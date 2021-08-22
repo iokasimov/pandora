@@ -19,7 +19,7 @@ instance Covariant (->) (->) Wye where
 	f -<$>- Right y = Right # f y
 	f -<$>- Both x y = Both # f x # f y
 
-instance Semimonoidal Wye (<--) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) Wye where
 	multiply = Flip $ \case
 		End -> End :*: End
 		Left (x :*: y) -> Left x :*: Left y

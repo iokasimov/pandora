@@ -32,13 +32,13 @@ newtype Identity a = Identity a
 instance Covariant (->) (->) Identity where
 	f -<$>- Identity x = Identity $ f x
 
-instance Semimonoidal Identity (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) Identity where
 	multiply (Identity x :*: Identity y) = Identity $ x :*: y
 
 instance Monoidal Identity (->) (->) (:*:) (:*:) where
 	unit _ f = Identity $ f One
 
-instance Semimonoidal Identity (<--) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) Identity where
 	multiply = Flip $ \(Identity (x :*: y)) -> Identity x :*: Identity y
 
 instance Monoidal Identity (<--) (->) (:*:) (:*:) where

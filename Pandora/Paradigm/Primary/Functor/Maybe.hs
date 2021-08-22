@@ -35,12 +35,12 @@ instance Covariant (->) (->) Maybe where
 	f -<$>- Just x = Just $ f x
 	_ -<$>- Nothing = Nothing
 
-instance Semimonoidal Maybe (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) Maybe where
 	multiply (Just x :*: Just y) = Just $ x :*: y
 	multiply (Nothing :*: _) = Nothing
 	multiply (_ :*: Nothing) = Nothing
 
-instance Semimonoidal Maybe (->) (:*:) (:+:) where
+instance Semimonoidal (->) (:*:) (:+:) Maybe where
 	multiply (Just x :*: _) = Just $ Option x
 	multiply (Nothing :*: Just y) = Just $ Adoption y
 	multiply (Nothing :*: Nothing) = Nothing
@@ -52,7 +52,7 @@ instance Monoidal Maybe (->) (->) (:*:) (:+:) where
 	unit _ _ = Nothing
 
 -- TODO: Check laws
-instance Semimonoidal Maybe (<--) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) Maybe where
 	multiply = Flip $ \case
 		Just (x :*: y) -> Just x :*: Just y
 		Nothing -> Nothing :*: Nothing

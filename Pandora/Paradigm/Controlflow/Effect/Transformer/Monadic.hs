@@ -30,7 +30,7 @@ newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 instance Covariant (->) (->) (Schematic Monad t u) => Covariant (->) (->) (t :> u) where
 	f -<$>- TM x = TM $ f -<$>- x
 
-instance Semimonoidal (Schematic Monad t u) (->) (:*:) (:*:) => Semimonoidal (t :> u) (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) (Schematic Monad t u) => Semimonoidal (->) (:*:) (:*:) (t :> u) where
 	multiply (TM f :*: TM x) = TM $ multiply $ f :*: x
 
 instance Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:) => Monoidal (t :> u) (->) (->) (:*:) (:*:) where

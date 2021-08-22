@@ -26,16 +26,16 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Backwards t) where
 	f -<$>- Backwards x = Backwards $ f -<$>- x
 
 -- TODO: check that effects evaluation goes in opposite order
-instance (Semimonoidal t (->) (:*:) (:*:), Covariant (->) (->) t) => Semimonoidal (Backwards t) (->) (:*:) (:*:) where
+instance (Semimonoidal (->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (->) (:*:) (:*:) (Backwards t) where
 	multiply (Backwards x :*: Backwards y) = Backwards #
 		((:*:) %) -<$>- y -<*>- x
 
 instance (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:)) => Monoidal (Backwards t) (->) (->) (:*:) (:*:) where
 	unit _ f = Backwards . point $ f One
 
-instance (Semimonoidal t (<--) (:*:) (:*:), Covariant (->) (->) t) => Semimonoidal (Backwards t) (<--) (:*:) (:*:) where
+instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Backwards t) where
 	multiply = Flip $ \(Backwards x) -> 
-		let Flip f = multiply @_ @(<--) @(:*:) @(:*:) in
+		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		(Backwards <-> Backwards) $ f x
 
 instance (Covariant (->) (->) t, Monoidal t (<--) (->) (:*:) (:*:)) => Monoidal (Backwards t) (<--) (->) (:*:) (:*:) where

@@ -37,7 +37,7 @@ instance Covariant (->) (->) (Flip Validation a) where
 	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
 	_ -<$>- Flip (Validated x) = Flip $ Validated x
 
-instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:*:) where
+instance Semigroup e => Semimonoidal (->) (:*:) (:*:) (Validation e) where
 	multiply (Validated x :*: Validated y) = Validated $ x :*: y
 	multiply (Flaws x :*: Flaws y) = Flaws $ x + y
 	multiply (Validated _ :*: Flaws y) = Flaws y
@@ -46,7 +46,7 @@ instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:*:) where
 instance Semigroup e => Monoidal (Validation e) (->) (->) (:*:) (:*:) where
 	unit _ f = Validated $ f One
 
-instance Semigroup e => Semimonoidal (Validation e) (->) (:*:) (:+:) where
+instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Validation e) where
 	multiply (Flaws _ :*: y) = Adoption -<$>- y
 	multiply (Validated x :*: _) = Option -<$>- Validated x
 

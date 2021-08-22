@@ -29,7 +29,7 @@ newtype Store s a = Store ((:*:) s :. (->) s := a)
 instance Covariant (->) (->) (Store s) where
 	f -<$>- Store x = Store $ f -<$$>- x
 
-instance Semimonoidal (Store s) (<--) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 	multiply = Flip $ \(Store (s :*: f)) -> 
 		let (x :*: y) = f s in
 		Store (s :*: (x !.)) :*: Store (s :*: (y !.))

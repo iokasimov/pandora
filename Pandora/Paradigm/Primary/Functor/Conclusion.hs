@@ -36,7 +36,7 @@ instance Covariant (->) (->) (Flip Conclusion e) where
 	_ -<$>- Flip (Success x) = Flip $ Success x
 	f -<$>- Flip (Failure y) = Flip . Failure $ f y
 
-instance Semimonoidal (Conclusion e) (->) (:*:) (:*:) where
+instance Semimonoidal (->) (:*:) (:*:) (Conclusion e) where
 	multiply (Success x :*: Success y) = Success $ x :*: y
 	multiply (Failure x :*: _) = Failure x
 	multiply (_ :*: Failure x) = Failure x
@@ -44,12 +44,12 @@ instance Semimonoidal (Conclusion e) (->) (:*:) (:*:) where
 instance Monoidal (Conclusion e) (->) (->) (:*:) (:*:) where
 	unit _ f = Success $ f One
 
-instance Semigroup e => Semimonoidal (Conclusion e) (->) (:*:) (:+:) where
+instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Conclusion e) where
 	multiply (Failure _ :*: x) = Adoption -<$>- x
 	multiply (Success x :*: _) = Option -<$>- Success x
 
 instance Traversable (Conclusion e) (->) (->) where
-	(<<-) :: (Covariant (->) (->) u, Monoidal u (->) (->) (:*:) (:*:), Semimonoidal u (->) (:*:) (:*:))
+	(<<-) :: (Covariant (->) (->) u, Monoidal u (->) (->) (:*:) (:*:), Semimonoidal (->) (:*:) (:*:)u)
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success -<$>- f x

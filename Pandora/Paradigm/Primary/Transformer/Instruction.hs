@@ -24,13 +24,13 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Instruction t) where
 	f -<$>- Enter x = Enter $ f x
 	f -<$>- Instruct xs = Instruct $ f -<$$>- xs
 
-instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => Semimonoidal (Instruction t) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Semimonoidal (->) (:*:) (:*:) (Instruction t) where
 	multiply (Enter x :*: Enter y) = Enter $ x :*: y
 	multiply (Enter x :*: Instruct y) = (x :*:) -<$>- Instruct y
 	multiply (Instruct x :*: Enter y) = (:*: y) -<$>- Instruct x
-	multiply (Instruct x :*: Instruct y) = Instruct $ multiply @_ @(->) @(:*:) -<$>- multiply (x :*: y)
+	multiply (Instruct x :*: Instruct y) = Instruct $ multiply @(->) @(:*:) -<$>- multiply (x :*: y)
 
-instance (Covariant (->) (->) t, Semimonoidal t (->) (:*:) (:*:)) => Monoidal (Instruction t) (->) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Monoidal (Instruction t) (->) (->) (:*:) (:*:) where
 	unit _ f = Enter $ f One
 
 instance Covariant (->) (->) t => Bindable (Instruction t) (->) where
