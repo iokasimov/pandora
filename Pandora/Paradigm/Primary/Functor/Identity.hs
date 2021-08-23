@@ -62,7 +62,7 @@ instance Comonad Identity (->)
 	--() <#> Identity x = x
 	--tabulate f = Identity $ f ()
 
-instance Adjoint Identity Identity (->) (->) where
+instance Adjoint (->) (->) Identity Identity where
 	f -| x = Identity . f . Identity $ x
 	g |- x = extract . extract . (g -<$>-) $ x
 

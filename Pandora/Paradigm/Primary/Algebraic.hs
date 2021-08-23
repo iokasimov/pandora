@@ -38,7 +38,7 @@ void x = x $>- ()
 instance Traversable ((:*:) s) (->) (->) where
 	f <<- x = (attached x :*:) -<$>- f (extract x)
 
-instance Adjoint ((:*:) s) ((->) s) (->) (->) where
+instance Adjoint (->) (->) ((:*:) s) ((->) s) where
 	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)
 	f -| x = \s -> f $ s :*: x
 	(|-) :: (a -> s -> b) -> (s :*: a) -> b
@@ -84,7 +84,7 @@ type Alternative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, M
 
 (-<*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
 	=> t (a -> b) -> t a -> t b
-f -<*>- x = (|-) @_ @_ @(->) @(->) (&) -<$>- multiply @_ @_ @(:*:) (f :*: x)
+f -<*>- x = (|-) @(->) @(->) (&) -<$>- multiply @_ @_ @(:*:) (f :*: x)
 
 forever_ :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b
 forever_ x = let r = x *>- r in r

@@ -14,6 +14,6 @@ infixl 3 -|, |-
 > * Right adjunction interchange: psi f ≡ epsilon . comap f
 -}
 
-class (Covariant target source t, Covariant source target u) => Adjoint t u source target where
+class (Covariant target source t, Covariant source target u) => Adjoint source target t u where
 	(-|) :: source (t a) b -> target a (u b)
 	(|-) :: target a (u b) -> source (t a) b
