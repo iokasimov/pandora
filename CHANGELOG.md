@@ -573,3 +573,5 @@
 * Rearrange type parameters in `Covariant` typeclass
 * Rearrange type parameters in `Contravariant` typeclass
 * Rearrange type parameters in `Semimonoidal` typeclass
+* Rearrange type parameters in `Adjoint` typeclass
+* Rearrange type parameters in `Bivariant` typeclass

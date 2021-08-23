@@ -31,7 +31,7 @@ instance Covariant (->) (->) (Flip (:*:) a) where
 instance Extendable ((:*:) s) (->) where
 	f <<= ~(s :*: x) = s :*: f (s :*: x)
 
-instance Bivariant (:*:) (->) (->) (->) where
+instance Bivariant (->) (->) (->) (:*:) where
 	f <-> g = \ ~(s :*: x) -> f s :*: g x
 
 instance (Setoid s, Setoid a) => Setoid (s :*: a) where

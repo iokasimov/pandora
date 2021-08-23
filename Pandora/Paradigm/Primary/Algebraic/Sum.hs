@@ -15,7 +15,7 @@ instance Covariant (->) (->) ((:+:) s) where
 	_ -<$>- Option s = Option s
 	f -<$>- Adoption x = Adoption $ f x
 
-instance Bivariant (:+:) (->) (->) (->) where
+instance Bivariant (->) (->) (->) (:+:) where
 	f <-> g = \case
 		Option s -> Option $ f s
 		Adoption x -> Adoption $ g x

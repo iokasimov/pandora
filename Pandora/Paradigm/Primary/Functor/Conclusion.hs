@@ -60,7 +60,7 @@ instance Bindable (Conclusion e) (->) where
 
 --instance Monad (Conclusion e) where
 
-instance Bivariant Conclusion (->) (->) (->) where
+instance Bivariant (->) (->) (->) Conclusion where
 	f <-> g = conclusion # Failure . f # Success . g
 
 instance (Setoid e, Setoid a) => Setoid (Conclusion e a) where

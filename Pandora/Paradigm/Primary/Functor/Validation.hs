@@ -54,7 +54,7 @@ instance Traversable (Validation e) (->) (->) where
 	f <<- Validated x = Validated -<$>- f x
 	_ <<- Flaws e = point $ Flaws e
 
-instance Bivariant Validation (->) (->) (->) where
+instance Bivariant (->) (->) (->) Validation where
 	f <-> g = validation # Flaws . f # Validated . g
 
 instance (Setoid e, Setoid a) => Setoid (Validation e a) where

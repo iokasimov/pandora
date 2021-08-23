@@ -32,7 +32,7 @@ instance Contravariant (->) (->) (Constant a) where
 instance Invariant (Constant a) where
 	_ <$< _ = \(Constant x) -> Constant x
 
-instance Bivariant Constant (->) (->) (->)where
+instance Bivariant (->) (->) (->) Constant where
 	f <-> _ = \(Constant x) -> Constant $ f x
 
 instance Setoid a => Setoid (Constant a b) where

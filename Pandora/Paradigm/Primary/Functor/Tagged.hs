@@ -67,7 +67,7 @@ instance Extendable (Tagged tag) (->) where
 
 instance Comonad (Tagged tag) (->)
 
-instance Bivariant Tagged (->) (->) (->) where
+instance Bivariant (->) (->) (->) Tagged where
 	_ <-> g = \(Tag x) -> Tag $ g x
 
 instance Setoid a => Setoid (Tagged tag a) where

@@ -12,5 +12,5 @@ infixl 4 <->
 -}
 
 class (forall i . Covariant left target (v i), forall i . Covariant right target (Flip v i))
-	=> Bivariant v left right target where
+	=> Bivariant left right target v where
 	(<->) :: left a b -> right c d -> target (v a c) (v b d) 
