@@ -27,7 +27,7 @@ instance Category (->) where
 instance Covariant (->) (->) ((->) a) where
 	(-<$>-) = (.)
 
-instance Distributive ((->) e) (->) (->) where
+instance Distributive (->) (->) ((->) e) where
 	f -<< g = \e -> (f % e) -<$>- g
 
 instance Bindable ((->) e) (->) where

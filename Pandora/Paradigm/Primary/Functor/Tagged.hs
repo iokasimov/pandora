@@ -54,7 +54,7 @@ instance Monoidal (Tagged tag) (<--) (->) (:*:) (:*:) where
 instance Traversable (->) (->) (Tagged tag) where
 	f <<- Tag x = Tag -<$>- f x
 
-instance Distributive (Tagged tag) (->) (->) where
+instance Distributive (->) (->) (Tagged tag) where
 	f -<< x = Tag $ extract . f -<$>- x
 
 instance Bindable (Tagged tag) (->) where

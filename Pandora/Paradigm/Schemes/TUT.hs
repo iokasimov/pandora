@@ -64,10 +64,10 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', 
 instance (Adjoint (->) (->) t' t, Extendable u (->)) => Extendable (t' <:<.>:> t := u) (->) where
 	f <<= x = TUT $ ((f . unite -|) <<=) -<$>- run x
 
-instance (Adjoint (->) (->) t' t, Distributive t(->) (->) ) => Liftable (t <:<.>:> t') where
+instance (Adjoint (->) (->) t' t, Distributive (->) (->) t) => Liftable (t <:<.>:> t') where
 	lift :: Covariant (->) (->) u => u ~> t <:<.>:> t' := u
 	lift x = TUT $ (identity @(->) -|) -<< x
 
-instance (Adjoint (->) (->) t t', Distributive t'(->) (->) ) => Lowerable (t <:<.>:> t') where
+instance (Adjoint (->) (->) t t', Distributive (->) (->) t') => Lowerable (t <:<.>:> t') where
 	lower :: Covariant (->) (->) u => (t <:<.>:> t' := u) ~> u
 	lower (TUT x) = (identity @(->) -<<) |- x

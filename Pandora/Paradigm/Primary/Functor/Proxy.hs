@@ -16,7 +16,7 @@ instance Covariant (->) (->) Proxy where
 instance Contravariant (->) (->) Proxy where
 	_ ->$<- _ = Proxy
 
-instance Distributive Proxy (->) (->) where
+instance Distributive (->) (->) Proxy where
 	_ -<< _ = Proxy
 
 instance Bindable Proxy (->) where

@@ -37,7 +37,7 @@ instance Semimonoidal (->) (:*:) (:*:) (Environment e) where
 instance Monoidal (Environment e) (->) (->) (:*:) (:*:) where
 	unit _ f = Environment $ \_ -> f One
 
-instance Distributive (Environment e) (->) (->) where
+instance Distributive (->) (->) (Environment e) where
 	f -<< g = Environment $ (run -<$>- f) -<< g
 
 instance Bindable (Environment e) (->) where

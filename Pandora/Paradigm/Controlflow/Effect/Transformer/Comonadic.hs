@@ -39,7 +39,7 @@ instance Monoidal (Schematic Comonad t u) (->) (->) (:*:) (:*:) => Monoidal (t :
 instance Traversable (->) (->) (Schematic Comonad t u) => Traversable (->) (->) (t :< u) where
 	f <<- TC x = TC -<$>- f <<- x
 
-instance Distributive (Schematic Comonad t u) (->) (->) => Distributive (t :< u) (->) (->) where
+instance Distributive (->) (->) (Schematic Comonad t u) => Distributive (->) (->) (t :< u) where
 	f -<< x = TC $ tc . f -<< x
 
 instance Bindable (Schematic Comonad t u) (->) => Bindable (t :< u) (->) where

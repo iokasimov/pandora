@@ -12,5 +12,5 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 
 infixl 5 -<<
 
-class Covariant source target t => Distributive t source target where
+class Covariant source target t => Distributive source target t where
 	(-<<) :: Covariant source target u => source a (t b) -> target (u a) (t (u b))

@@ -39,7 +39,7 @@ instance Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:) => Monoidal (t :> 
 instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
 	f <<- TM x = TM -<$>- f <<- x
 
-instance Distributive (Schematic Monad t u) (->) (->) => Distributive (t :> u) (->) (->) where
+instance Distributive (->) (->) (Schematic Monad t u) => Distributive (->) (->) (t :> u) where
 	f -<< x = TM $ tm . f -<< x
 
 instance Bindable (Schematic Monad t u) (->) => Bindable (t :> u) (->) where

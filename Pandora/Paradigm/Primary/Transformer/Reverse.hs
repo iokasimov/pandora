@@ -44,7 +44,7 @@ instance (Covariant (->) (->) t, Monoidal t (<--) (->) (:*:) (:*:)) => Monoidal 
 instance Traversable (->) (->) t => Traversable (->) (->) (Reverse t) where
 	f <<- Reverse x = Reverse -<$>- run (Backwards . f <<- x)
 
-instance Distributive t (->) (->) => Distributive (Reverse t) (->) (->) where
+instance Distributive (->) (->) t => Distributive (->) (->) (Reverse t) where
 	f -<< x = Reverse $ run . f -<< x
 
 instance Contravariant (->) (->) t => Contravariant (->) (->) (Reverse t) where

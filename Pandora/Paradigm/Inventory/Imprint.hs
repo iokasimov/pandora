@@ -25,7 +25,7 @@ instance Covariant (->) (->) (Imprint e) where
 instance Contravariant (->) (->) (Flip Imprint a) where
 	f ->$<- Flip (Imprint g) = Flip . Imprint $ g . f
 
-instance Distributive (Imprint e) (->) (->) where
+instance Distributive (->) (->) (Imprint e) where
 	f -<< g = Imprint $ (run -<$>- f) -<< g
 
 instance Divariant Imprint (->) (->) (->) where
