@@ -44,7 +44,7 @@ instance Semimonoidal (<--) (:*:) (:*:) Identity where
 instance Monoidal Identity (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Identity x) -> (\_ -> x)
 
-instance Traversable Identity (->) (->) where
+instance Traversable (->) (->) Identity where
 	f <<- Identity x = Identity -<$>- f x
 
 instance Bindable Identity (->) where

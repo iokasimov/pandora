@@ -36,7 +36,7 @@ instance Semimonoidal (->) (:*:) (:*:) (Schematic Monad t u) => Semimonoidal (->
 instance Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:) => Monoidal (t :> u) (->) (->) (:*:) (:*:) where
 	unit _ f = TM . point $ f One
 
-instance Traversable (Schematic Monad t u) (->) (->) => Traversable (t :> u) (->) (->) where
+instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
 	f <<- TM x = TM -<$>- f <<- x
 
 instance Distributive (Schematic Monad t u) (->) (->) => Distributive (t :> u) (->) (->) where

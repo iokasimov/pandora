@@ -48,7 +48,7 @@ instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Conclusion e) where
 	multiply (Failure _ :*: x) = Adoption -<$>- x
 	multiply (Success x :*: _) = Option -<$>- Success x
 
-instance Traversable (Conclusion e) (->) (->) where
+instance Traversable (->) (->) (Conclusion e) where
 	(<<-) :: (Covariant (->) (->) u, Monoidal u (->) (->) (:*:) (:*:), Semimonoidal (->) (:*:) (:*:)u)
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y

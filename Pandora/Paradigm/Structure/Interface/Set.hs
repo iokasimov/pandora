@@ -22,10 +22,10 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing), Morph
 import Pandora.Paradigm.Inventory.State (State, modify)
 import Pandora.Paradigm.Controlflow.Effect (run)
 
-type Set t f a = (Traversable t (->) (->), Setoid a, Setoid (t a), Morphable (Find f) t)
+type Set t f a = (Traversable (->) (->) t, Setoid a, Setoid (t a), Morphable (Find f) t)
 
 subset :: forall t f a . (Set t f a, Morphing (Find f) t ~ (Predicate <:.:> Maybe := (->))) => Convergence Boolean := t a
 subset = Convergence $ \s ss -> Nothing != (find @f @t @Maybe % s) . equate <<- ss
 
-cardinality :: Traversable t (->) (->) => t a -> Numerator
+cardinality :: Traversable (->) (->) t => t a -> Numerator
 cardinality s = attached . run @(State _) % Zero $ (modify @Numerator (+ one) !.) <<- s

@@ -41,7 +41,7 @@ instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoid
 instance (Covariant (->) (->) t, Monoidal t (<--) (->) (:*:) (:*:)) => Monoidal (Reverse t) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Reverse x) -> (\_ -> extract x)
 
-instance Traversable t (->) (->) => Traversable (Reverse t) (->) (->) where
+instance Traversable (->) (->) t => Traversable (->) (->) (Reverse t) where
 	f <<- Reverse x = Reverse -<$>- run (Backwards . f <<- x)
 
 instance Distributive t (->) (->) => Distributive (Reverse t) (->) (->) where

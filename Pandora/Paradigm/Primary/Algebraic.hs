@@ -35,7 +35,7 @@ x $$$>- r = (r !.) -<$$$>- x
 void :: Covariant (->) (->) t => t a -> t ()
 void x = x $>- ()
 
-instance Traversable ((:*:) s) (->) (->) where
+instance Traversable (->) (->) ((:*:) s) where
 	f <<- x = (attached x :*:) -<$>- f (extract x)
 
 instance Adjoint (->) (->) ((:*:) s) ((->) s) where

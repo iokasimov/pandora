@@ -36,7 +36,7 @@ instance Semimonoidal (->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (
 instance Monoidal (Schematic Comonad t u) (->) (->) (:*:) (:*:) => Monoidal (t :< u) (->) (->) (:*:) (:*:) where
 	unit _ f = TC . point $ f One
 
-instance Traversable (Schematic Comonad t u) (->) (->) => Traversable (t :< u) (->) (->) where
+instance Traversable (->) (->) (Schematic Comonad t u) => Traversable (->) (->) (t :< u) where
 	f <<- TC x = TC -<$>- f <<- x
 
 instance Distributive (Schematic Comonad t u) (->) (->) => Distributive (t :< u) (->) (->) where

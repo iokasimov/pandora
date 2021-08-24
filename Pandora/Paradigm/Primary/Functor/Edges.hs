@@ -14,7 +14,7 @@ instance Covariant (->) (->) Edges where
 	f -<$>- Overlay x = Overlay $ f x
 	f -<$>- Leap x = Leap $ f x
 
-instance Traversable Edges (->) (->) where
+instance Traversable (->) (->) Edges where
 	_ <<- Empty = point Empty
 	f <<- Connect x = Connect -<$>- f x
 	f <<- Overlay x = Overlay -<$>- f x

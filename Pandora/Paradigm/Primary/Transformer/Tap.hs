@@ -43,7 +43,7 @@ instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (Tap t) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Tap x _) -> (\_ -> x)
 
-instance Traversable t (->) (->) => Traversable (Tap t) (->) (->) where
+instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where
 	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable t (->), Covariant (->) (->) t) => Extendable (Tap t) (->) where
@@ -59,7 +59,7 @@ instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (
 	multiply (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
 		$ T_U $ multiply (xls :*: yls) :*: multiply (xrs :*: yrs)
 
-instance {-# OVERLAPS #-} Traversable t (->) (->) => Traversable (Tap (t <:.:> t := (:*:))) (->) (->) where
+instance {-# OVERLAPS #-} Traversable (->) (->) t => Traversable (->) (->) (Tap (t <:.:> t := (:*:))) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
 

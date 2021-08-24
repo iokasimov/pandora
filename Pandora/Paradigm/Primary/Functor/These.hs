@@ -14,7 +14,7 @@ instance Covariant (->) (->) (These e) where
 	_ -<$>- That y = That y
 	f -<$>- These y x = These y $ f x
 
-instance Traversable (These e) (->) (->) where
+instance Traversable (->) (->) (These e) where
 	f <<- This x = This -<$>- f x
 	_ <<- That y = point $ That y
 	f <<- These y x = These y -<$>- f x

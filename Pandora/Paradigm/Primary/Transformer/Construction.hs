@@ -45,7 +45,7 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoid
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (Construction t) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Construct x _) -> (\_ -> x)
 
-instance Traversable t (->) (->) => Traversable (Construction t) (->) (->) where
+instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
 	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs
 
 instance Covariant (->) (->) t => Extendable (Construction t) (->) where

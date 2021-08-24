@@ -25,7 +25,7 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Jack t) where
 	f -<$>- It x = It $ f x
 	f -<$>- Other y = Other $ f -<$>- y
 
-instance Traversable t (->) (->) => Traversable (Jack t) (->) (->) where
+instance Traversable (->) (->) t => Traversable (->) (->) (Jack t) where
 	f <<- It x = It -<$>- f x
 	f <<- Other y = Other -<$>- f <<- y
 

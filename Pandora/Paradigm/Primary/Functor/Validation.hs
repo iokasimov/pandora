@@ -50,7 +50,7 @@ instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Validation e) where
 	multiply (Flaws _ :*: y) = Adoption -<$>- y
 	multiply (Validated x :*: _) = Option -<$>- Validated x
 
-instance Traversable (Validation e) (->) (->) where
+instance Traversable (->) (->) (Validation e) where
 	f <<- Validated x = Validated -<$>- f x
 	_ <<- Flaws e = point $ Flaws e
 

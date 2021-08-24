@@ -116,7 +116,7 @@ instance Substructure Tail List where
 		Nothing -> Store $ Identity zero :*: lift . identity . extract
 
 -- | Transform any traversable structure into a stack
-linearize :: forall t a . Traversable t (->) (->) => t a -> List a
+linearize :: forall t a . Traversable (->) (->) t => t a -> List a
 linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just -.#..- Construct)
 
 ----------------------------------------- Non-empty list -------------------------------------------
@@ -165,7 +165,7 @@ type instance Combinative List = Comprehension Maybe
 
 type instance Zipper List (Left ::: Right) = Tap (List <:.:> List := (:*:))
 
-instance {-# OVERLAPS #-} Traversable (Tap (List <:.:> List := (:*:))) (->) (->) where
+instance {-# OVERLAPS #-} Traversable (->) (->) (Tap (List <:.:> List := (:*:))) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
 

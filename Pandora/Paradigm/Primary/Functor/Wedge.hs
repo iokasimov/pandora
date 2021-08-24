@@ -13,7 +13,7 @@ instance Covariant (->) (->) (Wedge e) where
 	_ -<$>- Here x = Here x
 	f -<$>- There x = There $ f x
 
-instance Traversable (Wedge e) (->) (->) where
+instance Traversable (->) (->) (Wedge e) where
 	_ <<- Nowhere = point Nowhere
 	_ <<- Here x = point $ Here x
 	f <<- There x = There -<$>- f x

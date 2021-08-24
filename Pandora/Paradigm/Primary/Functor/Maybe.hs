@@ -57,7 +57,7 @@ instance Semimonoidal (<--) (:*:) (:*:) Maybe where
 		Just (x :*: y) -> Just x :*: Just y
 		Nothing -> Nothing :*: Nothing
 
-instance Traversable Maybe (->) (->) where
+instance Traversable (->) (->) Maybe where
 	_ <<- Nothing = point Nothing
 	f <<- Just x = Just -<$>- f x
 

@@ -60,7 +60,7 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal 
 instance (Covariant (->) (->) t, Monoidal t (<--) (->) (:*:) (:*:), Monoidal u (<--) (->) (:*:) (:*:)) => Monoidal (t <:.> u) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(TU x) -> (\_ -> extract $ extract x)
 
-instance (Traversable t (->) (->), Traversable u (->) (->)) => Traversable (t <:.> u) (->) (->) where
+instance (Traversable (->) (->) t, Traversable (->) (->) u) => Traversable (->) (->) (t <:.> u) where
 	f <<- x = TU -<$>- f -<<-<<- run x
 
 instance (Bindable t (->), Distributive t (->) (->), Covariant (->) (->) u, Bindable u (->)) => Bindable (t <:.> u) (->) where

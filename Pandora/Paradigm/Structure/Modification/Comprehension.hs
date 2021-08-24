@@ -37,7 +37,7 @@ instance Interpreted (Comprehension t) where
 instance Covariant (->) (->) (t <:.> Construction t) => Covariant (->) (->) (Comprehension t) where
 	f -<$>- Comprehension x = Comprehension $ f -<$>- x
 
-instance Traversable (t <:.> Construction t) (->) (->) => Traversable (Comprehension t) (->) (->) where
+instance Traversable (->) (->) (t <:.> Construction t) => Traversable (->) (->) (Comprehension t) where
 	f <<- Comprehension x = Comprehension -<$>- f <<- x
 
 instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Semimonoidal (->) (:*:) (:*:) (Comprehension t) where

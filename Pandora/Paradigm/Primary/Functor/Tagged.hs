@@ -51,7 +51,7 @@ instance Semimonoidal (<--) (:*:) (:*:) (Tagged tag) where
 instance Monoidal (Tagged tag) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Tag x) -> (\_ -> x)
 
-instance Traversable (Tagged tag) (->) (->) where
+instance Traversable (->) (->) (Tagged tag) where
 	f <<- Tag x = Tag -<$>- f x
 
 instance Distributive (Tagged tag) (->) (->) where
