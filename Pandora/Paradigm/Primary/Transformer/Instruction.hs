@@ -33,7 +33,7 @@ instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Semimonoida
 instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Monoidal (Instruction t) (->) (->) (:*:) (:*:) where
 	unit _ f = Enter $ f One
 
-instance Covariant (->) (->) t => Bindable (Instruction t) (->) where
+instance Covariant (->) (->) t => Bindable (->) (Instruction t) where
 	f =<< Enter x = f x
 	f =<< Instruct xs = Instruct $ (f =<<) -<$>- xs
 
@@ -46,7 +46,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Instruction t) where
 instance Liftable Instruction where
 	lift x = Instruct $ Enter -<$>- x
 
-instance (forall t . Bindable t (->), forall t . Monoidal t (->) (->) (:*:) (:*:)) => Lowerable Instruction where
+instance (forall t . Bindable (->) t, forall t . Monoidal t (->) (->) (:*:) (:*:)) => Lowerable Instruction where
 	lower (Enter x) = point x
 	lower (Instruct xs) = lower =<< xs
 

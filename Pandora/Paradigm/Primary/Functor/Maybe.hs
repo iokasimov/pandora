@@ -61,7 +61,7 @@ instance Traversable (->) (->) Maybe where
 	_ <<- Nothing = point Nothing
 	f <<- Just x = Just -<$>- f x
 
-instance Bindable Maybe (->) where
+instance Bindable (->) Maybe where
 	f =<< Just x = f x
 	_ =<< Nothing = Nothing
 

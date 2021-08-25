@@ -40,7 +40,7 @@ instance Monoidal (Environment e) (->) (->) (:*:) (:*:) where
 instance Distributive (->) (->) (Environment e) where
 	f -<< g = Environment $ (run -<$>- f) -<< g
 
-instance Bindable (Environment e) (->) where
+instance Bindable (->) (Environment e) where
 	f =<< Environment x = Environment $ \e -> (run % e) . f . x $ e
 
 --instance Monad (Environment e) where

@@ -47,7 +47,7 @@ instance Monoidal Identity (<--) (->) (:*:) (:*:) where
 instance Traversable (->) (->) Identity where
 	f <<- Identity x = Identity -<$>- f x
 
-instance Bindable Identity (->) where
+instance Bindable (->) Identity where
 	f =<< Identity x = f x	
 
 instance Monad Identity

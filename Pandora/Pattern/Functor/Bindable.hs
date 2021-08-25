@@ -9,5 +9,5 @@ infixr 1 =<<
 > * Interchange: t >>= f = join (f <$> t)
 -}
 
-class Covariant source source t => Bindable t source where
+class Covariant source source t => Bindable source t where
 	(=<<) :: source a (t b) -> source (t a) (t b)

@@ -19,7 +19,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 --infixl 1 >>=-, ->>=
 --infixr 1 -=<<, =<<-
 
-class (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:), Bindable t (->)) => Monad t where
+class (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:), Bindable (->) t) => Monad t where
 	--(>>=-) :: t a -> t b -> t a
 	--(>>=-) x y = x >>= \r -> y >>= \_ -> point r
 	--(->>=) :: t a -> t b -> t b

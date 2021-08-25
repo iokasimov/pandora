@@ -42,13 +42,13 @@ instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t
 instance Distributive (->) (->) (Schematic Monad t u) => Distributive (->) (->) (t :> u) where
 	f -<< x = TM $ tm . f -<< x
 
-instance Bindable (Schematic Monad t u) (->) => Bindable (t :> u) (->) where
+instance Bindable (->) (Schematic Monad t u) => Bindable (->) (t :> u) where
 	f =<< TM x = TM $ tm . f =<< x
 
 instance Extendable (Schematic Monad t u) (->) => Extendable (t :> u) (->) where
 	f <<= TM x = TM $ f . TM <<= x
 
-instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:), Bindable (t :> u) (->)) => Monad (t :> u) where
+instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:), Bindable (->) (t :> u)) => Monad (t :> u) where
 
 instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
 	lift = TM . lift

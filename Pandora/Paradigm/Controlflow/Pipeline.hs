@@ -47,7 +47,7 @@ finish :: Monoidal t (->) (->) (:*:) (:*:) => Pipeline i o t () ()
 finish = Continuation (Pipe (point () !..) !.)
 
 -- | Do some effectful computation within pipeline
-impact :: Bindable t (->) => t a -> Pipeline i o t a a
+impact :: Bindable (->) t => t a -> Pipeline i o t a a
 impact action = Continuation $ \next -> Pipe $ \i o -> (\x -> pipe (next x) i o) =<< action
 
 -- | Compose two pipelines into one

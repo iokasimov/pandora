@@ -19,7 +19,7 @@ instance Contravariant (->) (->) Proxy where
 instance Distributive (->) (->) Proxy where
 	_ -<< _ = Proxy
 
-instance Bindable Proxy (->) where
+instance Bindable (->) Proxy where
 	_ =<< _ = Proxy
 
 --instance Monad Proxy

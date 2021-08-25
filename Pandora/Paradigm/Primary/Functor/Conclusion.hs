@@ -54,7 +54,7 @@ instance Traversable (->) (->) (Conclusion e) where
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success -<$>- f x
 
-instance Bindable (Conclusion e) (->) where
+instance Bindable (->) (Conclusion e) where
 	f =<< Success x = f x
 	_ =<< Failure y = Failure y
 
@@ -110,6 +110,6 @@ instance Catchable e (Conclusion e) where
 	catch (Failure e) handle = handle e
 	catch (Success x) _ = Success x
 
-instance (Monoidal u (->) (->) (:*:) (:*:), Bindable u (->)) => Catchable e (Conclusion e <.:> u) where
+instance (Monoidal u (->) (->) (:*:) (:*:), Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = let conclude = conclusion # run . handle # point . Success
 		in UT $ conclude =<< x

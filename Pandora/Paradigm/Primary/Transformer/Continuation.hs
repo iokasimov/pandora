@@ -24,12 +24,12 @@ instance Interpreted (Continuation r t) where
 instance Covariant (->) (->) t => Covariant (->) (->) (Continuation r t) where
 	f -<$>- Continuation continuation = Continuation $ continuation . (. f)
 
-instance Covariant (->) (->) t => Bindable (Continuation r t) (->) where
+instance Covariant (->) (->) t => Bindable (->) (Continuation r t) where
 	f =<< x = Continuation $ \g -> run x $ \y -> run # f y # g
 
 --instance Monad t => Monad (Continuation r t) where
 
-instance (forall u . Bindable u (->)) => Liftable (Continuation r) where
+instance (forall u . Bindable (->) u) => Liftable (Continuation r) where
 	lift = Continuation . (%) (=<<)
 
 -- | Call with current continuation
@@ -37,7 +37,7 @@ cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
 cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . (!.) . g
 
 -- | Delimit the continuation of any 'shift'
-reset :: (forall u . Bindable u (->), Monad t) => Continuation r t r -> Continuation s t r
+reset :: (forall u . Bindable (->) u, Monad t) => Continuation r t r -> Continuation s t r
 reset = lift . (run % point)
 
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it

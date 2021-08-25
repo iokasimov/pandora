@@ -42,7 +42,7 @@ instance Traversable (->) (->) (Schematic Comonad t u) => Traversable (->) (->) 
 instance Distributive (->) (->) (Schematic Comonad t u) => Distributive (->) (->) (t :< u) where
 	f -<< x = TC $ tc . f -<< x
 
-instance Bindable (Schematic Comonad t u) (->) => Bindable (t :< u) (->) where
+instance Bindable (->) (Schematic Comonad t u) => Bindable (->) (t :< u) where
 	f =<< TC x = TC $ tc . f =<< x
 
 instance Extendable (Schematic Comonad t u) (->) => Extendable (t :< u) (->) where

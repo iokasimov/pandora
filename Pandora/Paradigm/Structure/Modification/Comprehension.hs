@@ -49,7 +49,7 @@ instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t) => Semimonoida
 instance (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:+:)) => Monoidal (Comprehension t) (->) (->) (:*:) (:+:) where
 	unit _ _ = Comprehension empty
 
-instance (forall a . Semigroup (t <:.> Construction t := a), Bindable t (->)) => Bindable (Comprehension t) (->) where
+instance (forall a . Semigroup (t <:.> Construction t := a), Bindable (->) t) => Bindable (->) (Comprehension t) where
 	f =<< Comprehension (TU t) = Comprehension . TU $ (\(Construct x xs) -> run . run $ f x + (f =<< Comprehension (TU xs))) =<< t
 
 instance Setoid (t <:.> Construction t := a) => Setoid (Comprehension t a) where

@@ -39,7 +39,7 @@ instance Semimonoidal (->) (:*:) (:*:) (State s) where
 instance Monoidal (State s) (->) (->) (:*:) (:*:) where
 	unit _ f = State . (identity @(->) -|) $ f One
 
-instance Bindable (State s) (->) where
+instance Bindable (->) (State s) where
 	f =<< x = State $ (run . f |-) -<$>- run x
 
 instance Monad (State s) where
@@ -71,7 +71,7 @@ modify f = adapt . State $ \s -> let r = f s in r :*: r
 replace :: Stateful s t => s -> t s
 replace s = adapt . State $ \_ -> s :*: s
 
-reconcile :: (Bindable t (->), Stateful s t, Adaptable u t) => (s -> u s) -> t s
+reconcile :: (Bindable (->) t, Stateful s t, Adaptable u t) => (s -> u s) -> t s
 reconcile f = replace =<< adapt . f =<< current
 
 type Memorable s t = (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:), Stateful s t)

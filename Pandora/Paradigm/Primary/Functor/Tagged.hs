@@ -57,7 +57,7 @@ instance Traversable (->) (->) (Tagged tag) where
 instance Distributive (->) (->) (Tagged tag) where
 	f -<< x = Tag $ extract . f -<$>- x
 
-instance Bindable (Tagged tag) (->) where
+instance Bindable (->) (Tagged tag) where
 	f =<< Tag x = f x
 
 instance Monad (Tagged tag)

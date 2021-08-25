@@ -41,7 +41,7 @@ instance (Covariant (->) (->) u, Semimonoidal (->) (:*:) (:*:) t, Semimonoidal (
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (->) (:*:) (:*:) u, Monoidal t (->) (->) (:*:) (:*:), Monoidal u (->) (->) (:*:) (:*:)) => Monoidal (t <.:> u) (->) (->) (:*:) (:*:) where
 	unit _ f = UT . point . point $ f One
 
-instance (Traversable (->) (->) t, Bindable t (->), Semimonoidal (->) (:*:) (:*:) u, Monoidal u (->) (->) (:*:) (:*:), Bindable u (->)) => Bindable (t <.:> u) (->) where
+instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (->) (:*:) (:*:) u, Monoidal u (->) (->) (:*:) (:*:), Bindable (->) u) => Bindable (->) (t <.:> u) where
 	f =<< UT x = UT $ ((identity =<<) -<$>-) . (run . f <<-) =<< x
 
 instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <.:> u) where

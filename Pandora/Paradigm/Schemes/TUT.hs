@@ -55,7 +55,7 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal u (<--) (->) (:*:) (:*:), Adjoint (->) (->) t t') => Monoidal (t <:<.>:> t' := u) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(TUT xys) -> (\_ -> (extract |-) xys)
 
-instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable u (->)) => Bindable (t <:<.>:> t' := u) (->) where
+instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable (->) u) => Bindable (->) (t <:<.>:> t' := u) where
 	f =<< x = TUT $ ((run . f |-) =<<) -<$>- run x
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal (->) (:*:) (:*:) t, Semimonoidal (->) (:*:) (:*:) t', Monoidal u (->) (->) (:*:) (:*:), Adjoint (->) (->) t' t) => Monoidal (t <:<.>:> t' := u) (->) (->) (:*:) (:*:) where
