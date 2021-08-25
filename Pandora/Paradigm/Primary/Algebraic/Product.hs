@@ -28,7 +28,7 @@ instance Covariant (->) (->) ((:*:) s) where
 instance Covariant (->) (->) (Flip (:*:) a) where
 	f -<$>- (Flip (x :*: y)) = Flip $ f x :*: y
 
-instance Extendable ((:*:) s) (->) where
+instance Extendable (->) ((:*:) s) where
 	f <<= ~(s :*: x) = s :*: f (s :*: x)
 
 instance Bivariant (->) (->) (->) (:*:) where

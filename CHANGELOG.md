@@ -578,3 +578,4 @@
 * Rearrange type parameters in `Traversable` typeclass
 * Rearrange type parameters in `Distributive` typeclass
 * Rearrange type parameters in `Bindaple` typeclass
+* Rearrange type parameters in `Extendable` typeclass

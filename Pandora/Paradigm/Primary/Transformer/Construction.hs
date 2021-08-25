@@ -48,7 +48,7 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
 	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs
 
-instance Covariant (->) (->) t => Extendable (Construction t) (->) where
+instance Covariant (->) (->) t => Extendable (->) (Construction t) where
 	f <<= x = Construct # f x # (f <<=) -<$>- deconstruct x
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Comonad (Construction t) (->) where

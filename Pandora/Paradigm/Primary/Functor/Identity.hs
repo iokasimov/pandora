@@ -52,7 +52,7 @@ instance Bindable (->) Identity where
 
 instance Monad Identity
 
-instance Extendable Identity (->) where
+instance Extendable (->) Identity where
 	f <<= x = Identity . f $ x
 
 instance Comonad Identity (->)

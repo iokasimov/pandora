@@ -45,10 +45,10 @@ instance Distributive (->) (->) (Schematic Comonad t u) => Distributive (->) (->
 instance Bindable (->) (Schematic Comonad t u) => Bindable (->) (t :< u) where
 	f =<< TC x = TC $ tc . f =<< x
 
-instance Extendable (Schematic Comonad t u) (->) => Extendable (t :< u) (->) where
+instance Extendable (->) (Schematic Comonad t u) => Extendable (->) (t :< u) where
 	f <<= TC x = TC $ f . TC <<= x
 
-instance (Extractable_ (t :< u), Extendable (t :< u) (->)) => Comonad (t :< u) (->) where
+instance (Extractable_ (t :< u), Extendable (->) (t :< u)) => Comonad (t :< u) (->) where
 
 instance Lowerable (Schematic Comonad t) => Lowerable ((:<) t) where
 	lower (TC x) = lower x

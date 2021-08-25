@@ -32,7 +32,7 @@ instance Morphable (Rotate Right) (Tap (Stream <:.:> Stream := (:*:))) where
 	morphing (premorph -> Tap x (T_U (bs :*: fs))) = Tap # extract fs
 		$ twosome # Construct x (point bs) # extract (deconstruct fs)
 
-instance {-# OVERLAPS #-} Extendable (Tap (Stream <:.:> Stream := (:*:))) (->) where
+instance {-# OVERLAPS #-} Extendable (->) (Tap (Stream <:.:> Stream := (:*:))) where
 	f <<= z = let move rtt = extract . deconstruct $ point . rtt .-+ z
 		in f -<$>- Tap z (twosome # (move $ rotate @Left) # (move $ rotate @Right))
 

@@ -46,7 +46,7 @@ instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (Tap t) (<--) (->) (:*:) (
 instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where
 	f <<- Tap x xs = Tap -<$>- f x -<*>- f <<- xs
 
-instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable t (->), Covariant (->) (->) t) => Extendable (Tap t) (->) where
+instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable (->) t, Covariant (->) (->) t) => Extendable (->) (Tap t) where
 	f <<= x = Tap # f x $ f . Tap (extract x) <<= lower x
 
 instance Lowerable Tap where

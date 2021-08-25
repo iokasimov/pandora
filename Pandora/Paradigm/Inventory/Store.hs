@@ -37,7 +37,7 @@ instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 instance Monoidal (Store s) (<--) (->) (:*:) (:*:) where
 	unit _ = Flip $ \(Store (s :*: f)) -> (\_ -> f s)
 
-instance Extendable (Store s) (->) where
+instance Extendable (->) (Store s) where
 	f <<= Store x = Store $ f -<$$>- (Store -.#..- (identity @(->) -|) -<$>- x)
 
 instance Comonad (Store s) (->) where

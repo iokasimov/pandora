@@ -33,7 +33,7 @@ instance (Monoidal t (->) (->) (:*:) (:*:), Bindable (->) t) => Bindable (->) (J
 	f =<< It x = f x
 	f =<< Other x = Other $ jack point identity . f =<< x
 
-instance Extendable t (->) => Extendable (Jack t) (->) where
+instance Extendable (->) t => Extendable (->) (Jack t) where
 	f <<= It x = It . f $ It x
 	f <<= Other x = Other $ f . Other <<= x
 

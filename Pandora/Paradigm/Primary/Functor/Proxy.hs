@@ -24,5 +24,5 @@ instance Bindable (->) Proxy where
 
 --instance Monad Proxy
 
-instance Extendable Proxy (->) where
+instance Extendable (->) Proxy where
 	_ <<= _ = Proxy

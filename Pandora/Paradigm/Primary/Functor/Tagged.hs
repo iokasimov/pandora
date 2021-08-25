@@ -62,7 +62,7 @@ instance Bindable (->) (Tagged tag) where
 
 instance Monad (Tagged tag)
 
-instance Extendable (Tagged tag) (->) where
+instance Extendable (->) (Tagged tag) where
 	f <<= x = Tag . f $ x
 
 instance Comonad (Tagged tag) (->)

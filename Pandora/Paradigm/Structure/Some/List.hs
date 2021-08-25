@@ -169,7 +169,7 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tap (List <:.:> List := (:*:)))
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
 		-<$>- f <<- Reverse past -<*>- f x -<*>- f <<- future
 
-instance {-# OVERLAPS #-} Extendable (Tap (List <:.:> List := (:*:))) (->) where
+instance {-# OVERLAPS #-} Extendable (->) (Tap (List <:.:> List := (:*:))) where
 	f <<= z = let move rtt = TU . deconstruct $ run . rtt .-+ z in
 		Tap # f z $ twosome # f -<$>- move (rotate @Left) # f -<$>- move (rotate @Right)
 

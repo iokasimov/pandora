@@ -61,7 +61,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t,
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal (->) (:*:) (:*:) t, Semimonoidal (->) (:*:) (:*:) t', Monoidal u (->) (->) (:*:) (:*:), Adjoint (->) (->) t' t) => Monoidal (t <:<.>:> t' := u) (->) (->) (:*:) (:*:) where
 	unit _ f = unite . (point -|) . f $ One
 
-instance (Adjoint (->) (->) t' t, Extendable u (->)) => Extendable (t' <:<.>:> t := u) (->) where
+instance (Adjoint (->) (->) t' t, Extendable (->) u) => Extendable (->) (t' <:<.>:> t := u) where
 	f <<= x = TUT $ ((f . unite -|) <<=) -<$>- run x
 
 instance (Adjoint (->) (->) t' t, Distributive (->) (->) t) => Liftable (t <:<.>:> t') where
