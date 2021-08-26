@@ -28,7 +28,7 @@ instance Contravariant (->) (->) (Flip Imprint a) where
 instance Distributive (->) (->) (Imprint e) where
 	f -<< g = Imprint $ (run -<$>- f) -<< g
 
-instance Divariant Imprint (->) (->) (->) where
+instance Divariant (->) (->) (->) Imprint where
 	(>->) ab cd bc = ab >-> cd ||= bc
 
 instance Semigroup e => Extendable (->) (Imprint e) where

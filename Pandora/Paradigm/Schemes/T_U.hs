@@ -24,7 +24,7 @@ instance Interpreted (T_U ct cu p t u) where
 instance (forall i . Covariant (->) (->) (p i), Bivariant (->) (->) (->) p,  Covariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (t <:.:> u := p) where
 	f -<$>- x = (f -<$>-) <-> (f -<$>-) ||= x
 
-instance (Divariant p (->) (->) (->), Contravariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (t >:.:> u := p) where
+instance (Divariant (->) (->) (->) p, Contravariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (t >:.:> u := p) where
 	f -<$>- x = (f ->$<-) >-> (f -<$>-) ||= x
 
 instance (forall i . Covariant (->) (->) (p i), Bivariant (->) (->) (->) p, Contravariant (->) (->) t, Contravariant (->) (->) u) => Contravariant (->) (->) (t >:.:< u := p) where

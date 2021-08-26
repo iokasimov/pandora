@@ -45,7 +45,7 @@ instance Bindable (->) (Environment e) where
 
 --instance Monad (Environment e) where
 
-instance Divariant Environment (->) (->) (->) where
+instance Divariant (->) (->) (->) Environment where
 	(>->) ab cd bc = Environment $ ab >-> cd $ run bc
 
 instance Interpreted (Environment e) where

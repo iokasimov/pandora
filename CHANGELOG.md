@@ -580,3 +580,4 @@
 * Rearrange type parameters in `Bindaple` typeclass
 * Rearrange type parameters in `Extendable` typeclass
 * Rearrange type parameters in `Monoidal` typeclass
+* Rearrange type parameters in `Divariant` typeclass
