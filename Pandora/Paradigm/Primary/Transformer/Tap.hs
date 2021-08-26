@@ -40,7 +40,7 @@ instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap
 		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		let (xs :*: ys) = f xys in Tap x xs :*: Tap y ys
 
-instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (Tap t) (<--) (->) (:*:) (:*:) where
+instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (->) (:*:) (:*:) (Tap t) where
 	unit _ = Flip $ \(Tap x _) -> (\_ -> x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where

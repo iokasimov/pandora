@@ -42,7 +42,7 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoid
 		let Flip g = multiply @(<--) @(:*:) @(:*:) in
 		(Construct x <-> Construct y) $ f $ g -<$>- xys
 
-instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (Construction t) (<--) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Construction t) where
 	unit _ = Flip $ \(Construct x _) -> (\_ -> x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
@@ -81,5 +81,5 @@ deconstruct ~(Construct _ xs) = xs
 (.-+) :: Covariant (->) (->) t => a :=> t -> a :=> Construction t
 f .-+ x = Construct x $ (f .-+) -<$>- f x
 
-section :: (Comonad t (->), Monoidal t (<--) (->) (:*:) (:*:)) => t ~> Construction t
+section :: (Comonad t (->), Monoidal (<--) (->) (:*:) (:*:) t) => t ~> Construction t
 section xs = Construct # extract xs $ section <<= xs

@@ -43,7 +43,7 @@ instance Semigroup e => Semimonoidal (->) (:*:) (:*:) (Validation e) where
 	multiply (Validated _ :*: Flaws y) = Flaws y
 	multiply (Flaws x :*: Validated _) = Flaws x
 
-instance Semigroup e => Monoidal (Validation e) (->) (->) (:*:) (:*:) where
+instance Semigroup e => Monoidal (->) (->) (:*:) (:*:) (Validation e) where
 	unit _ f = Validated $ f One
 
 instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Validation e) where

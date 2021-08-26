@@ -45,10 +45,10 @@ instance Semimonoidal (->) (:*:) (:+:) Maybe where
 	multiply (Nothing :*: Just y) = Just $ Adoption y
 	multiply (Nothing :*: Nothing) = Nothing
 
-instance Monoidal Maybe (->) (->) (:*:) (:*:) where
+instance Monoidal (->) (->) (:*:) (:*:) Maybe where
 	unit _ f = Just $ f One
 
-instance Monoidal Maybe (->) (->) (:*:) (:+:) where
+instance Monoidal (->) (->) (:*:) (:+:) Maybe where
 	unit _ _ = Nothing
 
 -- TODO: Check laws

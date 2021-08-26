@@ -34,7 +34,7 @@ instance Contravariant (->) (->) (Flip Environment a) where
 instance Semimonoidal (->) (:*:) (:*:) (Environment e) where
 	multiply (x :*: y) = unite $ multiply $ run x :*: run y
 
-instance Monoidal (Environment e) (->) (->) (:*:) (:*:) where
+instance Monoidal (->) (->) (:*:) (:*:) (Environment e) where
 	unit _ f = Environment $ \_ -> f One
 
 instance Distributive (->) (->) (Environment e) where

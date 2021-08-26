@@ -62,13 +62,13 @@ instance Semimonoidal (->) (:*:) (:*:) ((:+:) e) where
 	multiply (Option e :*: _) = Option e
 	multiply (_ :*: Option e) = Option e
 
-instance Monoidal ((:+:) e) (->) (->) (:*:) (:*:) where
+instance Monoidal (->) (->) (:*:) (:*:) ((:+:) e) where
 	unit _ f = Adoption $ f One
 
 instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
 	multiply = Flip $ \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
 
-instance Monoidal ((:*:) s) (<--) (->) (:*:) (:*:) where
+instance Monoidal (<--) (->) (:*:) (:*:) ((:*:) s) where
 	unit _ = Flip $ \(_ :*: x) -> (\_ -> x)
 
 instance Comonad ((:*:) s) (->) where
@@ -76,11 +76,11 @@ instance Comonad ((:*:) s) (->) where
 instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
 	multiply = Flip $ \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
 
-instance Monoidal (Flip (:*:) a) (<--) (->) (:*:) (:*:) where
+instance Monoidal (<--) (->) (:*:) (:*:) (Flip (:*:) a) where
 	unit _ = Flip $ \(Flip (s :*: _)) -> (\_ -> s)
 
-type Applicative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal t (->) (->) (:*:) (:*:))
-type Alternative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, Monoidal t (->) (->) (:*:) (:+:))
+type Applicative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) (->) (:*:) (:*:) t)
+type Alternative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, Monoidal (->) (->) (:*:) (:+:) t)
 
 (-<*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
 	=> t (a -> b) -> t a -> t b
@@ -96,13 +96,13 @@ x *>- y = ((!.) %) -<$>- x -<*>- y
 	  => t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f -<$>- multiply (x :*: y)
 
-point :: Monoidal t (->) (->) (:*:) (:*:) => a -> t a
+point :: Monoidal (->) (->) (:*:) (:*:) t => a -> t a
 point x = unit (Proxy @(:*:)) (\One -> x)
 
-empty :: Monoidal t (->) (->) (:*:) (:+:) => t a
+empty :: Monoidal (->) (->) (:*:) (:+:) t => t a
 empty = unit (Proxy @(:*:)) absurd
 
-type Extractable_ t = Monoidal t (<--) (->) (:*:) (:*:)
+type Extractable_ t = Monoidal (<--) (->) (:*:) (:*:) t
 
 extract :: Extractable_ t => t a -> a
-extract j = let Flip f = unit @_ @(<--) @(->) @(:*:) @(:*:) Proxy in f j $ One
+extract j = let Flip f = unit @(<--) @(->) @(:*:) @(:*:) Proxy in f j $ One

@@ -29,7 +29,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Jack t) where
 	f <<- It x = It -<$>- f x
 	f <<- Other y = Other -<$>- f <<- y
 
-instance (Monoidal t (->) (->) (:*:) (:*:), Bindable (->) t) => Bindable (->) (Jack t) where
+instance (Monoidal (->) (->) (:*:) (:*:) t, Bindable (->) t) => Bindable (->) (Jack t) where
 	f =<< It x = f x
 	f =<< Other x = Other $ jack point identity . f =<< x
 

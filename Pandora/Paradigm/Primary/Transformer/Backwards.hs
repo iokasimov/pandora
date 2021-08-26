@@ -30,7 +30,7 @@ instance (Semimonoidal (->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoida
 	multiply (Backwards x :*: Backwards y) = Backwards #
 		((:*:) %) -<$>- y -<*>- x
 
-instance (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:)) => Monoidal (Backwards t) (->) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t) => Monoidal (->) (->) (:*:) (:*:) (Backwards t) where
 	unit _ f = Backwards . point $ f One
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Backwards t) where
@@ -38,7 +38,7 @@ instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoid
 		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		(Backwards <-> Backwards) $ f x
 
-instance (Covariant (->) (->) t, Monoidal t (<--) (->) (:*:) (:*:)) => Monoidal (Backwards t) (<--) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Backwards t) where
 	unit _ = Flip $ \(Backwards x) -> (\_ -> extract x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Backwards t) where

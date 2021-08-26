@@ -30,7 +30,7 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Reverse t) where
 instance (Semimonoidal (->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (->) (:*:) (:*:) (Reverse t) where
 	multiply (Reverse x :*: Reverse y) = Reverse # multiply (x :*: y)
 
-instance (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:)) => Monoidal (Reverse t) (->) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t) => Monoidal (->) (->) (:*:) (:*:) (Reverse t) where
 	unit _ f = Reverse . point $ f One
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
@@ -38,7 +38,7 @@ instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoid
 		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		(Reverse <-> Reverse) $ f x
 
-instance (Covariant (->) (->) t, Monoidal t (<--) (->) (:*:) (:*:)) => Monoidal (Reverse t) (<--) (->) (:*:) (:*:) where
+instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Reverse t) where
 	unit _ = Flip $ \(Reverse x) -> (\_ -> extract x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Reverse t) where

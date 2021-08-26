@@ -36,7 +36,7 @@ instance Semimonoidal (->) (:*:) (:*:) (State s) where
 	  	let new :*: y = h old in
 		new :*: x :*: y
 
-instance Monoidal (State s) (->) (->) (:*:) (:*:) where
+instance Monoidal (->) (->) (:*:) (:*:) (State s) where
 	unit _ f = State . (identity @(->) -|) $ f One
 
 instance Bindable (->) (State s) where
@@ -74,7 +74,7 @@ replace s = adapt . State $ \_ -> s :*: s
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable u t) => (s -> u s) -> t s
 reconcile f = replace =<< adapt . f =<< current
 
-type Memorable s t = (Covariant (->) (->) t, Monoidal t (->) (->) (:*:) (:*:), Stateful s t)
+type Memorable s t = (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t,  Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = (modify . op <<- struct) *>- current

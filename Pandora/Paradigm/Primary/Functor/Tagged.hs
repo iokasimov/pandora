@@ -42,13 +42,13 @@ instance Covariant (->) (->) (Flip Tagged a) where
 instance Semimonoidal (->) (:*:) (:*:) (Tagged tag) where
 	multiply (x :*: y) = Tag $ extract x :*: extract y
 
-instance Monoidal (Tagged tag) (->) (->) (:*:) (:*:) where
+instance Monoidal (->) (->) (:*:) (:*:) (Tagged tag) where
 	unit _ f = Tag $ f One
 
 instance Semimonoidal (<--) (:*:) (:*:) (Tagged tag) where
 	multiply = Flip $ \(Tag (x :*: y)) -> Tag x :*: Tag y
 
-instance Monoidal (Tagged tag) (<--) (->) (:*:) (:*:) where
+instance Monoidal (<--) (->) (:*:) (:*:) (Tagged tag) where
 	unit _ = Flip $ \(Tag x) -> (\_ -> x)
 
 instance Traversable (->) (->) (Tagged tag) where

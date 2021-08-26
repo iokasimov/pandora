@@ -33,7 +33,7 @@ instance Covariant (->) (->) (Schematic Comonad t u) => Covariant (->) (->) (t :
 instance Semimonoidal (->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (->) (:*:) (:*:) (t :< u) where
 	multiply (TC f :*: TC x) = TC $ multiply $ f :*: x
 
-instance Monoidal (Schematic Comonad t u) (->) (->) (:*:) (:*:) => Monoidal (t :< u) (->) (->) (:*:) (:*:) where
+instance Monoidal (->) (->) (:*:) (:*:) (Schematic Comonad t u) => Monoidal (->) (->) (:*:) (:*:) (t :< u) where
 	unit _ f = TC . point $ f One
 
 instance Traversable (->) (->) (Schematic Comonad t u) => Traversable (->) (->) (t :< u) where

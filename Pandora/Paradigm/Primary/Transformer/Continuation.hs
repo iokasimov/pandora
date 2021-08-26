@@ -41,8 +41,8 @@ reset :: (forall u . Bindable (->) u, Monad t) => Continuation r t r -> Continua
 reset = lift . (run % point)
 
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it
-shift :: Monoidal t (->) (->) (:*:) (:*:) => ((a -> t r) -> Continuation r t r) -> Continuation r t a
+shift :: Monoidal (->) (->) (:*:) (:*:) t => ((a -> t r) -> Continuation r t r) -> Continuation r t a
 shift f = Continuation $ (run % point) . f
 
-interruptable :: Monoidal t (->) (->) (:*:) (:*:) => ((a -> Continuation a t a) -> Continuation a t a) -> t a
+interruptable :: Monoidal (->) (->) (:*:) (:*:) t => ((a -> Continuation a t a) -> Continuation a t a) -> t a
 interruptable = (run % point) . cwcc

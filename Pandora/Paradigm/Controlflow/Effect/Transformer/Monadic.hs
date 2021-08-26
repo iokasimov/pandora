@@ -22,7 +22,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 
 class Interpreted t => Monadic t where
 	{-# MINIMAL wrap #-}
-	wrap :: Monoidal u (->) (->) (:*:) (:*:) => t ~> t :> u
+	wrap :: Monoidal (->) (->) (:*:) (:*:) u => t ~> t :> u
 
 infixr 3 :>
 newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
@@ -33,7 +33,7 @@ instance Covariant (->) (->) (Schematic Monad t u) => Covariant (->) (->) (t :> 
 instance Semimonoidal (->) (:*:) (:*:) (Schematic Monad t u) => Semimonoidal (->) (:*:) (:*:) (t :> u) where
 	multiply (TM f :*: TM x) = TM $ multiply $ f :*: x
 
-instance Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:) => Monoidal (t :> u) (->) (->) (:*:) (:*:) where
+instance Monoidal (->) (->) (:*:) (:*:) (Schematic Monad t u) => Monoidal (->) (->) (:*:) (:*:) (t :> u) where
 	unit _ f = TM . point $ f One
 
 instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
@@ -48,7 +48,7 @@ instance Bindable (->) (Schematic Monad t u) => Bindable (->) (t :> u) where
 instance Extendable (->) (Schematic Monad t u) => Extendable (->) (t :> u) where
 	f <<= TM x = TM $ f . TM <<= x
 
-instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (Schematic Monad t u) (->) (->) (:*:) (:*:), Bindable (->) (t :> u)) => Monad (t :> u) where
+instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (->) (->) (:*:) (:*:) (Schematic Monad t u), Bindable (->) (t :> u)) => Monad (t :> u) where
 
 instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
 	lift = TM . lift
