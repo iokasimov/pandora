@@ -50,7 +50,7 @@ instance Extendable (->) (Schematic Comonad t u) => Extendable (->) (t :< u) whe
 
 instance (Extractable_ (t :< u), Extendable (->) (t :< u)) => Comonad (t :< u) (->) where
 
-instance Lowerable (Schematic Comonad t) => Lowerable ((:<) t) where
+instance Lowerable (->) (Schematic Comonad t) => Lowerable (->) ((:<) t) where
 	lower (TC x) = lower x
 
 instance Hoistable (Schematic Comonad t) => Hoistable ((:<) t) where

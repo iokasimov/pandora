@@ -8,5 +8,5 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 > * Interchange: extract . lower ≡ extract
 -}
 
-class Lowerable t where
-	lower :: (Covariant (->) (->) u) => t u ~> u
+class Lowerable cat t where
+	lower :: Covariant cat cat u => cat (t u a) (u a)

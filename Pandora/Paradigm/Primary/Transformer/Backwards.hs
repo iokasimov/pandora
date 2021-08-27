@@ -58,7 +58,7 @@ instance Interpreted (Backwards t) where
 instance Liftable (->) Backwards where
 	lift = Backwards
 
-instance Lowerable Backwards where
+instance Lowerable (->) Backwards where
 	lower = run
 
 instance Hoistable Backwards where

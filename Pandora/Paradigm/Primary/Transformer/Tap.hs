@@ -49,7 +49,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where
 instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable (->) t, Covariant (->) (->) t) => Extendable (->) (Tap t) where
 	f <<= x = Tap # f x $ f . Tap (extract x) <<= lower x
 
-instance Lowerable Tap where
+instance Lowerable (->) Tap where
 	lower (Tap _ xs) = xs
 
 instance Hoistable Tap where

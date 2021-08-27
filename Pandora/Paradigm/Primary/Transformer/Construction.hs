@@ -53,7 +53,7 @@ instance Covariant (->) (->) t => Extendable (->) (Construction t) where
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Comonad (Construction t) (->) where
 
-instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Lowerable Construction where
+instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Lowerable (->) Construction where
 	lower x = extract -<$>- deconstruct x
 
 instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Hoistable Construction where

@@ -68,6 +68,6 @@ instance (Adjoint (->) (->) t' t, Distributive (->) (->) t) => Liftable (->) (t 
 	lift :: Covariant (->) (->) u => u ~> t <:<.>:> t' := u
 	lift x = TUT $ (identity @(->) -|) -<< x
 
-instance (Adjoint (->) (->) t t', Distributive (->) (->) t') => Lowerable (t <:<.>:> t') where
+instance (Adjoint (->) (->) t t', Distributive (->) (->) t') => Lowerable (->) (t <:<.>:> t') where
 	lower :: Covariant (->) (->) u => (t <:<.>:> t' := u) ~> u
 	lower (TUT x) = (identity @(->) -<<) |- x

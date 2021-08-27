@@ -70,7 +70,7 @@ instance Monoidal (->) (->) (:*:) (:*:) t => Liftable (->) (TU Covariant Covaria
 	lift :: Covariant (->) (->) u => u ~> t <:.> u
 	lift = TU . point
 
-instance Monoidal (<--) (->) (:*:) (:*:) t => Lowerable (TU Covariant Covariant t) where
+instance Monoidal (<--) (->) (:*:) (:*:) t => Lowerable (->) (TU Covariant Covariant t) where
 	lower :: t <:.> u ~> u
 	lower (TU x) = extract x
 

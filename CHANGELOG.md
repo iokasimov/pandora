@@ -582,3 +582,4 @@
 * Rearrange type parameters in `Monoidal` typeclass
 * Rearrange type parameters in `Divariant` typeclass
 * Generalize `Liftable` typeclass
+* Generalize `Lowerable` typeclass

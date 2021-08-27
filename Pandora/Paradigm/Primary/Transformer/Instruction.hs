@@ -46,7 +46,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Instruction t) where
 instance Liftable (->) Instruction where
 	lift x = Instruct $ Enter -<$>- x
 
-instance (forall t . Bindable (->) t, forall t . Monoidal (->) (->) (:*:) (:*:) t) => Lowerable Instruction where
+instance (forall t . Bindable (->) t, forall t . Monoidal (->) (->) (:*:) (:*:) t) => Lowerable (->) Instruction where
 	lower (Enter x) = point x
 	lower (Instruct xs) = lower =<< xs
 

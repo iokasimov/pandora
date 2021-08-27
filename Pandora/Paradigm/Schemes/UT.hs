@@ -57,6 +57,6 @@ instance Monoidal (->) (->) (:*:) (:*:) t => Liftable (->) (UT Covariant Covaria
 	lift :: Covariant (->) (->) u => u ~> t <.:> u
 	lift x = UT $ point -<$>- x
 
-instance Monoidal (<--) (->) (:*:) (:*:) t => Lowerable (UT Covariant Covariant t) where
+instance Monoidal (<--) (->) (:*:) (:*:) t => Lowerable (->) (UT Covariant Covariant t) where
 	lower :: Covariant (->) (->) u => t <.:> u ~> u
 	lower (UT x) = extract -<$>- x
