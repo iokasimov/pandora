@@ -17,7 +17,7 @@ instance Covariant (->) (->) (Outline t) where
 	f -<$>- Line a = Line $ f a
 	f -<$>- Outlined x y = Outlined x # (.) f -<$>- y
 
-instance Liftable Outline where
+instance Liftable (->) Outline where
 	lift t = Outlined t (Line identity)
 
 instance Hoistable Outline where

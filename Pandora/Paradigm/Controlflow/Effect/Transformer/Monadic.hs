@@ -50,7 +50,7 @@ instance Extendable (->) (Schematic Monad t u) => Extendable (->) (t :> u) where
 
 instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (->) (->) (:*:) (:*:) (Schematic Monad t u), Bindable (->) (t :> u)) => Monad (t :> u) where
 
-instance Liftable (Schematic Monad t) => Liftable ((:>) t) where
+instance Liftable (->) (Schematic Monad t) => Liftable (->) ((:>) t) where
 	lift = TM . lift
 
 instance Hoistable (Schematic Monad t) => Hoistable ((:>) t) where

@@ -29,7 +29,7 @@ instance Covariant (->) (->) t => Bindable (->) (Continuation r t) where
 
 --instance Monad t => Monad (Continuation r t) where
 
-instance (forall u . Bindable (->) u) => Liftable (Continuation r) where
+instance (forall u . Bindable (->) u) => Liftable (->) (Continuation r) where
 	lift = Continuation . (%) (=<<)
 
 -- | Call with current continuation

@@ -1,6 +1,5 @@
 module Pandora.Pattern.Transformer.Liftable (Liftable (..)) where
 
-import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |
@@ -8,5 +7,5 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 > * Interchange: lift . point ≡ point
 -}
 
-class Liftable t where
-	lift :: (Covariant (->) (->) u) => u ~> t u
+class Liftable cat t where
+	lift :: Covariant cat cat u => cat (u a) (t u a)

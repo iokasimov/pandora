@@ -13,5 +13,5 @@ newtype Yoneda t a = Yoneda
 instance Covariant (->) (->) (Yoneda t) where
 	f -<$>- x = Yoneda (\k -> yoneda x (k . f))
 
-instance Liftable Yoneda where
+instance Liftable (->) Yoneda where
 	lift x = Yoneda (-<$>- x)

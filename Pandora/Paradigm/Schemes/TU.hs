@@ -66,7 +66,7 @@ instance (Traversable (->) (->) t, Traversable (->) (->) u) => Traversable (->) 
 instance (Bindable (->) t, Distributive (->) (->) t, Covariant (->) (->) u, Bindable (->) u) => Bindable (->) (t <:.> u) where
 	f =<< TU x = TU $ (\i -> (identity =<<) -<$>- run . f -<< i) =<< x
 
-instance Monoidal (->) (->) (:*:) (:*:) t => Liftable (TU Covariant Covariant t) where
+instance Monoidal (->) (->) (:*:) (:*:) t => Liftable (->) (TU Covariant Covariant t) where
 	lift :: Covariant (->) (->) u => u ~> t <:.> u
 	lift = TU . point
 

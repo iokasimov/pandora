@@ -55,7 +55,7 @@ instance Interpreted (Reverse t) where
 	run ~(Reverse x) = x
 	unite = Reverse
 
-instance Liftable Reverse where
+instance Liftable (->) Reverse where
 	lift = Reverse
 
 instance Lowerable Reverse where

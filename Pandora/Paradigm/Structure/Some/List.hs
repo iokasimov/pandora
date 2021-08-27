@@ -112,7 +112,7 @@ instance Substructure Tail List where
 	type Available Tail List = Identity
 	type Substance Tail List = List
 	substructure = P_Q_T $ \x -> case run . extract . run $ x of
-		Just ns -> lift . lift -<$>- run (sub @Tail) ns
+		Just ns -> lift . lift @(->) -<$>- run (sub @Tail) ns
 		Nothing -> Store $ Identity zero :*: lift . identity . extract
 
 -- | Transform any traversable structure into a stack
@@ -221,7 +221,7 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Construction Maybe) 
 
 instance Morphable (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Tap (List <:.:> List := (:*:)))) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Tap (List <:.:> List := (:*:))
-	morphing (premorph -> zipper) = Tap # extract zipper $ lift <-> lift ||= lower zipper
+	morphing (premorph -> zipper) = Tap # extract zipper $ lift @(->) <-> lift @(->) ||= lower zipper
 
 instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) =
