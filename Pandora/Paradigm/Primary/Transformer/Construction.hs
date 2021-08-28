@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\), hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
@@ -63,7 +63,7 @@ instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Lowerable (->) Constru
 	lower x = extract -<$>- deconstruct x
 
 instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Hoistable Construction where
-	f /|\ x = Construct # extract x $ f # hoist f -<$>- deconstruct x
+	f /|\ x = Construct # extract x $ f # (f /|\) -<$>- deconstruct x
 
 instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Setoid (Construction t a) where
 	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)

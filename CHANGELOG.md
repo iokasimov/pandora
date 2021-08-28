@@ -583,3 +583,6 @@
 * Rearrange type parameters in `Divariant` typeclass
 * Generalize `Liftable` typeclass
 * Generalize `Lowerable` typeclass
+
+# 0.4.7
+* Remove `hoist` method from `Hoistable` typeclass

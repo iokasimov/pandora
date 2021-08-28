@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\), hoist))
+import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
@@ -52,4 +52,4 @@ instance (forall t . Bindable (->) t, forall t . Monoidal (->) (->) (:*:) (:*:) 
 
 instance (forall v . Covariant (->) (->) v) => Hoistable Instruction where
 	_ /|\ Enter x = Enter x
-	f /|\ Instruct xs = Instruct $ hoist f -<$>- f xs
+	f /|\ Instruct xs = Instruct $ (f /|\) -<$>- f xs

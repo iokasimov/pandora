@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower), Hoistable (hoist))
+import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower), Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Primary.Algebraic (Extractable_)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
@@ -296,7 +296,7 @@ instance
 	adapt = bring . lower . lower . lower . lower . lower . lower . lower
 
 instance (Covariant (->) (->) u, Hoistable ((:>) t), Adaptable u u') => Adaptable (t :> u) (t :> u') where
-	adapt = hoist adapt
+	adapt = (adapt /|\)
 
 instance
 	( Covariant (->) (->) v
@@ -306,7 +306,7 @@ instance
 	, Hoistable (Schematic Monad u)
 	, Adaptable v v'
 	) => Adaptable (t :> u :> v) (t :> u :> v') where
-	adapt = hoist (hoist adapt)
+	adapt = ((adapt /|\) /|\)
 
 instance
 	( Covariant (->) (->) u
@@ -321,7 +321,7 @@ instance
 	, Hoistable (Schematic Monad v)
 	, Adaptable w w'
 	) => Adaptable (t :> u :> v :> w) (t :> u :> v :> w') where
-	adapt = hoist (hoist (hoist adapt))
+	adapt = (((adapt /|\) /|\) /|\)
 
 instance
 	( Covariant (->) (->) x
@@ -335,7 +335,7 @@ instance
 	, Hoistable (Schematic Monad w)
 	, Adaptable x x'
 	) => Adaptable (t :> u :> v :> w :> x) (t :> u :> v :> w :> x') where
-	adapt = hoist (hoist (hoist (hoist adapt)))
+	adapt = (((adapt /|\) /|\) /|\)
 
 instance
 	( Covariant (->) (->) y
@@ -351,7 +351,7 @@ instance
 	, Hoistable (Schematic Monad x)
 	, Adaptable y y'
 	) => Adaptable (t :> u :> v :> w :> x :> y) (t :> u :> v :> w :> x :> y') where
-	adapt = hoist (hoist (hoist (hoist (hoist adapt))))
+	adapt = ((((adapt /|\) /|\) /|\) /|\)
 
 instance
 	( Covariant (->) (->) z
@@ -370,7 +370,7 @@ instance
 	, Adaptable z z'
 	) => Adaptable (t :> u :> v :> w :> x :> y :> z)
 		(t :> u :> v :> w :> x :> y :> z') where
-	adapt = hoist (hoist (hoist (hoist (hoist adapt))))
+	adapt = (((((adapt /|\) /|\) /|\) /|\) /|\)
 
 instance
 	( Covariant (->) (->) f
@@ -391,7 +391,7 @@ instance
 	, Adaptable f f'
 	) => Adaptable (t :> u :> v :> w :> x :> y :> z :> f)
 		(t :> u :> v :> w :> x :> y :> z :> f') where
-	adapt = hoist (hoist (hoist (hoist (hoist (hoist adapt)))))
+	adapt = ((((((adapt /|\) /|\) /|\) /|\) /|\) /|\)
 
 instance
 	( Covariant (->) (->) h
@@ -414,4 +414,4 @@ instance
 	, Adaptable h h'
 	) => Adaptable (t :> u :> v :> w :> x :> y :> z :> f :> h)
 		(t :> u :> v :> w :> x :> y :> z :> f :> h') where
-	adapt = hoist (hoist (hoist (hoist (hoist (hoist (hoist adapt))))))
+	adapt = (((((((adapt /|\) /|\) /|\) /|\) /|\) /|\) /|\)
