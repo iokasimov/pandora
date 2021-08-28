@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Transformer.Jack where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -22,12 +22,12 @@ import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 data Jack t a = It a | Other (t a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Jack t) where
-	f -<$>- It x = It $ f x
-	f -<$>- Other y = Other $ f -<$>- y
+	f <$> It x = It $ f x
+	f <$> Other y = Other $ f <$> y
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Jack t) where
-	f <<- It x = It -<$>- f x
-	f <<- Other y = Other -<$>- f <<- y
+	f <<- It x = It <$> f x
+	f <<- Other y = Other <$> f <<- y
 
 instance (Monoidal (->) (->) (:*:) (:*:) t, Bindable (->) t) => Bindable (->) (Jack t) where
 	f =<< It x = f x

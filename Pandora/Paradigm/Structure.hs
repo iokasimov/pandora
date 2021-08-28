@@ -10,7 +10,7 @@ import Pandora.Paradigm.Structure.Some as Exports
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup ((+))
@@ -67,7 +67,7 @@ instance Morphable (Into (Postorder (Construction Maybe))) (Construction Wye) wh
 
 instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
 	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
-	morphing (premorph -> xs) = (into @(o ds) -<$>-) ||= xs
+	morphing (premorph -> xs) = (into @(o ds) <$>) ||= xs
 
 instance Substructure Left (Flip (:*:) a) where
 	type Available Left (Flip (:*:) a) = Identity

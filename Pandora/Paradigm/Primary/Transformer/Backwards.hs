@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Transformer.Backwards where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -23,12 +23,12 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 newtype Backwards t a = Backwards (t a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Backwards t) where
-	f -<$>- Backwards x = Backwards $ f -<$>- x
+	f <$> Backwards x = Backwards $ f <$> x
 
 -- TODO: check that effects evaluation goes in opposite order
 instance (Semimonoidal (->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (->) (:*:) (:*:) (Backwards t) where
 	multiply (Backwards x :*: Backwards y) = Backwards #
-		((:*:) %) -<$>- y -<*>- x
+		((:*:) %) <$> y -<*>- x
 
 instance (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t) => Monoidal (->) (->) (:*:) (:*:) (Backwards t) where
 	unit _ f = Backwards . point $ f One
@@ -42,7 +42,7 @@ instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t) => Monoidal 
 	unit _ = Flip $ \(Backwards x) -> (\_ -> extract x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Backwards t) where
-	f <<- Backwards x = Backwards -<$>- f <<- x
+	f <<- Backwards x = Backwards <$> f <<- x
 
 instance Distributive (->) (->) t => Distributive (->) (->) (Backwards t) where
 	f -<< x = Backwards $ run . f -<< x

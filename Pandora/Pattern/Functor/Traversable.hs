@@ -10,7 +10,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 
 > When providing a new instance, you should ensure it satisfies:
 > * Numeratority of traversing: g . (f <<--) ≡ (g . f <<--)
-> * Numeratority of sequencing: f . (identity <<--)= (identity <<--) . (f -<$>-)
+> * Numeratority of sequencing: f . (identity <<--)= (identity <<--) . (f <$>)
 > * Preserving point: p (point x) ≡ point x
 > * Preserving apply: f (x -<*>- y) ≡ f x -<*>- f y
 -}

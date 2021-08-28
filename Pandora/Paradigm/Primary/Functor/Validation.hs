@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Validation where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -22,20 +22,20 @@ import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 data Validation e a = Flaws e | Validated a
 
 instance Covariant (->) (->) (Validation e) where
-	_ -<$>- Flaws e = Flaws e
-	f -<$>- Validated x = Validated $ f x
-	_ -<$>- Flaws e = Flaws e
-	f -<$>- Validated x = Validated $ f x
-	_ -<$>- Flaws e = Flaws e
-	f -<$>- Validated x = Validated $ f x
+	_ <$> Flaws e = Flaws e
+	f <$> Validated x = Validated $ f x
+	_ <$> Flaws e = Flaws e
+	f <$> Validated x = Validated $ f x
+	_ <$> Flaws e = Flaws e
+	f <$> Validated x = Validated $ f x
 
 instance Covariant (->) (->) (Flip Validation a) where
-	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
-	_ -<$>- Flip (Validated x) = Flip $ Validated x
-	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
-	_ -<$>- Flip (Validated x) = Flip $ Validated x
-	f -<$>- Flip (Flaws e) = Flip . Flaws $ f e
-	_ -<$>- Flip (Validated x) = Flip $ Validated x
+	f <$> Flip (Flaws e) = Flip . Flaws $ f e
+	_ <$> Flip (Validated x) = Flip $ Validated x
+	f <$> Flip (Flaws e) = Flip . Flaws $ f e
+	_ <$> Flip (Validated x) = Flip $ Validated x
+	f <$> Flip (Flaws e) = Flip . Flaws $ f e
+	_ <$> Flip (Validated x) = Flip $ Validated x
 
 instance Semigroup e => Semimonoidal (->) (:*:) (:*:) (Validation e) where
 	multiply (Validated x :*: Validated y) = Validated $ x :*: y
@@ -47,11 +47,11 @@ instance Semigroup e => Monoidal (->) (->) (:*:) (:*:) (Validation e) where
 	unit _ f = Validated $ f One
 
 instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Validation e) where
-	multiply (Flaws _ :*: y) = Adoption -<$>- y
-	multiply (Validated x :*: _) = Option -<$>- Validated x
+	multiply (Flaws _ :*: y) = Adoption <$> y
+	multiply (Validated x :*: _) = Option <$> Validated x
 
 instance Traversable (->) (->) (Validation e) where
-	f <<- Validated x = Validated -<$>- f x
+	f <<- Validated x = Validated <$> f x
 	_ <<- Flaws e = point $ Flaws e
 
 instance Bivariant (->) (->) (->) Validation where

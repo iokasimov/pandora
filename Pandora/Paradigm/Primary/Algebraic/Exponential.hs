@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Algebraic.Exponential where
 
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -25,10 +25,10 @@ instance Category (->) where
 	identity x = x
 
 instance Covariant (->) (->) ((->) a) where
-	(-<$>-) = (.)
+	(<$>) = (.)
 
 instance Distributive (->) (->) ((->) e) where
-	f -<< g = \e -> (f % e) -<$>- g
+	f -<< g = \e -> (f % e) <$> g
 
 instance Bindable (->) ((->) e) where
 	f =<< g = \x -> f # g x # x
@@ -54,7 +54,7 @@ instance Contravariant (->) (->) ((<--) a) where
 	f ->$<- Flip g = Flip $ g . f
 
 (-.#..-) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
-(-.#..-) f = (-<$>-) (f .)
+(-.#..-) f = (<$>) (f .)
 
 {-# INLINE (!.) #-}
 (!.) :: a -> b -> a

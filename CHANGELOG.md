@@ -586,3 +586,4 @@
 
 # 0.4.7
 * Remove `hoist` method from `Hoistable` typeclass
+* Rename `-<$>-` method to `<$>` in `Covariant` typeclasss 

@@ -9,7 +9,7 @@ import Pandora.Paradigm.Primary.Algebraic.Zero as Exports
 import Pandora.Paradigm.Primary.Algebraic.One as Exports
 
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -24,7 +24,7 @@ type instance Unit (:+:) = Zero
 infixl 4 -<*>-
 
 ($>-) :: Covariant (->) (->) t => t a -> b -> t b
-x $>- r = (r !.) -<$>- x
+x $>- r = (r !.) <$> x
 
 ($$>-) :: (Covariant (->) (->) t, Covariant (->) (->) u) => t (u a) -> b -> t (u b)
 x $$>- r = (r !.) -<$$>- x
@@ -36,7 +36,7 @@ void :: Covariant (->) (->) t => t a -> t ()
 void x = x $>- ()
 
 instance Traversable (->) (->) ((:*:) s) where
-	f <<- x = (attached x :*:) -<$>- f (extract x)
+	f <<- x = (attached x :*:) <$> f (extract x)
 
 instance Adjoint (->) (->) ((:*:) s) ((->) s) where
 	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)
@@ -84,17 +84,17 @@ type Alternative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, M
 
 (-<*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
 	=> t (a -> b) -> t a -> t b
-f -<*>- x = (|-) @(->) @(->) (&) -<$>- multiply @_ @_ @(:*:) (f :*: x)
+f -<*>- x = (|-) @(->) @(->) (&) <$> multiply @_ @_ @(:*:) (f :*: x)
 
 forever_ :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b
 forever_ x = let r = x *>- r in r
 
 (*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b -> t b
-x *>- y = ((!.) %) -<$>- x -<*>- y
+x *>- y = ((!.) %) <$> x -<*>- y
 
 (-+-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t)
 	  => t a -> t b -> (a :+: b -> r) -> t r
-x -+- y = \f -> f -<$>- multiply (x :*: y)
+x -+- y = \f -> f <$> multiply (x :*: y)
 
 point :: Monoidal (->) (->) (:*:) (:*:) t => a -> t a
 point x = unit (Proxy @(:*:)) (\One -> x)

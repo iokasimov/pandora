@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.State where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -28,7 +28,7 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 newtype State s a = State ((->) s :. (:*:) s := a)
 
 instance Covariant (->) (->) (State s) where
-	f -<$>- x = State $ (-<$>-) f . run x
+	f <$> x = State $ (<$>) f . run x
 
 instance Semimonoidal (->) (:*:) (:*:) (State s) where
 	multiply (State g :*: State h) = State $ \s -> 
@@ -40,7 +40,7 @@ instance Monoidal (->) (->) (:*:) (:*:) (State s) where
 	unit _ f = State . (identity @(->) -|) $ f One
 
 instance Bindable (->) (State s) where
-	f =<< x = State $ (run . f |-) -<$>- run x
+	f =<< x = State $ (run . f |-) <$> run x
 
 instance Monad (State s) where
 
@@ -55,7 +55,7 @@ instance Interpreted (State s) where
 type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 
 instance Monadic (State s) where
-	wrap x = TM . TUT $ point -<$>- run x
+	wrap x = TM . TUT $ point <$> run x
 
 type Stateful s = Adaptable (State s)
 

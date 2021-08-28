@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Optics where
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity, ($), (#)))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
@@ -27,7 +27,7 @@ infixl 2 #=@
 type Lens = P_Q_T (->) Store
 
 instance Invariant (Flip (Lens available) tgt) where
-	f <$< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T $ g >-> (f -<$>-) $ lens
+	f <$< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T $ g >-> (f <$>) $ lens
 
 type family Convex lens where
 	Convex Lens = Lens Identity

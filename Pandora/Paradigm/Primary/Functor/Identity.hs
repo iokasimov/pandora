@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Identity where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -30,7 +30,7 @@ import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 newtype Identity a = Identity a
 
 instance Covariant (->) (->) Identity where
-	f -<$>- Identity x = Identity $ f x
+	f <$> Identity x = Identity $ f x
 
 instance Semimonoidal (->) (:*:) (:*:) Identity where
 	multiply (Identity x :*: Identity y) = Identity $ x :*: y
@@ -45,7 +45,7 @@ instance Monoidal (<--) (->) (:*:) (:*:) Identity where
 	unit _ = Flip $ \(Identity x) -> (\_ -> x)
 
 instance Traversable (->) (->) Identity where
-	f <<- Identity x = Identity -<$>- f x
+	f <<- Identity x = Identity <$> f x
 
 instance Bindable (->) Identity where
 	f =<< Identity x = f x	
@@ -64,7 +64,7 @@ instance Comonad Identity (->)
 
 instance Adjoint (->) (->) Identity Identity where
 	f -| x = Identity . f . Identity $ x
-	g |- x = extract . extract . (g -<$>-) $ x
+	g |- x = extract . extract . (g <$>) $ x
 
 instance Setoid a => Setoid (Identity a) where
 	Identity x == Identity y = x == y

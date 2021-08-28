@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -26,7 +26,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 newtype Environment e a = Environment (e -> a)
 
 instance Covariant (->) (->) (Environment e) where
-	f -<$>- Environment x = Environment $ f . x
+	f <$> Environment x = Environment $ f . x
 
 instance Contravariant (->) (->) (Flip Environment a) where
 	f ->$<- Flip (Environment g) = Flip . Environment $ g . f
@@ -38,7 +38,7 @@ instance Monoidal (->) (->) (:*:) (:*:) (Environment e) where
 	unit _ f = Environment $ \_ -> f One
 
 instance Distributive (->) (->) (Environment e) where
-	f -<< g = Environment $ (run -<$>- f) -<< g
+	f -<< g = Environment $ (run <$> f) -<< g
 
 instance Bindable (->) (Environment e) where
 	f =<< Environment x = Environment $ \e -> (run % e) . f . x $ e
@@ -56,7 +56,7 @@ instance Interpreted (Environment e) where
 type instance Schematic Monad (Environment e) = (<:.>) ((->) e)
 
 instance Monadic (Environment e) where
-	wrap x = TM . TU $ point -<$>- run x
+	wrap x = TM . TU $ point <$> run x
 
 type Configured e = Adaptable (Environment e)
 

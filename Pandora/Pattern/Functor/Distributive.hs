@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 
 > When providing a new instance, you should ensure it satisfies:
 > * Identity morphism: (identity -<<) . (identity -<<) ≡ identity
-> * Interchange collection: (f -<<) ≡ (identity -<<) . (f -<$>-)
+> * Interchange collection: (f -<<) ≡ (identity -<<) . (f <$>)
 -}
 
 infixl 5 -<<

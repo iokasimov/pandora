@@ -5,7 +5,7 @@ module Pandora.Paradigm.Primary.Transformer.Construction where
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
@@ -34,16 +34,16 @@ infixr 7 .-+
 data Construction t a = Construct a (t :. Construction t := a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
-	f -<$>- ~(Construct x xs) = Construct # f x # f -<$$>- xs
+	f <$> ~(Construct x xs) = Construct # f x # f -<$$>- xs
 
 instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Semimonoidal (->) (:*:) (:*:) (Construction t) where
-	multiply (Construct x xs :*: Construct y ys) = Construct (x :*: y) (multiply @(->) @(:*:) -<$>- multiply (xs :*: ys))
+	multiply (Construct x xs :*: Construct y ys) = Construct (x :*: y) (multiply @(->) @(:*:) <$> multiply (xs :*: ys))
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
 	multiply = Flip $ \(Construct (x :*: y) xys) ->
 		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		let Flip g = multiply @(<--) @(:*:) @(:*:) in
-		(Construct x <-> Construct y) $ f $ g -<$>- xys
+		(Construct x <-> Construct y) $ f $ g <$> xys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Construction t) where
 	unit _ = Flip $ \(Construct x _) -> (\_ -> x)
@@ -52,18 +52,18 @@ instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) 
 	unit _ f = Construct # f One # empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
-	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs
+	f <<- ~(Construct x xs) = Construct <$> f x -<*>- f -<<-<<- xs
 
 instance Covariant (->) (->) t => Extendable (->) (Construction t) where
-	f <<= x = Construct # f x # (f <<=) -<$>- deconstruct x
+	f <<= x = Construct # f x # (f <<=) <$> deconstruct x
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Comonad (Construction t) (->) where
 
 instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Lowerable (->) Construction where
-	lower x = extract -<$>- deconstruct x
+	lower x = extract <$> deconstruct x
 
 instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Hoistable Construction where
-	f /|\ x = Construct # extract x $ f # (f /|\) -<$>- deconstruct x
+	f /|\ x = Construct # extract x $ f # (f /|\) <$> deconstruct x
 
 instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Setoid (Construction t a) where
 	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)
@@ -85,7 +85,7 @@ deconstruct ~(Construct _ xs) = xs
 
 -- Generate a construction from seed using effectful computation
 (.-+) :: Covariant (->) (->) t => a :=> t -> a :=> Construction t
-f .-+ x = Construct x $ (f .-+) -<$>- f x
+f .-+ x = Construct x $ (f .-+) <$> f x
 
 section :: (Comonad t (->), Monoidal (<--) (->) (:*:) (:*:) t) => t ~> Construction t
 section xs = Construct # extract xs $ section <<= xs
