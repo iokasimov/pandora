@@ -23,3 +23,8 @@ instance Interpreted (Flip v a) where
 	type Primary (Flip v a) e = v e a
 	run ~(Flip x) = x
 	unite = Flip
+
+instance Interpreted (Straight v e) where
+	type Primary (Straight v e) a = v e a
+	run ~(Straight x) = x
+	unite = Straight
