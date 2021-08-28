@@ -3,7 +3,7 @@ module Pandora.Paradigm.Schemes.TUT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((-<$>-)), (-<$$>-), (-<$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<$>)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -40,29 +40,29 @@ instance Interpreted (TUT ct ct' cu t t' u) where
 	unite = TUT
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u) => Covariant (->) (->) (t <:<.>:> t' := u) where
-	f -<$>- TUT x = TUT $ f -<$$$>- x
+	f <$> TUT x = TUT $ f -<$$$>- x
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u, Semimonoidal (->) (:*:) (:*:) t, Semimonoidal (->) (:*:) (:*:) u, Semimonoidal (->) (:*:) (:*:) t') => Semimonoidal (->) (:*:) (:*:) (t <:<.>:> t' := u) where
-	multiply (TUT x :*: TUT y) = TUT $ multiply @(->) @(:*:) -<$$>- multiply @(->) @(:*:) -<$>- multiply (x :*: y)
+	multiply (TUT x :*: TUT y) = TUT $ multiply @(->) @(:*:) -<$$>- multiply @(->) @(:*:) <$> multiply (x :*: y)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
 	multiply = Flip $ \(TUT xys) ->
 		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		let Flip g = multiply @(<--) @(:*:) @(:*:) in
 		let Flip h = multiply @(<--) @(:*:) @(:*:) in
-		(TUT <-> TUT) $ f (g -<$>- (h -<$$>- xys)) where
+		(TUT <-> TUT) $ f (g <$> (h -<$$>- xys)) where
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Flip $ \(TUT xys) -> (\_ -> (extract |-) xys)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable (->) u) => Bindable (->) (t <:<.>:> t' := u) where
-	f =<< x = TUT $ ((run . f |-) =<<) -<$>- run x
+	f =<< x = TUT $ ((run . f |-) =<<) <$> run x
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal (->) (:*:) (:*:) t, Semimonoidal (->) (:*:) (:*:) t', Monoidal (->) (->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (->) (->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ f = unite . (point -|) . f $ One
 
 instance (Adjoint (->) (->) t' t, Extendable (->) u) => Extendable (->) (t' <:<.>:> t := u) where
-	f <<= x = TUT $ ((f . unite -|) <<=) -<$>- run x
+	f <<= x = TUT $ ((f . unite -|) <<=) <$> run x
 
 instance (Adjoint (->) (->) t' t, Distributive (->) (->) t) => Liftable (->) (t <:<.>:> t') where
 	lift :: Covariant (->) (->) u => u ~> t <:<.>:> t' := u

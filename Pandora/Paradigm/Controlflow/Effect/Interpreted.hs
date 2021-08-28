@@ -2,7 +2,7 @@ module Pandora.Paradigm.Controlflow.Effect.Interpreted where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((-<$>-)), (-<$$>-), (-<$$$>-), (-<$$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-), (-<$$$>-), (-<$$$$>-))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
@@ -24,7 +24,7 @@ class Interpreted t where
 
 	(<$||=) :: (Covariant (->) (->) j, Interpreted u)
 		=> (Primary t a -> Primary u b) -> j := t a -> j := u b
-	f <$||= x = (f ||=) -<$>- x
+	f <$||= x = (f ||=) <$> x
 
 	(<$$||=) :: (Covariant (->) (->) j, Covariant (->) (->) k, Interpreted u)
 		=> (Primary t a -> Primary u b) -> j :. k := t a -> j :. k := u b
@@ -40,7 +40,7 @@ class Interpreted t where
 
 	(=||$>) :: (Covariant (->) (->) j, Interpreted u)
 		=> (t a -> u b) -> j := Primary t a -> j := Primary u b
-	f =||$> x = (f =||) -<$>- x
+	f =||$> x = (f =||) <$> x
 
 	(=||$$>) :: (Covariant (->) (->) j, Covariant (->) (->) k, Interpreted u)
 		=> (t a -> u b) -> j :. k := Primary t a -> j :. k := Primary u b
