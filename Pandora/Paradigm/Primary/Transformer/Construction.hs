@@ -21,6 +21,9 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
+import Pandora.Paradigm.Primary.Algebraic.One (One (One))
+import Pandora.Paradigm.Primary.Algebraic (empty)
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
@@ -44,6 +47,9 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoid
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Construction t) where
 	unit _ = Flip $ \(Construct x _) -> (\_ -> x)
+
+instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) (->) (:*:) (:+:) t) => Monoidal (->) (->) (:*:) (:*:) (Construction t) where
+	unit _ f = Construct # f One # empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
 	f <<- ~(Construct x xs) = Construct -<$>- f x -<*>- f -<<-<<- xs
