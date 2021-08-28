@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -29,7 +29,7 @@ instance Covariant (->) (->) (Environment e) where
 	f <$> Environment x = Environment $ f . x
 
 instance Contravariant (->) (->) (Flip Environment a) where
-	f ->$<- Flip (Environment g) = Flip . Environment $ g . f
+	f >$< Flip (Environment g) = Flip . Environment $ g . f
 
 instance Semimonoidal (->) (:*:) (:*:) (Environment e) where
 	multiply (x :*: y) = unite $ multiply $ run x :*: run y

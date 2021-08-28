@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Transformer.Backwards where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant ((->$<-)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -48,7 +48,7 @@ instance Distributive (->) (->) t => Distributive (->) (->) (Backwards t) where
 	f -<< x = Backwards $ run . f -<< x
 
 instance Contravariant (->) (->) t => Contravariant (->) (->) (Backwards t) where
-	f ->$<- Backwards x = Backwards $ f ->$<- x
+	f >$< Backwards x = Backwards $ f >$< x
 
 instance Interpreted (Backwards t) where
 	type Primary (Backwards t) a = t a
