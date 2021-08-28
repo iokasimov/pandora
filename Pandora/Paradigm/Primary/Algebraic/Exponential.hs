@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Paradigm.Primary.Transformer.Straight (Straight (Straight))
 
 infixr 2 !.
 infixr 7 -.#..-
@@ -45,13 +46,24 @@ instance Ringoid r => Ringoid (e -> r) where
 type (<--) = Flip (->)
 
 instance Semigroupoid (<--) where
-	Flip f . Flip g = Flip $ \x -> g (f x)
+	Flip f . Flip g = Flip $ g . f
 
 instance Category (<--) where
 	identity = Flip identity
 
 instance Contravariant (->) (->) ((<--) a) where
 	f >$< Flip g = Flip $ g . f
+
+type (-->) = Straight (->)
+
+instance Semigroupoid (-->) where
+	Straight f . Straight g = Straight $ f . g
+
+instance Category (-->) where
+	identity = Straight identity
+
+instance Covariant (->) (->) ((-->) b) where
+	f <$> Straight g = Straight $ f . g
 
 (-.#..-) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (-.#..-) f = (<$>) (f .)

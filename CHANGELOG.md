@@ -589,3 +589,4 @@
 * Rename `-<$>-` method to `<$>` in `Covariant` typeclasss
 * Rename `->$<-` method to `>$<` in `Contravariant` typeclass
 * Define `Straight` transformer
+* Define `-->` type synonymous
