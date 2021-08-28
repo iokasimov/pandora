@@ -58,6 +58,7 @@ library
     Pandora.Paradigm.Primary.Transformer.Backwards
     Pandora.Paradigm.Primary.Transformer.Reverse
     Pandora.Paradigm.Primary.Transformer.Flip
+    Pandora.Paradigm.Primary.Transformer.Straight
     Pandora.Paradigm.Primary.Transformer.Continuation
     Pandora.Paradigm.Primary.Transformer.Construction
     Pandora.Paradigm.Primary.Transformer.Instruction

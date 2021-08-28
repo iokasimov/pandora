@@ -586,5 +586,6 @@
 
 # 0.4.7
 * Remove `hoist` method from `Hoistable` typeclass
-* Rename `-<$>-` method to `<$>` in `Covariant` typeclasss 
-* Rename `->$<-` method to `>$<` in `Contravariant` typeclasss 
+* Rename `-<$>-` method to `<$>` in `Covariant` typeclasss
+* Rename `->$<-` method to `>$<` in `Contravariant` typeclass
+* Define `Straight` transformer

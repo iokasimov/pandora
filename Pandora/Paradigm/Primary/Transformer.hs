@@ -14,6 +14,7 @@ import Pandora.Paradigm.Primary.Transformer.Instruction as Exports
 import Pandora.Paradigm.Primary.Transformer.Construction as Exports
 import Pandora.Paradigm.Primary.Transformer.Reverse as Exports
 import Pandora.Paradigm.Primary.Transformer.Backwards as Exports
+import Pandora.Paradigm.Primary.Transformer.Straight as Exports
 import Pandora.Paradigm.Primary.Transformer.Flip as Exports
 
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
