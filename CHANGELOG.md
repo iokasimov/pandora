@@ -590,3 +590,4 @@
 * Rename `->$<-` method to `>$<` in `Contravariant` typeclass
 * Define `Straight` transformer
 * Define `-->` type synonymous
+* Define `Opposite` type family
