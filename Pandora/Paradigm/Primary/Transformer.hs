@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Transformer (module Exports, Opposite) where
+module Pandora.Paradigm.Primary.Transformer (module Exports, Opposite, Appliable ((!))) where
 
 import Pandora.Paradigm.Primary.Transformer.Yoneda as Exports
 import Pandora.Paradigm.Primary.Transformer.Tap as Exports
@@ -17,6 +17,8 @@ import Pandora.Paradigm.Primary.Transformer.Backwards as Exports
 import Pandora.Paradigm.Primary.Transformer.Straight as Exports
 import Pandora.Paradigm.Primary.Transformer.Flip as Exports
 
+import Pandora.Pattern.Category (($))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 instance Interpreted (Flip v a) where
@@ -32,3 +34,12 @@ instance Interpreted (Straight v e) where
 type family Opposite m where
 	Opposite Straight = Flip
 	Opposite Flip = Straight
+
+class Appliable m a c b d where
+	(!) :: m a b -> c -> d
+
+instance Appliable (Straight (->)) c c b b where
+	Straight f ! x = f x
+
+instance Appliable (Straight (->)) a (a :*: b) (b -> c) c where
+	Straight f ! (x :*: y) = f x $ y

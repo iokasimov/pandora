@@ -591,3 +591,4 @@
 * Define `Straight` transformer
 * Define `-->` type synonymous
 * Define `Opposite` type family
+* Define experimental `Appliable` typeclass
