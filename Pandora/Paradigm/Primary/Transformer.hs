@@ -17,7 +17,6 @@ import Pandora.Paradigm.Primary.Transformer.Backwards as Exports
 import Pandora.Paradigm.Primary.Transformer.Straight as Exports
 import Pandora.Paradigm.Primary.Transformer.Flip as Exports
 
-import Pandora.Pattern.Category (($))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
@@ -35,11 +34,14 @@ type family Opposite m where
 	Opposite Straight = Flip
 	Opposite Flip = Straight
 
-class Appliable m a b c d where
-	(!) :: m a b -> c -> d
+class Appliable m a b n c d where
+	(!) :: m a b -> n c d
 
-instance Appliable (Straight (->)) c b c b where
-	Straight f ! x = f x
+instance Appliable (Straight m) c b m c b where
+	(!) (Straight m) = m
 
-instance Appliable (Straight (->)) a (b -> c) (a :*: b) c where
-	Straight f ! (x :*: y) = f x $ y
+instance Appliable (->) c b (->) c b where
+	f ! x = f x
+
+instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
+	f ! (x :*: y) = f x ! y
