@@ -35,11 +35,11 @@ type family Opposite m where
 	Opposite Straight = Flip
 	Opposite Flip = Straight
 
-class Appliable m a c b d where
+class Appliable m a b c d where
 	(!) :: m a b -> c -> d
 
-instance Appliable (Straight (->)) c c b b where
+instance Appliable (Straight (->)) c b c b where
 	Straight f ! x = f x
 
-instance Appliable (Straight (->)) a (a :*: b) (b -> c) c where
+instance Appliable (Straight (->)) a (b -> c) (a :*: b) c where
 	Straight f ! (x :*: y) = f x $ y
