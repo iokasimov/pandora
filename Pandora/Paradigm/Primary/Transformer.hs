@@ -17,6 +17,7 @@ import Pandora.Paradigm.Primary.Transformer.Backwards as Exports
 import Pandora.Paradigm.Primary.Transformer.Straight as Exports
 import Pandora.Paradigm.Primary.Transformer.Flip as Exports
 
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
@@ -37,11 +38,14 @@ type family Opposite m where
 class Appliable m a b n c d where
 	(!) :: m a b -> n c d
 
-instance Appliable (Straight m) c b m c b where
-	(!) (Straight m) = m
-
 instance Appliable (->) c b (->) c b where
 	f ! x = f x
+
+instance Appliable (->) a (b -> c) (->) b (a -> c) where
+	(!) f = (%) f
+
+instance Appliable (Straight m) c b m c b where
+	(!) (Straight m) = m
 
 instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
 	f ! (x :*: y) = f x ! y
