@@ -47,5 +47,8 @@ instance Appliable (->) a (b -> c) (->) b (a -> c) where
 instance Appliable (Straight m) c b m c b where
 	(!) (Straight m) = m
 
+instance Appliable (Flip m) b c m c b where
+	(!) (Flip m) = m
+
 instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
 	f ! (x :*: y) = f x ! y
