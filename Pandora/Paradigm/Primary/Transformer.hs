@@ -14,8 +14,8 @@ import Pandora.Paradigm.Primary.Transformer.Instruction as Exports
 import Pandora.Paradigm.Primary.Transformer.Construction as Exports
 import Pandora.Paradigm.Primary.Transformer.Reverse as Exports
 import Pandora.Paradigm.Primary.Transformer.Backwards as Exports
-import Pandora.Paradigm.Primary.Transformer.Straight as Exports
-import Pandora.Paradigm.Primary.Transformer.Flip as Exports
+import Pandora.Pattern.Morphism.Straight as Exports
+import Pandora.Pattern.Morphism.Flip as Exports
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))

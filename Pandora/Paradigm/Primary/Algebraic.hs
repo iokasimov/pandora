@@ -16,7 +16,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero

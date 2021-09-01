@@ -27,7 +27,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 data Maybe a = Nothing | Just a
 

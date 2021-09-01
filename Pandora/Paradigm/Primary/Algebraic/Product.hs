@@ -15,7 +15,7 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
 infixr 0 :*:

@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (empty, point, extract)
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 newtype TU ct cu t u a = TU (t :. u := a)
 

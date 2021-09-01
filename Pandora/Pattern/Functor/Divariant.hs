@@ -2,7 +2,7 @@ module Pandora.Pattern.Functor.Divariant where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
+import Pandora.Pattern.Morphism.Flip (Flip)
 
 infixl 4 >->
 

@@ -8,7 +8,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
 data Wye a = End | Left a | Right a | Both a a

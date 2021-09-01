@@ -15,7 +15,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 

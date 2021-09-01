@@ -11,8 +11,8 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
-import Pandora.Paradigm.Primary.Transformer.Straight (Straight (Straight))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
 infixr 2 !.
 infixr 7 -.#..-

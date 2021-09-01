@@ -1,7 +1,7 @@
 module Pandora.Pattern.Functor.Bivariant where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip)
+import Pandora.Pattern.Morphism.Flip (Flip)
 
 infixl 4 <->
 

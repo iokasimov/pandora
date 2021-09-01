@@ -25,7 +25,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (extract)
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 newtype Identity a = Identity a
 

@@ -5,7 +5,7 @@ import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
-import Pandora.Paradigm.Primary.Transformer.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 infixr 0 :+:
 
