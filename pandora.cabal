@@ -23,6 +23,7 @@ library
     Pandora.Core
     Pandora.Core.Functor
     Pandora.Core.Impliable
+    Pandora.Core.Appliable
 
     Pandora.Paradigm
     -- Basic constructions
@@ -136,6 +137,7 @@ library
 	-- Algebra typeclasses
     Pandora.Pattern.Semigroupoid
     Pandora.Pattern.Category
+    Pandora.Pattern.Morphism
     -- Functor typeclassess
     Pandora.Pattern.Functor
     Pandora.Pattern.Functor.Adjoint

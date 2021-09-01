@@ -20,17 +20,6 @@ import Pandora.Pattern.Morphism.Flip as Exports
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-
-instance Interpreted (Flip v a) where
-	type Primary (Flip v a) e = v e a
-	run ~(Flip x) = x
-	unite = Flip
-
-instance Interpreted (Straight v e) where
-	type Primary (Straight v e) a = v e a
-	run ~(Straight x) = x
-	unite = Straight
 
 instance Appliable (->) c b (->) c b where
 	f ! x = f x
