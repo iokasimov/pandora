@@ -109,17 +109,5 @@ type Extractable_ t = Monoidal (<--) (->) (:*:) (:*:) t
 extract :: Extractable_ t => t a -> a
 extract j = let Flip f = unit @(<--) @(->) @(:*:) @(:*:) Proxy in f j $ One
 
-instance Appliable (->) c b (->) c b where
-	f ! x = f x
-
-instance Appliable (->) a (b -> c) (->) b (a -> c) where
-	(!) f = (%) f
-
-instance Appliable (Straight m) c b m c b where
-	(!) (Straight m) = m
-
-instance Appliable (Flip m) b c m c b where
-	(!) (Flip m) = m
-
 instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
 	f ! (x :*: y) = f x ! y
