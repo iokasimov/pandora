@@ -8,6 +8,7 @@ import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
 import Pandora.Paradigm.Primary.Algebraic as Exports
 
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#)))

@@ -8,6 +8,9 @@ import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 import Pandora.Paradigm.Primary.Algebraic.Zero as Exports
 import Pandora.Paradigm.Primary.Algebraic.One as Exports
 
+import Pandora.Core.Appliable (Appliable ((!)))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
@@ -16,7 +19,6 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
-import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
@@ -106,3 +108,18 @@ type Extractable_ t = Monoidal (<--) (->) (:*:) (:*:) t
 
 extract :: Extractable_ t => t a -> a
 extract j = let Flip f = unit @(<--) @(->) @(:*:) @(:*:) Proxy in f j $ One
+
+instance Appliable (->) c b (->) c b where
+	f ! x = f x
+
+instance Appliable (->) a (b -> c) (->) b (a -> c) where
+	(!) f = (%) f
+
+instance Appliable (Straight m) c b m c b where
+	(!) (Straight m) = m
+
+instance Appliable (Flip m) b c m c b where
+	(!) (Flip m) = m
+
+instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
+	f ! (x :*: y) = f x ! y
