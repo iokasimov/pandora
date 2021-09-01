@@ -1,7 +1,8 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Transformer (module Exports, Appliable ((!))) where
+module Pandora.Paradigm.Primary.Transformer (module Exports) where
 
+import Pandora.Core.Appliable (Appliable ((!)))
 import Pandora.Paradigm.Primary.Transformer.Yoneda as Exports
 import Pandora.Paradigm.Primary.Transformer.Tap as Exports
 import Pandora.Paradigm.Primary.Transformer.Continuation as Exports
@@ -30,9 +31,6 @@ instance Interpreted (Straight v e) where
 	type Primary (Straight v e) a = v e a
 	run ~(Straight x) = x
 	unite = Straight
-
-class Appliable m a b n c d where
-	(!) :: m a b -> n c d
 
 instance Appliable (->) c b (->) c b where
 	f ! x = f x
