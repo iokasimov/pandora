@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<$>)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -43,13 +43,13 @@ instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u) 
 	f <$> TUT x = TUT $ f -<$$$>- x
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u, Semimonoidal (->) (:*:) (:*:) t, Semimonoidal (->) (:*:) (:*:) u, Semimonoidal (->) (:*:) (:*:) t') => Semimonoidal (->) (:*:) (:*:) (t <:<.>:> t' := u) where
-	multiply (TUT x :*: TUT y) = TUT $ multiply @(->) @(:*:) -<$$>- multiply @(->) @(:*:) <$> multiply (x :*: y)
+	mult (TUT x :*: TUT y) = TUT $ mult @(->) @(:*:) -<$$>- mult @(->) @(:*:) <$> mult (x :*: y)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
-	multiply = Flip $ \(TUT xys) ->
-		let Flip f = multiply @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply @(<--) @(:*:) @(:*:) in
-		let Flip h = multiply @(<--) @(:*:) @(:*:) in
+	mult = Flip $ \(TUT xys) ->
+		let Flip f = mult @(<--) @(:*:) @(:*:) in
+		let Flip g = mult @(<--) @(:*:) @(:*:) in
+		let Flip h = mult @(<--) @(:*:) @(:*:) in
 		(TUT <-> TUT) $ f (g <$> (h -<$$>- xys)) where
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (->) (:*:) (:*:) (t <:<.>:> t' := u) where

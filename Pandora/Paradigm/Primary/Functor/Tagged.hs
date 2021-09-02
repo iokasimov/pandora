@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -40,13 +40,13 @@ instance Covariant (->) (->) (Flip Tagged a) where
 	_ <$> Flip (Tag x) = Flip $ Tag x
 
 instance Semimonoidal (->) (:*:) (:*:) (Tagged tag) where
-	multiply (x :*: y) = Tag $ extract x :*: extract y
+	mult (x :*: y) = Tag $ extract x :*: extract y
 
 instance Monoidal (->) (->) (:*:) (:*:) (Tagged tag) where
 	unit _ f = Tag $ f One
 
 instance Semimonoidal (<--) (:*:) (:*:) (Tagged tag) where
-	multiply = Flip $ \(Tag (x :*: y)) -> Tag x :*: Tag y
+	mult = Flip $ \(Tag (x :*: y)) -> Tag x :*: Tag y
 
 instance Monoidal (<--) (->) (:*:) (:*:) (Tagged tag) where
 	unit _ = Flip $ \(Tag x) -> (\_ -> x)

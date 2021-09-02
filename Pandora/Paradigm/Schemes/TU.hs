@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<$>)), (-<$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -40,21 +40,21 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (
 	f <$> x = TU $ f -<$$>- run x
 
 instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Semimonoidal (->) (:*:) (:*:) u) => Semimonoidal (->) (:*:) (:*:) (t <:.> u) where
-	multiply (TU x :*: TU y) = TU $ multiply @(->) @(:*:) <$> multiply (x :*: y)
+	mult (TU x :*: TU y) = TU $ mult @(->) @(:*:) <$> mult (x :*: y)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (->) (:*:) (:*:) u, Monoidal (->) (->) (:*:) (:*:) t, Monoidal (->) (->) (:*:) (:*:) u) => Monoidal (->) (->) (:*:) (:*:) (t <:.> u) where
 	unit _ f = TU . point . point $ f One
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (->) (:*:) (:+:) t) => Semimonoidal (->) (:*:) (:+:) (t <:.> u) where
-	multiply (TU x :*: TU y) = TU $ sum (Option <$>) (Adoption <$>) <$> multiply @(->) @(:*:) @(:+:) (x :*: y)
+	mult (TU x :*: TU y) = TU $ sum (Option <$>) (Adoption <$>) <$> mult @(->) @(:*:) @(:+:) (x :*: y)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Monoidal (->) (->) (:*:) (:+:) t) => Monoidal (->) (->) (:*:) (:+:) (t <:.> u) where
 	unit _ _ = TU empty
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.> u) where
-	multiply = Flip $ \(TU xys) -> (TU <-> TU)
-		. run (multiply @(<--) @(:*:) @(:*:))
-		$ run (multiply @(<--) @(:*:) @(:*:)) <$> xys
+	mult = Flip $ \(TU xys) -> (TU <-> TU)
+		. run (mult @(<--) @(:*:) @(:*:))
+		$ run (mult @(<--) @(:*:) @(:*:)) <$> xys
 
 instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t, Monoidal (<--) (->) (:*:) (:*:) u) => Monoidal (<--) (->) (:*:) (:*:) (t <:.> u) where
 	unit _ = Flip $ \(TU x) -> (\_ -> extract $ extract x)

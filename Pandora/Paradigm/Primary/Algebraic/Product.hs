@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Algebraic.Product where
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -61,13 +61,13 @@ instance (Group s, Group a) => Group (s :*: a) where
 	invert ~(s :*: x) = invert # s :*: invert # x
 
 instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (t <:.:> t := (:*:)) where
-	multiply (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ multiply (xls :*: yls) :*: multiply (xrs :*: yrs)
+	mult (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ mult (xls :*: yls) :*: mult (xrs :*: yrs)
 
 -- TODO: Generalize (:*:) as Bivariant p
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
-	multiply = Flip $ \(T_U lrxys) ->
-		let Flip f = multiply @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply @(<--) @(:*:) @(:*:) in
+	mult = Flip $ \(T_U lrxys) ->
+		let Flip f = mult @(<--) @(:*:) @(:*:) in
+		let Flip g = mult @(<--) @(:*:) @(:*:) in
 		-- TODO: I need matrix transposing here
 		let ((lxs :*: lys) :*: (rxs :*: rys)) = (f <-> g) lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)

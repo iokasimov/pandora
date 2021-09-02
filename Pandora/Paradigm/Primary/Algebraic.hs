@@ -13,7 +13,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-), (-<$$$>-))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -48,28 +48,28 @@ instance Adjoint (->) (->) ((:*:) s) ((->) s) where
 	f |- ~(s :*: x) = f x s
 
 instance Semimonoidal (->) (:*:) (:*:) ((->) e) where
-	multiply :: ((e -> a) :*: (e -> b)) -> e -> (a :*: b)
-	multiply (g :*: h) = \x -> g x :*: h x
+	mult :: ((e -> a) :*: (e -> b)) -> e -> (a :*: b)
+	mult (g :*: h) = \x -> g x :*: h x
 
 instance Semimonoidal (<--) (:*:) (:*:) ((->) e) where
-	multiply = Flip $ \f -> (\e -> attached $ f e) :*: (\e -> extract $ f e)
+	mult = Flip $ \f -> (\e -> attached $ f e) :*: (\e -> extract $ f e)
 
 instance Semimonoidal (->) (:*:) (:+:) ((:+:) e) where
-	multiply :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
-	multiply (Option _ :*: Option e') = Option e'
-	multiply (Option _ :*: Adoption y) = Adoption $ Adoption y
-	multiply (Adoption x :*: _) = Adoption $ Option x
+	mult :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
+	mult (Option _ :*: Option e') = Option e'
+	mult (Option _ :*: Adoption y) = Adoption $ Adoption y
+	mult (Adoption x :*: _) = Adoption $ Option x
 
 instance Semimonoidal (->) (:*:) (:*:) ((:+:) e) where
-	multiply (Adoption x :*: Adoption y) = Adoption $ x :*: y
-	multiply (Option e :*: _) = Option e
-	multiply (_ :*: Option e) = Option e
+	mult (Adoption x :*: Adoption y) = Adoption $ x :*: y
+	mult (Option e :*: _) = Option e
+	mult (_ :*: Option e) = Option e
 
 instance Monoidal (->) (->) (:*:) (:*:) ((:+:) e) where
 	unit _ f = Adoption $ f One
 
 instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
-	multiply = Flip $ \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
+	mult = Flip $ \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
 
 instance Monoidal (<--) (->) (:*:) (:*:) ((:*:) s) where
 	unit _ = Flip $ \(_ :*: x) -> (\_ -> x)
@@ -77,7 +77,7 @@ instance Monoidal (<--) (->) (:*:) (:*:) ((:*:) s) where
 instance Comonad ((:*:) s) (->) where
 
 instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
-	multiply = Flip $ \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
+	mult = Flip $ \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
 
 instance Monoidal (<--) (->) (:*:) (:*:) (Flip (:*:) a) where
 	unit _ = Flip $ \(Flip (s :*: _)) -> (\_ -> s)
@@ -87,7 +87,7 @@ type Alternative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, M
 
 (-<*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
 	=> t (a -> b) -> t a -> t b
-f -<*>- x = (|-) @(->) @(->) (&) <$> multiply @_ @_ @(:*:) (f :*: x)
+f -<*>- x = (|-) @(->) @(->) (&) <$> mult @_ @_ @(:*:) (f :*: x)
 
 forever_ :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b
 forever_ x = let r = x *>- r in r
@@ -97,7 +97,7 @@ x *>- y = ((!.) %) <$> x -<*>- y
 
 (-+-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t)
 	  => t a -> t b -> (a :+: b -> r) -> t r
-x -+- y = \f -> f <$> multiply (x :*: y)
+x -+- y = \f -> f <$> mult (x :*: y)
 
 point :: Monoidal (->) (->) (:*:) (:*:) t => a -> t a
 point x = unit (Proxy @(:*:)) (\One -> x)

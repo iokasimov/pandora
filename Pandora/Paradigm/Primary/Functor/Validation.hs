@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Validation where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
@@ -38,17 +38,17 @@ instance Covariant (->) (->) (Flip Validation a) where
 	_ <$> Flip (Validated x) = Flip $ Validated x
 
 instance Semigroup e => Semimonoidal (->) (:*:) (:*:) (Validation e) where
-	multiply (Validated x :*: Validated y) = Validated $ x :*: y
-	multiply (Flaws x :*: Flaws y) = Flaws $ x + y
-	multiply (Validated _ :*: Flaws y) = Flaws y
-	multiply (Flaws x :*: Validated _) = Flaws x
+	mult (Validated x :*: Validated y) = Validated $ x :*: y
+	mult (Flaws x :*: Flaws y) = Flaws $ x + y
+	mult (Validated _ :*: Flaws y) = Flaws y
+	mult (Flaws x :*: Validated _) = Flaws x
 
 instance Semigroup e => Monoidal (->) (->) (:*:) (:*:) (Validation e) where
 	unit _ f = Validated $ f One
 
 instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Validation e) where
-	multiply (Flaws _ :*: y) = Adoption <$> y
-	multiply (Validated x :*: _) = Option <$> Validated x
+	mult (Flaws _ :*: y) = Adoption <$> y
+	mult (Validated x :*: _) = Option <$> Validated x
 
 instance Traversable (->) (->) (Validation e) where
 	f <<- Validated x = Validated <$> f x

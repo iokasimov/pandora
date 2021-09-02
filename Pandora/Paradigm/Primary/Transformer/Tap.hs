@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -34,11 +34,11 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Tap t) where
 	f <$> Tap x xs = Tap # f x # f <$> xs
 
 instance Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (Tap t) where
-	multiply (Tap x xs :*: Tap y ys) = Tap (x :*: y) $ multiply $ xs :*: ys
+	mult (Tap x xs :*: Tap y ys) = Tap (x :*: y) $ mult $ xs :*: ys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
-	multiply = Flip $ \(Tap (x :*: y) xys) -> 
-		(Tap x <-> Tap y) $ run (multiply @(<--) @(:*:) @(:*:)) xys
+	mult = Flip $ \(Tap (x :*: y) xys) -> 
+		(Tap x <-> Tap y) $ run (mult @(<--) @(:*:) @(:*:)) xys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (->) (:*:) (:*:) (Tap t) where
 	unit _ = Flip $ \(Tap x _) -> (\_ -> x)
@@ -56,8 +56,8 @@ instance Hoistable Tap where
 	f /|\ Tap x xs = Tap x # f xs
 
 instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (Tap (t <:.:> t := (:*:))) where
-	multiply (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
-		$ T_U $ multiply (xls :*: yls) :*: multiply (xrs :*: yrs)
+	mult (Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) = Tap (x :*: y)
+		$ T_U $ mult (xls :*: yls) :*: mult (xrs :*: yrs)
 
 instance {-# OVERLAPS #-} Traversable (->) (->) t => Traversable (->) (->) (Tap (t <:.:> t := (:*:))) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')

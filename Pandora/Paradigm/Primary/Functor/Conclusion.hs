@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($), (#))
 --import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -37,16 +37,16 @@ instance Covariant (->) (->) (Flip Conclusion e) where
 	f <$> Flip (Failure y) = Flip . Failure $ f y
 
 instance Semimonoidal (->) (:*:) (:*:) (Conclusion e) where
-	multiply (Success x :*: Success y) = Success $ x :*: y
-	multiply (Failure x :*: _) = Failure x
-	multiply (_ :*: Failure x) = Failure x
+	mult (Success x :*: Success y) = Success $ x :*: y
+	mult (Failure x :*: _) = Failure x
+	mult (_ :*: Failure x) = Failure x
 
 instance Monoidal (->) (->) (:*:) (:*:) (Conclusion e) where
 	unit _ f = Success $ f One
 
 instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Conclusion e) where
-	multiply (Failure _ :*: x) = Adoption <$> x
-	multiply (Success x :*: _) = Option <$> Success x
+	mult (Failure _ :*: x) = Adoption <$> x
+	mult (Success x :*: _) = Option <$> Success x
 
 instance Traversable (->) (->) (Conclusion e) where
 	(<<-) :: (Covariant (->) (->) u, Monoidal (->) (->) (:*:) (:*:) u, Semimonoidal (->) (:*:) (:*:)u)

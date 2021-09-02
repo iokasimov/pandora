@@ -6,7 +6,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -28,13 +28,13 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Reverse t) where
 	f <$> Reverse x = Reverse # f <$> x
 
 instance (Semimonoidal (->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (->) (:*:) (:*:) (Reverse t) where
-	multiply (Reverse x :*: Reverse y) = Reverse # multiply (x :*: y)
+	mult (Reverse x :*: Reverse y) = Reverse # mult (x :*: y)
 
 instance (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t) => Monoidal (->) (->) (:*:) (:*:) (Reverse t) where
 	unit _ f = Reverse . point $ f One
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
-	multiply = Flip $ (Reverse <-> Reverse) . run (multiply @(<--) @(:*:) @(:*:)) . run 
+	mult = Flip $ (Reverse <-> Reverse) . run (mult @(<--) @(:*:) @(:*:)) . run 
 
 instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Reverse t) where
 	unit _ = Flip $ \(Reverse x) -> (\_ -> extract x)

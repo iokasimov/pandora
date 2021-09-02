@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -37,12 +37,12 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
 	f <$> ~(Construct x xs) = Construct # f x # f -<$$>- xs
 
 instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Semimonoidal (->) (:*:) (:*:) (Construction t) where
-	multiply (Construct x xs :*: Construct y ys) = Construct (x :*: y) (multiply @(->) @(:*:) <$> multiply (xs :*: ys))
+	mult (Construct x xs :*: Construct y ys) = Construct (x :*: y) (mult @(->) @(:*:) <$> mult (xs :*: ys))
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
-	multiply = Flip $ \(Construct (x :*: y) xys) ->
-		let Flip f = multiply @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply @(<--) @(:*:) @(:*:) in
+	mult = Flip $ \(Construct (x :*: y) xys) ->
+		let Flip f = mult @(<--) @(:*:) @(:*:) in
+		let Flip g = mult @(<--) @(:*:) @(:*:) in
 		(Construct x <-> Construct y) $ f $ g <$> xys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Construction t) where

@@ -6,7 +6,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -32,7 +32,7 @@ instance Contravariant (->) (->) (Flip Environment a) where
 	f >$< Flip (Environment g) = Flip . Environment $ g . f
 
 instance Semimonoidal (->) (:*:) (:*:) (Environment e) where
-	multiply (x :*: y) = unite $ multiply $ run x :*: run y
+	mult (x :*: y) = unite $ mult $ run x :*: run y
 
 instance Monoidal (->) (->) (:*:) (:*:) (Environment e) where
 	unit _ f = Environment $ \_ -> f One

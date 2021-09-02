@@ -8,7 +8,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -31,7 +31,7 @@ instance Covariant (->) (->) (State s) where
 	f <$> x = State $ (<$>) f . run x
 
 instance Semimonoidal (->) (:*:) (:*:) (State s) where
-	multiply (State g :*: State h) = State $ \s -> 
+	mult (State g :*: State h) = State $ \s -> 
 		let old :*: x = g s in 
 	  	let new :*: y = h old in
 		new :*: x :*: y

@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -36,14 +36,14 @@ instance Covariant (->) (->) Maybe where
 	_ <$> Nothing = Nothing
 
 instance Semimonoidal (->) (:*:) (:*:) Maybe where
-	multiply (Just x :*: Just y) = Just $ x :*: y
-	multiply (Nothing :*: _) = Nothing
-	multiply (_ :*: Nothing) = Nothing
+	mult (Just x :*: Just y) = Just $ x :*: y
+	mult (Nothing :*: _) = Nothing
+	mult (_ :*: Nothing) = Nothing
 
 instance Semimonoidal (->) (:*:) (:+:) Maybe where
-	multiply (Just x :*: _) = Just $ Option x
-	multiply (Nothing :*: Just y) = Just $ Adoption y
-	multiply (Nothing :*: Nothing) = Nothing
+	mult (Just x :*: _) = Just $ Option x
+	mult (Nothing :*: Just y) = Just $ Adoption y
+	mult (Nothing :*: Nothing) = Nothing
 
 instance Monoidal (->) (->) (:*:) (:*:) Maybe where
 	unit _ f = Just $ f One
@@ -53,7 +53,7 @@ instance Monoidal (->) (->) (:*:) (:+:) Maybe where
 
 -- TODO: Check laws
 instance Semimonoidal (<--) (:*:) (:*:) Maybe where
-	multiply = Flip $ \case
+	mult = Flip $ \case
 		Just (x :*: y) -> Just x :*: Just y
 		Nothing -> Nothing :*: Nothing
 
