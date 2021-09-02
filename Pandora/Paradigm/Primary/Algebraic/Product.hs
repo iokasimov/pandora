@@ -65,11 +65,11 @@ instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (
 
 -- TODO: Generalize (:*:) as Bivariant p
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
-	multiply = Flip $ \(T_U (lxys :*: rxys)) ->
+	multiply = Flip $ \(T_U lrxys) ->
 		let Flip f = multiply @(<--) @(:*:) @(:*:) in
 		let Flip g = multiply @(<--) @(:*:) @(:*:) in
-		let (lxs :*: lys) = f lxys in
-		let (rxs :*: rys) = g rxys in
+		-- TODO: I need matrix transposing here
+		let ((lxs :*: lys) :*: (rxs :*: rys)) = (f <-> g) lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
 delta :: a -> a :*: a

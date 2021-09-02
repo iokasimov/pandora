@@ -45,10 +45,9 @@ instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (->) (:*:) (:*:
 	f =<< UT x = UT $ ((identity =<<) <$>) . (run . f <<-) =<< x
 
 instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <.:> u) where
-	multiply = Flip $ \(UT xys) ->
-		let Flip f = multiply @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply @(<--) @(:*:) @(:*:) in
-		(UT <-> UT) $ f (g <$> xys) where
+	multiply = Flip $ \(UT xys) -> (UT <-> UT)
+		. run (multiply @(<--) @(:*:) @(:*:))
+		$ run (multiply @(<--) @(:*:) @(:*:)) <$> xys
 
 instance (Covariant (->) (->) u, Monoidal (<--) (->) (:*:) (:*:) t, Monoidal (<--) (->) (:*:) (:*:) u) => Monoidal (<--) (->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Flip $ \(UT x) -> (\_ -> extract $ extract x)

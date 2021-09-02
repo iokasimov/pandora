@@ -34,9 +34,7 @@ instance (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t) => Monoidal (
 	unit _ f = Reverse . point $ f One
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
-	multiply = Flip $ \(Reverse x) -> 
-		let Flip f = multiply @(<--) @(:*:) @(:*:) in
-		(Reverse <-> Reverse) $ f x
+	multiply = Flip $ (Reverse <-> Reverse) . run (multiply @(<--) @(:*:) @(:*:)) . run 
 
 instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Reverse t) where
 	unit _ = Flip $ \(Reverse x) -> (\_ -> extract x)

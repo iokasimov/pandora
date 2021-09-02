@@ -19,6 +19,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
@@ -107,7 +108,7 @@ empty = unit (Proxy @(:*:)) absurd
 type Extractable_ t = Monoidal (<--) (->) (:*:) (:*:) t
 
 extract :: Extractable_ t => t a -> a
-extract j = let Flip f = unit @(<--) @(->) @(:*:) @(:*:) Proxy in f j $ One
+extract j = run (unit @(<--) @(->) @(:*:) @(:*:) Proxy) j One
 
 instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
 	f ! (x :*: y) = f x ! y

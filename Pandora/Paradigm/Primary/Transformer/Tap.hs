@@ -10,6 +10,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (multiply))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -37,8 +38,7 @@ instance Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (Tap t
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
 	multiply = Flip $ \(Tap (x :*: y) xys) -> 
-		let Flip f = multiply @(<--) @(:*:) @(:*:) in
-		let (xs :*: ys) = f xys in Tap x xs :*: Tap y ys
+		(Tap x <-> Tap y) $ run (multiply @(<--) @(:*:) @(:*:)) xys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (->) (:*:) (:*:) (Tap t) where
 	unit _ = Flip $ \(Tap x _) -> (\_ -> x)

@@ -52,10 +52,9 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Monoidal (->) (->) (:*:)
 	unit _ _ = TU empty
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.> u) where
-	multiply = Flip $ \(TU xys) ->
-		let Flip f = multiply @(<--) @(:*:) @(:*:) in
-		let Flip g = multiply @(<--) @(:*:) @(:*:) in
-		(TU <-> TU) $ g (f <$> xys) where
+	multiply = Flip $ \(TU xys) -> (TU <-> TU)
+		. run (multiply @(<--) @(:*:) @(:*:))
+		$ run (multiply @(<--) @(:*:) @(:*:)) <$> xys
 
 instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t, Monoidal (<--) (->) (:*:) (:*:) u) => Monoidal (<--) (->) (:*:) (:*:) (t <:.> u) where
 	unit _ = Flip $ \(TU x) -> (\_ -> extract $ extract x)
