@@ -45,7 +45,7 @@ instance Comonad (Store s) (->) where
 instance Invariant (Flip Store r) where
 	f <$< g = \(Flip x) -> Flip $ (<->) @_ @(->) f (g >-> identity @(->)) ||= x
 
-instance Interpreted (Store s) where
+instance Interpreted (->) (Store s) where
 	type Primary (Store s) a = (:*:) s :. (->) s := a
 	run ~(Store x) = x
 	unite = Store
@@ -59,11 +59,11 @@ type Storable s x = Adaptable x (Store s)
 
 -- | Get current index
 position :: Storable s t => t a -> s
-position = attached . run @(Store _) . adapt
+position = attached . run @(->) @(Store _) . adapt
 
 -- | Given an index return value
 look :: Storable s t => s -> a <:= t
-look s = (extract % s) . run @(Store _) . adapt
+look s = (extract % s) . run @(->) @(Store _) . adapt
 
 -- | Change index with function
 retrofit :: (s -> s) -> Store s ~> Store s

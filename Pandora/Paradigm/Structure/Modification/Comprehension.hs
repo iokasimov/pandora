@@ -29,7 +29,7 @@ import Pandora.Paradigm.Primary.Algebraic (empty)
 
 newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
 
-instance Interpreted (Comprehension t) where
+instance Interpreted (->) (Comprehension t) where
 	type Primary (Comprehension t) a = t <:.> Construction t := a
 	run ~(Comprehension x) = x
 	unite = Comprehension
@@ -66,4 +66,4 @@ instance (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t)  => Morphable
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 
 instance Nullable (t <:.> Construction t) => Nullable (Comprehension t) where
-	null = run >$< null
+	null = run @(->) >$< null

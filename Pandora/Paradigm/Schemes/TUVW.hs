@@ -5,7 +5,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 
 newtype TUVW ct cu cv cw t u v w a = TUVW (t :. u :. v :. w := a)
 
-instance Interpreted (TUVW ct cu cv cw t u v w) where
+instance Interpreted (->) (TUVW ct cu cv cw t u v w) where
 	type Primary (TUVW ct cu cv cw t u v w) a = t :. u :. v :. w := a
 	run ~(TUVW x) = x
 	unite = TUVW

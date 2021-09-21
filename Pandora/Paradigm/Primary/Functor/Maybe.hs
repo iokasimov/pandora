@@ -100,7 +100,7 @@ instance Lattice a => Lattice (Maybe a) where
 
 type instance Schematic Monad Maybe = (<.:>) Maybe
 
-instance Interpreted Maybe where
+instance Interpreted (->) Maybe where
 	type Primary Maybe a = Maybe a
 	run = identity
 	unite = identity

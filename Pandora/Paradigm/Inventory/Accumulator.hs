@@ -32,7 +32,7 @@ instance Semigroup e => Bindable (->) (Accumulator e) where
 
 type instance Schematic Monad (Accumulator e) = (<.:>) ((:*:) e)
 
-instance Interpreted (Accumulator e) where
+instance Interpreted (->) (Accumulator e) where
 	type Primary (Accumulator e) a = e :*: a
 	run ~(Accumulator x) = x
 	unite = Accumulator

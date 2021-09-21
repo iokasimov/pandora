@@ -26,7 +26,7 @@ instance Contravariant (->) (->) (Flip Imprint a) where
 	f >$< Flip (Imprint g) = Flip . Imprint $ g . f
 
 instance Distributive (->) (->) (Imprint e) where
-	f -<< g = Imprint $ (run <$> f) -<< g
+	f -<< g = Imprint $ (run @(->) <$> f) -<< g
 
 instance Divariant (->) (->) (->) Imprint where
 	(>->) ab cd bc = ab >-> cd ||= bc
@@ -34,7 +34,7 @@ instance Divariant (->) (->) (->) Imprint where
 instance Semigroup e => Extendable (->) (Imprint e) where
 	f <<= Imprint x = Imprint $ \e -> f $ Imprint $ x . (e +)
 
-instance Interpreted (Imprint e) where
+instance Interpreted (->) (Imprint e) where
 	type Primary (Imprint e) a = (->) e a
 	run ~(Imprint x) = x
 	unite = Imprint

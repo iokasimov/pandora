@@ -11,7 +11,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 newtype Endo a = Endo { endo :: a -> a }
 
-instance Interpreted Endo where
+instance Interpreted (->) Endo where
 	type Primary Endo a = a -> a
 	run ~(Endo x) = x
 	unite = Endo

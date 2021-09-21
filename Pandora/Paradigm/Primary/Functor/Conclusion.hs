@@ -88,7 +88,7 @@ fail :: (e -> r) -> Conclusion e ~> Conclusion r
 fail f (Failure x) = Failure $ f x
 fail _ (Success y) = Success y
 
-instance Interpreted (Conclusion e) where
+instance Interpreted (->) (Conclusion e) where
 	type Primary (Conclusion e) a = Conclusion e a
 	run = identity
 	unite = identity

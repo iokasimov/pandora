@@ -48,7 +48,7 @@ instance Distributive (->) (->) t => Distributive (->) (->) (Backwards t) where
 instance Contravariant (->) (->) t => Contravariant (->) (->) (Backwards t) where
 	f >$< Backwards x = Backwards $ f >$< x
 
-instance Interpreted (Backwards t) where
+instance Interpreted (->) (Backwards t) where
 	type Primary (Backwards t) a = t a
 	run ~(Backwards x) = x
 	unite = Backwards

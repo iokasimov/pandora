@@ -117,7 +117,7 @@ instance Substructure Tail List where
 
 -- | Transform any traversable structure into a stack
 linearize :: forall t a . Traversable (->) (->) t => t a -> List a
-linearize = TU . extract . (run @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just -.#..- Construct)
+linearize = TU . extract . (run @(->) @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just -.#..- Construct)
 
 ----------------------------------------- Non-empty list -------------------------------------------
 
@@ -191,13 +191,13 @@ instance Morphable (Into (Tap (List <:.:> List := (:*:)))) List where
 
 instance Morphable (Into List) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into List) (Tap (List <:.:> List := (:*:))) = List
-	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(->) @(State _)
 		# modify . item @Push @List <<- past
 		# item @Push x future
 
 instance Morphable (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:))) where
 	type Morphing (Into (Comprehension Maybe)) (Tap (List <:.:> List := (:*:))) = Comprehension Maybe
-	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(->) @(State _)
 		# modify . item @Push @(Comprehension Maybe) <<- past
 		# item @Push x (Comprehension future)
 
@@ -227,17 +227,17 @@ instance Morphable (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:
 	type Morphing (Into (Tap (Construction Maybe <:.:> Construction Maybe := (:*:)))) (Tap (List <:.:> List := (:*:))) =
 		Maybe <:.> Tap (Construction Maybe <:.:> Construction Maybe := (:*:))
 	morphing (premorph -> zipper) = let spread x y = (:*:) <$> x -<*>- y in TU $
-		Tap (extract zipper) . T_U <$> ((spread |-) . (run <-> run) . run $ lower zipper)
+		Tap (extract zipper) . T_U <$> ((spread |-) . (run @(->) <-> run @(->)) . run $ lower zipper)
 
 instance Morphable (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into (Construction Maybe)) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = Construction Maybe
-	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(->) @(State _)
 		# modify . item @Push @(Nonempty List) <<- past
 		# item @Push x future
 
 instance Morphable (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) where
 	type Morphing (Into List) (Tap (Construction Maybe <:.:> Construction Maybe := (:*:))) = List
-	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(State _)
+	morphing (premorph -> Tap x (T_U (future :*: past))) = attached $ run @(->) @(State _)
 		# modify . item @Push @List <<- past
 		# item @Push x (lift future)
 

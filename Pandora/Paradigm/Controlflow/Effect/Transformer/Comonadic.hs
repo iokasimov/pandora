@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (Extractable_, point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
-class Interpreted t => Comonadic t where
+class Interpreted (->) t => Comonadic t where
 	{-# MINIMAL bring #-}
 	bring :: Extractable_ u => t :< u ~> t
 
@@ -56,7 +56,7 @@ instance Lowerable (->) (Schematic Comonad t) => Lowerable (->) ((:<) t) where
 instance Hoistable (Schematic Comonad t) => Hoistable ((:<) t) where
 	f /|\ TC x = TC $ f /|\ x
 
-instance (Interpreted (Schematic Comonad t u)) => Interpreted (t :< u) where
+instance (Interpreted (->) (Schematic Comonad t u)) => Interpreted (->) (t :< u) where
 	type Primary (t :< u) a = Primary (Schematic Comonad t u) a
 	run ~(TC x) = run x
 	unite = TC . unite

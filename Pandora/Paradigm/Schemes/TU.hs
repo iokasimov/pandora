@@ -31,7 +31,7 @@ type (>:.>) = TU Contravariant Covariant
 type (<:.<) = TU Covariant Contravariant
 type (>:.<) = TU Contravariant Contravariant
 
-instance Interpreted (TU ct cu t u) where
+instance Interpreted (->) (TU ct cu t u) where
 	type Primary (TU ct cu t u) a = t :. u := a
 	run ~(TU x) = x
 	unite = TU

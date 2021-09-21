@@ -16,7 +16,7 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 
 newtype Prefixed t k a = Prefixed (t :. (:*:) k := a)
 
-instance Interpreted (Prefixed t k) where
+instance Interpreted (->) (Prefixed t k) where
 	type Primary (Prefixed t k) a = t :. (:*:) k := a
 	run ~(Prefixed x) = x
 	unite = Prefixed

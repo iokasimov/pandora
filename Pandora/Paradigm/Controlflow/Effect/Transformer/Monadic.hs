@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
-class Interpreted t => Monadic t where
+class Interpreted (->) t => Monadic t where
 	{-# MINIMAL wrap #-}
 	wrap :: Monoidal (->) (->) (:*:) (:*:) u => t ~> t :> u
 
@@ -56,7 +56,7 @@ instance Liftable (->) (Schematic Monad t) => Liftable (->) ((:>) t) where
 instance Hoistable (Schematic Monad t) => Hoistable ((:>) t) where
 	f /|\ TM x = TM $ f /|\ x
 
-instance (Interpreted (Schematic Monad t u)) => Interpreted (t :> u) where
+instance (Interpreted (->) (Schematic Monad t u)) => Interpreted (->) (t :> u) where
 	type Primary (t :> u) a = Primary (Schematic Monad t u) a
 	run ~(TM x) = run x
 	unite = TM . unite

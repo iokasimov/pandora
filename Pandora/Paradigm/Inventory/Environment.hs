@@ -38,7 +38,7 @@ instance Monoidal (->) (->) (:*:) (:*:) (Environment e) where
 	unit _ f = Environment $ \_ -> f One
 
 instance Distributive (->) (->) (Environment e) where
-	f -<< g = Environment $ (run <$> f) -<< g
+	f -<< g = Environment $ (run @(->) <$> f) -<< g
 
 instance Bindable (->) (Environment e) where
 	f =<< Environment x = Environment $ \e -> (run % e) . f . x $ e
@@ -48,7 +48,7 @@ instance Bindable (->) (Environment e) where
 instance Divariant (->) (->) (->) Environment where
 	(>->) ab cd bc = Environment $ ab >-> cd $ run bc
 
-instance Interpreted (Environment e) where
+instance Interpreted (->) (Environment e) where
 	type Primary (Environment e) a = (->) e a
 	run ~(Environment x) = x
 	unite = Environment

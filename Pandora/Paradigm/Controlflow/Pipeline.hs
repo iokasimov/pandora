@@ -12,14 +12,14 @@ import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continua
 
 newtype Producer i t r = Producer { produce :: Consumer i t r -> t r }
 
-instance Interpreted (Producer i t) where
+instance Interpreted (->) (Producer i t) where
 	type Primary (Producer i t) a = Consumer i t a -> t a
 	run ~(Producer f) = f
 	unite = Producer
 
 newtype Consumer o t r = Consumer { consume :: o -> Producer o t r -> t r }
 
-instance Interpreted (Consumer o t) where
+instance Interpreted (->) (Consumer o t) where
 	type Primary (Consumer o t) a = o -> Producer o t a -> t a
 	run ~(Consumer f) = f
 	unite = Consumer

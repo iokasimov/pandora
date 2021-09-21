@@ -25,7 +25,7 @@ instance Traversable (->) (->) (Equipment e) where
 instance Extendable (->) (Equipment e) where
 	f <<= Equipment (e :*: x) = Equipment . (:*:) e . f . Equipment $ e :*: x
 
-instance Interpreted (Equipment e) where
+instance Interpreted (->) (Equipment e) where
 	type Primary (Equipment e) a = e :*: a
 	run ~(Equipment x) = x
 	unite = Equipment
@@ -38,4 +38,4 @@ instance {-# OVERLAPS #-} Extendable (->) u => Extendable (->) ((:*:) e <:.> u) 
 	f <<= TU (e :*: x) = TU . (:*:) e $ f . TU . (:*:) e <<= x
 
 retrieve :: Equipped e t => t a -> e
-retrieve = attached . run @(Equipment _) . adapt
+retrieve = attached . run @(->) @(Equipment _) . adapt

@@ -48,7 +48,7 @@ instance Distributive (->) (->) t => Distributive (->) (->) (Reverse t) where
 instance Contravariant (->) (->) t => Contravariant (->) (->) (Reverse t) where
 	f >$< Reverse x = Reverse # f >$< x
 
-instance Interpreted (Reverse t) where
+instance Interpreted (->) (Reverse t) where
 	type Primary (Reverse t) a = t a
 	run ~(Reverse x) = x
 	unite = Reverse

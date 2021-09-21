@@ -16,7 +16,7 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 
 newtype Continuation r t a = Continuation ((->) ::|:. a :. t := r)
 
-instance Interpreted (Continuation r t) where
+instance Interpreted (->) (Continuation r t) where
 	type Primary (Continuation r t) a = (->) ::|:. a :. t := r
 	run ~(Continuation x) = x
 	unite = Continuation

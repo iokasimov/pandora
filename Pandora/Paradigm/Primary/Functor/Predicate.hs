@@ -10,7 +10,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 
 newtype Predicate a = Predicate (a -> Boolean)
 
-instance Interpreted Predicate where
+instance Interpreted (->) Predicate where
 	type Primary Predicate a = a -> Boolean
 	run ~(Predicate f) = f
 	unite = Predicate

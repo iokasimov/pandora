@@ -47,7 +47,7 @@ instance Monad (State s) where
 instance Invariant (Flip State r) where
 	f <$< g = ((g >-> ((<->) @_ @(->) @(->) f identity) ||=) ||=)
 
-instance Interpreted (State s) where
+instance Interpreted (->) (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a
 	run ~(State x) = x
 	unite = State
