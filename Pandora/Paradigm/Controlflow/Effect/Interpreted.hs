@@ -24,41 +24,41 @@ class Interpreted m t where
 	(=||) :: (Semigroupoid m, Interpreted m u) => m (t a) (u b) -> m (Primary t a) (Primary u b)
 	(=||) f = run . f . unite
 
-	-- (<$||=) :: (Covariant (->) (->) j, Interpreted u)
-		-- => (Primary t a -> Primary u b) -> j := t a -> j := u b
-	-- f <$||= x = (f ||=) <$> x
+	(<$||=) :: (Semigroupoid m, Covariant m m j, Interpreted m u)
+                => m (Primary t a) (Primary u b) -> m (j := t a) (j := u b)
+	(<$||=) f = (<$>) ((||=) f)
 
-	--(<$$||=) :: (Covariant (->) (->) j, Covariant (->) (->) k, Interpreted u)
-		-- => (Primary t a -> Primary u b) -> j :. k := t a -> j :. k := u b
-	-- f <$$||= x = (f ||=) -<$$>- x
+	(<$$||=) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Interpreted m u)
+		=> m (Primary t a) (Primary u b) -> m (j :. k := t a) (j :. k := u b)
+	(<$$||=) f = (-<$$>-) ((||=) f)
 
-	-- (<$$$||=) :: (Covariant (->) (->) j, Covariant (->) (->) k, Covariant (->) (->) l, Interpreted u)
-		-- => (Primary t a -> Primary u b) -> j :. k :. l := t a -> j :. k :. l := u b
-	--f <$$$||= x = (f ||=) -<$$$>- x
+	(<$$$||=) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Covariant m m l, Interpreted m u)
+		=> m (Primary t a) (Primary u b) -> m (j :. k :. l := t a) (j :. k :. l := u b)
+	(<$$$||=) f = (-<$$$>-) ((||=) f)
 
-	-- (<$$$$||=) :: (Covariant (->) (->) j, Covariant (->) (->) k, Covariant (->) (->) l, Covariant (->) (->) m, Interpreted u)
-		-- => (Primary t a -> Primary u b) -> j :. k :. l :. m := t a -> j :. k :. l :. m := u b
-	-- f <$$$$||= x = (f ||=) -<$$$$>- x
+	(<$$$$||=) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Covariant m m l, Covariant m m n, Interpreted m u)
+		=> m (Primary t a) (Primary u b) -> m (j :. k :. l :. n := t a) (j :. k :. l :. n := u b)
+	(<$$$$||=) f = (-<$$$$>-) ((||=) f)
 
-	-- (=||$>) :: (Covariant (->) (->) j, Interpreted u)
-		-- => (t a -> u b) -> j := Primary t a -> j := Primary u b
-	-- f =||$> x = (f =||) <$> x
+	(=||$>) :: (Covariant m m j, Interpreted m u)
+		=> m (t a) (u b) -> m (j := Primary t a) (j := Primary u b)
+	(=||$>) f = (<$>) ((=||) f)
 
-	-- (=||$$>) :: (Covariant (->) (->) j, Covariant (->) (->) k, Interpreted u)
-		-- => (t a -> u b) -> j :. k := Primary t a -> j :. k := Primary u b
-	-- f =||$$> x = (f =||) -<$$>- x
+	(=||$$>) :: (Covariant m m j, Covariant m m k, Interpreted m u)
+		=> m (t a) (u b) -> m (j :. k := Primary t a) (j :. k := Primary u b)
+	(=||$$>) f = (-<$$>-) ((=||) f)
 
-	-- (=||$$$>) :: (Covariant (->) (->) j, Covariant (->) (->) k, Covariant (->) (->) l, Interpreted u)
-		-- => (t a -> u b) -> j :. k :. l := Primary t a -> j :. k :. l := Primary u b
-	-- f =||$$$> x = (f =||) -<$$$>- x
+	(=||$$$>) :: (Covariant m m j, Covariant m m k, Covariant m m l, Interpreted m u)
+		=> m (t a) (u b) -> m (j :. k :. l := Primary t a) (j :. k :. l := Primary u b)
+	(=||$$$>) f = (-<$$$>-) ((=||) f)
 
-	-- (=||$$$$>) :: (Covariant (->) (->) j, Covariant (->) (->) k, Covariant (->) (->) l, Covariant (->) (->) m, Interpreted u)
-		-- => (t a -> u b) -> j :. k :. l :. m := Primary t a -> j :. k :. l :. m := Primary u b
-	-- f =||$$$$> x = (f =||) -<$$$$>- x
+	(=||$$$$>) :: (Covariant m m j, Covariant m m k, Covariant m m l, Covariant m m n, Interpreted m u)
+		=> m (t a) (u b) -> m (j :. k :. l :. n := Primary t a) (j :. k :. l :. n := Primary u b)
+	(=||$$$$>) f = (-<$$$$>-) ((=||) f)
 
--- (-=:) :: (Liftable (->) t, Interpreted (t u), Interpreted (t v), Covariant (->) (->) u)
-	-- => (t u a -> t v b) -> u a -> Primary (t v) b
--- (-=:) f = run . f . lift
+(-=:) :: (Liftable m t, Interpreted m (t u), Interpreted m (t v), Covariant m m u)
+	=> m (t u a) (t v b) -> m (u a) (Primary (t v) b)
+(-=:) f = run . f . lift
 
 instance Interpreted (->) (Flip v a) where
 	type Primary (Flip v a) e = v e a
