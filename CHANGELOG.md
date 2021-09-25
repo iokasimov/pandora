@@ -594,3 +594,4 @@
 * Define experimental `Appliable` typeclass
 * Rename `multiply` method to `mult` in `Semimonoidal` typeclass 
 * Generalize `Interpreted` typeclass
+* Define `Groupoid` typeclass

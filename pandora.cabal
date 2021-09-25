@@ -137,6 +137,7 @@ library
 	-- Algebra typeclasses
     Pandora.Pattern.Semigroupoid
     Pandora.Pattern.Category
+    Pandora.Pattern.Groupoid
     Pandora.Pattern.Morphism
     -- Functor typeclassess
     Pandora.Pattern.Functor
