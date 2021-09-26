@@ -31,8 +31,8 @@ instance Covariant (->) (->) (State s) where
 	f <$> x = State $ (<$>) f . run x
 
 instance Semimonoidal (->) (:*:) (:*:) (State s) where
-	mult (State g :*: State h) = State $ \s -> 
-		let old :*: x = g s in 
+	mult (State g :*: State h) = State $ \s ->
+		let old :*: x = g s in
 	  	let new :*: y = h old in
 		new :*: x :*: y
 

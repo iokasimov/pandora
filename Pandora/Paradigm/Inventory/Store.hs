@@ -30,7 +30,7 @@ instance Covariant (->) (->) (Store s) where
 	f <$> Store x = Store $ f -<$$>- x
 
 instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
-	mult = Flip $ \(Store (s :*: f)) -> 
+	mult = Flip $ \(Store (s :*: f)) ->
 		let (x :*: y) = f s in
 		Store (s :*: (x !.)) :*: Store (s :*: (y !.))
 

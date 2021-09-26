@@ -1,6 +1,6 @@
 module Pandora.Pattern.Category (Category (..)) where
 
-import Pandora.Pattern.Semigroupoid (Semigroupoid ((.))) 
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 
 infixl 2 #
 infixr 0 $
