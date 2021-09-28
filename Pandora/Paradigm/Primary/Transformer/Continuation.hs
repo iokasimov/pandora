@@ -37,7 +37,7 @@ cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
 cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . (!.) . g
 
 -- | Delimit the continuation of any 'shift'
-reset :: (forall u . Bindable (->) u, Monad t) => Continuation r t r -> Continuation s t r
+reset :: (forall u . Bindable (->) u, Monad (->) t) => Continuation r t r -> Continuation s t r
 reset = lift . (run % point)
 
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it

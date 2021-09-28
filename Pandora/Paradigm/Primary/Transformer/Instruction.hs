@@ -37,7 +37,7 @@ instance Covariant (->) (->) t => Bindable (->) (Instruction t) where
 	f =<< Enter x = f x
 	f =<< Instruct xs = Instruct $ (f =<<) <$> xs
 
-instance Monad t => Monad (Instruction t) where
+instance Monad (->) t => Monad (->) (Instruction t) where
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Instruction t) where
 	f <<- Enter x = Enter <$> f x

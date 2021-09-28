@@ -74,7 +74,7 @@ instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
 instance Monoidal (<--) (->) (:*:) (:*:) ((:*:) s) where
 	unit _ = Flip $ \(_ :*: x) -> (\_ -> x)
 
-instance Comonad ((:*:) s) (->) where
+instance Comonad (->) ((:*:) s) where
 
 instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
 	mult = Flip $ \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)

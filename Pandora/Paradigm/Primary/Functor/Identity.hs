@@ -48,14 +48,14 @@ instance Traversable (->) (->) Identity where
 	f <<- Identity x = Identity <$> f x
 
 instance Bindable (->) Identity where
-	f =<< Identity x = f x	
+	f =<< Identity x = f x
 
-instance Monad Identity
+instance Monad (->) Identity
 
 instance Extendable (->) Identity where
 	f <<= x = Identity . f $ x
 
-instance Comonad Identity (->)
+instance Comonad (->) Identity
 
 --instance Representable Identity where
 	--type Representation Identity = ()

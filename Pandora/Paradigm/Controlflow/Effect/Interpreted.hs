@@ -10,7 +10,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 infixr 2 ||=, =||
 
-type family Schematic (c :: (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
+type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 
 class Interpreted m t where
 	{-# MINIMAL run, unite #-}

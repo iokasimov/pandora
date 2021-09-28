@@ -60,12 +60,12 @@ instance Distributive (->) (->) (Tagged tag) where
 instance Bindable (->) (Tagged tag) where
 	f =<< Tag x = f x
 
-instance Monad (Tagged tag)
+instance Monad (->) (Tagged tag)
 
 instance Extendable (->) (Tagged tag) where
 	f <<= x = Tag . f $ x
 
-instance Comonad (Tagged tag) (->)
+instance Comonad (->) (Tagged tag)
 
 instance Bivariant (->) (->) (->) Tagged where
 	_ <-> g = \(Tag x) -> Tag $ g x

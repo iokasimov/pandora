@@ -42,7 +42,7 @@ instance Monoidal (->) (->) (:*:) (:*:) (State s) where
 instance Bindable (->) (State s) where
 	f =<< x = State $ (run . f |-) <$> run x
 
-instance Monad (State s) where
+instance Monad (->) (State s) where
 
 instance Invariant (Flip State r) where
 	f <$< g = ((g >-> ((<->) @_ @(->) @(->) f identity) ||=) ||=)

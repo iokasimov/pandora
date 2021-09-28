@@ -15,4 +15,4 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 > * Associativity: extend f . extend g ≡ extend (f . extend g)
 -}
 
-class (Monoidal (<--) source (:*:) (:*:) t, Extendable source t) => Comonad t source
+class (Monoidal (<--) source (:*:) (:*:) t, Extendable source t) => Comonad source t
