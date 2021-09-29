@@ -2,14 +2,13 @@
 
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (:::))
+import Pandora.Core.Functor (type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Bindable ((=<<))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached, twosome)
@@ -17,15 +16,13 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&))
 import Pandora.Paradigm.Primary.Algebraic (($$$>-), extract)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
-import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator, Zero))
-import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (Single))
 import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=||))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
@@ -41,21 +38,22 @@ import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 type Binary = Maybe <:.> Construction Wye
 
-rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
-rebalance (Both x y) = extract x <=> extract y & order
-	# Construct (extract x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
-	# Construct (extract y) (Both # x # rebalance (deconstruct y))
-	# Construct (extract x) (Both # rebalance (deconstruct x) # y)
+--rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
+--rebalance (Both x y) = extract x <=> extract y & order
+--	# Construct (extract x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
+--	# Construct (extract y) (Both # x # rebalance (deconstruct y))
+--	# Construct (extract x) (Both # rebalance (deconstruct x) # y)
 
 instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
-	morphing (run . premorph -> Nothing) = T_U $ \(T_U (Identity x :*: _)) -> lift $ leaf x
-	morphing (run . premorph -> Just ne) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
-		let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
-		let change = Just . resolve continue (leaf x) in
-		lift $ f x # extract ne & order # ne
-			# over (sub @Left) change ne
-			# over (sub @Right) change ne
+	morphing binary = case run # premorph binary of
+		Nothing -> T_U $ \(T_U (Identity x :*: _)) -> lift $ leaf x
+		Just non_empty_binary -> T_U $ \(T_U (Identity x :*: Convergence f)) ->
+			let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
+			let change = Just . resolve continue (leaf x) in
+			lift $ f x # extract non_empty_binary & order # non_empty_binary
+				# over (sub @Left) change non_empty_binary
+				# over (sub @Right) change non_empty_binary
 
 instance Nullable Binary where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
