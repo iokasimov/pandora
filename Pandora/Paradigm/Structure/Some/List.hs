@@ -40,7 +40,6 @@ import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
-import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Length), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
@@ -93,11 +92,6 @@ instance Morphable (Delete All) List where
 
 instance Stack List where
 
-instance Measurable Length List where
-	type Measural Length List a = Numerator
-	measurement (run . extract -> Nothing) = zero
-	measurement (run . extract -> Just xs) = Numerator $ measure @Length xs
-
 instance Nullable List where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
 
@@ -139,11 +133,6 @@ instance Morphable (Into List) (Construction Maybe) where
 instance Morphable Push (Construction Maybe) where
 	type Morphing Push (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
 	morphing (premorph -> xs) = T_U $ \(Identity x) -> Construct x $ Just xs
-
-instance Measurable Length (Construction Maybe) where
-	type Measural Length (Construction Maybe) a = Denumerator
-	measurement (deconstruct . extract -> Nothing) = Single
-	measurement (deconstruct . extract -> Just xs) = Single + measure @Length xs
 
 instance Substructure Root (Construction Maybe) where
 	type Available Root (Construction Maybe) = Identity

@@ -108,7 +108,6 @@ library
     Pandora.Paradigm.Structure.Ability
     Pandora.Paradigm.Structure.Ability.Morphable
     Pandora.Paradigm.Structure.Ability.Accessible
-    Pandora.Paradigm.Structure.Ability.Measurable
     Pandora.Paradigm.Structure.Ability.Substructure
     Pandora.Paradigm.Structure.Ability.Nonempty
     Pandora.Paradigm.Structure.Ability.Nullable

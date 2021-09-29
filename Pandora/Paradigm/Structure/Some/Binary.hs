@@ -32,7 +32,6 @@ import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (over, view)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
-import Pandora.Paradigm.Structure.Ability.Measurable (Measurable (Measural, measurement), Scale (Heighth), measure)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
 	, Morph (Rotate, Into, Insert, Lookup, Vary, Key, Element), Vertical (Up, Down), lookup, vary)
@@ -57,11 +56,6 @@ instance Morphable Insert Binary where
 		lift $ f x # extract ne & order # ne
 			# over (sub @Left) change ne
 			# over (sub @Right) change ne
-
-instance Measurable Heighth Binary where
-	type Measural Heighth Binary a = Numerator
-	measurement (run . extract -> Just bt) = Numerator $ measure @Heighth bt
-	measurement (run . extract -> Nothing) = Zero
 
 instance Nullable Binary where
 	null = Predicate $ \case { TU Nothing -> True ; _ -> False }
@@ -97,15 +91,6 @@ instance Morphable Insert (Construction Wye) where
 			# over (sub @Left) change nonempty_list
 			# over (sub @Right) change nonempty_list
 			# f x (extract nonempty_list)
-
-instance Measurable Heighth (Construction Wye) where
-	type Measural Heighth (Construction Wye) a = Denumerator
-	measurement (deconstruct . extract -> End) = Single
-	measurement (deconstruct . extract -> Left lst) = Single + measure @Heighth lst
-	measurement (deconstruct . extract -> Right rst) = Single + measure @Heighth rst
-	measurement (deconstruct . extract -> Both lst rst) = Single +
-		let (lm :*: rm) = measure @Heighth lst :*: measure @Heighth rst
-		in lm <=> rm & order lm rm lm
 
 instance Substructure Root (Construction Wye) where
 	type Available Root (Construction Wye) = Identity
