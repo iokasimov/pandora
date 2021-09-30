@@ -17,12 +17,12 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (Extractable_, point)
+import Pandora.Paradigm.Primary.Algebraic (Extractable, point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 
 class Interpreted (->) t => Comonadic t where
 	{-# MINIMAL bring #-}
-	bring :: Extractable_ u => t :< u ~> t
+	bring :: Extractable u => t :< u ~> t
 
 infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
@@ -48,7 +48,7 @@ instance Bindable (->) (Schematic Comonad t u) => Bindable (->) (t :< u) where
 instance Extendable (->) (Schematic Comonad t u) => Extendable (->) (t :< u) where
 	f <<= TC x = TC $ f . TC <<= x
 
-instance (Extractable_ (t :< u), Extendable (->) (t :< u)) => Comonad (->) (t :< u) where
+instance (Extractable (t :< u), Extendable (->) (t :< u)) => Comonad (->) (t :< u) where
 
 instance Lowerable (->) (Schematic Comonad t) => Lowerable (->) ((:<) t) where
 	lower (TC x) = lower x

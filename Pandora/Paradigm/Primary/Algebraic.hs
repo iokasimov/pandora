@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Extractable_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void, empty, point, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Extractable, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void, empty, point, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -105,9 +105,9 @@ point x = unit (Proxy @(:*:)) (\One -> x)
 empty :: Monoidal (->) (->) (:*:) (:+:) t => t a
 empty = unit (Proxy @(:*:)) absurd
 
-type Extractable_ t = Monoidal (<--) (->) (:*:) (:*:) t
+type Extractable t = Monoidal (<--) (->) (:*:) (:*:) t
 
-extract :: Extractable_ t => t a -> a
+extract :: Extractable t => t a -> a
 extract j = run (unit @(<--) @(->) @(:*:) @(:*:) Proxy) j One
 
 instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
