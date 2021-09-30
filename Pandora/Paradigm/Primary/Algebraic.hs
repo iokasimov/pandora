@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative_, Alternative_, Extractable_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void, empty, point, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Extractable_, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void, empty, point, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -82,8 +82,8 @@ instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
 instance Monoidal (<--) (->) (:*:) (:*:) (Flip (:*:) a) where
 	unit _ = Flip $ \(Flip (s :*: _)) -> (\_ -> s)
 
-type Applicative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) (->) (:*:) (:*:) t)
-type Alternative_ t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, Monoidal (->) (->) (:*:) (:+:) t)
+type Applicative t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) (->) (:*:) (:*:) t)
+type Alternative t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, Monoidal (->) (->) (:*:) (:+:) t)
 
 (-<*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
 	=> t (a -> b) -> t a -> t b

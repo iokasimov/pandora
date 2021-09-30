@@ -596,3 +596,5 @@
 * Generalize `Interpreted` typeclass
 * Define `Groupoid` typeclass
 * Remove `Measurable` typeclass
+* Rename `Applicative_` typeclass to `Applicative`
+* Rename `Alternative_` typeclass to `Alternative`
