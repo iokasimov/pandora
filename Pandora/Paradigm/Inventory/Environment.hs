@@ -12,12 +12,13 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -31,11 +32,13 @@ instance Covariant (->) (->) (Environment e) where
 instance Contravariant (->) (->) (Flip Environment a) where
 	f >$< Flip (Environment g) = Flip . Environment $ g . f
 
-instance Semimonoidal (->) (:*:) (:*:) (Environment e) where
-	mult (x :*: y) = unite $ mult $ run x :*: run y
+-- TODO: Uncomment this instance as soon as we find out how to compose Straight morphisms
+--instance Semimonoidal (-->) (:*:) (:*:) (Environment e) where
+--	mult = Straight $ \(x :*: y) -> unite $ mult $ run x :*: run y
 
-instance Monoidal (->) (->) (:*:) (:*:) (Environment e) where
-	unit _ f = Environment $ \_ -> f One
+-- TODO: Uncomment this instance as soon as we find out how to compose Straight morphisms
+--instance Monoidal (->) (->) (:*:) (:*:) (Environment e) where
+--	unit _ f = Environment $ \_ -> f One
 
 instance Distributive (->) (->) (Environment e) where
 	f -<< g = Environment $ (run @(->) <$> f) -<< g
