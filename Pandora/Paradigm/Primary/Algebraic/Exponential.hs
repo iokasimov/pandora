@@ -46,22 +46,10 @@ instance Ringoid r => Ringoid (e -> r) where
 
 type (<--) = Flip (->)
 
-instance Semigroupoid (<--) where
-	Flip f . Flip g = Flip $ g . f
-
-instance Category (<--) where
-	identity = Flip identity
-
 instance Contravariant (->) (->) ((<--) a) where
 	f >$< Flip g = Flip $ g . f
 
 type (-->) = Straight (->)
-
-instance Semigroupoid (-->) where
-	Straight f . Straight g = Straight $ f . g
-
-instance Category (-->) where
-	identity = Straight identity
 
 instance Covariant (->) (->) ((-->) b) where
 	f <$> Straight g = Straight $ f . g
