@@ -12,6 +12,7 @@ import Pandora.Core.Appliable (Appliable ((!)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-), (-<$$$>-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
@@ -47,12 +48,13 @@ instance Adjoint (->) (->) ((:*:) s) ((->) s) where
 	(|-) :: (a -> s -> b) -> (s :*: a) -> b
 	f |- ~(s :*: x) = f x s
 
-instance Semimonoidal (->) (:*:) (:*:) ((->) e) where
-	mult :: ((e -> a) :*: (e -> b)) -> e -> (a :*: b)
-	mult (g :*: h) = \x -> g x :*: h x
+instance Semimonoidal (-->) (:*:) (:*:) ((->) e) where
+	mult :: ((e -> a) :*: (e -> b)) --> (e -> (a :*: b))
+	mult = Straight $ \(g :*: h) -> \x -> g x :*: h x
 
 instance Semimonoidal (<--) (:*:) (:*:) ((->) e) where
-	mult = Flip $ \f -> (\e -> attached $ f e) :*: (\e -> extract $ f e)
+	mult :: ((e -> a) :*: (e -> b)) <-- (e -> a :*: b)
+	mult = Flip $ \f -> attached . f :*: extract . f
 
 instance Semimonoidal (->) (:*:) (:+:) ((:+:) e) where
 	mult :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
