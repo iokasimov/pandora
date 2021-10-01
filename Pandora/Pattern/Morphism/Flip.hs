@@ -17,5 +17,11 @@ instance Category m => Category (Flip m) where
 instance (Category m, Covariant m m t) => Contravariant (Flip m) m t where
 	(>$<) (Flip f) = (<$>) f
 
+instance (Category m, Covariant m m t) => Contravariant m (Flip m) t where
+	(>$<) f = Flip ((<$>) f)
+
+instance (Category m, Covariant m m t) => Covariant  (Flip m) (Flip m) t where
+	(<$>) (Flip f) = Flip ((<$>) f)
+
 instance Appliable (Flip m) b c m c b where
 	(!) (Flip m) = m

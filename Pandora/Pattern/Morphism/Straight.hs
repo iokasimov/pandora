@@ -16,5 +16,11 @@ instance Category m => Category (Straight m) where
 instance Covariant m m t => Covariant (Straight m) m t where
 	(<$>) (Straight f) = (<$>) f
 
+instance Covariant m m t => Covariant m (Straight m) t where
+	(<$>) f = Straight ((<$>) f)
+
+instance Covariant m m t => Covariant (Straight m) (Straight m) t where
+	(<$>) (Straight f) = Straight ((<$>) f)
+
 instance Appliable (Straight m) c b m c b where
 	(!) (Straight m) = m
