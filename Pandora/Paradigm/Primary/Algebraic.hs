@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Extractable, ($>-), ($$>-), ($$$>-), (-<*>-), (*>-), forever_, (-+-), void, empty, point, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Extractable, ($>-), ($$>-), ($$$>-), (<-*-), (*>-), forever_, (-+-), void, empty, point, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -25,7 +25,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
 
-infixl 4 -<*>-
+infixl 4 <-*-
 
 ($>-) :: Covariant (->) (->) t => t a -> b -> t b
 x $>- r = (r !.) <$> x
@@ -56,19 +56,21 @@ instance Semimonoidal (<--) (:*:) (:*:) ((->) e) where
 	mult :: ((e -> a) :*: (e -> b)) <-- (e -> a :*: b)
 	mult = Flip $ \f -> attached . f :*: extract . f
 
-instance Semimonoidal (->) (:*:) (:+:) ((:+:) e) where
-	mult :: ((e :+: a) :*: (e :+: b)) -> e :+: a :+: b
-	mult (Option _ :*: Option e') = Option e'
-	mult (Option _ :*: Adoption y) = Adoption $ Adoption y
-	mult (Adoption x :*: _) = Adoption $ Option x
+instance Semimonoidal (-->) (:*:) (:+:) ((:+:) e) where
+	mult :: ((e :+: a) :*: (e :+: b)) --> (e :+: a :+: b)
+	mult = Straight $ \case
+		Option _ :*: Option e' -> Option e'
+		Option _ :*: Adoption y -> Adoption $ Adoption y
+		Adoption x :*: _ -> Adoption $ Option x
 
-instance Semimonoidal (->) (:*:) (:*:) ((:+:) e) where
-	mult (Adoption x :*: Adoption y) = Adoption $ x :*: y
-	mult (Option e :*: _) = Option e
-	mult (_ :*: Option e) = Option e
+instance Semimonoidal (-->) (:*:) (:*:) ((:+:) e) where
+	mult = Straight $ \case
+		Adoption x :*: Adoption y -> Adoption $ x :*: y
+		Option e :*: _ -> Option e
+		_ :*: Option e -> Option e
 
-instance Monoidal (->) (->) (:*:) (:*:) ((:+:) e) where
-	unit _ f = Adoption $ f One
+instance Monoidal (-->) (->) (:*:) (:*:) ((:+:) e) where
+	unit _ = Straight $ Adoption . ($ One)
 
 instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
 	mult = Flip $ \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
@@ -87,18 +89,18 @@ instance Monoidal (<--) (->) (:*:) (:*:) (Flip (:*:) a) where
 type Applicative t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) (->) (:*:) (:*:) t)
 type Alternative t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, Monoidal (->) (->) (:*:) (:+:) t)
 
-(-<*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
+(<-*-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
 	=> t (a -> b) -> t a -> t b
-f -<*>- x = (|-) @(->) @(->) (&) <$> mult @_ @_ @(:*:) (f :*: x)
+f <-*- x = (|-) @(->) @(->) (&) <$> mult @_ @_ @(:*:) (f :*: x)
 
 forever_ :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b
 forever_ x = let r = x *>- r in r
 
 (*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b -> t b
-x *>- y = ((!.) %) <$> x -<*>- y
+x *>- y = ((!.) %) <$> x <-*- y
 
 (-+-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t)
-	  => t a -> t b -> (a :+: b -> r) -> t r
+	=> t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f <$> mult (x :*: y)
 
 point :: Monoidal (->) (->) (:*:) (:*:) t => a -> t a

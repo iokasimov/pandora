@@ -18,7 +18,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
@@ -52,7 +52,7 @@ instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) 
 	unit _ f = Construct # f One # empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
-	f <<- ~(Construct x xs) = Construct <$> f x -<*>- f -<<-<<- xs
+	f <<- ~(Construct x xs) = Construct <$> f x <-*- f -<<-<<- xs
 
 instance Covariant (->) (->) t => Extendable (->) (Construction t) where
 	f <<= x = Construct # f x # (f <<=) <$> deconstruct x

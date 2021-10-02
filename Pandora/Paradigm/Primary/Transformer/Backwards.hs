@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-))
+import Pandora.Paradigm.Primary.Algebraic ((<-*-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), (%))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
@@ -28,7 +28,7 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Backwards t) where
 -- TODO: check that effects evaluation goes in opposite order
 instance (Semimonoidal (->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (->) (:*:) (:*:) (Backwards t) where
 	mult (Backwards x :*: Backwards y) = Backwards #
-		((:*:) %) <$> y -<*>- x
+		((:*:) %) <$> y <-*- x
 
 instance (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t) => Monoidal (->) (->) (:*:) (:*:) (Backwards t) where
 	unit _ f = Backwards . point $ f One

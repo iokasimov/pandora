@@ -16,7 +16,7 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run) 
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), (%))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
@@ -44,7 +44,7 @@ instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (->) (:*:) (:*:) (Ta
 	unit _ = Flip $ \(Tap x _) -> (\_ -> x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where
-	f <<- Tap x xs = Tap <$> f x -<*>- f <<- xs
+	f <<- Tap x xs = Tap <$> f x <-*- f <<- xs
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable (->) t, Covariant (->) (->) t) => Extendable (->) (Tap t) where
 	f <<= x = Tap # f x $ f . Tap (extract x) <<= lower x
@@ -61,7 +61,7 @@ instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (
 
 instance {-# OVERLAPS #-} Traversable (->) (->) t => Traversable (->) (->) (Tap (t <:.:> t := (:*:))) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')
-		<$> f <<- Reverse past -<*>- f x -<*>- f <<- future
+		<$> f <<- Reverse past <-*- f x <-*- f <<- future
 
 instance (Covariant (->) (->) t) => Substructure Root (Tap (t <:.:> t := (:*:))) where
 	type Available Root (Tap (t <:.:> t := (:*:))) = Identity

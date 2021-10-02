@@ -9,7 +9,7 @@ import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Primary ()
-import Pandora.Paradigm.Primary.Algebraic ((-<*>-), extract)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product (twosome)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
@@ -54,7 +54,7 @@ instance Morphable (Rotate (Right (Zig Zag))) Binary where
 instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 	type Morphing (Rotate (Left Zig)) (Construction Wye) = Binary
 	morphing :: forall a . (:#) (Rotate (Left Zig)) <:.> Construction Wye := a -> Binary a
-	morphing (premorph -> Construct x xs) = TU $ Construct <$> parent -<*>- Just nodes where
+	morphing (premorph -> Construct x xs) = TU $ Construct <$> parent <-*- Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (branch @Left xs) . Just . Construct x
@@ -67,7 +67,7 @@ instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	type Morphing (Rotate (Right Zig)) (Construction Wye) = Binary
 	morphing :: forall a . (:#) (Rotate (Right Zig)) <:.> Construction Wye := a -> Binary a
-	morphing (premorph -> Construct x xs) = TU $ Construct <$> parent -<*>- Just nodes where
+	morphing (premorph -> Construct x xs) = TU $ Construct <$> parent <-*- Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (branch @Left =<< deconstruct <$> branch @Left xs) . Just . Construct x
