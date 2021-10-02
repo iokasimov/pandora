@@ -32,13 +32,11 @@ instance Covariant (->) (->) (Environment e) where
 instance Contravariant (->) (->) (Flip Environment a) where
 	f >$< Flip (Environment g) = Flip . Environment $ g . f
 
--- TODO: Uncomment this instance as soon as we find out how to compose Straight morphisms
---instance Semimonoidal (-->) (:*:) (:*:) (Environment e) where
---	mult = Straight $ \(x :*: y) -> unite $ mult $ run x :*: run y
+instance Semimonoidal (-->) (:*:) (:*:) (Environment e) where
+	mult = Straight $ \(x :*: y) -> let Straight f = mult in unite . f $ run x :*: run y
 
--- TODO: Uncomment this instance as soon as we find out how to compose Straight morphisms
---instance Monoidal (->) (->) (:*:) (:*:) (Environment e) where
---	unit _ f = Environment $ \_ -> f One
+instance Monoidal (-->) (->) (:*:) (:*:) (Environment e) where
+	unit _ = Straight $ \f -> Environment $ \_ -> f One
 
 instance Distributive (->) (->) (Environment e) where
 	f -<< g = Environment $ (run @(->) <$> f) -<< g
