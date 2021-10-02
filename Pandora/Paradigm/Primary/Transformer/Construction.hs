@@ -3,6 +3,7 @@
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
+import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-))
@@ -40,10 +41,8 @@ instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Semimonoida
 	mult (Construct x xs :*: Construct y ys) = Construct (x :*: y) (mult @(->) @(:*:) <$> mult (xs :*: ys))
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
-	mult = Flip $ \(Construct (x :*: y) xys) ->
-		let Flip f = mult @(<--) @(:*:) @(:*:) in
-		let Flip g = mult @(<--) @(:*:) @(:*:) in
-		(Construct x <-> Construct y) $ f $ g <$> xys
+	mult = Flip $ \(Construct (x :*: y) xys) -> (Construct x <-> Construct y)
+		$ (mult @(<--) @(:*:) @(:*:) !) $ (mult @(<--) @(:*:) @(:*:) !) <$> xys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Construction t) where
 	unit _ = Flip $ \(Construct x _) -> (\_ -> x)
