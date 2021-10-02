@@ -114,5 +114,5 @@ type Extractable t = Monoidal (<--) (->) (:*:) (:*:) t
 extract :: Extractable t => t a -> a
 extract j = run (unit @(<--) @(->) @(:*:) @(:*:) Proxy) j One
 
-instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
-	f ! (x :*: y) = f x ! y
+--instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
+--	f ! (x :*: y) = f x ! y

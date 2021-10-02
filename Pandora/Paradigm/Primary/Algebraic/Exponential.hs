@@ -57,6 +57,7 @@ instance Covariant (->) (->) ((-->) b) where
 instance Appliable (->) c b (->) c b where
 	f ! x = f x
 
+-- TODO: Is it possible to generalize?
 instance Appliable (->) a (b -> c) (->) b (a -> c) where
 	(!) f = (%) f
 

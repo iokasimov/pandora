@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
 
+import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -12,9 +13,10 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
+import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic ()
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -33,7 +35,7 @@ instance Contravariant (->) (->) (Flip Environment a) where
 	f >$< Flip (Environment g) = Flip . Environment $ g . f
 
 instance Semimonoidal (-->) (:*:) (:*:) (Environment e) where
-	mult = Straight $ \(x :*: y) -> let Straight f = mult in unite . f $ run x :*: run y
+	mult = Straight $ Environment . (mult @(-->) !) . (run @(->) <-> run @(->))
 
 instance Monoidal (-->) (->) (:*:) (:*:) (Environment e) where
 	unit _ = Straight $ \f -> Environment $ \_ -> f One

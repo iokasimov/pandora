@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Primary.Algebraic.Product where
 
 import Pandora.Core.Functor (type (:=))
+import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -66,10 +67,8 @@ instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (
 -- TODO: Generalize (:*:) as Bivariant p
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	mult = Flip $ \(T_U lrxys) ->
-		let Flip f = mult @(<--) @(:*:) @(:*:) in
-		let Flip g = mult @(<--) @(:*:) @(:*:) in
 		-- TODO: I need matrix transposing here
-		let ((lxs :*: lys) :*: (rxs :*: rys)) = (f <-> g) lrxys in
+		let ((lxs :*: lys) :*: (rxs :*: rys)) = ((mult @(<--) @(:*:) @(:*:) @t !) <-> (mult @(<--) @(:*:) @(:*:) @u !)) lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
 delta :: a -> a :*: a
