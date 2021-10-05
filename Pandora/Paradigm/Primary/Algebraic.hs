@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Extractable, ($>-), ($$>-), ($$$>-), (<-*-), (*>-), forever_, (-+-), void, empty, point, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (*>-), forever_, (-+-), void, empty, point, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -8,7 +8,7 @@ import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 import Pandora.Paradigm.Primary.Algebraic.Zero as Exports
 import Pandora.Paradigm.Primary.Algebraic.One as Exports
 
-import Pandora.Core.Appliable (Appliable ((!)))
+import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (($))
@@ -86,30 +86,30 @@ instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
 instance Monoidal (<--) (->) (:*:) (:*:) (Flip (:*:) a) where
 	unit _ = Flip $ \(Flip (s :*: _)) -> (\_ -> s)
 
-type Applicative t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) (->) (:*:) (:*:) t)
-type Alternative t = (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t, Monoidal (->) (->) (:*:) (:+:) t)
+type Applicative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (->) (:*:) (:*:) t)
+type Alternative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (->) (:*:) (:+:) t)
 
-(<-*-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t)
-	=> t (a -> b) -> t a -> t b
-f <-*- x = (|-) @(->) @(->) (&) <$> mult @_ @_ @(:*:) (f :*: x)
+(<-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t (a -> b) -> t a -> t b
+f <-*- x = (|-) @(->) @(->) (&) <$> run (mult @(-->) @(:*:) @(:*:)) (f :*: x)
 
-forever_ :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b
+forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
 forever_ x = let r = x *>- r in r
 
-(*>-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => t a -> t b -> t b
+(*>-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b -> t b
 x *>- y = ((!.) %) <$> x <-*- y
 
 (-+-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t)
 	=> t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f <$> mult (x :*: y)
 
-point :: Monoidal (->) (->) (:*:) (:*:) t => a -> t a
-point x = unit (Proxy @(:*:)) (\One -> x)
+point :: Monoidal (-->) (->) (:*:) (:*:) t => a -> t a
+point x = run (unit @(-->) @(->) @(:*:) @(:*:) Proxy) (\One -> x)
 
-empty :: Monoidal (->) (->) (:*:) (:+:) t => t a
-empty = unit (Proxy @(:*:)) absurd
+empty :: Monoidal (-->) (->) (:*:) (:+:) t => t a
+empty = unit @(-->) @(->) @(:*:) @(:+:) (Proxy @(:*:)) ! absurd
 
 type Extractable t = Monoidal (<--) (->) (:*:) (:*:) t
+type Pointable t = Monoidal (-->) (->) (:*:) (:*:) t
 
 extract :: Extractable t => t a -> a
 extract j = run (unit @(<--) @(->) @(:*:) @(:*:) Proxy) j One

@@ -2,9 +2,11 @@
 
 module Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
+import Pandora.Core.Appliable ((!))
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -15,6 +17,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (Extractable, point)
@@ -30,11 +33,11 @@ newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
 instance Covariant (->) (->) (Schematic Comonad t u) => Covariant (->) (->) (t :< u) where
 	f <$> TC x = TC $ f <$> x
 
-instance Semimonoidal (->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (->) (:*:) (:*:) (t :< u) where
-	mult (TC f :*: TC x) = TC $ mult $ f :*: x
+instance Semimonoidal (-->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (-->) (:*:) (:*:) (t :< u) where
+	mult = Straight $ \(TC f :*: TC x) -> TC $ mult @(-->) @(:*:) @(:*:) ! f :*: x
 
-instance Monoidal (->) (->) (:*:) (:*:) (Schematic Comonad t u) => Monoidal (->) (->) (:*:) (:*:) (t :< u) where
-	unit _ f = TC . point $ f One
+instance Monoidal (-->) (->) (:*:) (:*:) (Schematic Comonad t u) => Monoidal (-->) (->) (:*:) (:*:) (t :< u) where
+	unit _ = Straight $ TC . point . ($ One)
 
 instance Traversable (->) (->) (Schematic Comonad t u) => Traversable (->) (->) (t :< u) where
 	f <<- TC x = TC <$> f <<- x

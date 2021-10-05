@@ -20,12 +20,13 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (empty)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Schemes (type (<:.>))
@@ -37,8 +38,8 @@ data Construction t a = Construct a (t :. Construction t := a)
 instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
 	f <$> ~(Construct x xs) = Construct # f x # f -<$$>- xs
 
-instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t) => Semimonoidal (->) (:*:) (:*:) (Construction t) where
-	mult (Construct x xs :*: Construct y ys) = Construct (x :*: y) (mult @(->) @(:*:) <$> mult (xs :*: ys))
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Construction t) where
+	mult = Straight $ \(Construct x xs :*: Construct y ys) -> Construct (x :*: y) $ (mult @(-->) @(:*:) !) <$> (mult @(-->) @(:*:) !) (xs :*: ys)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
 	mult = Flip $ \(Construct (x :*: y) xys) -> (Construct x <-> Construct y)
@@ -47,8 +48,8 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoid
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Construction t) where
 	unit _ = Flip $ \(Construct x _) -> (\_ -> x)
 
-instance (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:*:) t, Monoidal (->) (->) (:*:) (:+:) t) => Monoidal (->) (->) (:*:) (:*:) (Construction t) where
-	unit _ f = Construct # f One # empty
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (->) (:*:) (:+:) t) => Monoidal (-->) (->) (:*:) (:*:) (Construction t) where
+	unit _ = Straight $ \f -> Construct # f One # empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
 	f <<- ~(Construct x xs) = Construct <$> f x <-*- f -<<-<<- xs

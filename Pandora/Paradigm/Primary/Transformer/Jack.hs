@@ -13,7 +13,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
@@ -29,7 +29,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Jack t) where
 	f <<- It x = It <$> f x
 	f <<- Other y = Other <$> f <<- y
 
-instance (Monoidal (->) (->) (:*:) (:*:) t, Bindable (->) t) => Bindable (->) (Jack t) where
+instance (Monoidal (-->) (->) (:*:) (:*:) t, Bindable (->) t) => Bindable (->) (Jack t) where
 	f =<< It x = f x
 	f =<< Other x = Other $ jack point identity . f =<< x
 

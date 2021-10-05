@@ -14,10 +14,11 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), (%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point, extract)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Backwards t a = Backwards (t a)
@@ -26,12 +27,11 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Backwards t) where
 	f <$> Backwards x = Backwards $ f <$> x
 
 -- TODO: check that effects evaluation goes in opposite order
-instance (Semimonoidal (->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (->) (:*:) (:*:) (Backwards t) where
-	mult (Backwards x :*: Backwards y) = Backwards #
-		((:*:) %) <$> y <-*- x
+instance (Semimonoidal (-->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (-->) (:*:) (:*:) (Backwards t) where
+	mult = Straight $ \(Backwards x :*: Backwards y) -> Backwards # ((:*:) %) <$> y <-*- x
 
-instance (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t) => Monoidal (->) (->) (:*:) (:*:) (Backwards t) where
-	unit _ f = Backwards . point $ f One
+instance (Covariant (->) (->) t, Monoidal (-->) (->) (:*:) (:*:) t) => Monoidal (-->) (->) (:*:) (:*:) (Backwards t) where
+	unit _ = Straight $ Backwards . point . ($ One)
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Backwards t) where
 	mult = Flip $ (Backwards <-> Backwards) . run (mult @(<--) @(:*:) @(:*:)) . run

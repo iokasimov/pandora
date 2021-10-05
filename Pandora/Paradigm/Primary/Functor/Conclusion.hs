@@ -2,8 +2,8 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (identity, ($), (#))
---import Pandora.Pattern.Functor (Endofunctor)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -23,6 +23,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
 
@@ -36,20 +37,22 @@ instance Covariant (->) (->) (Flip Conclusion e) where
 	_ <$> Flip (Success x) = Flip $ Success x
 	f <$> Flip (Failure y) = Flip . Failure $ f y
 
-instance Semimonoidal (->) (:*:) (:*:) (Conclusion e) where
-	mult (Success x :*: Success y) = Success $ x :*: y
-	mult (Failure x :*: _) = Failure x
-	mult (_ :*: Failure x) = Failure x
+instance Semimonoidal (-->) (:*:) (:*:) (Conclusion e) where
+	mult = Straight $ \case
+		Success x :*: Success y -> Success $ x :*: y
+		Failure x :*: _ -> Failure x
+		_ :*: Failure x -> Failure x
 
-instance Monoidal (->) (->) (:*:) (:*:) (Conclusion e) where
-	unit _ f = Success $ f One
+instance Monoidal (-->) (->) (:*:) (:*:) (Conclusion e) where
+	unit _ = Straight $ Success . ($ One)
 
-instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Conclusion e) where
-	mult (Failure _ :*: x) = Adoption <$> x
-	mult (Success x :*: _) = Option <$> Success x
+instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Conclusion e) where
+	mult = Straight $ \case
+		Failure _ :*: x -> Adoption <$> x
+		Success x :*: _ -> Option <$> Success x
 
 instance Traversable (->) (->) (Conclusion e) where
-	(<<-) :: (Covariant (->) (->) u, Monoidal (->) (->) (:*:) (:*:) u, Semimonoidal (->) (:*:) (:*:)u)
+	(<<-) :: (Covariant (->) (->) u, Monoidal (-->) (->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) u)
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success <$> f x
@@ -110,6 +113,6 @@ instance Catchable e (Conclusion e) where
 	catch (Failure e) handle = handle e
 	catch (Success x) _ = Success x
 
-instance (Monoidal (->) (->) (:*:) (:*:) u, Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
+instance (Monoidal (-->) (->) (:*:) (:*:) u, Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = let conclude = conclusion # run . handle # point . Success
 		in UT $ conclude =<< x

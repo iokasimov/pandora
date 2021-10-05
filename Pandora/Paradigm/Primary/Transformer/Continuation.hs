@@ -1,4 +1,5 @@
 {-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Primary.Transformer.Continuation where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
@@ -10,7 +11,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Primary.Algebraic (point)
 
@@ -41,8 +42,8 @@ reset :: (forall u . Bindable (->) u, Monad (->) t) => Continuation r t r -> Con
 reset = lift . (run % point)
 
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it
-shift :: Monoidal (->) (->) (:*:) (:*:) t => ((a -> t r) -> Continuation r t r) -> Continuation r t a
+shift :: Monoidal (-->) (->) (:*:) (:*:) t => ((a -> t r) -> Continuation r t r) -> Continuation r t a
 shift f = Continuation $ (run % point) . f
 
-interruptable :: Monoidal (->) (->) (:*:) (:*:) t => ((a -> Continuation a t a) -> Continuation a t a) -> t a
+interruptable :: Monoidal (-->) (->) (:*:) (:*:) t => ((a -> Continuation a t a) -> Continuation a t a) -> t a
 interruptable = (run % point) . cwcc

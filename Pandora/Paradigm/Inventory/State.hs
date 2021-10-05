@@ -3,6 +3,7 @@
 module Pandora.Paradigm.Inventory.State where
 
 import Pandora.Pattern.Morphism.Flip (Flip)
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
@@ -20,9 +21,10 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (*>-), delta)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Primary.Algebraic (Pointable, point)
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
@@ -30,14 +32,14 @@ newtype State s a = State ((->) s :. (:*:) s := a)
 instance Covariant (->) (->) (State s) where
 	f <$> x = State $ (<$>) f . run x
 
-instance Semimonoidal (->) (:*:) (:*:) (State s) where
-	mult (State g :*: State h) = State $ \s ->
+instance Semimonoidal (-->) (:*:) (:*:) (State s) where
+	mult = Straight $ \(State g :*: State h) -> State $ \s ->
 		let old :*: x = g s in
-	  	let new :*: y = h old in
+		let new :*: y = h old in
 		new :*: x :*: y
 
-instance Monoidal (->) (->) (:*:) (:*:) (State s) where
-	unit _ f = State . (identity @(->) -|) $ f One
+instance Monoidal (-->) (->) (:*:) (:*:) (State s) where
+	unit _ = Straight $ State . (identity @(->) -|) . ($ One)
 
 instance Bindable (->) (State s) where
 	f =<< x = State $ (run . f |-) <$> run x
@@ -74,7 +76,7 @@ replace s = adapt . State $ \_ -> s :*: s
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable u t) => (s -> u s) -> t s
 reconcile f = replace =<< adapt . f =<< current
 
-type Memorable s t = (Covariant (->) (->) t, Monoidal (->) (->) (:*:) (:*:) t,  Stateful s t)
+type Memorable s t = (Covariant (->) (->) t, Pointable t,  Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
 fold op struct = (modify . op <<- struct) *>- current

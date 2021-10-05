@@ -1,5 +1,6 @@
 module Pandora.Pattern.Functor.Monad where
 
+import Pandora.Pattern.Morphism.Straight (Straight)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Bindable (Bindable)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
@@ -19,7 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 --infixl 1 >>=-, ->>=
 --infixr 1 -=<<, =<<-
 
-class (Covariant category category t, Monoidal category category (:*:) (:*:) t, Bindable category t) => Monad category t where
+class (Covariant category category t, Monoidal (Straight category) category (:*:) (:*:) t, Bindable category t) => Monad category t where
 	--(>>=-) :: t a -> t b -> t a
 	--(>>=-) x y = x >>= \r -> y >>= \_ -> point r
 	--(->>=) :: t a -> t b -> t b

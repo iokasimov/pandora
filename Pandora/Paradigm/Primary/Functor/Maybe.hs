@@ -3,6 +3,8 @@ module Pandora.Paradigm.Primary.Functor.Maybe where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -22,12 +24,11 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
-import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 data Maybe a = Nothing | Just a
 
@@ -35,21 +36,23 @@ instance Covariant (->) (->) Maybe where
 	f <$> Just x = Just $ f x
 	_ <$> Nothing = Nothing
 
-instance Semimonoidal (->) (:*:) (:*:) Maybe where
-	mult (Just x :*: Just y) = Just $ x :*: y
-	mult (Nothing :*: _) = Nothing
-	mult (_ :*: Nothing) = Nothing
+instance Semimonoidal (-->) (:*:) (:*:) Maybe where
+	mult = Straight $ \case
+		Just x :*: Just y -> Just $ x :*: y
+		Nothing :*: _ -> Nothing
+		_ :*: Nothing -> Nothing
 
-instance Semimonoidal (->) (:*:) (:+:) Maybe where
-	mult (Just x :*: _) = Just $ Option x
-	mult (Nothing :*: Just y) = Just $ Adoption y
-	mult (Nothing :*: Nothing) = Nothing
+instance Semimonoidal (-->) (:*:) (:+:) Maybe where
+	mult = Straight $ \case
+		Just x :*: _ -> Just $ Option x
+		Nothing :*: Just y -> Just $ Adoption y
+		Nothing :*: Nothing -> Nothing
 
-instance Monoidal (->) (->) (:*:) (:*:) Maybe where
-	unit _ f = Just $ f One
+instance Monoidal (-->) (->) (:*:) (:*:) Maybe where
+	unit _ = Straight $ Just . ($ One)
 
-instance Monoidal (->) (->) (:*:) (:+:) Maybe where
-	unit _ _ = Nothing
+instance Monoidal (-->) (->) (:*:) (:+:) Maybe where
+	unit _ = Straight $ \_ -> Nothing
 
 -- TODO: Check laws
 instance Semimonoidal (<--) (:*:) (:*:) Maybe where

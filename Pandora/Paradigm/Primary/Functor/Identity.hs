@@ -2,12 +2,15 @@ module Pandora.Paradigm.Primary.Functor.Identity where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 --import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
@@ -21,22 +24,21 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (extract)
-import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 newtype Identity a = Identity a
 
 instance Covariant (->) (->) Identity where
 	f <$> Identity x = Identity $ f x
 
-instance Semimonoidal (->) (:*:) (:*:) Identity where
-	mult (Identity x :*: Identity y) = Identity $ x :*: y
+instance Semimonoidal (-->) (:*:) (:*:) Identity where
+	mult = Straight $ Identity . (extract <-> extract)
 
-instance Monoidal (->) (->) (:*:) (:*:) Identity where
-	unit _ f = Identity $ f One
+instance Monoidal (-->) (->) (:*:) (:*:) Identity where
+	unit _ = Straight $ Identity . ($ One)
 
 instance Semimonoidal (<--) (:*:) (:*:) Identity where
 	mult = Flip $ \(Identity (x :*: y)) -> Identity x :*: Identity y
