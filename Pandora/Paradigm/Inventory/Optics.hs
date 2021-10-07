@@ -33,9 +33,11 @@ type family Convex lens where
 	Convex Lens = Lens Identity
 
 instance Semigroupoid (Lens Identity) where
+	(.) :: Convex Lens between target -> Convex Lens source between -> Convex Lens source target
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> (to . extract @Identity . position $ from source) $>- source
 
 instance Category (Lens Identity) where
+	identity :: Convex Lens source source
 	identity = imply @(Convex Lens _ _) identity ((%) (!.))
 
 instance Impliable (P_Q_T (->) Store Identity source target) where
@@ -52,11 +54,13 @@ instance Impliable (P_Q_T (->) Store Maybe source target) where
 	imply getter setter = P_Q_T $ \source -> Store $ getter source :*: setter source
 
 instance Semigroupoid (Lens Maybe) where
+	(.) :: Obscure Lens between target -> Obscure Lens source between -> Obscure Lens source target
 	P_Q_T to . P_Q_T from = P_Q_T $ \source -> case position # from source of
 		Nothing -> Store $ Nothing :*: (source !.)
 		Just between -> to between $>- source
 
 instance Category (Lens Maybe) where
+	identity :: Obscure Lens source source
 	identity = imply @(Obscure Lens _ _) # Just # resolve identity
 
 -- Lens as natural transformation

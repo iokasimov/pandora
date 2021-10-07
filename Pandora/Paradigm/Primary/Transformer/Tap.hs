@@ -15,7 +15,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run) 
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), (%))
@@ -37,7 +37,7 @@ instance Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (Tap t
 	mult (Tap x xs :*: Tap y ys) = Tap (x :*: y) $ mult $ xs :*: ys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
-	mult = Flip $ \(Tap (x :*: y) xys) -> 
+	mult = Flip $ \(Tap (x :*: y) xys) ->
 		(Tap x <-> Tap y) $ run (mult @(<--) @(:*:) @(:*:)) xys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (->) (:*:) (:*:) (Tap t) where
