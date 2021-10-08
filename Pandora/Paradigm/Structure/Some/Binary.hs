@@ -6,6 +6,7 @@ import Pandora.Core.Functor (type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable ((=<<))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -13,7 +14,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&))
-import Pandora.Paradigm.Primary.Algebraic (($$$>-), extract)
+import Pandora.Paradigm.Primary.Algebraic (($$$>-), (<-*-), extract)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Functor (Comparison)
@@ -37,6 +38,12 @@ import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 type Binary = Maybe <:.> Construction Wye
+
+instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
+	f <<- (Construct x (Left l)) = Construct <$> f x <-*- (Left <$> f <<- l)
+	f <<- (Construct x (Right r)) = Construct <$> f x <-*- (Right <$> f <<- r)
+	f <<- (Construct x (Both l r)) = Construct <$> f x <-*- (Both <$> f <<- l <-*- f <<- r)
+	f <<- (Construct x End) = Construct % End <$> f x
 
 --rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
 --rebalance (Both x y) = extract x <=> extract y & order
