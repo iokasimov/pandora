@@ -10,12 +10,13 @@ import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 
@@ -37,18 +38,20 @@ instance Covariant (->) (->) (Flip Validation a) where
 	f <$> Flip (Flaws e) = Flip . Flaws $ f e
 	_ <$> Flip (Validated x) = Flip $ Validated x
 
-instance Semigroup e => Semimonoidal (->) (:*:) (:*:) (Validation e) where
-	mult (Validated x :*: Validated y) = Validated $ x :*: y
-	mult (Flaws x :*: Flaws y) = Flaws $ x + y
-	mult (Validated _ :*: Flaws y) = Flaws y
-	mult (Flaws x :*: Validated _) = Flaws x
+instance Semigroup e => Semimonoidal (-->) (:*:) (:*:) (Validation e) where
+	mult = Straight $ \case
+		Validated x :*: Validated y -> Validated $ x :*: y
+		Flaws x :*: Flaws y -> Flaws $ x + y
+		Validated _ :*: Flaws y -> Flaws y
+		Flaws x :*: Validated _ -> Flaws x
 
-instance Semigroup e => Monoidal (->) (->) (:*:) (:*:) (Validation e) where
-	unit _ f = Validated $ f One
+instance Semigroup e => Monoidal (-->) (->) (:*:) (:*:) (Validation e) where
+	unit _ = Straight $ Validated . ($ One)
 
-instance Semigroup e => Semimonoidal (->) (:*:) (:+:) (Validation e) where
-	mult (Flaws _ :*: y) = Adoption <$> y
-	mult (Validated x :*: _) = Option <$> Validated x
+instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Validation e) where
+	mult = Straight $ \case
+		Flaws _ :*: y -> Adoption <$> y
+		Validated x :*: _ -> Option <$> Validated x
 
 instance Traversable (->) (->) (Validation e) where
 	f <<- Validated x = Validated <$> f x

@@ -15,8 +15,9 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
 infixr 0 :*:
@@ -61,8 +62,8 @@ instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 instance (Group s, Group a) => Group (s :*: a) where
 	invert ~(s :*: x) = invert # s :*: invert # x
 
-instance {-# OVERLAPS #-} Semimonoidal (->) (:*:) (:*:) t => Semimonoidal (->) (:*:) (:*:) (t <:.:> t := (:*:)) where
-	mult (T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) = T_U $ mult (xls :*: yls) :*: mult (xrs :*: yrs)
+instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (t <:.:> t := (:*:)) where
+	mult = Straight $ \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U $ (mult @(-->) @(:*:) @(:*:) @t !) (xls :*: yls) :*: (mult @(-->) @(:*:) @(:*:) @t !) (xrs :*: yrs)
 
 -- TODO: Generalize (:*:) as Bivariant p
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where

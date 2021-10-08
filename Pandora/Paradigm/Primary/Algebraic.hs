@@ -98,9 +98,9 @@ forever_ x = let r = x *>- r in r
 (*>-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b -> t b
 x *>- y = ((!.) %) <$> x <-*- y
 
-(-+-) :: (Covariant (->) (->) t, Semimonoidal (->) (:*:) (:+:) t)
+(-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t)
 	=> t a -> t b -> (a :+: b -> r) -> t r
-x -+- y = \f -> f <$> mult (x :*: y)
+x -+- y = \f -> f <$> (mult @(-->) @(:*:) @(:+:) ! (x :*: y))
 
 type Extractable t = Monoidal (<--) (->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (->) (:*:) (:*:) t
