@@ -30,13 +30,13 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Reverse t) where
 	f <$> Reverse x = Reverse # f <$> x
 
 instance (Semimonoidal (-->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (-->) (:*:) (:*:) (Reverse t) where
-	mult = Straight $ \(Reverse x :*: Reverse y) -> Reverse ! mult @(-->) @(:*:) @(:*:) ! (x :*: y)
+	mult = Straight $ \(Reverse x :*: Reverse y) -> Reverse ! mult @(-->) ! (x :*: y)
 
 instance (Covariant (->) (->) t, Monoidal (-->) (->) (:*:) (:*:) t) => Monoidal (-->) (->) (:*:) (:*:) (Reverse t) where
 	unit _ = Straight $ Reverse . point . ($ One)
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
-	mult = Flip $ (Reverse <-> Reverse) . run (mult @(<--) @(:*:) @(:*:)) . run
+	mult = Flip $ (Reverse <-> Reverse) . run (mult @(<--)) . run
 
 instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Reverse t) where
 	unit _ = Flip $ \(Reverse x) -> (\_ -> extract x)

@@ -38,7 +38,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (
 	f <$> x = UT $ f -<$$>- run x
 
 instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <.:> u) where
-	mult = Straight $ \(UT x :*: UT y) -> UT $ (mult @(-->) @(:*:) @(:*:) @t !) <$> (mult @(-->) @(:*:) @(:*:) @u ! (x :*: y))
+	mult = Straight $ \(UT x :*: UT y) -> UT $ (mult @(-->) !) <$> (mult @(-->) ! (x :*: y))
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (->) (:*:) (:*:) t, Monoidal (-->) (->) (:*:) (:*:) u) => Monoidal (-->) (->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Straight $ UT . point . point . ($ One)
@@ -47,9 +47,7 @@ instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (-->) (:*:) (:*
 	f =<< UT x = UT $ ((identity =<<) <$>) . (run . f <<-) =<< x
 
 instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <.:> u) where
-	mult = Flip $ \(UT xys) -> (UT <-> UT)
-		. run (mult @(<--) @(:*:) @(:*:))
-		$ run (mult @(<--) @(:*:) @(:*:)) <$> xys
+	mult = Flip $ \(UT xys) -> (UT <-> UT) . (mult @(<--) !) $ (mult @(<--) !) <$> xys
 
 instance (Covariant (->) (->) u, Monoidal (<--) (->) (:*:) (:*:) t, Monoidal (<--) (->) (:*:) (:*:) u) => Monoidal (<--) (->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Flip $ \(UT x) -> (\_ -> extract $ extract x)

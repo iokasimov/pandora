@@ -32,7 +32,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoid
 		Enter x :*: Enter y -> Enter $ x :*: y
 		Enter x :*: Instruct y -> (x :*:) <$> Instruct y
 		Instruct x :*: Enter y -> (:*: y) <$> Instruct x
-		Instruct x :*: Instruct y -> Instruct $ (mult @(-->) @(:*:) !) <$> (mult @(-->) @(:*:) ! x :*: y)
+		Instruct x :*: Instruct y -> Instruct $ (mult @(-->) !) <$> (mult @(-->) ! x :*: y)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Monoidal (-->) (->) (:*:) (:*:) (Instruction t) where
 	unit _ = Straight $ Enter . ($ One)

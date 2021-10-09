@@ -36,11 +36,11 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Tap t) where
 	f <$> Tap x xs = Tap # f x # f <$> xs
 
 instance Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap t) where
-	mult = Straight $ \(Tap x xs :*: Tap y ys) -> Tap (x :*: y) $ mult @(-->) @(:*:) @(:*:) ! xs :*: ys
+	mult = Straight $ \(Tap x xs :*: Tap y ys) -> Tap (x :*: y) $ mult @(-->) ! xs :*: ys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
 	mult = Flip $ \(Tap (x :*: y) xys) ->
-		(Tap x <-> Tap y) $ run (mult @(<--) @(:*:) @(:*:)) xys
+		(Tap x <-> Tap y) $ mult @(<--) ! xys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (->) (:*:) (:*:) (Tap t) where
 	unit _ = Flip $ \(Tap x _) -> (\_ -> x)
@@ -59,7 +59,7 @@ instance Hoistable Tap where
 
 instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap (t <:.:> t := (:*:))) where
 	mult = Straight $ \(Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) -> Tap (x :*: y)
-		$ T_U $ (mult @(-->) @(:*:) @(:*:) ! (xls :*: yls)) :*: (mult @(-->) @(:*:) @(:*:) ! (xrs :*: yrs))
+		$ T_U $ (mult @(-->) ! (xls :*: yls)) :*: (mult @(-->) ! (xrs :*: yrs))
 
 instance {-# OVERLAPS #-} Traversable (->) (->) t => Traversable (->) (->) (Tap (t <:.:> t := (:*:))) where
 	f <<- Tap x (T_U (future :*: past)) = (\past' x' future' -> Tap x' $ twosome # future' # run past')

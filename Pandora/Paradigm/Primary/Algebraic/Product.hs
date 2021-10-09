@@ -63,13 +63,13 @@ instance (Group s, Group a) => Group (s :*: a) where
 	invert ~(s :*: x) = invert # s :*: invert # x
 
 instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (t <:.:> t := (:*:)) where
-	mult = Straight $ \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U $ (mult @(-->) @(:*:) @(:*:) @t !) (xls :*: yls) :*: (mult @(-->) @(:*:) @(:*:) @t !) (xrs :*: yrs)
+	mult = Straight $ \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U $ (mult @(-->) !) (xls :*: yls) :*: (mult @(-->) !) (xrs :*: yrs)
 
 -- TODO: Generalize (:*:) as Bivariant p
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	mult = Flip $ \(T_U lrxys) ->
 		-- TODO: I need matrix transposing here
-		let ((lxs :*: lys) :*: (rxs :*: rys)) = ((mult @(<--) @(:*:) @(:*:) @t !) <-> (mult @(<--) @(:*:) @(:*:) @u !)) lrxys in
+		let ((lxs :*: lys) :*: (rxs :*: rys)) = ((mult @(<--) !) <-> (mult @(<--) !)) lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
 delta :: a -> a :*: a
