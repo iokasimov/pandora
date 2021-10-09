@@ -107,13 +107,13 @@ type Pointable t = Monoidal (-->) (->) (:*:) (:*:) t
 type Emptiable t = Monoidal (-->) (->) (:*:) (:+:) t
 
 extract :: Extractable t => t a -> a
-extract j = run (unit @(<--) @(->) @(:*:) @(:*:) Proxy) j One
+extract j = run (unit @(<--) Proxy) j One
 
 point :: Pointable t => a -> t a
-point x = run (unit @(-->) @(->) @(:*:) @(:*:) Proxy) (\One -> x)
+point x = run (unit @(-->) Proxy) (\One -> x)
 
 empty :: Emptiable t => t a
-empty = unit @(-->) @(->) @(:*:) @(:+:) (Proxy @(:*:)) ! absurd
+empty = unit @(-->) (Proxy @(:*:)) ! absurd
 
 --instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
 --	f ! (x :*: y) = f x ! y
