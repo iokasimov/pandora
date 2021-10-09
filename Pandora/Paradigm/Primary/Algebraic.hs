@@ -90,7 +90,7 @@ type Applicative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, M
 type Alternative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (->) (:*:) (:+:) t)
 
 (<-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t (a -> b) -> t a -> t b
-f <-*- x = (|-) @(->) @(->) (&) <$> run (mult @(-->)) (f :*: x)
+f <-*- x = (|-) @(->) @(->) (&) <$> run (mult @(-->) @_ @(:*:)) (f :*: x)
 
 forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
 forever_ x = let r = x *>- r in r
