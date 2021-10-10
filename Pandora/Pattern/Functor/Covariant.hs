@@ -1,9 +1,11 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
+
 module Pandora.Pattern.Functor.Covariant where
 
 import Pandora.Pattern.Semigroupoid (Semigroupoid)
 
 infixl 4 <$>
-infixl 3 -<<$$>-, -<$$>>-
+infixl 3 <$$>
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -14,20 +16,10 @@ infixl 3 -<<$$>-, -<$$>>-
 class (Semigroupoid source, Semigroupoid target) => Covariant source target t where
 	(<$>) :: source a b -> target (t a) (t b)
 
-(-<$$>-) :: forall t u category a b
-	. (Covariant category category u, Covariant category category t)
-	=> category a b -> category (t (u a)) (t (u b))
-(-<$$>-) s = ((<$>) ((<$>) @category @category @u s))
-
-(-<<$$>-) :: forall t u source target a b
-	. (Covariant source source u, Covariant source target t)
+(<$$>) :: forall source between target t u a b
+	. (Covariant source between u, Covariant between target t)
 	=> source a b -> target (t (u a)) (t (u b))
-(-<<$$>-) s = ((<$>) ((<$>) @source @source @u s))
-
-(-<$$>>-) :: forall source target t u a b
-	. (Covariant source target u, Covariant target target t)
-	=> source a b -> target (t (u a)) (t (u b))
-(-<$$>>-) s = ((<$>) ((<$>) @source @target @u s))
+(<$$>) s = ((<$>) ((<$>) @source @between @u s))
 
 -- TODO: Figure out how to work with hidden type variables
 -- to put intermediate category `between`

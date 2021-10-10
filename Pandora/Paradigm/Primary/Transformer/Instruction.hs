@@ -7,7 +7,7 @@ import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
@@ -25,7 +25,7 @@ data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Instruction t) where
 	f <$> Enter x = Enter $ f x
-	f <$> Instruct xs = Instruct $ f -<$$>- xs
+	f <$> Instruct xs = Instruct $ (<$$>) @(->) @(->) f xs
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Instruction t) where
 	mult = Straight $ \case

@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
 import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
@@ -36,7 +36,7 @@ infixr 7 .-+
 data Construction t a = Construct a (t :. Construction t := a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
-	f <$> ~(Construct x xs) = Construct # f x # f -<$$>- xs
+	f <$> ~(Construct x xs) = Construct # f x # (<$$>) @(->) @(->) f xs
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Construction t) where
 	mult = Straight $ \(Construct x xs :*: Construct y ys) -> Construct (x :*: y) $ (mult @(-->) !) <$> (mult @(-->) ! xs :*: ys)

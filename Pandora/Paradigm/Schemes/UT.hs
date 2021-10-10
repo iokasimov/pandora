@@ -5,7 +5,7 @@ import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<$>)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -34,8 +34,9 @@ instance Interpreted (->) (UT ct cu t u) where
 	run ~(UT x) = x
 	unite = UT
 
+-- TODO: Can we generalize (->) to Semigroupoid here?
 instance (Covariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (t <.:> u) where
-	f <$> x = UT $ f -<$$>- run x
+	(<$>) f = UT . (<$$>) @(->) @(->) f . run
 
 instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <.:> u) where
 	mult = Straight $ \(UT x :*: UT y) -> UT $ (mult @(-->) !) <$> (mult @(-->) ! (x :*: y))

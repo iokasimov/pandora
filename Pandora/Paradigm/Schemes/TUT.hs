@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<$>)), (-<$$>-), (-<$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<$>)), (<$$>), (-<$$$>-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -45,17 +45,17 @@ instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u) 
 	f <$> TUT x = TUT $ f -<$$$>- x
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) t') => Semimonoidal (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
-	mult = Straight $ \(TUT x :*: TUT y) -> TUT $
-		(mult @(-->) @(:*:) @(:*:) @t' !) -<$$>-
-			(mult @(-->) @(:*:) @(:*:) @u !) <$>
-				(mult @(-->) @(:*:) @(:*:) @t ! (x :*: y))
+	mult = Straight $ \(TUT x :*: TUT y) -> TUT
+		$ (<$$>) @_ @(->) (mult @(-->) @(:*:) @(:*:) @t' !)
+			$ (<$>) (mult @(-->) @(:*:) @(:*:) @u !)
+				$ (mult @(-->) @(:*:) @(:*:) @t !) (x :*: y)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
 	mult = Flip $ \(TUT xys) ->
 		let Flip f = mult @(<--) @(:*:) @(:*:) in
 		let Flip g = mult @(<--) @(:*:) @(:*:) in
 		let Flip h = mult @(<--) @(:*:) @(:*:) in
-		(TUT <-> TUT) $ f (g <$> (h -<$$>- xys)) where
+		(TUT <-> TUT) $ f (g <$> ((<$$>) @(->) @(->) h xys)) where
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Flip $ \(TUT xys) -> (\_ -> (extract |-) xys)

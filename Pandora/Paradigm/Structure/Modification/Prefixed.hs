@@ -5,12 +5,11 @@ module Pandora.Paradigm.Structure.Modification.Prefixed where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 
@@ -21,8 +20,9 @@ instance Interpreted (->) (Prefixed t k) where
 	run ~(Prefixed x) = x
 	unite = Prefixed
 
+-- TODO: Try to generalize (->) here
 instance Covariant (->) (->) t => Covariant (->) (->) (Prefixed t k) where
-	f <$> Prefixed x = Prefixed $ f -<$$>- x
+	(<$>) f = (||=) ((<$$>) @(->) @(->) f)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Prefixed t k) where
 	f <<- Prefixed x = Prefixed <$> f -<<-<<- x

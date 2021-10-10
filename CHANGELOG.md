@@ -600,3 +600,4 @@
 * Rename `Alternative_` typeclass to `Alternative`
 * Rename `-<*>-` method of Applicative to `<-*-`
 * Add functional dependencies to `Appliable` typeclass
+* Remove `-<$$>-`, `-<<$>-`, `-<$$>>-` in favor of `<$$>`

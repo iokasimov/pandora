@@ -5,7 +5,7 @@ module Pandora.Paradigm.Inventory.Store where
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (-<$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
@@ -26,8 +26,9 @@ import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 -- | Context based computation on value
 newtype Store s a = Store ((:*:) s :. (->) s := a)
 
+-- TODO: Try to generalize (->) here
 instance Covariant (->) (->) (Store s) where
-	f <$> Store x = Store $ f -<$$>- x
+	(<$>) f = (||=) ((<$$>) @(->) @(->) f)
 
 instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 	mult = Flip $ \(Store (s :*: f)) ->
@@ -37,8 +38,9 @@ instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 instance Monoidal (<--) (->) (:*:) (:*:) (Store s) where
 	unit _ = Flip $ \(Store (s :*: f)) -> (\_ -> f s)
 
+-- TODO: Try to generalize (->) here
 instance Extendable (->) (Store s) where
-	f <<= Store x = Store $ f -<$$>- (Store -.#..- (identity @(->) -|) <$> x)
+	f <<= Store x = Store $ (<$$>) @(->) @(->) f (Store -.#..- (identity @(->) -|) <$> x)
 
 instance Comonad (->) (Store s) where
 
