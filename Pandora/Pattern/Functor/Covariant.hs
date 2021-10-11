@@ -6,6 +6,7 @@ import Pandora.Pattern.Semigroupoid (Semigroupoid)
 
 infixl 4 <$>
 infixl 3 <$$>
+infixl 4 <$$$>
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -26,7 +27,7 @@ class (Semigroupoid source, Semigroupoid target) => Covariant source target t wh
 	=> source a b -> target (t (u (v a))) (t (u (v b)))
 (<$$$>) s = ((<$>) @between2 @target ((<$>) @between1 @between2 @u ((<$>) @source @between1 @v s)))
 
-(-<$$$$>-) :: forall category t u v w a b
-	. (Covariant category category t, Covariant category category u, Covariant category category v, Covariant category category w)
-	=> category a b -> category (t (u (v (w a)))) (t (u (v (w b))))
-(-<$$$$>-) s = ((<$>) @category @category @t ((<$>) @category @category @u ((<$>) @category @category @v ((<$>) @category @category @w s))))
+(<$$$$>) :: forall source between1 between2 between3 target t u v w a b
+	. (Covariant source between1 w, Covariant between1 between2 v, Covariant between2 between3 u, Covariant between3 target t)
+	=> source a b -> target (t (u (v (w a)))) (t (u (v (w b))))
+(<$$$$>) s = ((<$>) @between3 @target @t ((<$>) @between2 @between3 @u ((<$>) @between1 @between2 @v ((<$>) @source @between1 @w s))))
