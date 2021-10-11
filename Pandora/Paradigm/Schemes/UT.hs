@@ -38,7 +38,7 @@ instance (Covariant m m t, Covariant m m u, Interpreted m (t <.:> u)) => Covaria
 	(<$>) f = (||=) ((<$$>) @m @m f)
 
 instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <.:> u) where
-	mult = Straight $ \(UT x :*: UT y) -> UT $ (mult @(-->) !) <$> (mult @(-->) ! (x :*: y))
+	mult = Straight $ UT . (<$>) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (->) (:*:) (:*:) t, Monoidal (-->) (->) (:*:) (:*:) u) => Monoidal (-->) (->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Straight $ UT . point . point . ($ One)

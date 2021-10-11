@@ -45,17 +45,10 @@ instance (Covariant m m t, Covariant m m u, Covariant m m t', Interpreted m (t <
 	(<$>) f = (||=) ((<$$$>) @m @m @m f)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) t') => Semimonoidal (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
-	mult = Straight $ \(TUT x :*: TUT y) -> TUT
-		$ (<$$>) @_ @(->) (mult @(-->) @(:*:) @(:*:) @t' !)
-			$ (<$>) (mult @(-->) @(:*:) @(:*:) @u !)
-				$ (mult @(-->) @(:*:) @(:*:) @t !) (x :*: y)
+	mult = Straight $ TUT . (<$$>) @_ @(->) (mult @(-->) !) . (<$>) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
-	mult = Flip $ \(TUT xys) ->
-		let Flip f = mult @(<--) @(:*:) @(:*:) in
-		let Flip g = mult @(<--) @(:*:) @(:*:) in
-		let Flip h = mult @(<--) @(:*:) @(:*:) in
-		(TUT <-> TUT) $ f (g <$> ((<$$>) @(->) @(->) h xys)) where
+	mult = Flip $ (TUT <-> TUT) . (mult @(<--) !) . (<$>) (mult @(<--) !) . (<$$>) @_ @(->) (mult @(<--) !) . run
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Flip $ \(TUT xys) -> (\_ -> (extract |-) xys)
