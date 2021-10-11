@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<$>)), (<$$>), (-<$$$>-))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<$>)), (<$$>), (<$$$>))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -42,7 +42,7 @@ instance Interpreted (->) (TUT ct ct' cu t t' u) where
 	unite = TUT
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u) => Covariant (->) (->) (t <:<.>:> t' := u) where
-	f <$> TUT x = TUT $ f -<$$$>- x
+	f <$> TUT x = TUT $ (<$$$>) @(->) @(->) @(->) f x
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) t') => Semimonoidal (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	mult = Straight $ \(TUT x :*: TUT y) -> TUT

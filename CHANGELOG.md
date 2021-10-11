@@ -601,3 +601,4 @@
 * Rename `-<*>-` method of Applicative to `<-*-`
 * Add functional dependencies to `Appliable` typeclass
 * Remove `-<$$>-`, `-<<$>-`, `-<$$>>-` in favor of `<$$>`
+* Remove `-<$$$>-` in favor of `<$$$>`
