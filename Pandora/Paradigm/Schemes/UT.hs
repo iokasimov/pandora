@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), point, extract)
@@ -34,9 +34,8 @@ instance Interpreted (->) (UT ct cu t u) where
 	run ~(UT x) = x
 	unite = UT
 
--- TODO: Can we generalize (->) to Semigroupoid here?
-instance (Covariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (t <.:> u) where
-	(<$>) f = UT . (<$$>) @(->) @(->) f . run
+instance (Covariant m m t, Covariant m m u, Interpreted m (t <.:> u)) => Covariant m m (t <.:> u) where
+	(<$>) f = (||=) ((<$$>) @m @m f)
 
 instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <.:> u) where
 	mult = Straight $ \(UT x :*: UT y) -> UT $ (mult @(-->) !) <$> (mult @(-->) ! (x :*: y))

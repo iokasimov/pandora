@@ -15,7 +15,7 @@ import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
@@ -38,9 +38,8 @@ instance Interpreted (->) (TU ct cu t u) where
 	run ~(TU x) = x
 	unite = TU
 
--- TODO: Can we generalize (->) to Semigroupoid here?
-instance (Covariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (t <:.> u) where
-	(<$>) f = TU . (<$$>) @(->) @(->) f . run
+instance (Covariant m m t, Covariant m m u, Interpreted m (t <:.> u)) => Covariant m m (t <:.> u) where
+	(<$>) f = (||=) ((<$$>) @m @m f)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.> u) where
 	mult = Straight $ \(TU x :*: TU y) -> TU $ (mult @(-->) !) <$> (mult @(-->) ! x :*: y)
