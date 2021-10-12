@@ -603,3 +603,5 @@
 * Remove `-<$$>-`, `-<<$>-`, `-<$$>>-` in favor of `<$$>`
 * Remove `-<$$$>-` in favor of `<$$$>`
 * Remove `-<$$$$>-` in favor of `<$$$$>`
+
+# 0.4.8
