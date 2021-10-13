@@ -605,3 +605,4 @@
 * Remove `-<$$$$>-` in favor of `<$$$$>`
 
 # 0.4.8
+* Define `Zippable` type family and remove moves from `Zipper` type alias
