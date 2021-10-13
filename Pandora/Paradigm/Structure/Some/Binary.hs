@@ -14,7 +14,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&))
-import Pandora.Paradigm.Primary.Algebraic (($$$>-), (<-*-), extract)
+import Pandora.Paradigm.Primary.Algebraic (($$$>-), (<-*-), extract, point)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Functor (Comparison)
@@ -125,21 +125,23 @@ instance Substructure Right (Construction Wye) where
 
 instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	type Morphing (Lookup Key) (Prefixed Binary k) = (->) k <:.> Maybe
-	morphing (run . run . premorph -> Nothing) = TU $ \_ -> Nothing
-	morphing (run . run . premorph -> Just tree) = TU $ \key ->
-		let root = extract tree in key <=> attached root & order (Just # extract root)
-			(lookup @Key key . Prefixed =<< view # sub @Left # tree)
-			(lookup @Key key . Prefixed =<< view # sub @Right # tree)
+	morphing prefixed_tree = case run . run . premorph $ prefixed_tree of
+		Nothing -> TU $ \_ -> Nothing
+		Just tree -> TU $ \key ->
+			let root = extract tree in key <=> attached root & order (Just # extract root)
+				(lookup @Key key . Prefixed =<< view # sub @Left # tree)
+				(lookup @Key key . Prefixed =<< view # sub @Right # tree)
 
 instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <:.> Identity) <:.:> Prefixed Binary k := (->)
-	morphing (run . run . premorph -> Nothing) = T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
-	morphing (run . run . premorph -> Just tree) = T_U $ \(TU (key :*: Identity value)) ->
-		let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)
-		in let root = extract tree in Prefixed . lift $ key <=> attached root & order
-			# over (sub @Root) ($$$>- value) tree
-			# over (sub @Left) continue tree
-			# over (sub @Right) continue tree
+	morphing prefixed_tree = case run . run . premorph $ prefixed_tree of
+		Nothing -> T_U $ \(TU (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
+		Just tree -> T_U $ \(TU (key :*: Identity value)) ->
+			let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)
+			in let root = extract tree in Prefixed . lift $ key <=> attached root & order
+				# over (sub @Root) ($$$>- value) tree
+				# over (sub @Left) continue tree
+				# over (sub @Right) continue tree
 
 ---------------------------------- Prefixed non-empty binary tree ----------------------------------
 
@@ -159,41 +161,49 @@ instance Covariant (->) (->) Biforked where
 	f <$> Leftward l = Leftward $ f l
 	f <$> Rightward r = Rightward $ f r
 
+instance Traversable (->) (->) Biforked where
+	_ <<- Top = point Top
+	f <<- Leftward l = Leftward <$> f l
+	f <<- Rightward r = Rightward <$> f r
+
 type Bifurcation = Biforked <:.> Construction Biforked
 
 type Bicursor = Identity <:.:> Binary := (:*:)
 
 type instance Zipper (Construction Wye) (Up ::: Down Left ::: Down Right) =
-	Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)
+	Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:)
 
 instance Morphable (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
 	type Morphing (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
-	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
-		lift $ twosome # Construct parent (resolve # Both focused # Left focused # run rest) # TU (TU next)
-	morphing (run . premorph -> focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next)))) =
-		lift $ twosome # Construct parent (resolve # Both % focused # Right focused # run rest) # TU (TU next)
-	morphing (premorph -> T_U (_ :*: TU (TU Top))) = TU Nothing
+	morphing zipper = case run # premorph zipper of
+		focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next))) ->
+			lift $ twosome # Construct parent (resolve # Both focused # Left focused # run rest) # TU (TU next)
+		focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next))) ->
+			lift $ twosome # Construct parent (resolve # Both % focused # Right focused # run rest) # TU (TU next)
+		_ :*: TU (TU Top) -> TU Nothing
 
 instance Morphable (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
 	type Morphing (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
-	morphing (run . premorph -> Construct x (Left lst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (TU Nothing) # next
-	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (lift rst) # next
-	morphing (run . premorph -> Construct _ (Right _) :*: _) = TU Nothing
-	morphing (run . premorph -> Construct _ End :*: _) = TU Nothing
+	morphing zipper = case run # premorph zipper of
+		Construct x (Left lst) :*: TU (TU next) ->
+			lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (TU Nothing) # next
+		Construct x (Both lst rst) :*: TU (TU next) ->
+			lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (lift rst) # next
+		Construct _ (Right _) :*: _ -> TU Nothing
+		Construct _ End :*: _ -> TU Nothing
 
 instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
 	type Morphing (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
 		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
-	morphing (run . premorph -> Construct x (Right rst) :*: TU (TU next)) =
-		lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (TU Nothing) # next
-	morphing (run . premorph -> Construct x (Both lst rst) :*: TU (TU next)) =
-		lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (lift lst) # next
-	morphing (run . premorph -> Construct _ (Left _) :*: _) = TU Nothing
-	morphing (run . premorph -> Construct _ End :*: _) = TU Nothing
+	morphing zipper = case run # premorph zipper of
+		Construct x (Right rst) :*: TU (TU next) ->
+			lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (TU Nothing) # next
+		Construct x (Both lst rst) :*: TU (TU next) ->
+			lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (lift lst) # next
+		Construct _ (Left _) :*: _ -> TU Nothing
+		Construct _ End :*: _ -> TU Nothing
 
 leaf :: a :=> Nonempty Binary
 leaf x = Construct x End
