@@ -14,13 +14,14 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), premorph, rotate)
-import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
+import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Primary.Algebraic (point)
 
 type Stream = Construction Identity
 
-type instance Zipper (Construction Identity) (Left ::: Right) = Tap (Stream <:.:> Stream := (:*:))
+instance Zippable (Construction Identity) where
+	type Breadcrumbs (Construction Identity) = (Stream <:.:> Stream := (:*:))
 
 instance Morphable (Rotate Left) (Tap (Stream <:.:> Stream := (:*:))) where
 	type Morphing (Rotate Left) (Tap (Stream <:.:> Stream := (:*:))) = Tap (Stream <:.:> Stream := (:*:))
