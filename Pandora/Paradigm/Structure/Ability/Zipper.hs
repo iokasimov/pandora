@@ -22,7 +22,7 @@ instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--)
 		let xs :*: ys = mult @(<--) ! xys in
 			T_U (Identity x :*: xs) :*: T_U (Identity y :*: ys)
 
-instance {-# OVERLAPS #-} Monoidal (<--) (->) (:*:) (:*:) t => Monoidal (<--) (->) (:*:) (:*:) (Identity <:.:> t := (:*:)) where
+instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (->) (:*:) (:*:) (Identity <:.:> t := (:*:)) where
 	unit _ = Flip $ \(T_U (Identity x :*: _)) -> (\_ -> x)
 
 type family Fastenable structure rs where
