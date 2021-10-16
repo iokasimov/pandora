@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (:=), type (:=>), type (:::))
+import Pandora.Core.Functor (type (~>), type (:=), type (:=>), type (:::))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -34,7 +34,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
 	, Morph (Rotate, Into, Insert, Lookup, Vary, Key, Element), Vertical (Up, Down), lookup, vary)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
-import Pandora.Paradigm.Structure.Ability.Zipper (Zipper)
+import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Zipper)
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 type Binary = Maybe <:.> Construction Wye
@@ -170,40 +170,54 @@ type Bifurcation = Biforked <:.> Construction Biforked
 
 type Bicursor = Identity <:.:> Binary := (:*:)
 
-type instance Zipper (Construction Wye) (Up ::: Down Left ::: Down Right) =
-	Construction Wye <:.:> (Bifurcation <:.> Bicursor) := (:*:)
+instance Zippable (Construction Wye) where
+	type Breadcrumbs (Construction Wye) = (Wye <:.> Construction Wye) <:.:> (Bifurcation <:.> Bicursor) := (:*:)
 
-instance Morphable (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
-	type Morphing (Rotate Up) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
-		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
+_focused_part_to_nonempty_binary_tree :: (Identity <:.:> Wye <:.> Construction Wye := (:*:)) ~> Construction Wye
+_focused_part_to_nonempty_binary_tree (T_U (Identity x :*: xs)) = Construct x # run xs
+
+instance Morphable (Rotate Up) ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> (Bifurcation <:.> Bicursor) := (:*:)) where
+	type Morphing (Rotate Up) ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> (Bifurcation <:.> Bicursor) := (:*:))
+		= Maybe <:.> ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing zipper = case run # premorph zipper of
 		focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next))) ->
-			lift $ twosome # Construct parent (resolve # Both focused # Left focused # run rest) # TU (TU next)
+			lift . twosome % TU (TU next) $ twosome # Identity parent $ TU $ resolve
+				# Both (_focused_part_to_nonempty_binary_tree focused)
+				# Left (_focused_part_to_nonempty_binary_tree focused)
+				# run rest
 		focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next))) ->
-			lift $ twosome # Construct parent (resolve # Both % focused # Right focused # run rest) # TU (TU next)
+			lift . twosome % TU (TU next) $ twosome # Identity parent $ TU $ resolve
+				# Both % _focused_part_to_nonempty_binary_tree focused
+				# Right (_focused_part_to_nonempty_binary_tree focused)
+				# run rest
 		_ :*: TU (TU Top) -> TU Nothing
 
-instance Morphable (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
-	type Morphing (Rotate (Down Left)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
-		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
-	morphing zipper = case run # premorph zipper of
-		Construct x (Left lst) :*: TU (TU next) ->
-			lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (TU Nothing) # next
-		Construct x (Both lst rst) :*: TU (TU next) ->
-			lift . twosome lst . TU . TU . Leftward $ Construct # twosome (Identity x) (lift rst) # next
-		Construct _ (Right _) :*: _ -> TU Nothing
-		Construct _ End :*: _ -> TU Nothing
+_nonempty_binary_tree_to_focused_part :: Construction Wye ~> Identity <:.:> Wye <:.> Construction Wye := (:*:)
+_nonempty_binary_tree_to_focused_part (Construct x xs) = twosome # Identity x # TU xs
 
-instance Morphable (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:)) where
-	type Morphing (Rotate (Down Right)) (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
-		= Maybe <:.> (Construction Wye <:.:> Bifurcation <:.> Bicursor := (:*:))
+instance Morphable (Rotate (Down Left)) ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> (Bifurcation <:.> Bicursor) := (:*:)) where
+	type Morphing (Rotate (Down Left)) ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> (Bifurcation <:.> Bicursor) := (:*:))
+		= Maybe <:.> ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> Bifurcation <:.> Bicursor := (:*:))
+	morphing zipper = case run # premorph zipper of
+		T_U (Identity x :*: TU (Left lst)) :*: TU (TU next) ->
+			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
+				. TU . TU . Leftward $ Construct # twosome (Identity x) (TU Nothing) # next
+		T_U (Identity x :*: TU (Both lst rst)) :*: TU (TU next) ->
+			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
+				. TU . TU . Leftward $ Construct # twosome (Identity x) (lift rst) # next
+		_ -> TU Nothing
+
+instance Morphable (Rotate (Down Right)) ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> (Bifurcation <:.> Bicursor) := (:*:)) where
+	type Morphing (Rotate (Down Right)) ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> (Bifurcation <:.> Bicursor) := (:*:))
+		= Maybe <:.> ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing zipper = case run # premorph zipper of
 		Construct x (Right rst) :*: TU (TU next) ->
-			lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (TU Nothing) # next
+			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
+				. TU . TU . Rightward $ Construct # twosome (Identity x) (TU Nothing) # next
 		Construct x (Both lst rst) :*: TU (TU next) ->
-			lift . twosome rst . TU . TU . Rightward $ Construct # twosome (Identity x) (lift lst) # next
-		Construct _ (Left _) :*: _ -> TU Nothing
-		Construct _ End :*: _ -> TU Nothing
+			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
+				. TU . TU . Rightward $ Construct # twosome (Identity x) (lift lst) # next
+		_ -> TU Nothing
 
 leaf :: a :=> Nonempty Binary
 leaf x = Construct x End
