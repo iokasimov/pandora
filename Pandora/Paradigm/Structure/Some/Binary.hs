@@ -211,10 +211,10 @@ instance Morphable (Rotate (Down Right)) ((Identity <:.:> Wye <:.> Construction 
 	type Morphing (Rotate (Down Right)) ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> (Bifurcation <:.> Bicursor) := (:*:))
 		= Maybe <:.> ((Identity <:.:> Wye <:.> Construction Wye := (:*:)) <:.:> Bifurcation <:.> Bicursor := (:*:))
 	morphing zipper = case run # premorph zipper of
-		Construct x (Right rst) :*: TU (TU next) ->
+		T_U (Identity x :*: TU (Right rst)) :*: TU (TU next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
 				. TU . TU . Rightward $ Construct # twosome (Identity x) (TU Nothing) # next
-		Construct x (Both lst rst) :*: TU (TU next) ->
+		T_U (Identity x :*: TU (Both lst rst)) :*: TU (TU next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
 				. TU . TU . Rightward $ Construct # twosome (Identity x) (lift lst) # next
 		_ -> TU Nothing
