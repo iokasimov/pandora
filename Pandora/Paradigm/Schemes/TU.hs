@@ -50,7 +50,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:)
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:+:) t) => Semimonoidal (-->) (:*:) (:+:) (t <:.> u) where
 	mult = Straight $ \(TU x :*: TU y) -> TU $ sum (Option <$>) (Adoption <$>) <$> (mult @(-->) ! x :*: y)
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u, Monoidal (-->) (->) (:*:) (:+:) t) => Monoidal (-->) (->) (:*:) (:+:) (t <:.> u) where
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (t <:.> u) where
 	unit _ = Straight $ \_ -> TU empty
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.> u) where

@@ -51,7 +51,7 @@ instance Semimonoidal (-->) (:*:) (:+:) Maybe where
 instance Monoidal (-->) (->) (:*:) (:*:) Maybe where
 	unit _ = Straight $ Just . ($ One)
 
-instance Monoidal (-->) (->) (:*:) (:+:) Maybe where
+instance Monoidal (-->) (-->) (:*:) (:+:) Maybe where
 	unit _ = Straight $ \_ -> Nothing
 
 -- TODO: Check laws
