@@ -48,8 +48,8 @@ instance Semimonoidal (-->) (:*:) (:+:) Maybe where
 		Nothing :*: Just y -> Just $ Adoption y
 		Nothing :*: Nothing -> Nothing
 
-instance Monoidal (-->) (->) (:*:) (:*:) Maybe where
-	unit _ = Straight $ Just . ($ One)
+instance Monoidal (-->) (-->) (:*:) (:*:) Maybe where
+	unit _ = Straight $ Just . ($ One) . run
 
 instance Monoidal (-->) (-->) (:*:) (:+:) Maybe where
 	unit _ = Straight $ \_ -> Nothing

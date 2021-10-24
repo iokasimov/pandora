@@ -32,8 +32,8 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Reverse t) where
 instance (Semimonoidal (-->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (-->) (:*:) (:*:) (Reverse t) where
 	mult = Straight $ \(Reverse x :*: Reverse y) -> Reverse ! mult @(-->) ! (x :*: y)
 
-instance (Covariant (->) (->) t, Monoidal (-->) (->) (:*:) (:*:) t) => Monoidal (-->) (->) (:*:) (:*:) (Reverse t) where
-	unit _ = Straight $ Reverse . point . ($ One)
+instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Reverse t) where
+	unit _ = Straight $ Reverse . point . ($ One) . run
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
 	mult = Flip $ (Reverse <-> Reverse) . run (mult @(<--)) . run

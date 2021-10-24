@@ -43,8 +43,8 @@ instance Semimonoidal (-->) (:*:) (:*:) (Conclusion e) where
 		Failure x :*: _ -> Failure x
 		_ :*: Failure x -> Failure x
 
-instance Monoidal (-->) (->) (:*:) (:*:) (Conclusion e) where
-	unit _ = Straight $ Success . ($ One)
+instance Monoidal (-->) (-->) (:*:) (:*:) (Conclusion e) where
+	unit _ = Straight $ Success . ($ One) . run
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Conclusion e) where
 	mult = Straight $ \case
@@ -52,7 +52,7 @@ instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Conclusion e) where
 		Success x :*: _ -> Option <$> Success x
 
 instance Traversable (->) (->) (Conclusion e) where
-	(<<-) :: (Covariant (->) (->) u, Monoidal (-->) (->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) u)
+	(<<-) :: (Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) u)
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
 	f <<- Success x = Success <$> f x
@@ -113,6 +113,6 @@ instance Catchable e (Conclusion e) where
 	catch (Failure e) handle = handle e
 	catch (Success x) _ = Success x
 
-instance (Monoidal (-->) (->) (:*:) (:*:) u, Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
+instance (Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = let conclude = conclusion # run . handle # point . Success
 		in UT $ conclude =<< x

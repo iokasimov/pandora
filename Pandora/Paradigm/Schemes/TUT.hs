@@ -56,7 +56,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:)
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable (->) u) => Bindable (->) (t <:<.>:> t' := u) where
 	f =<< x = TUT $ ((run . f |-) =<<) <$> run x
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) t', Monoidal (-->) (->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (-->) (->) (:*:) (:*:) (t <:<.>:> t' := u) where
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) t', Monoidal (-->) (-->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (-->) (->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Straight $ unite . (point -|) . ($ One)
 
 instance (Adjoint (->) (->) t' t, Extendable (->) u) => Extendable (->) (t' <:<.>:> t := u) where

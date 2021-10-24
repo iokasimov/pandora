@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 --infixl 1 >>=-, ->>=
 --infixr 1 -=<<, =<<-
 
-class (Covariant category category t, Monoidal (Straight category) category (:*:) (:*:) t, Bindable category t) => Monad category t where
+class (Covariant category category t, Monoidal (Straight category) (Straight category) (:*:) (:*:) t, Bindable category t) => Monad category t where
 	--(>>=-) :: t a -> t b -> t a
 	--(>>=-) x y = x >>= \r -> y >>= \_ -> point r
 	--(->>=) :: t a -> t b -> t b

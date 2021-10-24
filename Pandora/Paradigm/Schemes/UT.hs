@@ -40,10 +40,10 @@ instance (Covariant m m t, Covariant m m u, Interpreted m (t <.:> u)) => Covaria
 instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <.:> u) where
 	mult = Straight $ UT . (<$>) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (->) (:*:) (:*:) t, Monoidal (-->) (->) (:*:) (:*:) u) => Monoidal (-->) (->) (:*:) (:*:) (t <.:> u) where
-	unit _ = Straight $ UT . point . point . ($ One)
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) u) => Monoidal (-->) (-->) (:*:) (:*:) (t <.:> u) where
+	unit _ = Straight $ UT . point . point . ($ One) . run
 
-instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (->) (:*:) (:*:) u, Bindable (->) u) => Bindable (->) (t <.:> u) where
+instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Bindable (->) (t <.:> u) where
 	f =<< UT x = UT $ ((identity =<<) <$>) . (run . f <<-) =<< x
 
 instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <.:> u) where
@@ -52,7 +52,7 @@ instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal 
 instance (Covariant (->) (->) u, Monoidal (<--) (->) (:*:) (:*:) t, Monoidal (<--) (->) (:*:) (:*:) u) => Monoidal (<--) (->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Flip $ \(UT x) -> (\_ -> extract $ extract x)
 
-instance Monoidal (-->) (->) (:*:) (:*:) t => Liftable (->) (UT Covariant Covariant t) where
+instance Monoidal (-->) (-->) (:*:) (:*:) t => Liftable (->) (UT Covariant Covariant t) where
 	lift :: Covariant (->) (->) u => u ~> t <.:> u
 	lift x = UT $ point <$> x
 

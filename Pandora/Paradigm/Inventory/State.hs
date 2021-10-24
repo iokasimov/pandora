@@ -38,8 +38,8 @@ instance Semimonoidal (-->) (:*:) (:*:) (State s) where
 		let new :*: y = h old in
 		new :*: x :*: y
 
-instance Monoidal (-->) (->) (:*:) (:*:) (State s) where
-	unit _ = Straight $ State . (identity @(->) -|) . ($ One)
+instance Monoidal (-->) (-->) (:*:) (:*:) (State s) where
+	unit _ = Straight $ State . (identity @(->) -|) . ($ One) . run
 
 instance Bindable (->) (State s) where
 	f =<< x = State $ (run . f |-) <$> run x

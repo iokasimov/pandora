@@ -36,8 +36,8 @@ instance Covariant (->) (->) (Schematic Monad t u) => Covariant (->) (->) (t :> 
 instance Semimonoidal (-->) (:*:) (:*:) (Schematic Monad t u) => Semimonoidal (-->) (:*:) (:*:) (t :> u) where
 	mult = Straight $ \(TM f :*: TM x) -> TM $ mult @(-->) @(:*:) @(:*:) ! f :*: x
 
-instance Monoidal (-->) (->) (:*:) (:*:) (Schematic Monad t u) => Monoidal (-->) (->) (:*:) (:*:) (t :> u) where
-	unit _ = Straight $ TM . point . ($ One)
+instance Monoidal (-->) (-->) (:*:) (:*:) (Schematic Monad t u) => Monoidal (-->) (-->) (:*:) (:*:) (t :> u) where
+	unit _ = Straight $ TM . point . ($ One) . run
 
 instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
 	f <<- TM x = TM <$> f <<- x
@@ -51,7 +51,7 @@ instance Bindable (->) (Schematic Monad t u) => Bindable (->) (t :> u) where
 instance Extendable (->) (Schematic Monad t u) => Extendable (->) (t :> u) where
 	f <<= TM x = TM $ f . TM <<= x
 
-instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (-->) (->) (:*:) (:*:) (Schematic Monad t u), Bindable (->) (t :> u)) => Monad (->) (t :> u) where
+instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (-->) (-->) (:*:) (:*:) (Schematic Monad t u), Bindable (->) (t :> u)) => Monad (->) (t :> u) where
 
 instance Liftable (->) (Schematic Monad t) => Liftable (->) ((:>) t) where
 	lift = TM . lift

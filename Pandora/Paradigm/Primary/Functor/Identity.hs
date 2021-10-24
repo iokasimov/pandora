@@ -28,6 +28,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (extract)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 newtype Identity a = Identity a
 
@@ -37,8 +38,8 @@ instance Covariant (->) (->) Identity where
 instance Semimonoidal (-->) (:*:) (:*:) Identity where
 	mult = Straight $ Identity . (extract <-> extract)
 
-instance Monoidal (-->) (->) (:*:) (:*:) Identity where
-	unit _ = Straight $ Identity . ($ One)
+instance Monoidal (-->) (-->) (:*:) (:*:) Identity where
+	unit _ = Straight $ Identity . ($ One) . run
 
 instance Semimonoidal (<--) (:*:) (:*:) Identity where
 	mult = Flip $ \(Identity (x :*: y)) -> Identity x :*: Identity y

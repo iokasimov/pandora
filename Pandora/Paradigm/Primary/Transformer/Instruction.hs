@@ -20,6 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 
@@ -34,8 +35,8 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoid
 		Instruct x :*: Enter y -> (:*: y) <$> Instruct x
 		Instruct x :*: Instruct y -> Instruct $ (mult @(-->) !) <$> (mult @(-->) ! x :*: y)
 
-instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Monoidal (-->) (->) (:*:) (:*:) (Instruction t) where
-	unit _ = Straight $ Enter . ($ One)
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Instruction t) where
+	unit _ = Straight $ Enter . ($ One) . run
 
 instance Covariant (->) (->) t => Bindable (->) (Instruction t) where
 	f =<< Enter x = f x
@@ -50,7 +51,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Instruction t) where
 instance Liftable (->) Instruction where
 	lift x = Instruct $ Enter <$> x
 
-instance (forall t . Bindable (->) t, forall t . Monoidal (-->) (->) (:*:) (:*:) t) => Lowerable (->) Instruction where
+instance (forall t . Bindable (->) t, forall t . Monoidal (-->) (-->) (:*:) (:*:) t) => Lowerable (->) Instruction where
 	lower (Enter x) = point x
 	lower (Instruct xs) = lower =<< xs
 
