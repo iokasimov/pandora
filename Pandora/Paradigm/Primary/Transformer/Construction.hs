@@ -45,8 +45,8 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoid
 	mult = Flip $ \(Construct (x :*: y) xys) -> (Construct x <-> Construct y)
 		$ (mult @(<--) !) $ (mult @(<--) !) <$> xys
 
-instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Construction t) where
-	unit _ = Flip $ \(Construct x _) -> (\_ -> x)
+instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Construction t) where
+	unit _ = Flip $ \(Construct x _) -> Straight (\_ -> x)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Construction t) where
 	unit _ = Straight $ \f -> Construct # run f One # empty
@@ -87,5 +87,5 @@ deconstruct ~(Construct _ xs) = xs
 (.-+) :: Covariant (->) (->) t => a :=> t -> a :=> Construction t
 f .-+ x = Construct x $ (f .-+) <$> f x
 
-section :: (Comonad (->) t, Monoidal (<--) (->) (:*:) (:*:) t) => t ~> Construction t
+section :: (Comonad (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => t ~> Construction t
 section xs = Construct # extract xs $ section <<= xs

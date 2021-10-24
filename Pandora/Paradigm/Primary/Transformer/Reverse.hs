@@ -38,8 +38,8 @@ instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
 	mult = Flip $ (Reverse <-> Reverse) . run (mult @(<--)) . run
 
-instance (Covariant (->) (->) t, Monoidal (<--) (->) (:*:) (:*:) t) => Monoidal (<--) (->) (:*:) (:*:) (Reverse t) where
-	unit _ = Flip $ \(Reverse x) -> (\_ -> extract x)
+instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Reverse t) where
+	unit _ = Flip $ \(Reverse x) -> Straight (\_ -> extract x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Reverse t) where
 	f <<- Reverse x = Reverse <$> run (Backwards . f <<- x)

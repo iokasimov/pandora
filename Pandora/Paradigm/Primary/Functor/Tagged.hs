@@ -50,8 +50,8 @@ instance Monoidal (-->) (-->) (:*:) (:*:) (Tagged tag) where
 instance Semimonoidal (<--) (:*:) (:*:) (Tagged tag) where
 	mult = Flip $ \(Tag (x :*: y)) -> Tag x :*: Tag y
 
-instance Monoidal (<--) (->) (:*:) (:*:) (Tagged tag) where
-	unit _ = Flip $ \(Tag x) -> (\_ -> x)
+instance Monoidal (<--) (-->) (:*:) (:*:) (Tagged tag) where
+	unit _ = Flip $ \(Tag x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) (Tagged tag) where
 	f <<- Tag x = Tag <$> f x

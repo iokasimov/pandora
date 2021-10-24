@@ -49,13 +49,13 @@ instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (-->) (:*:) (:*
 instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <.:> u) where
 	mult = Flip $ \(UT xys) -> (UT <-> UT) . (mult @(<--) !) $ (mult @(<--) !) <$> xys
 
-instance (Covariant (->) (->) u, Monoidal (<--) (->) (:*:) (:*:) t, Monoidal (<--) (->) (:*:) (:*:) u) => Monoidal (<--) (->) (:*:) (:*:) (t <.:> u) where
-	unit _ = Flip $ \(UT x) -> (\_ -> extract $ extract x)
+instance (Covariant (->) (->) u, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<--) (-->) (:*:) (:*:) u) => Monoidal (<--) (-->) (:*:) (:*:) (t <.:> u) where
+	unit _ = Flip $ \(UT x) -> Straight (\_ -> extract $ extract x)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) t => Liftable (->) (UT Covariant Covariant t) where
 	lift :: Covariant (->) (->) u => u ~> t <.:> u
 	lift x = UT $ point <$> x
 
-instance Monoidal (<--) (->) (:*:) (:*:) t => Lowerable (->) (UT Covariant Covariant t) where
+instance Monoidal (<--) (-->) (:*:) (:*:) t => Lowerable (->) (UT Covariant Covariant t) where
 	lower :: Covariant (->) (->) u => t <.:> u ~> u
 	lower (UT x) = extract <$> x

@@ -14,10 +14,11 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Adjoint ((-|))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), (%), (!.), (-.#..-))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%), (!.), (-.#..-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
@@ -35,8 +36,8 @@ instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 		let (x :*: y) = f s in
 		Store (s :*: (x !.)) :*: Store (s :*: (y !.))
 
-instance Monoidal (<--) (->) (:*:) (:*:) (Store s) where
-	unit _ = Flip $ \(Store (s :*: f)) -> (\_ -> f s)
+instance Monoidal (<--) (-->) (:*:) (:*:) (Store s) where
+	unit _ = Flip $ \(Store (s :*: f)) -> Straight (\_ -> f s)
 
 -- TODO: Try to generalize (->) here
 instance Extendable (->) (Store s) where

@@ -50,14 +50,14 @@ instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u, 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
 	mult = Flip $ (TUT <-> TUT) . (mult @(<--) !) . (<$>) (mult @(<--) !) . (<$$>) @_ @(->) (mult @(<--) !) . run
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (->) (:*:) (:*:) (t <:<.>:> t' := u) where
-	unit _ = Flip $ \(TUT xys) -> (\_ -> (extract |-) xys)
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (-->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
+	unit _ = Flip $ \(TUT xys) -> Straight (\_ -> (extract |-) xys)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable (->) u) => Bindable (->) (t <:<.>:> t' := u) where
 	f =<< x = TUT $ ((run . f |-) =<<) <$> run x
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) t', Monoidal (-->) (-->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (-->) (->) (:*:) (:*:) (t <:<.>:> t' := u) where
-	unit _ = Straight $ unite . (point -|) . ($ One)
+instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) t', Monoidal (-->) (-->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (-->) (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
+	unit _ = Straight $ unite . (point -|) . ($ One) . run
 
 instance (Adjoint (->) (->) t' t, Extendable (->) u) => Extendable (->) (t' <:<.>:> t := u) where
 	f <<= x = TUT $ ((f . unite -|) <<=) <$> run x

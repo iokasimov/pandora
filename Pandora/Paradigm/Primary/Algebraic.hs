@@ -75,16 +75,16 @@ instance Monoidal (-->) (-->) (:*:) (:*:) ((:+:) e) where
 instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
 	mult = Flip $ \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
 
-instance Monoidal (<--) (->) (:*:) (:*:) ((:*:) s) where
-	unit _ = Flip $ \(_ :*: x) -> (\_ -> x)
+instance Monoidal (<--) (-->) (:*:) (:*:) ((:*:) s) where
+	unit _ = Flip $ \(_ :*: x) -> Straight (\_ -> x)
 
 instance Comonad (->) ((:*:) s) where
 
 instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
 	mult = Flip $ \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
 
-instance Monoidal (<--) (->) (:*:) (:*:) (Flip (:*:) a) where
-	unit _ = Flip $ \(Flip (s :*: _)) -> (\_ -> s)
+instance Monoidal (<--) (-->) (:*:) (:*:) (Flip (:*:) a) where
+	unit _ = Flip $ \(Flip (s :*: _)) -> Straight (\_ -> s)
 
 type Applicative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) t)
 type Alternative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:+:) t)
@@ -103,12 +103,12 @@ x *>- y = ((!.) %) <$> x <-*- y
 	=> t a -> t b -> (a :+: b -> r) -> t r
 x -+- y = \f -> f <$> (mult @(-->) ! (x :*: y))
 
-type Extractable t = Monoidal (<--) (->) (:*:) (:*:) t
+type Extractable t = Monoidal (<--) (-->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t
 type Emptiable t = Monoidal (-->) (-->) (:*:) (:+:) t
 
 extract :: Extractable t => t a -> a
-extract j = run (unit @(<--) Proxy) j One
+extract j = run (run (unit @(<--) @(-->) Proxy) j) One
 
 point :: Pointable t => a -> t a
 point x = run (unit @(-->) Proxy) (Straight $ \One -> x)

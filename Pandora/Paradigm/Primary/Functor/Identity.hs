@@ -44,8 +44,8 @@ instance Monoidal (-->) (-->) (:*:) (:*:) Identity where
 instance Semimonoidal (<--) (:*:) (:*:) Identity where
 	mult = Flip $ \(Identity (x :*: y)) -> Identity x :*: Identity y
 
-instance Monoidal (<--) (->) (:*:) (:*:) Identity where
-	unit _ = Flip $ \(Identity x) -> (\_ -> x)
+instance Monoidal (<--) (-->) (:*:) (:*:) Identity where
+	unit _ = Flip $ \(Identity x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) Identity where
 	f <<- Identity x = Identity <$> f x
