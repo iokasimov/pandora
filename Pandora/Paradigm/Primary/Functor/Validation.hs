@@ -19,6 +19,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 data Validation e a = Flaws e | Validated a
 
@@ -45,8 +46,8 @@ instance Semigroup e => Semimonoidal (-->) (:*:) (:*:) (Validation e) where
 		Validated _ :*: Flaws y -> Flaws y
 		Flaws x :*: Validated _ -> Flaws x
 
-instance Semigroup e => Monoidal (-->) (->) (:*:) (:*:) (Validation e) where
-	unit _ = Straight $ Validated . ($ One)
+instance Semigroup e => Monoidal (-->) (-->) (:*:) (:*:) (Validation e) where
+	unit _ = Straight $ Validated . ($ One) . run
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Validation e) where
 	mult = Straight $ \case

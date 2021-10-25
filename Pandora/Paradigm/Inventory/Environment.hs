@@ -37,8 +37,8 @@ instance Contravariant (->) (->) (Flip Environment a) where
 instance Semimonoidal (-->) (:*:) (:*:) (Environment e) where
 	mult = Straight $ Environment . (mult @(-->) !) . (run @(->) <-> run @(->))
 
-instance Monoidal (-->) (->) (:*:) (:*:) (Environment e) where
-	unit _ = Straight $ \f -> Environment $ \_ -> f One
+instance Monoidal (-->) (-->) (:*:) (:*:) (Environment e) where
+	unit _ = Straight $ \f -> Environment $ \_ -> run f One
 
 instance Distributive (->) (->) (Environment e) where
 	f -<< g = Environment $ (run @(->) <$> f) -<< g
