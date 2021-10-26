@@ -11,6 +11,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:)(Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), type (<--))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
@@ -25,10 +26,15 @@ instance Contravariant (->) (->) Predicate where
 	f >$< Predicate g = Predicate $ g . f
 
 instance Semimonoidal (-->) (:*:) (:*:) Predicate where
-	mult = Straight $ \(Predicate f :*: Predicate g) -> Predicate $ \(a :*: b) -> f a * g b
+	mult = Straight $ \(Predicate f :*: Predicate g) -> Predicate $ \(x :*: y) -> f x * g y
 
 instance Monoidal (-->) (<--) (:*:) (:*:) Predicate where
 	unit _ = Straight $ \_ -> Predicate $ \_ -> True
+
+instance Semimonoidal (-->) (:*:) (:+:) Predicate where
+	mult = Straight $ \(Predicate f :*: Predicate g) -> Predicate $ \case
+		Option x -> f x
+		Adoption y -> g y
 
 equate :: Setoid a => a :=> Predicate
 equate x = Predicate (== x)
