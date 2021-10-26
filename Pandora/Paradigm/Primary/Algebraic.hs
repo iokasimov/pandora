@@ -8,7 +8,6 @@ import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 import Pandora.Paradigm.Primary.Algebraic.Zero as Exports
 import Pandora.Paradigm.Primary.Algebraic.One as Exports
 
-import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (($))
@@ -20,7 +19,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero

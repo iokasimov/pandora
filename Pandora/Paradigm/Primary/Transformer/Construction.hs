@@ -3,7 +3,6 @@
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
-import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
@@ -27,7 +26,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (empty)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Schemes (type (<:.>))
 

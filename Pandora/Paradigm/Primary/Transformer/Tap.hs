@@ -3,7 +3,6 @@
 module Pandora.Paradigm.Primary.Transformer.Tap where
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -16,7 +15,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%))

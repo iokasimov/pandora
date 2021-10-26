@@ -2,7 +2,6 @@
 
 module Pandora.Paradigm.Primary.Algebraic.Exponential where
 
-import Pandora.Core.Appliable (Appliable ((!)))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -53,13 +52,6 @@ type (-->) = Straight (->)
 
 instance Covariant (->) (->) ((-->) b) where
 	f <$> Straight g = Straight $ f . g
-
-instance Appliable (->) c b (->) c b where
-	f ! x = f x
-
--- TODO: Is it possible to generalize?
-instance Appliable (->) a (b -> c) (->) b (a -> c) where
-	(!) f = (%) f
 
 (-.#..-) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (-.#..-) f = (<$>) (f .)

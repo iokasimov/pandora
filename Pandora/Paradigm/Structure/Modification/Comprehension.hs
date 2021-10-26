@@ -4,7 +4,6 @@
 module Pandora.Paradigm.Structure.Modification.Comprehension where
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -21,7 +20,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!)))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)

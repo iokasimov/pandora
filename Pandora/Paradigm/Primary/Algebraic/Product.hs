@@ -1,7 +1,6 @@
 module Pandora.Paradigm.Primary.Algebraic.Product where
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -19,6 +18,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 
 infixr 0 :*:
 

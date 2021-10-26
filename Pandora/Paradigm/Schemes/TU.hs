@@ -1,7 +1,6 @@
 module Pandora.Paradigm.Schemes.TU where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
-import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
@@ -15,7 +14,7 @@ import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!), (||=)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)

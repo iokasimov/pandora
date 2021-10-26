@@ -1,7 +1,6 @@
 module Pandora.Paradigm.Structure.Ability.Zipper where
 
 import Pandora.Core.Functor (type (:=), type (:::))
-import Pandora.Core.Appliable ((!))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (($))
@@ -12,6 +11,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *

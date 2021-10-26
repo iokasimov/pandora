@@ -8,6 +8,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>), (<$$$>), (<
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
+infixr 0 !
 infixr 2 ||=, =||
 
 type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
@@ -17,6 +18,9 @@ class Interpreted m t where
 	type Primary t a :: *
 	run :: m (t a) (Primary t a)
 	unite :: m (Primary t a) (t a)
+
+	(!) :: m (t a) (Primary t a)
+	(!) = run
 
 	(||=) :: (Semigroupoid m, Interpreted m u) => m (Primary t a) (Primary u b) -> m (t a) (u b)
 	(||=) f = unite . f . run
