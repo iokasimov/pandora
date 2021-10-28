@@ -22,9 +22,9 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
 
-class Interpreted (->) t => Monadic t where
+class Interpreted m t => Monadic m t where
 	{-# MINIMAL wrap #-}
-	wrap :: Pointable u => t ~> t :> u
+	wrap :: Pointable u => m (t a) ((t :> u) a)
 
 infixr 3 :>
 newtype (:>) t u a = TM { tm :: Schematic Monad t u a }

@@ -108,7 +108,7 @@ instance Interpreted (->) Maybe where
 	run = identity
 	unite = identity
 
-instance Monadic Maybe where
+instance Monadic (->) Maybe where
 	wrap = TM . UT . point
 
 instance Monotonic a (Maybe a) where
@@ -119,7 +119,7 @@ instance Monotonic a (t a) => Monotonic a (Maybe :. t := a) where
 	reduce f r (Just x) = reduce f r x
 	reduce _ r Nothing = r
 
-type Optional = Adaptable Maybe
+type Optional = Adaptable (->) Maybe
 
 nothing :: Optional t => t a
 nothing = adapt Nothing

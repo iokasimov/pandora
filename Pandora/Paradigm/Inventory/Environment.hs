@@ -57,10 +57,10 @@ instance Interpreted (->) (Environment e) where
 
 type instance Schematic Monad (Environment e) = (<:.>) ((->) e)
 
-instance Monadic (Environment e) where
+instance Monadic (->) (Environment e) where
 	wrap x = TM . TU $ point <$> run x
 
-type Configured e = Adaptable (Environment e)
+type Configured e = Adaptable (->) (Environment e)
 
 env :: Configured e t => t e
 env = adapt $ Environment identity

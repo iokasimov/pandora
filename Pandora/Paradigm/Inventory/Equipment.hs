@@ -32,7 +32,7 @@ instance Interpreted (->) (Equipment e) where
 
 type instance Schematic Comonad (Equipment e) = (<:.>) ((:*:) e)
 
-type Equipped e t = Adaptable t (Equipment e)
+type Equipped e t = Adaptable (->) t (Equipment e)
 
 instance {-# OVERLAPS #-} Extendable (->) u => Extendable (->) ((:*:) e <:.> u) where
 	f <<= TU (e :*: x) = TU . (:*:) e $ f . TU . (:*:) e <<= x

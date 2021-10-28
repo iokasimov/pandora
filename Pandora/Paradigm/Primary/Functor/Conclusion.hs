@@ -98,10 +98,10 @@ instance Interpreted (->) (Conclusion e) where
 
 type instance Schematic Monad (Conclusion e) = (<.:>) (Conclusion e)
 
-instance Monadic (Conclusion e) where
+instance Monadic (->) (Conclusion e) where
 	wrap = TM . UT . point
 
-type Failable e = Adaptable (Conclusion e)
+type Failable e = Adaptable (->) (Conclusion e)
 
 failure :: Failable e t => e -> t a
 failure = adapt . Failure

@@ -56,10 +56,10 @@ instance Interpreted (->) (State s) where
 
 type instance Schematic Monad (State s) = (->) s <:<.>:> (:*:) s
 
-instance Monadic (State s) where
+instance Monadic (->) (State s) where
 	wrap x = TM . TUT $ point <$> run x
 
-type Stateful s = Adaptable (State s)
+type Stateful s = Adaptable (->) (State s)
 
 -- | Get current value
 current :: Stateful s t => t s
@@ -73,7 +73,7 @@ modify f = adapt . State $ \s -> let r = f s in r :*: r
 replace :: Stateful s t => s -> t s
 replace s = adapt . State $ \_ -> s :*: s
 
-reconcile :: (Bindable (->) t, Stateful s t, Adaptable u t) => (s -> u s) -> t s
+reconcile :: (Bindable (->) t, Stateful s t, Adaptable (->) u t) => (s -> u s) -> t s
 reconcile f = replace =<< adapt . f =<< current
 
 type Memorable s t = (Covariant (->) (->) t, Pointable t,  Stateful s t)

@@ -39,10 +39,10 @@ instance Interpreted (->) (Accumulator e) where
 	run ~(Accumulator x) = x
 	unite = Accumulator
 
-instance Monoid e => Monadic (Accumulator e) where
+instance Monoid e => Monadic (->) (Accumulator e) where
 	wrap = TM . UT . point . run
 
-type Accumulated e t = Adaptable (Accumulator e) t
+type Accumulated e t = Adaptable (->) (Accumulator e) t
 
 gather :: Accumulated e t => e -> t ()
 gather x = adapt . Accumulator $ x :*: ()

@@ -22,9 +22,9 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (Extractable, point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
 
-class Interpreted (->) t => Comonadic t where
+class Interpreted m t => Comonadic m t where
 	{-# MINIMAL bring #-}
-	bring :: Extractable u => t :< u ~> t
+	bring :: Extractable u => m ((t :< u) a) (t a)
 
 infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
