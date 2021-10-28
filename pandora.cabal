@@ -23,7 +23,6 @@ library
     Pandora.Core
     Pandora.Core.Functor
     Pandora.Core.Impliable
-    Pandora.Core.Appliable
 
     Pandora.Paradigm
     -- Basic constructions

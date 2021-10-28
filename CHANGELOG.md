@@ -607,3 +607,4 @@
 # 0.4.8
 * Define `Zippable` type family and remove moves from `Zipper` type alias
 * Add `!` infix operator as synonymous for `run`
+* Remove `Appliable` module
