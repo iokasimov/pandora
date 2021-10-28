@@ -608,3 +608,4 @@
 * Define `Zippable` type family and remove moves from `Zipper` type alias
 * Add `!` infix operator as synonymous for `run`
 * Remove `Appliable` module
+* Generalize `Adaptable` typeclass
