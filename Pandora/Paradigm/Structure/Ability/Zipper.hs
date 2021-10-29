@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Pandora.Paradigm.Structure.Ability.Zipper where
 
 import Pandora.Core.Functor (type (:=), type (:::))

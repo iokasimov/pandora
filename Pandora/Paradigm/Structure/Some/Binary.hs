@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (~>), type (:=), type (:=>), type (:::))
+import Pandora.Core.Functor (type (~>), type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
@@ -34,7 +34,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
 	, Morph (Rotate, Into, Insert, Lookup, Vary, Key, Element), Vertical (Up, Down), lookup, vary)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
-import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Zipper)
+import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 type Binary = Maybe <:.> Construction Wye
@@ -185,12 +185,12 @@ instance Morphable (Rotate Up) ((Identity <:.:> Wye <:.> Construction Wye := (:*
 				# Both (_focused_part_to_nonempty_binary_tree focused)
 				# Left (_focused_part_to_nonempty_binary_tree focused)
 				# run rest
-		focused :*: TU (TU (Rightward (Construct (T_U (Identity parent :*: rest)) next))) ->
+		focused :*: TU (TU (Leftward (Construct (T_U (Identity parent :*: rest)) next))) ->
 			lift . twosome % TU (TU next) $ twosome # Identity parent $ TU $ resolve
 				# Both % _focused_part_to_nonempty_binary_tree focused
 				# Right (_focused_part_to_nonempty_binary_tree focused)
 				# run rest
-		_ :*: TU (TU Top) -> TU Nothing
+		_ -> TU Nothing
 
 _nonempty_binary_tree_to_focused_part :: Construction Wye ~> Identity <:.:> Wye <:.> Construction Wye := (:*:)
 _nonempty_binary_tree_to_focused_part (Construct x xs) = twosome # Identity x # TU xs
