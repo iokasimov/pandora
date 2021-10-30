@@ -2,7 +2,7 @@
 
 module Pandora.Paradigm.Structure.Some.List where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (:::))
+import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#), identity)
@@ -18,8 +18,6 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
-import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Numerator))
-import Pandora.Paradigm.Primary.Object.Denumerator (Denumerator (Single))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), (-.#..-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
@@ -28,7 +26,6 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
-import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Inventory.State (State, fold, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
@@ -74,21 +71,24 @@ instance Morphable Pop List where
 
 instance Morphable (Find Element) List where
 	type Morphing (Find Element) List = Predicate <:.:> Maybe := (->)
-	morphing (premorph -> TU Nothing) = T_U $ \_ -> Nothing
-	morphing (premorph -> TU (Just (Construct x xs))) = T_U $ \p ->
-		run p x ? Just x $ find @Element @List @Maybe # p # TU xs
+	morphing list = case run # premorph list of
+		Nothing -> T_U $ \_ -> Nothing
+		Just (Construct x xs) -> T_U $ \p -> run p x ? Just x
+			$ find @Element @List @Maybe # p # TU xs
 
 instance Morphable (Delete First) List where
 	type Morphing (Delete First) List = Predicate <:.:> List := (->)
-	morphing (premorph -> TU Nothing) = T_U $ \_ -> TU Nothing
-	morphing (premorph -> TU (Just (Construct x xs))) = T_U $ \p ->
-		run p x ? TU xs $ lift . Construct x . run . filter @First @List p $ TU xs
+	morphing list = case run # premorph list of
+		Nothing -> T_U $ \_ -> TU Nothing
+		Just (Construct x xs) -> T_U $ \p -> run p x ? TU xs
+			$ lift . Construct x . run . filter @First @List p $ TU xs
 
 instance Morphable (Delete All) List where
 	type Morphing (Delete All) List = Predicate <:.:> List := (->)
-	morphing (premorph -> TU Nothing) = T_U $ \_ -> TU Nothing
-	morphing (premorph -> TU (Just (Construct x xs))) = T_U $ \p ->
-		run p x ? filter @All @List p (TU xs) $ lift . Construct x . run . filter @All @List p $ TU xs
+	morphing list = case run # premorph list of
+		Nothing -> T_U $ \_ -> TU Nothing
+		Just (Construct x xs) -> T_U $ \p -> run p x ? filter @All @List p (TU xs)
+			$ lift . Construct x . run . filter @All @List p $ TU xs
 
 instance Stack List where
 
