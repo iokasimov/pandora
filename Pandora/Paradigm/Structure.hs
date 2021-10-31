@@ -46,24 +46,27 @@ instance (Covariant (->) (->) t) => Substructure Tail (Tap t) where
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
-	morphing (premorph -> Construct x End) = Construct x Nothing
-	morphing (premorph -> Construct x (Left lst)) = Construct x . Just $ into @(Preorder (Nonempty List)) lst
-	morphing (premorph -> Construct x (Right rst)) = Construct x . Just $ into @(Preorder (Nonempty List)) rst
-	morphing (premorph -> Construct x (Both lst rst)) = Construct x . Just $ into @(Preorder (Nonempty List)) lst + into @(Preorder (Nonempty List)) rst
+	morphing nonempty_binary = case premorph nonempty_binary of
+		Construct x End -> Construct x Nothing
+		Construct x (Left lst) -> Construct x . Just $ into @(Preorder (Nonempty List)) lst
+		Construct x (Right rst) -> Construct x . Just $ into @(Preorder (Nonempty List)) rst
+		Construct x (Both lst rst) -> Construct x . Just $ into @(Preorder (Nonempty List)) lst + into @(Preorder (Nonempty List)) rst
 
 instance Morphable (Into (Inorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Inorder (Construction Maybe))) (Construction Wye) = Construction Maybe
-	morphing (premorph -> Construct x End) = Construct x Nothing
-	morphing (premorph -> Construct x (Left lst)) = into @(Inorder (Nonempty List)) lst + Construct x Nothing
-	morphing (premorph -> Construct x (Right rst)) = Construct x Nothing + into @(Inorder (Nonempty List)) rst
-	morphing (premorph -> Construct x (Both lst rst)) = into @(Inorder (Nonempty List)) lst + Construct x Nothing + into @(Inorder (Nonempty List)) rst
+	morphing nonempty_binary = case premorph nonempty_binary of
+		Construct x End -> Construct x Nothing
+		Construct x (Left lst) -> into @(Inorder (Nonempty List)) lst + Construct x Nothing
+		Construct x (Right rst) -> Construct x Nothing + into @(Inorder (Nonempty List)) rst
+		Construct x (Both lst rst) -> into @(Inorder (Nonempty List)) lst + Construct x Nothing + into @(Inorder (Nonempty List)) rst
 
 instance Morphable (Into (Postorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Postorder (Construction Maybe))) (Construction Wye) = Construction Maybe
-	morphing (premorph -> Construct x End) = Construct x Nothing
-	morphing (premorph -> Construct x (Left lst)) = into @(Postorder (Nonempty List)) lst + Construct x Nothing
-	morphing (premorph -> Construct x (Right rst)) = into @(Postorder (Nonempty List)) rst + Construct x Nothing
-	morphing (premorph -> Construct x (Both lst rst)) = into @(Postorder (Nonempty List)) lst + into @(Postorder (Nonempty List)) rst + Construct x Nothing
+	morphing nonempty_binary = case premorph nonempty_binary of
+		Construct x End -> Construct x Nothing
+		Construct x (Left lst) -> into @(Postorder (Nonempty List)) lst + Construct x Nothing
+		Construct x (Right rst) -> into @(Postorder (Nonempty List)) rst + Construct x Nothing
+		Construct x (Both lst rst) -> into @(Postorder (Nonempty List)) lst + into @(Postorder (Nonempty List)) rst + Construct x Nothing
 
 instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
 	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
