@@ -70,8 +70,9 @@ instance Substructure Tail (Construction List) where
 
 instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 	type Morphing (Lookup Key) (Prefixed Rose k) = (->) (Nonempty List k) <:.> Maybe
-	morphing (run . premorph -> TU Nothing) = TU $ \_ -> Nothing
-	morphing (run . premorph -> TU (Just tree)) = TU $ find_rose_sub_tree % tree
+	morphing prefixed_rose_tree = case run # premorph prefixed_rose_tree of
+		TU Nothing -> TU $ \_ -> Nothing
+		TU (Just tree) -> TU $ find_rose_sub_tree % tree
 
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 --instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where
