@@ -609,3 +609,4 @@
 * Add `!` infix operator as synonymous for `run`
 * Remove `Appliable` module
 * Generalize `Adaptable` typeclass
+* Generalize `Hoistable` typeclass

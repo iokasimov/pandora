@@ -59,5 +59,5 @@ instance Liftable (->) Backwards where
 instance Lowerable (->) Backwards where
 	lower = run
 
-instance Hoistable Backwards where
+instance Hoistable (->) Backwards where
 	f /|\ Backwards x = Backwards $ f x

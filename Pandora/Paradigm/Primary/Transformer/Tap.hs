@@ -53,7 +53,7 @@ instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable (->) t, Covariant (->) (-
 instance Lowerable (->) Tap where
 	lower (Tap _ xs) = xs
 
-instance Hoistable Tap where
+instance Hoistable (->) Tap where
 	f /|\ Tap x xs = Tap x # f xs
 
 instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap (t <:.:> t := (:*:))) where

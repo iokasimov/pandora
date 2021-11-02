@@ -55,8 +55,8 @@ instance (Extractable (t :< u), Extendable (->) (t :< u)) => Comonad (->) (t :< 
 instance Lowerable (->) (Schematic Comonad t) => Lowerable (->) ((:<) t) where
 	lower (TC x) = lower x
 
-instance Hoistable (Schematic Comonad t) => Hoistable ((:<) t) where
-	f /|\ TC x = TC $ f /|\ x
+--instance Hoistable (Schematic Comonad t) => Hoistable ((:<) t) where
+--	f /|\ TC x = TC $ f /|\ x
 
 instance (Interpreted (->) (Schematic Comonad t u)) => Interpreted (->) (t :< u) where
 	type Primary (t :< u) a = Primary (Schematic Comonad t u) a

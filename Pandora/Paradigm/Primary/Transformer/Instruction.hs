@@ -54,6 +54,6 @@ instance (forall t . Bindable (->) t, forall t . Monoidal (-->) (-->) (:*:) (:*:
 	lower (Enter x) = point x
 	lower (Instruct xs) = lower =<< xs
 
-instance (forall v . Covariant (->) (->) v) => Hoistable Instruction where
+instance (forall v . Covariant (->) (->) v) => Hoistable (->) Instruction where
 	_ /|\ Enter x = Enter x
 	f /|\ Instruct xs = Instruct $ (f /|\) <$> f xs

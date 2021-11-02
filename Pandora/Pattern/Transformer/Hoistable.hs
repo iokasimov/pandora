@@ -1,6 +1,5 @@
 module Pandora.Pattern.Transformer.Hoistable (Hoistable (..)) where
 
-import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |
@@ -11,6 +10,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 
 infixr 5 /|\
 
-class Hoistable t where
+class Hoistable m t where
 	{-# MINIMAL (/|\) #-}
-	(/|\) :: (Covariant (->) (->) u) => u ~> v -> t u ~> t v
+	(/|\) :: Covariant m m u => (forall a . m (u a) (v a)) -> (forall a . m (t u a) (t v a))

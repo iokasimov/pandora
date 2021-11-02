@@ -20,6 +20,6 @@ instance Covariant (->) (->) (Outline t) where
 instance Liftable (->) Outline where
 	lift t = Outlined t (Line identity)
 
-instance Hoistable Outline where
+instance Hoistable (->) Outline where
 	_ /|\ Line x = Line x
 	f /|\ Outlined x y = Outlined # f x # f /|\ y

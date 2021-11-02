@@ -72,6 +72,6 @@ instance Monoidal (<--) (-->) (:*:) (:*:) t => Lowerable (->) (TU Covariant Cova
 	lower :: t <:.> u ~> u
 	lower (TU x) = extract x
 
-instance Covariant (->) (->) t => Hoistable (TU Covariant Covariant t) where
+instance Covariant (->) (->) t => Hoistable (->) (TU Covariant Covariant t) where
 	(/|\) :: u ~> v -> (t <:.> u ~> t <:.> v)
 	f /|\ TU x = TU $ f <$> x

@@ -16,7 +16,7 @@ instance Covariant (->) (->) (Day t u) where
 instance (Extendable (->) t, Extendable (->) u) => Extendable (->) (Day t u) where
 	f <<= day@(Day tb uc _) = Day tb uc (f day !..)
 
-instance Hoistable (Day t) where
+instance Hoistable (->) (Day t) where
 	g /|\ Day tb uc bca = Day tb # g uc # bca
 
 data Day_ category source target t u r = forall a b .

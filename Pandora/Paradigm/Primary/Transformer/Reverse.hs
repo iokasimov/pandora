@@ -60,5 +60,5 @@ instance Liftable (->) Reverse where
 instance Lowerable (->) Reverse where
 	lower = run
 
-instance Hoistable Reverse where
+instance Hoistable (->) Reverse where
 	f /|\ Reverse x = Reverse # f x

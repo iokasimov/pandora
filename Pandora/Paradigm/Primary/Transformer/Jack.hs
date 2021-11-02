@@ -40,7 +40,7 @@ instance Extendable (->) t => Extendable (->) (Jack t) where
 instance Liftable (->) Jack where
 	lift = Other
 
-instance Hoistable Jack where
+instance Hoistable (->) Jack where
 	_ /|\ It x = It x
 	f /|\ Other x = Other $ f x
 
