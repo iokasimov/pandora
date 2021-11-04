@@ -55,8 +55,8 @@ instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (-->) (-->) (:*:) 
 instance Liftable (->) (Schematic Monad t) => Liftable (->) ((:>) t) where
 	lift = TM . lift
 
---instance Hoistable (Schematic Monad t) => Hoistable ((:>) t) where
---	f /|\ TM x = TM $ f /|\ x
+instance Hoistable (->) (Schematic Monad t) => Hoistable (->) ((:>) t) where
+	f /|\ TM x = TM $ f /|\ x
 
 instance (Interpreted (->) (Schematic Monad t u)) => Interpreted (->) (t :> u) where
 	type Primary (t :> u) a = Primary (Schematic Monad t u) a

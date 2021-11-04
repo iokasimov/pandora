@@ -2,7 +2,6 @@
 
 module Pandora.Paradigm.Controlflow.Effect.Adaptable where
 
-import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (Category (identity))
 import Pandora.Pattern.Functor.Covariant (Covariant)
