@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -30,7 +30,7 @@ infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
 
 instance Covariant (->) (->) (Schematic Comonad t u) => Covariant (->) (->) (t :< u) where
-	f <$> TC x = TC $ f <$> x
+	f <-|- TC x = TC $ f <-|- x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (-->) (:*:) (:*:) (t :< u) where
 	mult = Straight $ \(TC f :*: TC x) -> TC $ mult @(-->) @(:*:) @(:*:) ! f :*: x
@@ -39,7 +39,7 @@ instance Monoidal (-->) (-->) (:*:) (:*:) (Schematic Comonad t u) => Monoidal (-
 	unit _ = Straight $ TC . point . ($ One) . run
 
 instance Traversable (->) (->) (Schematic Comonad t u) => Traversable (->) (->) (t :< u) where
-	f <<- TC x = TC <$> f <<- x
+	f <<- TC x = TC <-|- f <<- x
 
 instance Distributive (->) (->) (Schematic Comonad t u) => Distributive (->) (->) (t :< u) where
 	f -<< x = TC $ tc . f -<< x

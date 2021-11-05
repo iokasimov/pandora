@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -33,8 +33,8 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 data Maybe a = Nothing | Just a
 
 instance Covariant (->) (->) Maybe where
-	f <$> Just x = Just $ f x
-	_ <$> Nothing = Nothing
+	f <-|- Just x = Just $ f x
+	_ <-|- Nothing = Nothing
 
 instance Semimonoidal (-->) (:*:) (:*:) Maybe where
 	mult = Straight $ \case
@@ -62,7 +62,7 @@ instance Semimonoidal (<--) (:*:) (:*:) Maybe where
 
 instance Traversable (->) (->) Maybe where
 	_ <<- Nothing = point Nothing
-	f <<- Just x = Just <$> f x
+	f <<- Just x = Just <-|- f x
 
 instance Bindable (->) Maybe where
 	f =<< Just x = f x

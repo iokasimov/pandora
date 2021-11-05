@@ -6,8 +6,8 @@ infixr 1 <<=
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
-> * Duplication interchange: (f -<$$>-) . (identity <<=) ≡ (identity <<=) . (f <$>)
-> * Extension interchange: (f <<=) ≡ (f <$>) . (identity <<=)
+> * Duplication interchange: (f -<-|-|--) . (identity <<=) ≡ (identity <<=) . (f <-|-)
+> * Extension interchange: (f <<=) ≡ (f <-|-) . (identity <<=)
 -}
 
 class Covariant source source t => Extendable source t where

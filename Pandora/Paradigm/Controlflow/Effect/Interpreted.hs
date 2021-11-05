@@ -4,7 +4,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>), (<$$$>), (<$$$$>))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<$$>), (<$$$>), (<$$$$>))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
@@ -30,7 +30,7 @@ class Interpreted m t where
 
 	(<$||=) :: (Semigroupoid m, Covariant m m j, Interpreted m u)
                 => m (Primary t a) (Primary u b) -> m (j := t a) (j := u b)
-	(<$||=) f = (<$>) ((||=) f)
+	(<$||=) f = (<-|-) ((||=) f)
 
 	(<$$||=) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Interpreted m u)
 		=> m (Primary t a) (Primary u b) -> m (j :. k := t a) (j :. k := u b)
@@ -46,7 +46,7 @@ class Interpreted m t where
 
 	(=||$>) :: (Covariant m m j, Interpreted m u)
 		=> m (t a) (u b) -> m (j := Primary t a) (j := Primary u b)
-	(=||$>) f = (<$>) ((=||) f)
+	(=||$>) f = (<-|-) ((=||) f)
 
 	(=||$$>) :: (Covariant m m j, Covariant m m k, Interpreted m u)
 		=> m (t a) (u b) -> m (j :. k := Primary t a) (j :. k := Primary u b)

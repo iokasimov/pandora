@@ -39,7 +39,7 @@ instance Nullable Rose where
 --	type Available Root Rose = Maybe
 --	type Substance Root Rose = Identity
 --	substructure = P_Q_T $ \rose -> case run # lower rose of
---		Nothing -> Store $ Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <$>)
+--		Nothing -> Store $ Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <-|-)
 --		Just nonempty_rose -> Store $ Just (Identity # extract nonempty_rose) :*: \case
 --			Just (Identity new) -> lift . TU . Just . Construct new $ deconstruct nonempty_rose
 --			Nothing -> lift empty

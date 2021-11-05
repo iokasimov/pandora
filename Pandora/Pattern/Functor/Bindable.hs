@@ -6,7 +6,7 @@ infixr 1 =<<
 
 {- |
 > When providing a new instance, you should ensure it satisfies :
-> * Interchange: t >>= f = join (f <$> t)
+> * Interchange: t >>= f = join (f <-|- t)
 -}
 
 class Covariant source source t => Bindable source t where

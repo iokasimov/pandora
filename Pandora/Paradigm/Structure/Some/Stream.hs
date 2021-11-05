@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Some.Stream where
 import Pandora.Core.Functor (type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
 import Pandora.Paradigm.Primary.Algebraic (extract)
@@ -35,7 +35,7 @@ instance Morphable (Rotate Right) (Tap (Stream <:.:> Stream := (:*:))) where
 
 instance {-# OVERLAPS #-} Extendable (->) (Tap (Stream <:.:> Stream := (:*:))) where
 	f <<= z = let move rtt = extract . deconstruct $ point . rtt .-+ z
-		in f <$> Tap z (twosome # move (rotate @Left) # move (rotate @Right))
+		in f <-|- Tap z (twosome # move (rotate @Left) # move (rotate @Right))
 
 repeat :: a :=> Stream
 repeat x = Construct x . Identity $ repeat x

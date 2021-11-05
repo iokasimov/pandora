@@ -6,7 +6,7 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -30,7 +30,7 @@ infixr 3 :>
 newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 
 instance Covariant (->) (->) (Schematic Monad t u) => Covariant (->) (->) (t :> u) where
-	f <$> TM x = TM $ f <$> x
+	f <-|- TM x = TM $ f <-|- x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Schematic Monad t u) => Semimonoidal (-->) (:*:) (:*:) (t :> u) where
 	mult = Straight $ \(TM f :*: TM x) -> TM $ mult @(-->) @(:*:) @(:*:) ! f :*: x
@@ -39,7 +39,7 @@ instance Monoidal (-->) (-->) (:*:) (:*:) (Schematic Monad t u) => Monoidal (-->
 	unit _ = Straight $ TM . point . ($ One) . run
 
 instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
-	f <<- TM x = TM <$> f <<- x
+	f <<- TM x = TM <-|- f <<- x
 
 instance Distributive (->) (->) (Schematic Monad t u) => Distributive (->) (->) (t :> u) where
 	f -<< x = TM $ tm . f -<< x

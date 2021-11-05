@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Modification.Prefixed where
 
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)), (<$$>))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
@@ -22,13 +22,13 @@ instance Interpreted (->) (Prefixed t k) where
 
 -- TODO: Try to generalize (->) here
 instance Covariant (->) (->) t => Covariant (->) (->) (Prefixed t k) where
-	(<$>) f = (||=) ((<$$>) @(->) @(->) f)
+	(<-|-) f = (||=) ((<-|-|-) @(->) @(->) f)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Prefixed t k) where
-	f <<- Prefixed x = Prefixed <$> f -<<-<<- x
+	f <<- Prefixed x = Prefixed <-|- f -<<-<<- x
 
 instance Covariant (->) (->) t => Morphable (Into t) (Prefixed t k) where
 	type Morphing (Into t) (Prefixed t k) = t
-	morphing (run . premorph -> prefixed) = extract <$> prefixed
+	morphing (run . premorph -> prefixed) = extract <-|- prefixed
 
 type instance Nonempty (Prefixed t k) = Prefixed (Nonempty t) k

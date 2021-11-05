@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 import Pandora.Core.Functor (type (~>), type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable ((=<<))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -40,10 +40,10 @@ import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 type Binary = Maybe <:.> Construction Wye
 
 instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
-	f <<- (Construct x (Left l)) = Construct <$> f x <-*- (Left <$> f <<- l)
-	f <<- (Construct x (Right r)) = Construct <$> f x <-*- (Right <$> f <<- r)
-	f <<- (Construct x (Both l r)) = Construct <$> f x <-*- (Both <$> f <<- l <-*- f <<- r)
-	f <<- (Construct x End) = Construct % End <$> f x
+	f <<- (Construct x (Left l)) = Construct <-|- f x <-*- (Left <-|- f <<- l)
+	f <<- (Construct x (Right r)) = Construct <-|- f x <-*- (Right <-|- f <<- r)
+	f <<- (Construct x (Both l r)) = Construct <-|- f x <-*- (Both <-|- f <<- l <-*- f <<- r)
+	f <<- (Construct x End) = Construct % End <-|- f x
 
 --rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
 --rebalance (Both x y) = extract x <=> extract y & order
@@ -70,14 +70,14 @@ instance Substructure Left Binary where
 	type Substance Left Binary = Construction Wye
 	substructure = P_Q_T $ \bintree -> case run . lower # bintree of
 		Nothing -> Store $ Nothing :*: lift . TU
-		Just tree -> lift . lift @(->) <$> run (sub @Left) tree
+		Just tree -> lift . lift @(->) <-|- run (sub @Left) tree
 
 instance Substructure Right Binary where
 	type Available Right Binary = Maybe
 	type Substance Right Binary = Construction Wye
 	substructure = P_Q_T $ \bintree -> case run . extract . run # bintree of
 		Nothing -> Store $ Nothing :*: lift . TU
-		Just tree -> lift . lift @(->) <$> run (sub @Right) tree
+		Just tree -> lift . lift @(->) <-|- run (sub @Right) tree
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
@@ -157,14 +157,14 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 data Biforked a = Top | Leftward a | Rightward a
 
 instance Covariant (->) (->) Biforked where
-	_ <$> Top = Top
-	f <$> Leftward l = Leftward $ f l
-	f <$> Rightward r = Rightward $ f r
+	_ <-|- Top = Top
+	f <-|- Leftward l = Leftward $ f l
+	f <-|- Rightward r = Rightward $ f r
 
 instance Traversable (->) (->) Biforked where
 	_ <<- Top = point Top
-	f <<- Leftward l = Leftward <$> f l
-	f <<- Rightward r = Rightward <$> f r
+	f <<- Leftward l = Leftward <-|- f l
+	f <<- Rightward r = Rightward <-|- f r
 
 type Bifurcation = Biforked <:.> Construction Biforked
 

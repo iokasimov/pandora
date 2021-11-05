@@ -4,7 +4,7 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (identity, ($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -30,12 +30,12 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 data Conclusion e a = Failure e | Success a
 
 instance Covariant (->) (->) (Conclusion e) where
-	f <$> Success x = Success $ f x
-	_ <$> Failure y = Failure y
+	f <-|- Success x = Success $ f x
+	_ <-|- Failure y = Failure y
 
 instance Covariant (->) (->) (Flip Conclusion e) where
-	_ <$> Flip (Success x) = Flip $ Success x
-	f <$> Flip (Failure y) = Flip . Failure $ f y
+	_ <-|- Flip (Success x) = Flip $ Success x
+	f <-|- Flip (Failure y) = Flip . Failure $ f y
 
 instance Semimonoidal (-->) (:*:) (:*:) (Conclusion e) where
 	mult = Straight $ \case
@@ -48,14 +48,14 @@ instance Monoidal (-->) (-->) (:*:) (:*:) (Conclusion e) where
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Conclusion e) where
 	mult = Straight $ \case
-		Failure _ :*: x -> Adoption <$> x
-		Success x :*: _ -> Option <$> Success x
+		Failure _ :*: x -> Adoption <-|- x
+		Success x :*: _ -> Option <-|- Success x
 
 instance Traversable (->) (->) (Conclusion e) where
 	(<<-) :: (Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) u)
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
 	_ <<- Failure y = point $ Failure y
-	f <<- Success x = Success <$> f x
+	f <<- Success x = Success <-|- f x
 
 instance Bindable (->) (Conclusion e) where
 	f =<< Success x = f x

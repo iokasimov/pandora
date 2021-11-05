@@ -5,7 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (($))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -36,10 +36,10 @@ infixr 0 :#
 type (:#) tag = Tagged tag
 
 instance Covariant (->) (->) (Tagged tag) where
-	f <$> Tag x = Tag $ f x
+	f <-|- Tag x = Tag $ f x
 
 instance Covariant (->) (->) (Flip Tagged a) where
-	_ <$> Flip (Tag x) = Flip $ Tag x
+	_ <-|- Flip (Tag x) = Flip $ Tag x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Tagged tag) where
 	mult = Straight $ Tag . (extract <-> extract)
@@ -54,10 +54,10 @@ instance Monoidal (<--) (-->) (:*:) (:*:) (Tagged tag) where
 	unit _ = Flip $ \(Tag x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) (Tagged tag) where
-	f <<- Tag x = Tag <$> f x
+	f <<- Tag x = Tag <-|- f x
 
 instance Distributive (->) (->) (Tagged tag) where
-	f -<< x = Tag $ extract . f <$> x
+	f -<< x = Tag $ extract . f <-|- x
 
 instance Bindable (->) (Tagged tag) where
 	f =<< Tag x = f x

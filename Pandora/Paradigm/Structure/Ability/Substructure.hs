@@ -4,7 +4,7 @@
 module Pandora.Paradigm.Structure.Ability.Substructure where
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<$>)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -24,4 +24,4 @@ class Substructure segment (structure :: * -> *) where
 	substructure :: (Tagged segment <:.> structure) #=@ Substance segment structure := Available segment structure
 
 	sub :: (Covariant (->) (->) structure) => structure #=@ Substance segment structure := Available segment structure
-	sub = lift @(->) >-> (lower @(->) <$>) ||= substructure @segment @structure
+	sub = lift @(->) >-> (lower @(->) <-|-) ||= substructure @segment @structure
