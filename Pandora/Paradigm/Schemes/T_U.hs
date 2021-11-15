@@ -2,7 +2,7 @@ module Pandora.Paradigm.Schemes.T_U where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant, Contravariant ((>$<)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant, Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
@@ -25,7 +25,7 @@ instance (forall i . Covariant (->) (->) (p i), Bivariant (->) (->) (->) p,  Cov
 	f <-|- x = (f <-|-) <-> (f <-|-) ||= x
 
 instance (Divariant (->) (->) (->) p, Contravariant (->) (->) t, Covariant (->) (->) u) => Covariant (->) (->) (t >:.:> u := p) where
-	f <-|- x = (f >$<) >-> (f <-|-) ||= x
+	f <-|- x = (f >-|-) >-> (f <-|-) ||= x
 
 instance (forall i . Covariant (->) (->) (p i), Bivariant (->) (->) (->) p, Contravariant (->) (->) t, Contravariant (->) (->) u) => Contravariant (->) (->) (t >:.:< u := p) where
-	f >$< x = (f >$<) <-> (f >$<) ||= x
+	f >-|- x = (f >-|-) <-> (f >-|-) ||= x

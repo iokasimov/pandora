@@ -611,3 +611,4 @@
 * Generalize `Adaptable` typeclass
 * Generalize `Hoistable` typeclass
 * Define experimental notation for map methods of `Covariant` typeclass
+* Define experimental notation for map methods of `Contravariant` typeclass

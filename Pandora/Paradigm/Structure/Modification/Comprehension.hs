@@ -8,7 +8,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Pattern.Functor.Contravariant ((>$<))
+import Pandora.Pattern.Functor.Contravariant ((>-|-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -66,4 +66,4 @@ instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Morphabl
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 
 instance Nullable (t <:.> Construction t) => Nullable (Comprehension t) where
-	null = run @(->) >$< null
+	null = run @(->) >-|- null

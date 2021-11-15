@@ -5,7 +5,7 @@ module Pandora.Paradigm.Primary.Algebraic.Exponential where
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Pattern.Functor.Contravariant (Contravariant ((>$<)))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
@@ -46,7 +46,7 @@ instance Ringoid r => Ringoid (e -> r) where
 type (<--) = Flip (->)
 
 instance Contravariant (->) (->) ((<--) a) where
-	f >$< Flip g = Flip $ g . f
+	f >-|- Flip g = Flip $ g . f
 
 type (-->) = Straight (->)
 
