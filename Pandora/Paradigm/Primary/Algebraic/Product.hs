@@ -62,7 +62,7 @@ instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 instance (Group s, Group a) => Group (s :*: a) where
 	invert ~(s :*: x) = invert # s :*: invert # x
 
-instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (t <:.:> t := (:*:)) where
+instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	mult = Straight $ \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U $ (mult @(-->) !) (xls :*: yls) :*: (mult @(-->) !) (xrs :*: yrs)
 
 -- TODO: Generalize (:*:) as Bivariant p
