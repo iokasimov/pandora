@@ -9,22 +9,25 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
-import Pandora.Pattern.Functor.Covariant (Covariant)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Primary.Algebraic (extract)
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate))
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate), Vertical (Up, Down))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
+import Pandora.Paradigm.Inventory.Optics (set, view)
 
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *
@@ -61,8 +64,38 @@ instance Covariant (->) (->) t => Substructure Left (Tape t) where
 	substructure = P_Q_T $ \zipper -> case run # lower zipper of
 		Identity x :*: T_U (ls :*: rs) -> Store $ Identity ls :*: lift . T_U . (Identity x :*:) . T_U . (:*: rs) . extract
 
-instance (Covariant (->) (->) t) => Substructure Right (Tape t) where
+instance Covariant (->) (->) t => Substructure Right (Tape t) where
 	type Available Right (Tape t) = Identity
 	type Substance Right (Tape t) = t
 	substructure = P_Q_T $ \zipper -> case run # lower zipper of
 		Identity x :*: T_U (ls :*: rs) -> Store $ Identity rs :*: lift . T_U . (Identity x :*:) . T_U . (ls :*:) . extract
+
+instance Covariant (->) (->) t => Substructure Up (Tape t <:.> Tape t) where
+	type Available Up (Tape t <:.> Tape t) = Identity
+	type Substance Up (Tape t <:.> Tape t) = t <:.> Tape t
+	substructure = P_Q_T $ \x -> case run . run . extract . run # x of
+		Identity focused :*: T_U (d :*: u) -> 
+			Store $ Identity (TU u) :*: lift . TU . twosome (Identity focused) . twosome d . run . extract
+
+instance Covariant (->) (->) t => Substructure Down (Tape t <:.> Tape t) where
+	type Available Down (Tape t <:.> Tape t) = Identity
+	type Substance Down (Tape t <:.> Tape t) = t <:.> Tape t
+	substructure = P_Q_T $ \ii -> case run . run . extract . run # ii of
+		Identity focused :*: T_U (d :*: u) -> 
+			Store $ Identity (TU d) :*: lift . TU . twosome (Identity focused) . (twosome % u) . run . extract
+
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure Left (Tape t <:.> Tape t) where
+	type Available Left (Tape t <:.> Tape t) = Identity
+	type Substance Left (Tape t <:.> Tape t) = Tape t <:.> t
+	substructure = P_Q_T $ \ii ->
+		let target = (extract . view (sub @Left) <-|-) ||= (lower ii) in
+		let updated new = set (sub @Left) . Identity <-|- new <-*- run (lower ii) in
+		Store $ Identity target :*: lift . (updated ||=) . extract
+
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure Right (Tape t <:.> Tape t) where
+	type Available Right (Tape t <:.> Tape t) = Identity
+	type Substance Right (Tape t <:.> Tape t) = Tape t <:.> t
+	substructure = P_Q_T $ \ii ->
+		let target = (extract . view (sub @Right) <-|-) ||= lower ii in
+		let updated new = set (sub @Right) . Identity <-|- new <-*- run (lower ii) in
+		Store $ Identity target :*: lift . (updated ||=) . extract
