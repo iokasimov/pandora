@@ -22,13 +22,13 @@ class Adaptable m t u where
 instance Category m => Adaptable m t t where
 	adapt = identity @m
 
-instance (Monadic m t, Monoidal (-->) (-->) (:*:) (:*:) u) => Adaptable m t (t :> u) where
+instance {-# OVERLAPS #-} (Monadic m t, Monoidal (-->) (-->) (:*:) (:*:) u) => Adaptable m t (t :> u) where
 	adapt = wrap
 
 instance (Covariant m m u', Liftable m ((:>) t), Adaptable m u u') => Adaptable m u (t :> u') where
 	adapt = lift . adapt
 
-instance (Comonadic m t, Extractable u) => Adaptable m (t :< u) t where
+instance {-# OVERLAPS #-} (Comonadic m t, Extractable u) => Adaptable m (t :< u) t where
 	adapt = bring
 
 instance (Covariant m m u', Lowerable m ((:<) t), Adaptable m u' u) => Adaptable m (t :< u') u where
