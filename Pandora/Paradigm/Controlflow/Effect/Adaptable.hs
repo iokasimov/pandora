@@ -19,7 +19,7 @@ class Adaptable m t u where
 	{-# MINIMAL adapt #-}
 	adapt :: m (t a) (u a)
 
-instance Category m => Adaptable m t t where
+instance {-# OVERLAPS #-} (t ~ u, Category m) => Adaptable m t u where
 	adapt = identity @m
 
 instance {-# OVERLAPS #-} (Monadic m t, Monoidal (-->) (-->) (:*:) (:*:) u) => Adaptable m t (t :> u) where
