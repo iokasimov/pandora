@@ -18,7 +18,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
-import Pandora.Paradigm.Primary.Algebraic ((<-*-), (-.#..-), extract)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), (-.#..-), extract, point, empty)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -129,6 +129,13 @@ instance Morphable (Find Element) (Construction Maybe) where
 instance Morphable (Into List) (Construction Maybe) where
 	type Morphing (Into List) (Construction Maybe) = List
 	morphing = lift . premorph
+
+instance Morphable (Into List) (Construction Maybe <:.> Maybe) where
+	type Morphing (Into List) (Construction Maybe <:.> Maybe) = List
+	morphing nonempty_list_with_maybe_elements = case run . premorph # nonempty_list_with_maybe_elements of
+		Construct (Just x) (Just xs) -> item @Push x # into @List (TU @Covariant @Covariant xs)
+		Construct (Just x) Nothing -> point x
+		Construct Nothing Nothing -> empty
 
 instance Morphable Push (Construction Maybe) where
 	type Morphing Push (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
