@@ -613,3 +613,4 @@
 * Define experimental notation for map methods of `Covariant` typeclass
 * Define experimental notation for map methods of `Contravariant` typeclass
 * Define `Tape` type synonymous for List and Stream zippers
+* Define `only` method of `Substructure` typeclass
