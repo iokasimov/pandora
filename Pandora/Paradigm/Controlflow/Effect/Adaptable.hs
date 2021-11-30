@@ -6,13 +6,11 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (Category (identity))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
-import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower), Hoistable ((/|\)))
+import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
-import Pandora.Paradigm.Primary.Algebraic (Extractable)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic)
+import Pandora.Paradigm.Primary.Algebraic (Extractable, extract, point)
+import Pandora.Paradigm.Primary.Functor.Identity (Identity)
 import Pandora.Paradigm.Controlflow.Effect.Transformer (Monadic, Comonadic, wrap, bring, (:>), (:<))
 
 class Adaptable m t u where
@@ -21,6 +19,9 @@ class Adaptable m t u where
 
 instance {-# OVERLAPS #-} (t ~ u, Category m) => Adaptable m t u where
 	adapt = identity @m
+
+instance {-# OVERLAPS #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable (->) Identity u where
+	adapt = point . extract
 
 instance {-# OVERLAPS #-} (Monadic m t, Monoidal (-->) (-->) (:*:) (:*:) u) => Adaptable m t (t :> u) where
 	adapt = wrap
