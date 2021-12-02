@@ -45,7 +45,7 @@ instance Distributive (->) (->) (Environment e) where
 instance Bindable (->) (Environment e) where
 	f =<< Environment x = Environment $ \e -> (run % e) . f . x $ e
 
---instance Monad (Environment e) where
+instance Monad (->) (Environment e) where
 
 instance Divariant (->) (->) (->) Environment where
 	(>->) ab cd bc = Environment $ ab >-> cd $ run bc

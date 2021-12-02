@@ -16,7 +16,7 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!), (||=)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), point, extract)
+import Pandora.Paradigm.Primary.Algebraic ((:*:), point, extract)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 newtype UT ct cu t u a = UT (u :. t := a)
