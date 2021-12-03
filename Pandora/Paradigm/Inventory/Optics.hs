@@ -34,7 +34,10 @@ type family Convex lens where
 
 instance Semigroupoid (Lens Identity) where
 	(.) :: Convex Lens between target -> Convex Lens source between -> Convex Lens source target
-	P_Q_T to . P_Q_T from = P_Q_T $ \source -> (to . extract @Identity . position $ from source) $>- source
+	P_Q_T to . P_Q_T from = P_Q_T $ \source ->
+		let (Identity between :*: bs) = run # from source in
+		let (Identity target :*: tb) = run # to between in
+		Store $ Identity target :*: bs . Identity . tb
 
 instance Category (Lens Identity) where
 	identity :: Convex Lens source source
