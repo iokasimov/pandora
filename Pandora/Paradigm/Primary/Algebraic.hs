@@ -51,6 +51,9 @@ instance Semimonoidal (-->) (:*:) (:*:) ((->) e) where
 	mult :: ((e -> a) :*: (e -> b)) --> (e -> (a :*: b))
 	mult = Straight $ \(g :*: h) -> \x -> g x :*: h x
 
+instance Monoidal (-->) (-->) (:*:) (:*:) ((->) e) where
+	unit _ = Straight $ (!.) . ($ One) . run
+
 instance Semimonoidal (<--) (:*:) (:*:) ((->) e) where
 	mult :: ((e -> a) :*: (e -> b)) <-- (e -> a :*: b)
 	mult = Flip $ \f -> attached . f :*: extract . f
