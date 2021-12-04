@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<$$>), (<$$$>), (
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
-infixr 0 !
+infixl 1 !
 infixr 2 ||=, =||
 
 type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t

@@ -35,7 +35,7 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Tap t) where
 	f <-|- Tap x xs = Tap # f x # f <-|- xs
 
 instance Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap t) where
-	mult = Straight $ \(Tap x xs :*: Tap y ys) -> Tap (x :*: y) $ mult @(-->) ! xs :*: ys
+	mult = Straight $ \(Tap x xs :*: Tap y ys) -> Tap # (x :*: y) # (mult @(-->) ! (xs :*: ys))
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
 	mult = Flip $ \(Tap (x :*: y) xys) ->

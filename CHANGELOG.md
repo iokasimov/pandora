@@ -614,3 +614,4 @@
 * Define experimental notation for map methods of `Contravariant` typeclass
 * Define `Tape` type synonymous for List and Stream zippers
 * Define `only` method of `Substructure` typeclass
+* Change fixity and precedense of `!` method of `Interpreted` typeclass

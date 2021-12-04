@@ -38,7 +38,7 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
 	f <-|- ~(Construct x xs) = Construct # f x # (<-|-|-) @(->) @(->) f xs
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Construction t) where
-	mult = Straight $ \(Construct x xs :*: Construct y ys) -> Construct (x :*: y) $ (mult @(-->) !) <-|- (mult @(-->) ! xs :*: ys)
+	mult = Straight $ \(Construct x xs :*: Construct y ys) -> Construct # (x :*: y) # (mult @(-->) !) <-|- (mult @(-->) ! (xs :*: ys))
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
 	mult = Flip $ \(Construct (x :*: y) xys) -> (Construct x <-> Construct y)

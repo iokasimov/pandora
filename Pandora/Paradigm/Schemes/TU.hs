@@ -47,7 +47,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:)
 	unit _ = Straight $ TU . point . point . ($ One) . run
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:+:) t) => Semimonoidal (-->) (:*:) (:+:) (t <:.> u) where
-	mult = Straight $ \(TU x :*: TU y) -> TU $ sum (Option <-|-) (Adoption <-|-) <-|- (mult @(-->) ! x :*: y)
+	mult = Straight $ \(TU x :*: TU y) -> TU $ sum (Option <-|-) (Adoption <-|-) <-|- (mult @(-->) ! (x :*: y))
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (t <:.> u) where
 	unit _ = Straight $ \_ -> TU empty
