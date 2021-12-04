@@ -15,7 +15,7 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point, extract)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -43,8 +43,8 @@ instance Interpreted (->) (TUT ct ct' cu t t' u) where
 instance (Covariant m m t, Covariant m m u, Covariant m m t', Interpreted m (t <:<.>:> t' := u)) => Covariant m m (t <:<.>:> t' := u) where
 	(<-|-) f = (||=) ((<-|-|-|-) @m @m @m f)
 
-instance (Covariant (->) (->) t, Covariant (->) (->) t', Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) t') => Semimonoidal (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
-	mult = Straight $ TUT . (<-|-|-) @_ @(->) (mult @(-->) !) . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
+instance (Adjoint (->) (->) t' t, Bindable (->) u) => Semimonoidal (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
+	mult = Straight $ \(TUT x :*: TUT y) -> TUT ((((\r -> (<-|-|-|-) @(->) @(->) @(->) (r :*:) y) |-) =<<) <-|- x)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
 	mult = Flip $ (TUT <-> TUT) . (mult @(<--) !) . (<-|-) (mult @(<--) !) . (<-|-|-) @_ @(->) (mult @(<--) !) . run
@@ -55,7 +55,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:)
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable (->) u) => Bindable (->) (t <:<.>:> t' := u) where
 	f =<< x = TUT $ ((run . f |-) =<<) <-|- run x
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) t', Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) t', Monoidal (-->) (-->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (-->) (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
+instance (Bindable (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (-->) (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Straight $ unite . (point -|) . ($ One) . run
 
 instance (Adjoint (->) (->) t' t, Extendable (->) u) => Extendable (->) (t' <:<.>:> t := u) where
