@@ -615,3 +615,4 @@
 * Define `Tape` type synonymous for List and Stream zippers
 * Define `only` method of `Substructure` typeclass
 * Change fixity and precedense of `!` method of `Interpreted` typeclass
+* Rename `*>-` `Applicative` operator to `-*-`

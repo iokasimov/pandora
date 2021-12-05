@@ -22,7 +22,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
-import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (*>-), delta)
+import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (-*-), delta)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, point)
 
@@ -79,4 +79,4 @@ reconcile f = replace =<< adapt . f =<< current
 type Memorable s t = (Covariant (->) (->) t, Pointable t,  Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = (modify . op <<- struct) *>- current
+fold op struct = current -*- modify . op <<- struct
