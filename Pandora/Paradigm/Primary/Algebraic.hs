@@ -24,6 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
 
+infixl 3 <-+-, -+-
 infixl 4 <-*-, -*-
 
 ($>-) :: Covariant (->) (->) t => t a -> b -> t b
@@ -99,17 +100,17 @@ type Decidable t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:+:) t, Mon
 (<-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t (a -> b) -> t a -> t b
 f <-*- x = (|-) @(->) @(->) (&) <-|- run (mult @(-->) @_ @(:*:)) (f :*: x)
 
-(-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b -> t b
-x -*- y = ((!.) %) <-|- x <-*- y
+(-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
+y -*- x = (!.) <-|- y <-*- x
 
 forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
-forever_ x = let r = x -*- r in r
+forever_ x = let r = r -*- x in r
 
-(<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t b -> (a :+: b -> r) -> t r
-x <-+- y = \f -> f <-|- (mult @(-->) ! (x :*: y))
+(<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
+y <-+- x = \f -> f <-|- (mult @(-->) ! (x :*: y))
 
 (-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
-x -+- y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|- (mult @(-->) ! (x :*: y))
+y -+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|- (mult @(-->) ! (x :*: y))
 
 type Extractable t = Monoidal (<--) (-->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t

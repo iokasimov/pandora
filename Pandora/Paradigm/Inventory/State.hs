@@ -79,4 +79,4 @@ reconcile f = replace =<< adapt . f =<< current
 type Memorable s t = (Covariant (->) (->) t, Pointable t,  Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = modify . op <<- struct -*- current
+fold op struct = current -*- modify . op <<- struct
