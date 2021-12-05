@@ -616,3 +616,4 @@
 * Define `only` method of `Substructure` typeclass
 * Change fixity and precedense of `!` method of `Interpreted` typeclass
 * Rename `*>-` `Applicative` operator to `-*-`
+* Rename `-+-` `Alternative` operator to `<-+-`

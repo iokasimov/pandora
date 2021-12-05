@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (-*-), forever_, (-+-), void, empty, point, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (-*-), forever_, (<-+-), void, empty, point, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -105,9 +105,9 @@ forever_ x = let r = r -*- x in r
 (-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
 y -*- x = ((!.) %) <-|- x <-*- y
 
-(-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t)
+(<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t)
 	=> t a -> t b -> (a :+: b -> r) -> t r
-x -+- y = \f -> f <-|- (mult @(-->) ! (x :*: y))
+x <-+- y = \f -> f <-|- (mult @(-->) ! (x :*: y))
 
 type Extractable t = Monoidal (<--) (-->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t
