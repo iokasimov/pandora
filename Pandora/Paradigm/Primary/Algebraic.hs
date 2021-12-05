@@ -101,7 +101,7 @@ type Decidable t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:+:) t, Mon
 f <-*- x = (|-) @(->) @(->) (&) <-|- run (mult @(-->) @_ @(:*:)) (f :*: x)
 
 (-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
-y -*- x = (!.) <-|- y <-*- x
+y -*- x = (\y' x' -> y') <-|- y <-*- x
 
 forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
 forever_ x = let r = r -*- x in r
