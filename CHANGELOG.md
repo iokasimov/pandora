@@ -617,3 +617,4 @@
 * Change fixity and precedense of `!` method of `Interpreted` typeclass
 * Rename `*>-` `Applicative` operator to `-*-`
 * Rename `-+-` `Alternative` operator to `<-+-`
+* Define `-+-` method of `Alternative` typeclass

@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (-*-), forever_, (<-+-), void, empty, point, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (-*-), forever_, (<-+-), (-+-), void, empty, point, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -99,15 +99,17 @@ type Decidable t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:+:) t, Mon
 (<-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t (a -> b) -> t a -> t b
 f <-*- x = (|-) @(->) @(->) (&) <-|- run (mult @(-->) @_ @(:*:)) (f :*: x)
 
+(-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b -> t b
+x -*- y = ((!.) %) <-|- x <-*- y
+
 forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
-forever_ x = let r = r -*- x in r
+forever_ x = let r = x -*- r in r
 
-(-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
-y -*- x = ((!.) %) <-|- x <-*- y
-
-(<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t)
-	=> t a -> t b -> (a :+: b -> r) -> t r
+(<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t b -> (a :+: b -> r) -> t r
 x <-+- y = \f -> f <-|- (mult @(-->) ! (x :*: y))
+
+(-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
+x -+- y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|- (mult @(-->) ! (x :*: y))
 
 type Extractable t = Monoidal (<--) (-->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t
