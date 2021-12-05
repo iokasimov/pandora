@@ -19,7 +19,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
@@ -53,7 +53,7 @@ instance Semimonoidal (-->) (:*:) (:*:) ((->) e) where
 	mult = Straight $ \(g :*: h) -> \x -> g x :*: h x
 
 instance Monoidal (-->) (-->) (:*:) (:*:) ((->) e) where
-	unit _ = Straight $ (!.) . ($ One) . run
+	unit _ = Straight $ (!.) . (! One)
 
 instance Semimonoidal (<--) (:*:) (:*:) ((->) e) where
 	mult :: ((e -> a) :*: (e -> b)) <-- (e -> a :*: b)
@@ -73,7 +73,7 @@ instance Semimonoidal (-->) (:*:) (:*:) ((:+:) e) where
 		_ :*: Option e -> Option e
 
 instance Monoidal (-->) (-->) (:*:) (:*:) ((:+:) e) where
-	unit _ = Straight $ Adoption . ($ One) . run
+	unit _ = Straight $ Adoption . (! One)
 
 instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
 	mult = Flip $ \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
@@ -98,7 +98,7 @@ type Divisible t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Mon
 type Decidable t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:+:) t, Monoidal (-->) (<--) (:*:) (:+:) t)
 
 (<-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t (a -> b) -> t a -> t b
-f <-*- x = (|-) @(->) @(->) (&) <-|- run (mult @(-->) @_ @(:*:)) (f :*: x)
+f <-*- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
 
 (-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
 y -*- x = (\x' y' -> y') <-|- x <-*- y
@@ -117,13 +117,13 @@ type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t
 type Emptiable t = Monoidal (-->) (-->) (:*:) (:+:) t
 
 extract :: Extractable t => t a -> a
-extract j = run (run (unit @(<--) @(-->) Proxy) j) One
+extract j = unit @(<--) @(-->) Proxy ! j ! One
 
 point :: Pointable t => a -> t a
-point x = run (unit @(-->) Proxy) (Straight $ \One -> x)
+point x = unit @(-->) Proxy ! (Straight $ \One -> x)
 
 empty :: Emptiable t => t a
-empty = unit @(-->) (Proxy @(:*:)) ! Straight absurd
+empty = unit @(-->) Proxy ! Straight absurd
 
 --instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
 --	f ! (x :*: y) = f x ! y
