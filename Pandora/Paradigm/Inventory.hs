@@ -1,7 +1,6 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# LANGUAGE AllowAmbiguousTypes #-} {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory (module Exports, zoom, magnify, (=<>), (~<>), adjust) where
+module Pandora.Paradigm.Inventory (module Exports, zoom, intensify, magnify, (=<>), (~<>), adjust) where
 
 import Pandora.Paradigm.Inventory.Optics as Exports
 import Pandora.Paradigm.Inventory.Store as Exports
@@ -13,14 +12,16 @@ import Pandora.Paradigm.Inventory.Accumulator as Exports
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#), identity)
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Functor.Covariant ((<-|-))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
-import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Structure.Ability.Accessible (Accessible (access))
 
 instance Adjoint (->) (->) (Store s) (State s) where
@@ -42,6 +43,12 @@ zoom lens less = adapt . State $ (restruct |-) . run . run lens where
 
 	restruct :: (Identity ls -> bg) -> Identity ls -> bg :*: a
 	restruct to = (to . Identity <-> identity @(->)) . run less . extract @Identity
+
+intensify :: forall u bg ls t result . Stateful bg t => Lens u bg ls -> State (u ls) result -> t result
+intensify lens less = adapt . State $ \source -> restruct |- run (lens ! source) where
+
+	restruct :: (u ls -> bg) -> u ls -> bg :*: result
+	restruct to target = run $ to <-|- Flip (less ! target)
 
 (=<>) :: Stateful src t => Lens available src tgt -> available tgt -> t src
 lens =<> new = modify $ set lens new
