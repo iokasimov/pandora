@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup ((+))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=), (!))
 import Pandora.Paradigm.Inventory.Optics ()
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
@@ -98,6 +98,12 @@ instance Accessible a (Identity a) where
 
 instance Possible a (Maybe a) where
 	perhaps = P_Q_T $ \x -> Store $ x :*: identity
+
+instance Accessible target source => Possible target (Maybe source) where
+	perhaps = let lst = access @target @source in P_Q_T $ \case
+		Just source -> let (Identity target :*: its) = run $ lst ! source in
+			Store $ Just target :*: (its . Identity <-|-)
+		Nothing -> Store $ Nothing :*: \_ -> Nothing
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
 	type Available Left (t <:.:> t := (:*:)) = Identity
