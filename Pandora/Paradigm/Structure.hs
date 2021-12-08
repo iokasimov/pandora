@@ -93,8 +93,11 @@ instance Accessible a (s :*: a) where
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @b . access @a
 
-instance {-# OVERLAPS #-} Accessible a (Identity a) where
+instance Accessible a (Identity a) where
 	access = P_Q_T $ \(Identity x) -> Store $ Identity x :*: identity
+
+instance Possible a (Maybe a) where
+	perhaps = P_Q_T $ \x -> Store $ x :*: identity
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
 	type Available Left (t <:.:> t := (:*:)) = Identity
