@@ -58,9 +58,11 @@ instance Impliable (P_Q_T (->) Store Maybe source target) where
 
 instance Semigroupoid (Lens Maybe) where
 	(.) :: Obscure Lens between target -> Obscure Lens source between -> Obscure Lens source target
-	P_Q_T to . P_Q_T from = P_Q_T $ \source -> case position # from source of
-		Nothing -> Store $ Nothing :*: (source !.)
-		Just between -> to between $>- source
+	P_Q_T to . P_Q_T from = P_Q_T $ \source -> case run # from source of
+		(Nothing :*: _) -> Store $ Nothing :*: \_ -> source
+		(Just between :*: mbs) -> case run # to between of
+			(Nothing :*: _) -> Store $ Nothing :*: \_ -> source
+			(Just target :*: mtb) -> Store $ Just target :*: mbs . Just . mtb
 
 instance Category (Lens Maybe) where
 	identity :: Obscure Lens source source
