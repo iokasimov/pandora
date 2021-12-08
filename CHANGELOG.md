@@ -621,3 +621,6 @@
 * Define experimental `intensify` method as replacement of `zoom`
 * Define `#` type operator for consuming arguments
 * Define experimental `Possible` type class
+* Remove `magnify` and `adjust` methods
+* Remove `zoom` method in favour `intensify`
+* Rename `intensify` method to `zoom`
