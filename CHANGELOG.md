@@ -619,3 +619,4 @@
 * Rename `-+-` `Alternative` operator to `<-+-`
 * Define `-+-` method of `Alternative` typeclass
 * Define experimental `intensify` method as replacement of `zoom`
+* Define `#` type operator for consuming arguments
