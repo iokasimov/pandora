@@ -8,15 +8,18 @@ import Pandora.Pattern.Category (Category (identity, ($), (#)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Divariant ((>->))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (!.), (%))
 import Pandora.Paradigm.Primary.Algebraic (($>-), extract)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Inventory.Store (Store (Store), position, look, retrofit)
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
@@ -42,6 +45,11 @@ instance Semigroupoid (Lens Identity) where
 instance Category (Lens Identity) where
 	identity :: Convex Lens source source
 	identity = imply @(Convex Lens _ _) identity ((%) (!.))
+
+instance Semigroup source => Semimonoidal (-->) (:*:) (:*:) (Lens Identity source) where
+	mult = Straight $ \(P_Q_T x :*: P_Q_T y) -> P_Q_T $ \source ->
+		let Store (Identity xt :*: ixts) :*: Store (Identity yt :*: iyts) = x source :*: y source in
+		Store $ Identity (xt :*: yt) :*: \(Identity (xt_ :*: yt_)) -> ixts (Identity xt_) + iyts (Identity yt_)
 
 instance Impliable (P_Q_T (->) Store Identity source target) where
 	type Arguments (P_Q_T (->) Store Identity source target) =
