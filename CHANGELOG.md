@@ -625,3 +625,4 @@
 * Remove `zoom` method in favour `intensify`
 * Rename `intensify` method to `zoom`
 * Define `Betwixt` type family to avoid specifying intermediate categories
+* Define experimental `overlook` method

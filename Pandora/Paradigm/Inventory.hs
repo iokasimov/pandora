@@ -1,7 +1,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory (module Exports, zoom, (=<>), (~<>)) where
+module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, (=<>), (~<>)) where
 
 import Pandora.Paradigm.Inventory.Optics as Exports
 import Pandora.Paradigm.Inventory.Store as Exports
@@ -14,10 +14,11 @@ import Pandora.Paradigm.Inventory.Accumulator as Exports
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Pattern.Functor.Covariant ((<-|-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%), type (<--))
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -41,6 +42,9 @@ zoom lens less = adapt . State $ \source -> restruct |- run (lens ! source) wher
 
 	restruct :: (u ls -> bg) -> u ls -> bg :*: result
 	restruct to target = run $ to <-|- Flip (less ! target)
+
+overlook :: (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => State s result -> State (t s) (t result)
+overlook (State state) = State $ \ts -> mult @(<--) @(:*:) @(:*:) ! (state <-|- ts)
 
 (=<>) :: Stateful src t => Lens available src tgt -> available tgt -> t src
 lens =<> new = modify $ set lens new
