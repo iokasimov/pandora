@@ -12,7 +12,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (($))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-), (<$$$>))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-), (<-|-|-|-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -31,10 +31,10 @@ infixl 4 <-*-, -*-
 x $>- r = (r !.) <-|- x
 
 ($$>-) :: (Covariant (->) (->) t, Covariant (->) (->) u) => t (u a) -> b -> t (u b)
-x $$>- r = (<-|-|-) @(->) @(->) (r !.) x
+x $$>- r = (r !.) <-|-|- x
 
 ($$$>-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) v) => t (u (v a)) -> b -> t (u (v b))
-x $$$>- r = (<$$$>) @(->) @(->) @(->) (r !.) x
+x $$$>- r = (r !.) <-|-|-|- x
 
 void :: Covariant (->) (->) t => t a -> t ()
 void x = x $>- ()

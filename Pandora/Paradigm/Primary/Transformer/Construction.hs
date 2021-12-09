@@ -35,7 +35,7 @@ infixr 7 .-+
 data Construction t a = Construct a (t :. Construction t := a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
-	f <-|- ~(Construct x xs) = Construct # f x # (<-|-|-) @(->) @(->) f xs
+	f <-|- ~(Construct x xs) = Construct # f x # f <-|-|- xs
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Construction t) where
 	mult = Straight $ \(Construct x xs :*: Construct y ys) -> Construct # (x :*: y) # (mult @(-->) !) <-|- (mult @(-->) ! (xs :*: ys))

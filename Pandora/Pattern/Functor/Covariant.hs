@@ -2,6 +2,7 @@
 
 module Pandora.Pattern.Functor.Covariant where
 
+import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid)
 
 infixl 4 <-|-, <$>
@@ -17,30 +18,28 @@ infixl 4 <-|-|-|-, <$$$>
 class (Semigroupoid source, Semigroupoid target) => Covariant source target t where
 	(<-|-) :: source a b -> target (t a) (t b)
 
-(<-|-|-) :: forall source between target t u a b
-	. (Covariant source between u, Covariant between target t)
+(<-|-|-) :: forall source target t u a b
+	. (Covariant source (Betwixt source target) u, Covariant (Betwixt source target) target t)
 	=> source a b -> target (t (u a)) (t (u b))
-(<-|-|-) s = ((<-|-) ((<-|-) @source @between @u s))
+(<-|-|-) s = ((<-|-) ((<-|-) @source @(Betwixt source target) @u s))
 
-(<-|-|-|-) :: forall source between1 between2 target t u v a b
-	. (Covariant source between1 v, Covariant between1 between2 u, Covariant between2 target t)
+(<-|-|-|-) :: forall source target t u v a b
+	. (Covariant source (Betwixt source (Betwixt source target)) v, Covariant (Betwixt source (Betwixt source target)) (Betwixt (Betwixt source target) target) u, Covariant (Betwixt (Betwixt source target) target) target t)
 	=> source a b -> target (t (u (v a))) (t (u (v b)))
-(<-|-|-|-) s = ((<-|-) @between2 @target ((<-|-) @between1 @between2 @u ((<-|-) @source @between1 @v s)))
+(<-|-|-|-) s = ((<-|-) @(Betwixt (Betwixt source target) target) @target ((<-|-) @(Betwixt source (Betwixt source target)) @(Betwixt (Betwixt source target) target) @u ((<-|-) @source @(Betwixt source (Betwixt source target)) @v s)))
+
+(<$>) :: Covariant source target t => source a b -> target (t a) (t b)
+(<$>) = (<-|-)
+
+(<$$>) :: (Covariant source (Betwixt source target) u, Covariant (Betwixt source target) target t) => source a b -> target (t (u a)) (t (u b))
+(<$$>) = (<-|-|-)
+
+(<$$$>) :: forall source target t u v a b
+	. (Covariant source (Betwixt source (Betwixt source target)) v, Covariant (Betwixt source (Betwixt source target)) (Betwixt (Betwixt source target) target) u, Covariant (Betwixt (Betwixt source target) target) target t)
+	=> source a b -> target (t (u (v a))) (t (u (v b)))
+(<$$$>) s = (<-|-|-|-) s
 
 (<$$$$>) :: forall source between1 between2 between3 target t u v w a b
 	. (Covariant source between1 w, Covariant between1 between2 v, Covariant between2 between3 u, Covariant between3 target t)
 	=> source a b -> target (t (u (v (w a)))) (t (u (v (w b))))
 (<$$$$>) s = ((<-|-) @between3 @target @t ((<-|-) @between2 @between3 @u ((<-|-) @between1 @between2 @v ((<-|-) @source @between1 @w s))))
-
-(<$>) :: Covariant source target t => source a b -> target (t a) (t b)
-(<$>) = (<-|-)
-
-(<$$>) :: forall source between target t u a b
-	. (Covariant source between u, Covariant between target t)
-	=> source a b -> target (t (u a)) (t (u b))
-(<$$>) = (<-|-|-) @source @between @target
-
-(<$$$>) :: forall source between1 between2 target t u v a b
-	. (Covariant source between1 v, Covariant between1 between2 u, Covariant between2 target t)
-	=> source a b -> target (t (u (v a))) (t (u (v b)))
-(<$$$>) = (<-|-|-|-) @source @between1 @between2 @target

@@ -133,6 +133,7 @@ library
     Pandora.Paradigm.Primary.Linear.Matrix
 
     Pandora.Pattern
+    Pandora.Pattern.Betwixt
 	-- Algebra typeclasses
     Pandora.Pattern.Semigroupoid
     Pandora.Pattern.Category

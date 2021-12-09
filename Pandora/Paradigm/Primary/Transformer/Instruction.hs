@@ -25,7 +25,7 @@ data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Instruction t) where
 	f <-|- Enter x = Enter $ f x
-	f <-|- Instruct xs = Instruct $ (<-|-|-) @(->) @(->) f xs
+	f <-|- Instruct xs = Instruct $ f <-|-|- xs
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Instruction t) where
 	mult = Straight $ \case

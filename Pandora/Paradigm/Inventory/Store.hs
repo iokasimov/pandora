@@ -29,7 +29,7 @@ newtype Store s a = Store ((:*:) s :. (->) s := a)
 
 -- TODO: Try to generalize (->) here
 instance Covariant (->) (->) (Store s) where
-	(<-|-) f = (||=) ((<-|-|-) @(->) @(->) f)
+	(<-|-) f = (||=) (f <-|-|-)
 
 instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 	mult = Flip $ \(Store (s :*: f)) ->
@@ -41,7 +41,7 @@ instance Monoidal (<--) (-->) (:*:) (:*:) (Store s) where
 
 -- TODO: Try to generalize (->) here
 instance Extendable (->) (Store s) where
-	f <<= Store x = Store $ (<-|-|-) @(->) @(->) f (Store -.#..- (identity @(->) -|) <-|- x)
+	f <<= Store x = Store $ f <-|-|- (Store -.#..- (identity @(->) -|) <-|- x)
 
 instance Comonad (->) (Store s) where
 

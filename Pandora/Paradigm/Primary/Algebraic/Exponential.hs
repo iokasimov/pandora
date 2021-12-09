@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Primary.Algebraic.Exponential where
 
+import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -18,6 +19,8 @@ infixr 2 !.
 infixr 7 -.#..-
 infixr 9 %
 infixl 1 &
+
+type instance Betwixt (->) (->) = (->)
 
 instance Semigroupoid (->) where
 	f . g = \x -> f (g x)

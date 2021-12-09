@@ -1,7 +1,10 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Schemes.TU where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
-import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Betwixt (Betwixt)
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (($), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
@@ -37,8 +40,8 @@ instance Interpreted (->) (TU ct cu t u) where
 	run ~(TU x) = x
 	unite = TU
 
-instance (Covariant m m t, Covariant m m u, Interpreted m (t <:.> u)) => Covariant m m (t <:.> u) where
-	(<-|-) f = (||=) ((<-|-|-) @m @m f)
+instance (Semigroupoid m, Covariant (Betwixt m m) m t, Covariant m (Betwixt m m) u, Interpreted m (t <:.> u)) => Covariant m m (t <:.> u) where
+	(<-|-) f = (||=) ((<-|-|-) f)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.> u) where
 	mult = Straight $ TU . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))

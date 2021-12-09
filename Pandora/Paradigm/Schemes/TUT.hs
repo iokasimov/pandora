@@ -1,7 +1,10 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module Pandora.Paradigm.Schemes.TUT where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
-import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Betwixt (Betwixt)
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity, ($))
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-)), (<-|-|-), (<-|-|-|-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
@@ -40,11 +43,11 @@ instance Interpreted (->) (TUT ct ct' cu t t' u) where
 	run ~(TUT x) = x
 	unite = TUT
 
-instance (Covariant m m t, Covariant m m u, Covariant m m t', Interpreted m (t <:<.>:> t' := u)) => Covariant m m (t <:<.>:> t' := u) where
-	(<-|-) f = (||=) ((<-|-|-|-) @m @m @m f)
+instance (Semigroupoid m, Covariant (Betwixt (Betwixt m m) m) m t, Covariant (Betwixt m (Betwixt m m)) (Betwixt (Betwixt m m) m) u, Covariant m (Betwixt m (Betwixt m m)) t', Interpreted m (t <:<.>:> t' := u)) => Covariant m m (t <:<.>:> t' := u) where
+	(<-|-) f = (||=) ((<-|-|-|-) f)
 
 instance (Adjoint (->) (->) t' t, Bindable (->) u) => Semimonoidal (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
-	mult = Straight $ \(TUT x :*: TUT y) -> TUT ((((\r -> (<-|-|-|-) @(->) @(->) @(->) (r :*:) y) |-) =<<) <-|- x)
+	mult = Straight $ \(TUT x :*: TUT y) -> TUT ((((\r -> (<-|-|-|-) (r :*:) y) |-) =<<) <-|- x)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
 	mult = Flip $ (TUT <-> TUT) . (mult @(<--) !) . (<-|-) (mult @(<--) !) . (<-|-|-) @_ @(->) (mult @(<--) !) . run

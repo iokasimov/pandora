@@ -22,7 +22,7 @@ instance Interpreted (->) (Prefixed t k) where
 
 -- TODO: Try to generalize (->) here
 instance Covariant (->) (->) t => Covariant (->) (->) (Prefixed t k) where
-	(<-|-) f = (||=) ((<-|-|-) @(->) @(->) f)
+	(<-|-) f = (||=) (f <-|-|-)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Prefixed t k) where
 	f <<- Prefixed x = Prefixed <-|- f -<<-<<- x
