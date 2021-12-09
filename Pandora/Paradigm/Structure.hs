@@ -1,3 +1,4 @@
+{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Pandora.Paradigm.Structure (module Exports) where
@@ -104,6 +105,11 @@ instance Accessible target source => Possible target (Maybe source) where
 		Just source -> let (Identity target :*: its) = run $ lst ! source in
 			Store $ Just target :*: (its . Identity <-|-)
 		Nothing -> Store $ Nothing :*: \_ -> Nothing
+
+instance Accessible (Maybe target) source => Possible target source where
+	perhaps = let lst = access @(Maybe target) @source in P_Q_T $ \source ->
+		let target :*: imts = run $ lst ! source in
+			Store $ extract target :*: imts . Identity
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
 	type Available Left (t <:.:> t := (:*:)) = Identity
