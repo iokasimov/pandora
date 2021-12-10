@@ -11,6 +11,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -19,6 +20,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point, extract)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -54,6 +56,14 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (-->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Flip $ \(TUT xys) -> Straight (\_ -> (extract |-) xys)
+
+-- TODO: generalize on (->) and (:*:)
+instance {-# OVERLAPS #-} (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) ((->) s <:<.>:> (:*:) s := u) where
+ mult = Straight $ \(TUT x :*: TUT y) -> TUT $ product_over_sum <-|-|- mult @(-->) @(:*:) @(:+:) <-|- (mult @(-->) @(:*:) @(:*:) ! (x :*: y))
+
+product_over_sum :: (s :*: a) :+: (s :*: b) -> s :*: (a :+: b)
+product_over_sum (Option (s :*: x)) = s :*: Option x
+product_over_sum (Adoption (s :*: y)) = s :*: Adoption y
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable (->) u) => Bindable (->) (t <:<.>:> t' := u) where
 	f =<< x = TUT $ ((run . f |-) =<<) <-|- run x
