@@ -44,8 +44,8 @@ instance (Semigroupoid m, Covariant m (Betwixt m m) t, Covariant (Betwixt m m) m
 instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <.:> u) where
 	mult = Straight $ UT . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
 
-instance (Covariant (->) (->) u, Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) (t <.:> u) where
-	mult = Straight $ \(UT x :*: UT y) -> UT $ sum (Option <-|-) (Adoption <-|-) <-|- (mult @(-->) ! (x :*: y))
+instance (Covariant (->) (->) u, Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:+:) t) => Semimonoidal (-->) (:*:) (:+:) (t <.:> u) where
+	mult = Straight $ \(UT x :*: UT y) -> UT $ (mult @(-->) @(:*:) @(:+:)) <-|- (mult @(-->) @(:*:) @(:*:) ! (x :*: y))
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) u) => Monoidal (-->) (-->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Straight $ UT . point . point . ($ One) . run

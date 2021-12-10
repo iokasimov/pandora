@@ -135,7 +135,7 @@ instance Morphable (Into List) (Construction Maybe <:.> Maybe) where
 	morphing nonempty_list_with_maybe_elements = case run . premorph # nonempty_list_with_maybe_elements of
 		Construct (Just x) (Just xs) -> item @Push x # into @List (TU @Covariant @Covariant xs)
 		Construct (Just x) Nothing -> point x
-		Construct Nothing Nothing -> empty
+		Construct Nothing Nothing -> TU Nothing -- empty
 
 instance Morphable Push (Construction Maybe) where
 	type Morphing Push (Construction Maybe) = Identity <:.:> Construction Maybe := (->)

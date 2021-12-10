@@ -47,6 +47,9 @@ instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoid
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Construction t) where
 	unit _ = Flip $ \(Construct x _) -> Straight (\_ -> x)
 
+--instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => Semimonoidal (-->) (:*:) (:+:) (Construction t) where
+	--mult = Straight $ \(Construct x xs :*: Construct y ys) ->
+
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Construction t) where
 	unit _ = Straight $ \f -> Construct # run f One # empty
 

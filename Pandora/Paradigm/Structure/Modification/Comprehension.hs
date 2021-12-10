@@ -46,7 +46,7 @@ instance Traversable (->) (->) (t <:.> Construction t) => Traversable (->) (->) 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) right t, Semimonoidal (-->) (:*:) right (t <:.> Construction t)) => Semimonoidal (-->) (:*:) right (Comprehension t) where
 	mult = Straight $ Comprehension . (mult @(-->) @(:*:) @right !) . (run @(->) <-> run @(->))
 
-instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (Comprehension t) where
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) (Construction t), Semimonoidal (-->) (:*:) (:+:) t, Semimonoidal (-->) (:*:) (:+:) (Construction t), Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (Comprehension t) where
 	unit _ = Straight $ \_ -> Comprehension empty
 
 instance (forall a . Semigroup (t <:.> Construction t := a), Bindable (->) t) => Bindable (->) (Comprehension t) where
