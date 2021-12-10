@@ -17,6 +17,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
@@ -36,6 +37,9 @@ instance Semimonoidal (-->) (:*:) (:*:) (Schematic Monad t u) => Semimonoidal (-
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Schematic Monad t u) => Monoidal (-->) (-->) (:*:) (:*:) (t :> u) where
 	unit _ = Straight $ TM . point . ($ One) . run
+
+instance Semimonoidal (-->) (:*:) (:+:) (Schematic Monad t u) => Semimonoidal (-->) (:*:) (:+:) (t :> u) where
+	mult = Straight $ \(TM f :*: TM x) -> TM $ mult @(-->) @(:*:) @(:+:) ! (f :*: x)
 
 instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
 	f <<- TM x = TM <-|- f <<- x
