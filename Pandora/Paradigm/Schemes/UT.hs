@@ -18,8 +18,10 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!), (||=)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic ((:*:), point, extract)
+import Pandora.Paradigm.Primary.Algebraic (point, extract)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 newtype UT ct cu t u a = UT (u :. t := a)
@@ -41,6 +43,9 @@ instance (Semigroupoid m, Covariant m (Betwixt m m) t, Covariant (Betwixt m m) m
 
 instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <.:> u) where
 	mult = Straight $ UT . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
+
+instance (Covariant (->) (->) u, Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) (t <.:> u) where
+	mult = Straight $ \(UT x :*: UT y) -> UT $ sum (Option <-|-) (Adoption <-|-) <-|- (mult @(-->) ! (x :*: y))
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) u) => Monoidal (-->) (-->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Straight $ UT . point . point . ($ One) . run
