@@ -17,22 +17,22 @@ class Adaptable m t u where
 	{-# MINIMAL adapt #-}
 	adapt :: m (t a) (u a)
 
-instance {-# OVERLAPS #-} (t ~ u, Category m) => Adaptable m t u where
+instance Category m => Adaptable m t t where
 	adapt = identity @m
 
 instance {-# OVERLAPS #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable (->) Identity u where
 	adapt = point . extract
 
-instance {-# OVERLAPS #-} (Monadic m t, Monoidal (-->) (-->) (:*:) (:*:) u) => Adaptable m t (t :> u) where
+instance (Monadic m t, Monoidal (-->) (-->) (:*:) (:*:) u) => Adaptable m t (t :> u) where
 	adapt = wrap
 
-instance {-# OVERLAPS #-} (Covariant m m u, Monadic m t, Liftable m ((:>) t)) => Adaptable m u (t :> u) where
+instance (Covariant m m u, Monadic m t, Liftable m ((:>) t)) => Adaptable m u (t :> u) where
 	adapt = lift
 
 instance (Covariant m m u', Liftable m ((:>) t), Adaptable m u u') => Adaptable m u (t :> u') where
 	adapt = lift . adapt
 
-instance {-# OVERLAPS #-} (Comonadic m t, Extractable u) => Adaptable m (t :< u) t where
+instance (Comonadic m t, Extractable u) => Adaptable m (t :< u) t where
 	adapt = bring
 
 instance (Covariant m m u', Lowerable m ((:<) t), Adaptable m u' u) => Adaptable m (t :< u') u where
