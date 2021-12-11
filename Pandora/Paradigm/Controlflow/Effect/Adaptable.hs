@@ -26,6 +26,9 @@ instance {-# OVERLAPS #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable (->) I
 instance {-# OVERLAPS #-} (Monadic m t, Monoidal (-->) (-->) (:*:) (:*:) u) => Adaptable m t (t :> u) where
 	adapt = wrap
 
+instance {-# OVERLAPS #-} (Covariant m m u, Monadic m t, Liftable m ((:>) t)) => Adaptable m u (t :> u) where
+	adapt = lift
+
 instance (Covariant m m u', Liftable m ((:>) t), Adaptable m u u') => Adaptable m u (t :> u') where
 	adapt = lift . adapt
 
