@@ -2,6 +2,7 @@
 
 module Pandora.Paradigm.Controlflow.Effect.Adaptable where
 
+import Pandora.Core.Functor (type (#))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (Category (identity))
 import Pandora.Pattern.Functor.Covariant (Covariant)
@@ -19,12 +20,6 @@ class Adaptable m t u where
 
 instance Category m => Adaptable m t t where
 	adapt = identity @m
-
-instance (Covariant m m u', Liftable m ((:>) t), Adaptable m u u') => Adaptable m u (t :> u') where
-	adapt = lift . adapt
-
-instance (Covariant m m u', Lowerable m ((:<) t), Adaptable m u' u) => Adaptable m (t :< u') u where
-	adapt = adapt . lower
 
 instance {-# OVERLAPPING #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable (->) Identity u where
 	adapt = point . extract
