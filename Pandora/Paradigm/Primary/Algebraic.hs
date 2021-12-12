@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (-*-), forever_, (<-+-), (-+-), void, empty, point, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (-*-), forever_, (<-+-), (-+-), void, empty, point, pass, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -121,6 +121,9 @@ extract j = unit @(<--) @(-->) Proxy ! j ! One
 
 point :: Pointable t => a -> t a
 point x = unit @(-->) Proxy ! (Straight $ \One -> x)
+
+pass :: Pointable t => t ()
+pass = point ()
 
 empty :: Emptiable t => t a
 empty = unit @(-->) Proxy ! Straight absurd
