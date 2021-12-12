@@ -119,7 +119,7 @@ instance Monotonic a (t a) => Monotonic a (Maybe :. t := a) where
 	reduce f r (Just x) = reduce f r x
 	reduce _ r Nothing = r
 
-type Optional = Adaptable (->) Maybe
+type Optional t = Adaptable t (->) Maybe
 
 nothing :: Optional t => t a
 nothing = adapt Nothing

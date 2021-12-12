@@ -44,4 +44,4 @@ type instance Schematic Comonad (Imprint e) = (<.:>) ((->) e)
 instance {-# OVERLAPS #-} (Semigroup e, Extendable (->) u) => Extendable (->) ((->) e <.:> u) where
 	f <<= UT x = UT $ (\x' e -> f . UT . (<-|-) (. (e +)) $ x') <<= x
 
-type Traceable e t = Adaptable t (Imprint e)
+type Traceable e t = Adaptable t (->) (Imprint e)

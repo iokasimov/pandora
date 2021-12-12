@@ -42,7 +42,7 @@ instance Interpreted (->) (Accumulator e) where
 instance Monoid e => Monadic (->) (Accumulator e) where
 	wrap = TM . UT . point . run
 
-type Accumulated e t = Adaptable (->) (Accumulator e) t
+type Accumulated e t = Adaptable t (->) (Accumulator e)
 
 gather :: Accumulated e t => e -> t ()
 gather x = adapt . Accumulator $ x :*: ()

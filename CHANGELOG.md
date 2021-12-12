@@ -628,3 +628,4 @@
 * Define experimental `overlook` method
 * Remove `<$$$$>`, `<$$$$||=` and `=||$$$$>` operators
 * Define `Effectful` typeclass to delegate instance resolution for `Adaptable`
+* Change order of type parameters in `Adaptable` typeclass

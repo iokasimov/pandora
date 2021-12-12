@@ -58,7 +58,7 @@ type instance Schematic Comonad (Store s) = (:*:) s <:<.>:> (->) s
 instance Comonadic (->) (Store s) where
 	bring (TC (TUT (s :*: f))) = Store $ s :*: extract f
 
-type Storable s x = Adaptable (->) x (Store s)
+type Storable s t = Adaptable (Store s) (->) t
 
 -- | Get current index
 position :: Storable s t => t a -> s
