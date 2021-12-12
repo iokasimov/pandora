@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Controlflow.Effect.Adaptable where
 
 import Pandora.Core.Functor (type (#))
-import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
@@ -23,3 +23,18 @@ instance Category m => Adaptable m t t where
 
 instance {-# OVERLAPPING #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable (->) Identity u where
 	adapt = point . extract
+
+class Effectful m v t u where
+	effect :: m (v a) (t :> u # a)
+
+instance (Pointable u, Monadic m t) => Effectful m t t u where
+	effect = wrap
+
+instance (Covariant m m u, Liftable m ((:>) t)) => Effectful m u t u where
+	effect = lift
+
+instance {-# OVERLAPS #-} (Semigroupoid m, Effectful m u t u, Adaptable m v u) => Effectful m v t u where
+	effect = effect @m @u @t @u . adapt @m @v @u
+
+instance Effectful m v t u => Adaptable m v (t :> u) where
+	adapt = effect @m @v @t @u
