@@ -629,3 +629,7 @@
 * Remove `<$$$$>`, `<$$$$||=` and `=||$$$$>` operators
 * Define `Effectful` typeclass to delegate instance resolution for `Adaptable`
 * Change order of type parameters in `Adaptable` typeclass
+
+# 0.4.9
+* Define `<-*-*-` method of `Applicative` typeclass
+* Define `-*-*-` method of `Applicative` typeclass

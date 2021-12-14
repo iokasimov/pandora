@@ -7,7 +7,7 @@ import Pandora.Pattern.Semigroupoid (Semigroupoid)
 
 infixl 4 <-|-, <$>
 infixl 3 <-|-|-, <$$>
-infixl 4 <-|-|-|-, <$$$>
+infixl 2 <-|-|-|-, <$$$>
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
