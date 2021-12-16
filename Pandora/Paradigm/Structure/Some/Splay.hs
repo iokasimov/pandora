@@ -17,7 +17,7 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
 import Pandora.Paradigm.Inventory.Optics (over)
-import Pandora.Paradigm.Schemes (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes (TT (TT), type (<::>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate, into)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (sub)
@@ -53,8 +53,8 @@ instance Morphable (Rotate (Right (Zig Zag))) Binary where
 
 instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 	type Morphing (Rotate (Left Zig)) (Construction Wye) = Binary
-	morphing :: forall a . (:#) (Rotate (Left Zig)) <:.> Construction Wye := a -> Binary a
-	morphing (premorph -> Construct x xs) = TU $ Construct <-|- parent <-*- Just nodes where
+	morphing :: forall a . (:#) (Rotate (Left Zig)) <::> Construction Wye := a -> Binary a
+	morphing (premorph -> Construct x xs) = TT $ Construct <-|- parent <-*- Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (branch @Left xs) . Just . Construct x
@@ -66,8 +66,8 @@ instance Morphable (Rotate (Left Zig)) (Construction Wye) where
 
 instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 	type Morphing (Rotate (Right Zig)) (Construction Wye) = Binary
-	morphing :: forall a . (:#) (Rotate (Right Zig)) <:.> Construction Wye := a -> Binary a
-	morphing (premorph -> Construct x xs) = TU $ Construct <-|- parent <-*- Just nodes where
+	morphing :: forall a . (:#) (Rotate (Right Zig)) <::> Construction Wye := a -> Binary a
+	morphing (premorph -> Construct x xs) = TT $ Construct <-|- parent <-*- Just nodes where
 
 		nodes :: Wye :. Nonempty Binary := a
 		nodes = into @Wye . twosome (branch @Left =<< deconstruct <-|- branch @Left xs) . Just . Construct x
@@ -76,22 +76,22 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 		parent :: Maybe a
 		parent = extract <-|- branch @Left xs
 
--- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
+-- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zig))) (Construction Wye) = Binary
-	morphing (premorph -> tree) = TU $ run . rotate @(Left Zig) =<< run # rotate @(Left Zig) tree
+	morphing (premorph -> tree) = TT $ run . rotate @(Left Zig) =<< run # rotate @(Left Zig) tree
 
--- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
+-- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zig))) (Construction Wye) = Binary
-	morphing (premorph -> tree) = TU $ run . rotate @(Right Zig) =<< run # rotate @(Right Zig) tree
+	morphing (premorph -> tree) = TT $ run . rotate @(Right Zig) =<< run # rotate @(Right Zig) tree
 
--- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
+-- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Binary
 	morphing = rotate @(Left Zig) . over (sub @Left) (run . rotate @(Right Zig) =<<) . premorph
 
--- TODO: Morphing ... = Conclussion Error <:.> Nonempty Binary
+-- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Binary
 	morphing = rotate @(Right Zig) . over (sub @Right) (run . rotate @(Left Zig) =<<) . premorph

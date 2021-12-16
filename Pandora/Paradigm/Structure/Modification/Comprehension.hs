@@ -21,7 +21,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!)))
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
@@ -30,40 +30,40 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Primary.Algebraic (empty)
 
-newtype Comprehension t a = Comprehension (t <:.> Construction t := a)
+newtype Comprehension t a = Comprehension (t <::> Construction t := a)
 
 instance Interpreted (->) (Comprehension t) where
-	type Primary (Comprehension t) a = t <:.> Construction t := a
+	type Primary (Comprehension t) a = t <::> Construction t := a
 	run ~(Comprehension x) = x
 	unite = Comprehension
 
-instance Covariant (->) (->) (t <:.> Construction t) => Covariant (->) (->) (Comprehension t) where
+instance Covariant (->) (->) (t <::> Construction t) => Covariant (->) (->) (Comprehension t) where
 	f <-|- Comprehension x = Comprehension $ f <-|- x
 
-instance Traversable (->) (->) (t <:.> Construction t) => Traversable (->) (->) (Comprehension t) where
+instance Traversable (->) (->) (t <::> Construction t) => Traversable (->) (->) (Comprehension t) where
 	f <<- Comprehension x = Comprehension <-|- f <<- x
 
-instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) right t, Semimonoidal (-->) (:*:) right (t <:.> Construction t)) => Semimonoidal (-->) (:*:) right (Comprehension t) where
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) right t, Semimonoidal (-->) (:*:) right (t <::> Construction t)) => Semimonoidal (-->) (:*:) right (Comprehension t) where
 	mult = Straight $ Comprehension . (mult @(-->) @(:*:) @right !) . (run @(->) <-> run @(->))
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) (Construction t), Semimonoidal (-->) (:*:) (:+:) t, Semimonoidal (-->) (:*:) (:+:) (Construction t), Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (Comprehension t) where
 	unit _ = Straight $ \_ -> Comprehension empty
 
-instance (forall a . Semigroup (t <:.> Construction t := a), Bindable (->) t) => Bindable (->) (Comprehension t) where
-	f =<< Comprehension (TU t) = Comprehension . TU $ (\(Construct x xs) -> run . run $ f x + (f =<< Comprehension (TU xs))) =<< t
+instance (forall a . Semigroup (t <::> Construction t := a), Bindable (->) t) => Bindable (->) (Comprehension t) where
+	f =<< Comprehension (TT t) = Comprehension . TT $ (\(Construct x xs) -> run . run $ f x + (f =<< Comprehension (TT xs))) =<< t
 
-instance Setoid (t <:.> Construction t := a) => Setoid (Comprehension t a) where
+instance Setoid (t <::> Construction t := a) => Setoid (Comprehension t a) where
 	Comprehension ls == Comprehension rs = ls == rs
 
-instance Semigroup (t <:.> Construction t := a) => Semigroup (Comprehension t a) where
+instance Semigroup (t <::> Construction t := a) => Semigroup (Comprehension t a) where
 	Comprehension x + Comprehension y = Comprehension $ x + y
 
-instance Monoid (t <:.> Construction t := a) => Monoid (Comprehension t a) where
+instance Monoid (t <::> Construction t := a) => Monoid (Comprehension t a) where
 	zero = Comprehension zero
 
 instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Morphable Push (Comprehension t) where
 	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
 	morphing (run . premorph -> xs) = T_U $ \(Identity x) -> Comprehension . lift . Construct x . run $ xs
 
-instance Nullable (t <:.> Construction t) => Nullable (Comprehension t) where
+instance Nullable (t <::> Construction t) => Nullable (Comprehension t) where
 	null = run @(->) >-|- null
