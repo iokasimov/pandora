@@ -633,3 +633,5 @@
 # 0.4.9
 * Define `<-*-*-` method of `Applicative` typeclass
 * Define `-*-*-` method of `Applicative` typeclass
+* Define `TT` scheme where two effects are known
+* Use `TT` instead of `TU` in `List` and `Binary`

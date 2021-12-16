@@ -27,3 +27,8 @@ instance Covariant (->) (->) (Flip (:+:) a) where
 sum :: (e -> r) -> (a -> r) -> e :+: a -> r
 sum f _ (Option x) = f x
 sum _ s (Adoption x) = s x
+
+-- TODO: keep it until we realize how to implement n-ary functors
+bitraverse_sum :: Covariant (->) (->) t => (e -> t e') -> (a -> t a') -> (e :+: a) -> t (e' :+: a')
+bitraverse_sum f _ (Option x) = Option <-|- f x
+bitraverse_sum _ g (Adoption x) = Adoption <-|- g x

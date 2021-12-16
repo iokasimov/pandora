@@ -71,6 +71,7 @@ library
     Pandora.Paradigm.Primary.Transformer.Yoneda
     -- Schemes of functor compositions
     Pandora.Paradigm.Schemes
+    Pandora.Paradigm.Schemes.TT
     Pandora.Paradigm.Schemes.TU
     Pandora.Paradigm.Schemes.TUT
     Pandora.Paradigm.Schemes.TUVW
