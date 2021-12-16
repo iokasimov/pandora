@@ -13,6 +13,7 @@ import Pandora.Paradigm.Schemes.UT as Exports
 import Pandora.Paradigm.Schemes.TUVW as Exports
 import Pandora.Paradigm.Schemes.TUT as Exports
 import Pandora.Paradigm.Schemes.TU as Exports
+import Pandora.Paradigm.Schemes.TT as Exports
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($))
