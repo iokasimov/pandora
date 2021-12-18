@@ -97,7 +97,7 @@ library
     -- Tools for datastructures
     Pandora.Paradigm.Inventory
     Pandora.Paradigm.Inventory.Accumulator
-    Pandora.Paradigm.Inventory.Environment
+    Pandora.Paradigm.Inventory.Provision
     Pandora.Paradigm.Inventory.Equipment
     Pandora.Paradigm.Inventory.Imprint
     Pandora.Paradigm.Inventory.Optics

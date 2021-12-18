@@ -637,3 +637,6 @@
 * Use `TT` instead of `TU` in `List` and `Binary`
 * Define `Lensic` typeclass to combine different lenses
 * Use `TT` instead of `TU` in `Tape` instances
+* Rename Environment module and type to `Provision`
+* Rename `Configured` to `Provided`
+* Rename `env` to `provided`

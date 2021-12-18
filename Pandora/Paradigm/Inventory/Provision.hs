@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Inventory.Environment (Environment (..), Configured, env) where
+module Pandora.Paradigm.Inventory.Provision where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
@@ -25,42 +25,42 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
-newtype Environment e a = Environment (e -> a)
+newtype Provision e a = Provision (e -> a)
 
-instance Covariant (->) (->) (Environment e) where
-	f <-|- Environment x = Environment $ f . x
+instance Covariant (->) (->) (Provision e) where
+	f <-|- Provision x = Provision $ f . x
 
-instance Contravariant (->) (->) (Flip Environment a) where
-	f >-|- Flip (Environment g) = Flip . Environment $ g . f
+instance Contravariant (->) (->) (Flip Provision a) where
+	f >-|- Flip (Provision g) = Flip . Provision $ g . f
 
-instance Semimonoidal (-->) (:*:) (:*:) (Environment e) where
-	mult = Straight $ Environment . (mult @(-->) !) . (run @(->) <-> run @(->))
+instance Semimonoidal (-->) (:*:) (:*:) (Provision e) where
+	mult = Straight $ Provision . (mult @(-->) !) . (run @(->) <-> run @(->))
 
-instance Monoidal (-->) (-->) (:*:) (:*:) (Environment e) where
-	unit _ = Straight $ \f -> Environment $ \_ -> run f One
+instance Monoidal (-->) (-->) (:*:) (:*:) (Provision e) where
+	unit _ = Straight $ \f -> Provision $ \_ -> run f One
 
-instance Distributive (->) (->) (Environment e) where
-	f -<< g = Environment $ (run @(->) <-|- f) -<< g
+instance Distributive (->) (->) (Provision e) where
+	f -<< g = Provision $ (run @(->) <-|- f) -<< g
 
-instance Bindable (->) (Environment e) where
-	f =<< Environment x = Environment $ \e -> (run % e) . f . x $ e
+instance Bindable (->) (Provision e) where
+	f =<< Provision x = Provision $ \e -> (run % e) . f . x $ e
 
-instance Monad (->) (Environment e) where
+instance Monad (->) (Provision e) where
 
-instance Divariant (->) (->) (->) Environment where
-	(>->) ab cd bc = Environment $ ab >-> cd $ run bc
+instance Divariant (->) (->) (->) Provision where
+	(>->) ab cd bc = Provision $ ab >-> cd $ run bc
 
-instance Interpreted (->) (Environment e) where
-	type Primary (Environment e) a = (->) e a
-	run ~(Environment x) = x
-	unite = Environment
+instance Interpreted (->) (Provision e) where
+	type Primary (Provision e) a = (->) e a
+	run ~(Provision x) = x
+	unite = Provision
 
-type instance Schematic Monad (Environment e) = (<:.>) ((->) e)
+type instance Schematic Monad (Provision e) = (<:.>) ((->) e)
 
-instance Monadic (->) (Environment e) where
+instance Monadic (->) (Provision e) where
 	wrap x = TM . TU $ point <-|- run x
 
-type Configured e t = Adaptable t (->) (Environment e)
+type Provided e t = Adaptable t (->) (Provision e)
 
-env :: Configured e t => t e
-env = adapt $ Environment identity
+provided :: Provided e t => t e
+provided = adapt $ Provision identity

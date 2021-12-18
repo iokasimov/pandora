@@ -8,7 +8,7 @@ import Pandora.Paradigm.Inventory.Store as Exports
 import Pandora.Paradigm.Inventory.State as Exports
 import Pandora.Paradigm.Inventory.Imprint as Exports
 import Pandora.Paradigm.Inventory.Equipment as Exports
-import Pandora.Paradigm.Inventory.Environment as Exports
+import Pandora.Paradigm.Inventory.Provision as Exports
 import Pandora.Paradigm.Inventory.Accumulator as Exports
 
 import Pandora.Pattern.Semigroupoid ((.))
@@ -33,8 +33,8 @@ instance Adjoint (->) (->) (Accumulator e) (Imprint e) where
 	f -| x = Imprint $ f . Accumulator -| x
 	g |- x = run . g |- run x
 
-instance Adjoint (->) (->) (Equipment e) (Environment e) where
-	f -| x = Environment $ f . Equipment -| x
+instance Adjoint (->) (->) (Equipment e) (Provision e) where
+	f -| x = Provision $ f . Equipment -| x
 	g |- x = run . g |- run x
 
 zoom :: forall bg ls t u result . Stateful bg t => Lens u bg ls -> State (u ls) result -> t result
