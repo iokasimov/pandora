@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Pandora.Paradigm.Inventory.Optics where
 
@@ -94,3 +95,25 @@ over lens f = extract . retrofit f . run lens
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
 represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate $ \r' -> r' == r ? target $ r' <#> source)
+
+class Lensic previous next where
+	type Lensally previous next :: * -> *
+	(>>>) :: Lens previous source between -> Lens next between target -> Lens (Lensally previous next) source target
+
+instance Semigroupoid (Lens t) => Lensic t t where
+	type Lensally t t = t
+	x >>> y = y . x
+
+instance Lensic Maybe Identity where
+	type Lensally Maybe Identity = Maybe
+	P_Q_T from >>> P_Q_T to = P_Q_T $ \source -> case run # from source of
+		(Nothing :*: _) -> Store $ Nothing :*: \_ -> source
+		(Just between :*: mbs) -> case run # to between of
+			(Identity target :*: itb) -> Store $ Just target :*: \mt -> mbs $ itb . Identity <-|- mt
+
+instance Lensic Identity Maybe where
+	type Lensally Identity Maybe = Maybe
+	P_Q_T from >>> P_Q_T to = P_Q_T $ \source -> case run # from source of
+		(Identity between :*: ibs) -> case run # to between of
+			(Just target :*: mtb) -> Store $ Just target :*: ibs . Identity . mtb
+			(Nothing :*: _) -> Store $ Nothing :*: \_ -> source
