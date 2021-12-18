@@ -636,3 +636,4 @@
 * Define `TT` scheme where two effects are known
 * Use `TT` instead of `TU` in `List` and `Binary`
 * Define `Lensic` typeclass to combine different lenses
+* Use `TT` instead of `TU` in `Tape` instances
