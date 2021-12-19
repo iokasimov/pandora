@@ -28,7 +28,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Schemes (type (<:.>))
+import Pandora.Paradigm.Schemes (type (<::>))
 
 infixr 7 .-+
 
@@ -79,7 +79,7 @@ instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) 
 instance Monotonic a (t :. Construction t := a) => Monotonic a (Construction t a) where
 	reduce f r ~(Construct x xs) = f x $ reduce f r xs
 
-instance Monotonic a (t :. Construction t := a) => Monotonic a (t <:.> Construction t := a) where
+instance Monotonic a (t :. Construction t := a) => Monotonic a (t <::> Construction t := a) where
 	reduce f r = reduce f r . run
 
 deconstruct :: Construction t a -> t :. Construction t := a
