@@ -8,7 +8,7 @@ import Pandora.Pattern.Category (($), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-), (<-|-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (-<<-<<-))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
@@ -54,7 +54,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->
 	unit _ = Straight $ \f -> Construct # run f One # empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
-	f <<- ~(Construct x xs) = Construct <-|- f x <-*- f -<<-<<- xs
+	f <<- ~(Construct x xs) = Construct <-|- f x <-*- f <<-<<- xs
 
 instance Covariant (->) (->) t => Extendable (->) (Construction t) where
 	f <<= x = Construct # f x # (f <<=) <-|- deconstruct x

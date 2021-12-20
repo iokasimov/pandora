@@ -640,3 +640,4 @@
 * Rename Environment module and type to `Provision`
 * Rename `Configured` to `Provided`
 * Rename `env` to `provided`
+* Rename `-<<-<<-` operator of `Traversable` to `<<-<<-`
