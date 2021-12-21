@@ -47,10 +47,12 @@ instance Category (Lens Identity) where
 	identity :: Convex Lens source source
 	identity = imply @(Convex Lens _ _) identity ((%) (!.))
 
-instance Semigroup source => Semimonoidal (-->) (:*:) (:*:) (Lens Identity source) where
+instance Semimonoidal (-->) (:*:) (:*:) (Lens Identity source) where
 	mult = Straight $ \(P_Q_T x :*: P_Q_T y) -> P_Q_T $ \source ->
 		let Store (Identity xt :*: ixts) :*: Store (Identity yt :*: iyts) = x source :*: y source in
-		Store $ Identity (xt :*: yt) :*: \(Identity (xt_ :*: yt_)) -> ixts (Identity xt_) + iyts (Identity yt_)
+		Store $ Identity (xt :*: yt) :*: \(Identity (xt_ :*: yt_)) ->
+			let modified = ixts (Identity xt_) in
+			extract # run (y modified) # Identity yt_
 
 instance Impliable (P_Q_T (->) Store Identity source target) where
 	type Arguments (P_Q_T (->) Store Identity source target) =
