@@ -12,7 +12,6 @@ import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (!.), (%))
@@ -49,7 +48,7 @@ instance Category (Lens Identity) where
 
 instance Semimonoidal (-->) (:*:) (:*:) (Lens Identity source) where
 	mult = Straight $ \(P_Q_T x :*: P_Q_T y) -> P_Q_T $ \source ->
-		let Store (Identity xt :*: ixts) :*: Store (Identity yt :*: iyts) = x source :*: y source in
+		let Store (Identity xt :*: ixts) :*: Store (Identity yt :*: _) = x source :*: y source in
 		Store $ Identity (xt :*: yt) :*: \(Identity (xt_ :*: yt_)) ->
 			let modified = ixts (Identity xt_) in
 			extract # run (y modified) # Identity yt_
