@@ -135,10 +135,11 @@ library
 
     Pandora.Pattern
     Pandora.Pattern.Betwixt
-	-- Algebra typeclasses
+    -- Algebra typeclasses
     Pandora.Pattern.Semigroupoid
     Pandora.Pattern.Category
     Pandora.Pattern.Groupoid
+    Pandora.Pattern.Kernel
     Pandora.Pattern.Morphism
     -- Functor typeclassess
     Pandora.Pattern.Functor
