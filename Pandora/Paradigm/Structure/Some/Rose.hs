@@ -48,7 +48,7 @@ instance Nullable Rose where
 --	type Available Just Rose = Identity
 --	type Substance Just Rose = List <:.> Construction List
 --	substructure = P_Q_T $ \rose -> case run . extract . run # rose of
---		Nothing -> Store $ Identity empty :*: (lift empty !.)
+--		Nothing -> Store $ Identity empty :*: constant (lift empty)
 --		Just (Construct x xs) -> Store $ Identity (TU xs) :*: lift . lift . Construct x . run . extract
 
 --------------------------------------- Non-empty rose tree ----------------------------------------

@@ -1,4 +1,4 @@
-# Architecture
+Architecture
 
 This document describes the high-level architecture of Pandora library.
 If you want to familiarize yourself with the code base, you are just in the right place!

@@ -12,6 +12,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#)))
+import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -29,7 +30,7 @@ instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
 
 instance Morphable (Into Maybe) (Conclusion e) where
 	type Morphing (Into Maybe) (Conclusion e) = Maybe
-	morphing = conclusion (Nothing !.) Just . premorph
+	morphing = conclusion (constant Nothing) Just . premorph
 
 instance Morphable (Into (Conclusion e)) Maybe where
 	type Morphing (Into (Conclusion e)) Maybe = (->) e <:.> Conclusion e
@@ -92,7 +93,7 @@ instance Substructure Left Wye where
 	substructure = P_Q_T $ \new -> case lower new of
 		End -> Store $ Nothing :*: lift . resolve Left End . (extract <-|-)
 		Left x -> Store $ Just (Identity x) :*: lift . resolve Left End . (extract <-|-)
-		Right y -> Store $ Nothing :*: (lift # Right y !.) . (extract <-|-)
+		Right y -> Store $ Nothing :*: lift . constant (Right y) . (extract <-|-)
 		Both x y -> Store $ Just (Identity x) :*: lift . resolve (Both % y) (Right y) . (extract <-|-)
 
 instance Substructure Right Wye where
@@ -100,6 +101,6 @@ instance Substructure Right Wye where
 	type Substance Right Wye = Identity
 	substructure = P_Q_T $ \new -> case lower new of
 		End -> Store $ Nothing :*: lift . resolve Right End . (extract <-|-)
-		Left x -> Store $ Nothing :*: (lift # Left x !.) . (extract <-|-)
+		Left x -> Store $ Nothing :*: lift . constant (Left x) . (extract <-|-)
 		Right y -> Store $ Just (Identity y) :*: lift . resolve Right End . (extract <-|-)
 		Both x y -> Store $ Just (Identity y) :*: lift . resolve (Both x) (Left x) . (extract <-|-)

@@ -5,6 +5,7 @@ module Pandora.Paradigm.Inventory.Store where
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, ($))
+import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -14,7 +15,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Bivariant ((<->))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Adjoint ((-|))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%), (!.), (-.#..-))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%), (-.#..-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -34,7 +35,7 @@ instance Covariant (->) (->) (Store s) where
 instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 	mult = Flip $ \(Store (s :*: f)) ->
 		let (x :*: y) = f s in
-		Store (s :*: (x !.)) :*: Store (s :*: (y !.))
+		Store (s :*: constant x) :*: Store (s :*: constant y)
 
 instance Monoidal (<--) (-->) (:*:) (:*:) (Store s) where
 	unit _ = Flip $ \(Store (s :*: f)) -> Straight (\_ -> f s)

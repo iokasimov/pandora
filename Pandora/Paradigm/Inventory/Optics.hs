@@ -6,6 +6,7 @@ module Pandora.Paradigm.Inventory.Optics where
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity, ($), (#)))
+import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<$<)))
 import Pandora.Pattern.Functor.Divariant ((>->))
@@ -14,7 +15,7 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (!.), (%))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -44,7 +45,7 @@ instance Semigroupoid (Lens Identity) where
 
 instance Category (Lens Identity) where
 	identity :: Convex Lens source source
-	identity = imply @(Convex Lens _ _) identity ((%) (!.))
+	identity = imply @(Convex Lens _ _) identity ((%) constant)
 
 instance Semimonoidal (-->) (:*:) (:*:) (Lens Identity source) where
 	mult = Straight $ \(P_Q_T x :*: P_Q_T y) -> P_Q_T $ \source ->
