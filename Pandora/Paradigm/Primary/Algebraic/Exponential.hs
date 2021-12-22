@@ -5,6 +5,7 @@ module Pandora.Paradigm.Primary.Algebraic.Exponential where
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (($), (#), identity))
+import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
@@ -27,6 +28,9 @@ instance Semigroupoid (->) where
 
 instance Category (->) where
 	identity x = x
+
+instance Kernel (->) where
+	constant x _ = x
 
 instance Covariant (->) (->) ((->) a) where
 	(<-|-) = (.)

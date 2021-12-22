@@ -5,13 +5,14 @@ module Pandora.Paradigm.Primary.Transformer.Continuation where
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((!.), (%), type (-->))
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Primary.Algebraic (point)
 
@@ -35,7 +36,7 @@ instance (forall u . Bindable (->) u) => Liftable (->) (Continuation r) where
 
 -- | Call with current continuation
 cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
-cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . (!.) . g
+cwcc f = Continuation $ \g -> (run % g) . f $ Continuation . constant . g
 
 -- | Delimit the continuation of any 'shift'
 reset :: (forall u . Bindable (->) u, Monad (->) t) => Continuation r t r -> Continuation s t r

@@ -10,7 +10,4 @@ import Pandora.Pattern.Category (Category (identity))
 -}
 
 class Category m => Kernel m where
-	constant :: m i a
-
-	(.-) :: m i (m a a)
-	(.-) = identity . constant
+	constant :: m a (m i a)
