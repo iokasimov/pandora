@@ -62,14 +62,6 @@ instance Covariant (->) (->) ((-->) b) where
 (-.#..-) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (-.#..-) f = (<-|-) (f .)
 
-{-# INLINE (!..) #-}
-(!..) :: a -> b -> c -> a
-(!..) x _ _ = x
-
-{-# INLINE (!...) #-}
-(!...) :: a -> b -> c -> d -> a
-(!...) x _ _ _ = x
-
 {-# INLINE (%) #-}
 (%) :: (a -> b -> c) -> b -> a -> c
 (%) f x y = f y x
