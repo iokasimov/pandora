@@ -40,7 +40,7 @@ instance Interpreted (->) (TU ct cu t u) where
 	run ~(TU x) = x
 	unite = TU
 
-instance (Semigroupoid m, Covariant (Betwixt m m) m t, Covariant m (Betwixt m m) u, Interpreted m (t <:.> u)) => Covariant m m (t <:.> u) where
+instance (Semigroupoid m, Covariant m m t, Covariant (Betwixt m m) m t, Covariant m (Betwixt m m) u, Interpreted m (t <:.> u)) => Covariant m m (t <:.> u) where
 	(<-|-) f = (||=) ((<-|-|-) f)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.> u) where

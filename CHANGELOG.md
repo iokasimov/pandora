@@ -644,3 +644,4 @@
 * Rename `-*-` and `-*-*-` to `.-*-` and `.-*-*-`
 * Define experimental `Kernel` typeclass
 * Remove `!.`, `!..`, `!..` operators in `Exponential` module
+* Move `<-|-|-` and `<-|-|-|-` under `Covariant` typeclass

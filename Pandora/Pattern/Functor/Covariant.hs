@@ -18,23 +18,20 @@ infixl 2 <-|-|-|-, <$$$>
 class (Semigroupoid source, Semigroupoid target) => Covariant source target t where
 	(<-|-) :: source a b -> target (t a) (t b)
 
-(<-|-|-) :: forall source target t u a b
-	. (Covariant source (Betwixt source target) u, Covariant (Betwixt source target) target t)
-	=> source a b -> target (t (u a)) (t (u b))
-(<-|-|-) s = ((<-|-) ((<-|-) @source @(Betwixt source target) @u s))
+	(<-|-|-) :: (Covariant source (Betwixt source target) u, Covariant (Betwixt source target) target t)
+		=> source a b -> target (t (u a)) (t (u b))
+	(<-|-|-) s = ((<-|-) ((<-|-) @source @(Betwixt source target) @_ s))
 
-(<-|-|-|-) :: forall source target t u v a b
-	. (Covariant source (Betwixt source (Betwixt source target)) v, Covariant (Betwixt source (Betwixt source target)) (Betwixt (Betwixt source target) target) u, Covariant (Betwixt (Betwixt source target) target) target t)
-	=> source a b -> target (t (u (v a))) (t (u (v b)))
-(<-|-|-|-) s = ((<-|-) @(Betwixt (Betwixt source target) target) @target ((<-|-) @(Betwixt source (Betwixt source target)) @(Betwixt (Betwixt source target) target) @u ((<-|-) @source @(Betwixt source (Betwixt source target)) @v s)))
+	(<-|-|-|-) :: (Covariant source (Betwixt source (Betwixt source target)) v, Covariant (Betwixt source (Betwixt source target)) (Betwixt (Betwixt source target) target) u, Covariant (Betwixt (Betwixt source target) target) target t)
+		=> source a b -> target (t (u (v a))) (t (u (v b)))
+	(<-|-|-|-) s = ((<-|-) @(Betwixt (Betwixt source target) target) @target ((<-|-) @(Betwixt source (Betwixt source target)) @(Betwixt (Betwixt source target) target) @_ ((<-|-) @source @(Betwixt source (Betwixt source target)) @_ s)))
 
 (<$>) :: Covariant source target t => source a b -> target (t a) (t b)
 (<$>) = (<-|-)
 
-(<$$>) :: (Covariant source (Betwixt source target) u, Covariant (Betwixt source target) target t) => source a b -> target (t (u a)) (t (u b))
+(<$$>) :: (Covariant source target t, Covariant source (Betwixt source target) u, Covariant (Betwixt source target) target t) => source a b -> target (t (u a)) (t (u b))
 (<$$>) = (<-|-|-)
 
-(<$$$>) :: forall source target t u v a b
-	. (Covariant source (Betwixt source (Betwixt source target)) v, Covariant (Betwixt source (Betwixt source target)) (Betwixt (Betwixt source target) target) u, Covariant (Betwixt (Betwixt source target) target) target t)
+(<$$$>) :: (Covariant source target t, Covariant source (Betwixt source (Betwixt source target)) v, Covariant (Betwixt source (Betwixt source target)) (Betwixt (Betwixt source target) target) u, Covariant (Betwixt (Betwixt source target) target) target t)
 	=> source a b -> target (t (u (v a))) (t (u (v b)))
 (<$$$>) s = (<-|-|-|-) s
