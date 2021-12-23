@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (<*), (<-*-*-), (<**), forever_, (<-+-), (-+-), void, empty, point, pass, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, ($>-), ($$>-), ($$$>-), (<-*-), (.-*-), (<-*-*-), (.-*-*-), forever_, (<-+-), (-+-), void, empty, point, pass, extract) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -25,8 +25,8 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
 
-infixl 4 <-*-, <*
-infixl 3 <-*-*-, <**
+infixl 4 <-*-, .-*-
+infixl 3 <-*-*-, .-*-*-
 infixl 3 <-+-, -+-
 
 ($>-) :: Covariant (->) (->) t => t a -> b -> t b
@@ -105,14 +105,14 @@ f <-*- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
 (<-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u (a -> b)) -> t (u a) -> t (u b)
 f <-*-*- x = (<-*-) <-|- f <-*- x
 
-(<*) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
-y <* x = (\x' y' -> y') <-|- x <-*- y
+(.-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
+y .-*- x = (\x' y' -> y') <-|- x <-*- y
 
-(<**) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u b) -> t (u a) -> t (u b)
-y <** x = (\x' y' -> y') <-|-|- x <-*-*- y
+(.-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u b) -> t (u a) -> t (u b)
+y .-*-*- x = (\x' y' -> y') <-|-|- x <-*-*- y
 
 forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
-forever_ x = let r = r <* x in r
+forever_ x = let r = r .-*- x in r
 
 (<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
 y <-+- x = \f -> f <-|- (mult @(-->) ! (x :*: y))

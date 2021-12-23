@@ -641,6 +641,6 @@
 * Rename `Configured` to `Provided`
 * Rename `env` to `provided`
 * Rename `-<<-<<-` operator of `Traversable` to `<<-<<-`
-* Rename `-*-` and `-*-*-` to `<*` and `<**`
+* Rename `-*-` and `-*-*-` to `.-*-` and `.-*-*-`
 * Define experimental `Kernel` typeclass
 * Remove `!.`, `!..`, `!..` operators in `Exponential` module
