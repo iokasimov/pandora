@@ -3,7 +3,7 @@ module Pandora.Pattern.Category (Category (..)) where
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 
 infixl 2 #
-infixr 0 $
+infixr 0 !
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -14,8 +14,8 @@ infixr 0 $
 class Semigroupoid m => Category m where
 	identity :: m a a
 
-	($) :: m (m a b) (m a b)
-	($) = identity . identity
+	(!) :: m (m a b) (m a b)
+	(!) = identity . identity
 
 	(#) :: m (m a b) (m a b)
 	(#) = identity . identity

@@ -647,3 +647,4 @@
 * Move `<-|-|-` and `<-|-|-|-` under `Covariant` typeclass
 * Change priority of `:*:` operator
 * Change priority of `!` operator
+* Remove `$` operator in favor of `!`

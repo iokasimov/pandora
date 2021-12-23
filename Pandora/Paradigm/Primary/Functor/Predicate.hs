@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Predicate where
 
 import Pandora.Core.Functor (type (~>), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Category ((!))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -23,16 +23,16 @@ instance Interpreted (->) Predicate where
 	unite = Predicate
 
 instance Contravariant (->) (->) Predicate where
-	f >-|- Predicate g = Predicate $ g . f
+	f >-|- Predicate g = Predicate ! g . f
 
 instance Semimonoidal (-->) (:*:) (:*:) Predicate where
-	mult = Straight $ \(Predicate f :*: Predicate g) -> Predicate $ \(x :*: y) -> f x * g y
+	mult = Straight ! \(Predicate f :*: Predicate g) -> Predicate ! \(x :*: y) -> f x * g y
 
 instance Monoidal (-->) (<--) (:*:) (:*:) Predicate where
-	unit _ = Straight $ \_ -> Predicate $ \_ -> True
+	unit _ = Straight ! \_ -> Predicate ! \_ -> True
 
 instance Semimonoidal (-->) (:*:) (:+:) Predicate where
-	mult = Straight $ \(Predicate f :*: Predicate g) -> Predicate $ \case
+	mult = Straight ! \(Predicate f :*: Predicate g) -> Predicate ! \case
 		Option x -> f x
 		Adoption y -> g y
 
@@ -40,4 +40,4 @@ equate :: Setoid a => a :=> Predicate
 equate x = Predicate (== x)
 
 not :: Predicate ~> Predicate
-not (Predicate p) = Predicate $ bool True False . p
+not (Predicate p) = Predicate ! bool True False . p

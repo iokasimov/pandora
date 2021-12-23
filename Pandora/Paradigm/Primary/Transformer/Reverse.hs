@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Primary.Transformer.Reverse where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -29,22 +29,22 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Reverse t) where
 	f <-|- Reverse x = Reverse # f <-|- x
 
 instance (Semimonoidal (-->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (-->) (:*:) (:*:) (Reverse t) where
-	mult = Straight $ \(Reverse x :*: Reverse y) -> Reverse (mult @(-->) ! x :*: y)
+	mult = Straight ! \(Reverse x :*: Reverse y) -> Reverse (mult @(-->) ! x :*: y)
 
 instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Reverse t) where
-	unit _ = Straight $ Reverse . point . ($ One) . run
+	unit _ = Straight ! Reverse . point . (! One) . run
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
-	mult = Flip $ (Reverse <-> Reverse) . run (mult @(<--)) . run
+	mult = Flip ! (Reverse <-> Reverse) . run (mult @(<--)) . run
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Reverse t) where
-	unit _ = Flip $ \(Reverse x) -> Straight (\_ -> extract x)
+	unit _ = Flip ! \(Reverse x) -> Straight (\_ -> extract x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Reverse t) where
 	f <<- Reverse x = Reverse <-|- run (Backwards . f <<- x)
 
 instance Distributive (->) (->) t => Distributive (->) (->) (Reverse t) where
-	f -<< x = Reverse $ run . f -<< x
+	f -<< x = Reverse ! run . f -<< x
 
 instance Contravariant (->) (->) t => Contravariant (->) (->) (Reverse t) where
 	f >-|- Reverse x = Reverse # f >-|- x

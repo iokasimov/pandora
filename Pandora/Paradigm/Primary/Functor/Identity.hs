@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Identity where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Category ((!))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -33,19 +33,19 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 newtype Identity a = Identity a
 
 instance Covariant (->) (->) Identity where
-	f <-|- Identity x = Identity $ f x
+	f <-|- Identity x = Identity ! f x
 
 instance Semimonoidal (-->) (:*:) (:*:) Identity where
-	mult = Straight $ Identity . (extract <-> extract)
+	mult = Straight ! Identity . (extract <-> extract)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) Identity where
-	unit _ = Straight $ Identity . ($ One) . run
+	unit _ = Straight ! Identity . (! One) . run
 
 instance Semimonoidal (<--) (:*:) (:*:) Identity where
-	mult = Flip $ \(Identity (x :*: y)) -> Identity x :*: Identity y
+	mult = Flip ! \(Identity (x :*: y)) -> Identity x :*: Identity y
 
 instance Monoidal (<--) (-->) (:*:) (:*:) Identity where
-	unit _ = Flip $ \(Identity x) -> Straight (\_ -> x)
+	unit _ = Flip ! \(Identity x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) Identity where
 	f <<- Identity x = Identity <-|- f x
@@ -56,18 +56,18 @@ instance Bindable (->) Identity where
 instance Monad (->) Identity
 
 instance Extendable (->) Identity where
-	f <<= x = Identity . f $ x
+	f <<= x = Identity . f ! x
 
 instance Comonad (->) Identity
 
 --instance Representable Identity where
 	--type Representation Identity = ()
 	--() <#> Identity x = x
-	--tabulate f = Identity $ f ()
+	--tabulate f = Identity ! f ()
 
 instance Adjoint (->) (->) Identity Identity where
-	f -| x = Identity . f . Identity $ x
-	g |- x = extract . extract . (g <-|-) $ x
+	f -| x = Identity . f . Identity ! x
+	g |- x = extract . extract . (g <-|-) ! x
 
 instance Setoid a => Setoid (Identity a) where
 	Identity x == Identity y = x == y
@@ -76,24 +76,24 @@ instance Chain a => Chain (Identity a) where
 	Identity x <=> Identity y = x <=> y
 
 instance Semigroup a => Semigroup (Identity a) where
-	Identity x + Identity y = Identity $ x + y
+	Identity x + Identity y = Identity ! x + y
 
 instance Monoid a => Monoid (Identity a) where
 	 zero = Identity zero
 
 instance Ringoid a => Ringoid (Identity a) where
-	Identity x * Identity y = Identity $ x * y
+	Identity x * Identity y = Identity ! x * y
 
 instance Quasiring a => Quasiring (Identity a) where
 	 one = Identity one
 
 instance Infimum a => Infimum (Identity a) where
-	Identity x /\ Identity y = Identity $ x /\ y
+	Identity x /\ Identity y = Identity ! x /\ y
 
 instance Supremum a => Supremum (Identity a) where
-	Identity x \/ Identity y = Identity $ x \/ y
+	Identity x \/ Identity y = Identity ! x \/ y
 
 instance Lattice a => Lattice (Identity a) where
 
 instance Group a => Group (Identity a) where
-	invert (Identity x) = Identity $ invert x
+	invert (Identity x) = Identity ! invert x

@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Category (identity, ($), (#))
+import Pandora.Pattern.Category (identity, (!), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -30,31 +30,31 @@ import Pandora.Paradigm.Primary.Algebraic (point)
 data Conclusion e a = Failure e | Success a
 
 instance Covariant (->) (->) (Conclusion e) where
-	f <-|- Success x = Success $ f x
+	f <-|- Success x = Success ! f x
 	_ <-|- Failure y = Failure y
 
 instance Covariant (->) (->) (Flip Conclusion e) where
-	_ <-|- Flip (Success x) = Flip $ Success x
-	f <-|- Flip (Failure y) = Flip . Failure $ f y
+	_ <-|- Flip (Success x) = Flip ! Success x
+	f <-|- Flip (Failure y) = Flip . Failure ! f y
 
 instance Semimonoidal (-->) (:*:) (:*:) (Conclusion e) where
-	mult = Straight $ \case
-		Success x :*: Success y -> Success $ x :*: y
+	mult = Straight ! \case
+		Success x :*: Success y -> Success ! x :*: y
 		Failure x :*: _ -> Failure x
 		_ :*: Failure x -> Failure x
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Conclusion e) where
-	unit _ = Straight $ Success . ($ One) . run
+	unit _ = Straight ! Success . (! One) . run
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Conclusion e) where
-	mult = Straight $ \case
+	mult = Straight ! \case
 		Failure _ :*: x -> Adoption <-|- x
 		Success x :*: _ -> Option <-|- Success x
 
 instance Traversable (->) (->) (Conclusion e) where
 	(<<-) :: (Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) u)
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
-	_ <<- Failure y = point $ Failure y
+	_ <<- Failure y = point ! Failure y
 	f <<- Success x = Success <-|- f x
 
 instance Bindable (->) (Conclusion e) where
@@ -78,8 +78,8 @@ instance (Chain e, Chain a) => Chain (Conclusion e a) where
 	Success _ <=> Failure _ = Greater
 
 instance (Semigroup e, Semigroup a) => Semigroup (Conclusion e a) where
-	Success x + Success y = Success $ x + y
-	Failure x + Failure y = Failure $ x + y
+	Success x + Success y = Success ! x + y
+	Failure x + Failure y = Failure ! x + y
 	Failure _ + Success y = Success y
 	Success x + Failure _ = Success x
 
@@ -88,7 +88,7 @@ conclusion f _ (Failure x) = f x
 conclusion _ s (Success x) = s x
 
 fail :: (e -> r) -> Conclusion e ~> Conclusion r
-fail f (Failure x) = Failure $ f x
+fail f (Failure x) = Failure ! f x
 fail _ (Success y) = Success y
 
 instance Interpreted (->) (Conclusion e) where
@@ -115,4 +115,4 @@ instance Catchable e (Conclusion e) where
 
 instance (Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = let conclude = conclusion # run . handle # point . Success
-		in UT $ conclude =<< x
+		in UT ! conclude =<< x

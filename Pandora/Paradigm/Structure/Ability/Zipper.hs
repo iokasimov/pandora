@@ -8,7 +8,7 @@ import Pandora.Core.Functor (type (:=), type (:::))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -37,12 +37,12 @@ type Zipper (structure :: * -> *) = Identity <:.:> Breadcrumbs structure := (:*:
 type Breadcrumbed structure t = (Zippable structure, Breadcrumbs structure ~ t)
 
 instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Identity <:.:> t := (:*:)) where
-	mult = Flip $ \(T_U (Identity (x :*: y) :*: xys)) ->
+	mult = Flip ! \(T_U (Identity (x :*: y) :*: xys)) ->
 		let xs :*: ys = mult @(<--) ! xys in
 			T_U (Identity x :*: xs) :*: T_U (Identity y :*: ys)
 
 instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Identity <:.:> t := (:*:)) where
-	unit _ = Flip $ \(T_U (Identity x :*: _)) -> Straight (\_ -> x)
+	unit _ = Flip ! \(T_U (Identity x :*: _)) -> Straight (\_ -> x)
 
 type family Fastenable structure rs where
 	Fastenable structure (r ::: rs) = (Morphable (Rotate r) structure, Fastenable structure rs)
@@ -55,47 +55,47 @@ type Tape t = Identity <:.:> (t <:.:> t := (:*:)) := (:*:)
 instance Covariant (->) (->) t => Substructure Root (Tape t) where
 	type Available Root (Tape t) = Identity
 	type Substance Root (Tape t) = Identity
-	substructure = P_Q_T $ \zipper -> case run # lower zipper of
-		 Identity x :*: xs -> Store $ Identity (Identity x) :*: lift . T_U . (:*: xs) . extract
+	substructure = P_Q_T ! \zipper -> case run # lower zipper of
+		 Identity x :*: xs -> Store ! Identity (Identity x) :*: lift . T_U . (:*: xs) . extract
 
 instance Covariant (->) (->) t => Substructure Left (Tape t) where
 	type Available Left (Tape t) = Identity
 	type Substance Left (Tape t) = t
-	substructure = P_Q_T $ \zipper -> case run # lower zipper of
-		Identity x :*: T_U (ls :*: rs) -> Store $ Identity ls :*: lift . T_U . (Identity x :*:) . T_U . (:*: rs) . extract
+	substructure = P_Q_T ! \zipper -> case run # lower zipper of
+		Identity x :*: T_U (ls :*: rs) -> Store ! Identity ls :*: lift . T_U . (Identity x :*:) . T_U . (:*: rs) . extract
 
 instance Covariant (->) (->) t => Substructure Right (Tape t) where
 	type Available Right (Tape t) = Identity
 	type Substance Right (Tape t) = t
-	substructure = P_Q_T $ \zipper -> case run # lower zipper of
-		Identity x :*: T_U (ls :*: rs) -> Store $ Identity rs :*: lift . T_U . (Identity x :*:) . T_U . (ls :*:) . extract
+	substructure = P_Q_T ! \zipper -> case run # lower zipper of
+		Identity x :*: T_U (ls :*: rs) -> Store ! Identity rs :*: lift . T_U . (Identity x :*:) . T_U . (ls :*:) . extract
 
 instance Covariant (->) (->) t => Substructure Up (Tape t <::> Tape t) where
 	type Available Up (Tape t <::> Tape t) = Identity
 	type Substance Up (Tape t <::> Tape t) = t <::> Tape t
-	substructure = P_Q_T $ \x -> case run . run . extract . run # x of
+	substructure = P_Q_T ! \x -> case run . run . extract . run # x of
 		Identity focused :*: T_U (d :*: u) -> 
-			Store $ Identity (TT u) :*: lift . TT . twosome (Identity focused) . twosome d . run . extract
+			Store ! Identity (TT u) :*: lift . TT . twosome (Identity focused) . twosome d . run . extract
 
 instance Covariant (->) (->) t => Substructure Down (Tape t <::> Tape t) where
 	type Available Down (Tape t <::> Tape t) = Identity
 	type Substance Down (Tape t <::> Tape t) = t <::> Tape t
-	substructure = P_Q_T $ \ii -> case run . run . extract . run # ii of
+	substructure = P_Q_T ! \ii -> case run . run . extract . run # ii of
 		Identity focused :*: T_U (d :*: u) -> 
-			Store $ Identity (TT d) :*: lift . TT . twosome (Identity focused) . (twosome % u) . run . extract
+			Store ! Identity (TT d) :*: lift . TT . twosome (Identity focused) . (twosome % u) . run . extract
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure Left (Tape t <::> Tape t) where
 	type Available Left (Tape t <::> Tape t) = Identity
 	type Substance Left (Tape t <::> Tape t) = Tape t <::> t
-	substructure = P_Q_T $ \ii ->
+	substructure = P_Q_T ! \ii ->
 		let target = (extract . view (sub @Left) <-|-) ||= (lower ii) in
 		let updated new = set (sub @Left) . Identity <-|- new <-*- run (lower ii) in
-		Store $ Identity target :*: lift . (updated ||=) . extract
+		Store ! Identity target :*: lift . (updated ||=) . extract
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure Right (Tape t <::> Tape t) where
 	type Available Right (Tape t <::> Tape t) = Identity
 	type Substance Right (Tape t <::> Tape t) = Tape t <::> t
-	substructure = P_Q_T $ \ii ->
+	substructure = P_Q_T ! \ii ->
 		let target = (extract . view (sub @Right) <-|-) ||= lower ii in
 		let updated new = set (sub @Right) . Identity <-|- new <-*- run (lower ii) in
-		Store $ Identity target :*: lift . (updated ||=) . extract
+		Store ! Identity target :*: lift . (updated ||=) . extract

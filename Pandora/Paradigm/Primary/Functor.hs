@@ -16,7 +16,7 @@ import Pandora.Paradigm.Primary.Functor.Tagged as Exports
 import Pandora.Paradigm.Primary.Functor.Constant as Exports
 import Pandora.Paradigm.Primary.Functor.Identity as Exports
 
-import Pandora.Pattern.Category (($))
+import Pandora.Pattern.Category ((!))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
@@ -25,4 +25,4 @@ type Equivalence = Convergence Boolean
 type Comparison = Convergence Ordering
 
 match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
-match (Predicate p) f x r = p x ? (f x :*: x) $ r :*: x
+match (Predicate p) f x r = p x ? (f x :*: x) ! r :*: x

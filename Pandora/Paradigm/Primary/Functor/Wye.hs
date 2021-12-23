@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Wye where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category ((#), ($))
+import Pandora.Pattern.Category ((#), (!))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -20,7 +20,7 @@ instance Covariant (->) (->) Wye where
 	f <-|- Both x y = Both # f x # f y
 
 instance Semimonoidal (<--) (:*:) (:*:) Wye where
-	mult = Flip $ \case
+	mult = Flip ! \case
 		End -> End :*: End
 		Left (x :*: y) -> Left x :*: Left y
 		Right (x :*: y) -> Right x :*: Right y

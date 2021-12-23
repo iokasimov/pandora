@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (~>), type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((!), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable ((=<<))
@@ -14,7 +14,7 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached, twosome)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&))
-import Pandora.Paradigm.Primary.Algebraic (($$$>-), (<-*-), extract, point)
+import Pandora.Paradigm.Primary.Algebraic ((!!!>-), (<-*-), extract, point)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Functor (Comparison)
@@ -54,29 +54,29 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
 instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
 	morphing binary = case run # premorph binary of
-		Nothing -> T_U $ \(T_U (Identity x :*: _)) -> lift $ leaf x
-		Just non_empty_binary -> T_U $ \(T_U (Identity x :*: Convergence f)) ->
-			let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
+		Nothing -> T_U ! \(T_U (Identity x :*: _)) -> lift ! leaf x
+		Just non_empty_binary -> T_U ! \(T_U (Identity x :*: Convergence f)) ->
+			let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
 			let change = Just . resolve continue (leaf x) in
-			lift $ f x # extract non_empty_binary & order # non_empty_binary
+			lift ! f x # extract non_empty_binary & order # non_empty_binary
 				# over (sub @Left) change non_empty_binary
 				# over (sub @Right) change non_empty_binary
 
 instance Nullable Binary where
-	null = Predicate $ \case { TT Nothing -> True ; _ -> False }
+	null = Predicate ! \case { TT Nothing -> True ; _ -> False }
 
 instance Substructure Left Binary where
 	type Available Left Binary = Maybe
 	type Substance Left Binary = Construction Wye
-	substructure = P_Q_T $ \bintree -> case run . lower # bintree of
-		Nothing -> Store $ Nothing :*: lift . TT
+	substructure = P_Q_T ! \bintree -> case run . lower # bintree of
+		Nothing -> Store ! Nothing :*: lift . TT
 		Just tree -> lift . lift @(->) <-|- run (sub @Left) tree
 
 instance Substructure Right Binary where
 	type Available Right Binary = Maybe
 	type Substance Right Binary = Construction Wye
-	substructure = P_Q_T $ \bintree -> case run . extract . run # bintree of
-		Nothing -> Store $ Nothing :*: lift . TT
+	substructure = P_Q_T ! \bintree -> case run . extract . run # bintree of
+		Nothing -> Store ! Nothing :*: lift . TT
 		Just tree -> lift . lift @(->) <-|- run (sub @Right) tree
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
@@ -89,8 +89,8 @@ instance Morphable (Into Binary) (Construction Wye) where
 
 instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
-	morphing (premorph -> nonempty_list) = T_U $ \(T_U (Identity x :*: Convergence f)) ->
-		let continue xs = run # morph @Insert @(Nonempty Binary) xs $ twosome # Identity x # Convergence f in
+	morphing (premorph -> nonempty_list) = T_U ! \(T_U (Identity x :*: Convergence f)) ->
+		let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
 		let change = Just . resolve continue (leaf x) in
 		order # nonempty_list
 			# over (sub @Left) change nonempty_list
@@ -100,46 +100,46 @@ instance Morphable Insert (Construction Wye) where
 instance Substructure Root (Construction Wye) where
 	type Available Root (Construction Wye) = Identity
 	type Substance Root (Construction Wye) = Identity
-	substructure = P_Q_T $ \bintree -> case lower bintree of
-		Construct x xs -> Store $ Identity (Identity x) :*: lift . (Construct % xs) . extract . extract
+	substructure = P_Q_T ! \bintree -> case lower bintree of
+		Construct x xs -> Store ! Identity (Identity x) :*: lift . (Construct % xs) . extract . extract
 
 instance Substructure Left (Construction Wye) where
 	type Available Left (Construction Wye) = Maybe
 	type Substance Left (Construction Wye) = Construction Wye
-	substructure = P_Q_T $ \bintree -> case extract # run bintree of
-		Construct x End -> Store $ Nothing :*: lift . resolve (Construct x . Left) (leaf x)
-		Construct x (Left lst) -> Store $ Just lst :*: lift . Construct x . resolve Left End
-		Construct x (Right rst) -> Store $ Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst)
-		Construct x (Both lst rst) -> Store $ Just lst :*: lift . Construct x . resolve (Both % rst) (Right rst)
+	substructure = P_Q_T ! \bintree -> case extract # run bintree of
+		Construct x End -> Store ! Nothing :*: lift . resolve (Construct x . Left) (leaf x)
+		Construct x (Left lst) -> Store ! Just lst :*: lift . Construct x . resolve Left End
+		Construct x (Right rst) -> Store ! Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst)
+		Construct x (Both lst rst) -> Store ! Just lst :*: lift . Construct x . resolve (Both % rst) (Right rst)
 
 instance Substructure Right (Construction Wye) where
 	type Available Right (Construction Wye) = Maybe
 	type Substance Right (Construction Wye) = Construction Wye
-	substructure = P_Q_T $ \bintree -> case extract # run bintree of
-		Construct x End -> Store $ Nothing :*: lift . resolve (Construct x . Right) (leaf x)
-		Construct x (Left lst) -> Store $ Nothing :*: lift . Construct x . resolve (Both lst) (Left lst)
-		Construct x (Right rst) -> Store $ Just rst :*: lift . Construct x . resolve Right End
-		Construct x (Both lst rst) -> Store $ Just rst :*: lift . Construct x . resolve (Both lst) (Left lst)
+	substructure = P_Q_T ! \bintree -> case extract # run bintree of
+		Construct x End -> Store ! Nothing :*: lift . resolve (Construct x . Right) (leaf x)
+		Construct x (Left lst) -> Store ! Nothing :*: lift . Construct x . resolve (Both lst) (Left lst)
+		Construct x (Right rst) -> Store ! Just rst :*: lift . Construct x . resolve Right End
+		Construct x (Both lst rst) -> Store ! Just rst :*: lift . Construct x . resolve (Both lst) (Left lst)
 
 -------------------------------------- Prefixed binary tree ----------------------------------------
 
 instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 	type Morphing (Lookup Key) (Prefixed Binary k) = (->) k <::> Maybe
-	morphing prefixed_tree = case run . run . premorph $ prefixed_tree of
-		Nothing -> TT $ \_ -> Nothing
-		Just tree -> TT $ \key ->
+	morphing prefixed_tree = case run . run . premorph ! prefixed_tree of
+		Nothing -> TT ! \_ -> Nothing
+		Just tree -> TT ! \key ->
 			let root = extract tree in key <=> attached root & order (Just # extract root)
 				(lookup @Key key . Prefixed =<< view # sub @Left # tree)
 				(lookup @Key key . Prefixed =<< view # sub @Right # tree)
 
 instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Identity) <:.:> Prefixed Binary k := (->)
-	morphing prefixed_tree = case run . run . premorph $ prefixed_tree of
-		Nothing -> T_U $ \(TT (key :*: Identity value)) -> Prefixed . lift . leaf $ key :*: value
-		Just tree -> T_U $ \(TT (key :*: Identity value)) ->
+	morphing prefixed_tree = case run . run . premorph ! prefixed_tree of
+		Nothing -> T_U ! \(TT (key :*: Identity value)) -> Prefixed . lift . leaf ! key :*: value
+		Just tree -> T_U ! \(TT (key :*: Identity value)) ->
 			let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)
-			in let root = extract tree in Prefixed . lift $ key <=> attached root & order
-				# over (sub @Root) ($$$>- value) tree
+			in let root = extract tree in Prefixed . lift ! key <=> attached root & order
+				# over (sub @Root) (!!!>- value) tree
 				# over (sub @Left) continue tree
 				# over (sub @Right) continue tree
 
@@ -147,7 +147,7 @@ instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 
 instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) where
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <::> Maybe
-	morphing (run . premorph -> Construct x xs) = TT $ \key ->
+	morphing (run . premorph -> Construct x xs) = TT ! \key ->
 		key <=> attached x & order (Just # extract x)
 			(lookup @Key key . Prefixed . extract =<< view # sub @Left # xs)
 			(lookup @Key key . Prefixed . extract =<< view # sub @Left # xs)
@@ -158,8 +158,8 @@ data Biforked a = Top | Leftward a | Rightward a
 
 instance Covariant (->) (->) Biforked where
 	_ <-|- Top = Top
-	f <-|- Leftward l = Leftward $ f l
-	f <-|- Rightward r = Rightward $ f r
+	f <-|- Leftward l = Leftward ! f l
+	f <-|- Rightward r = Rightward ! f r
 
 instance Traversable (->) (->) Biforked where
 	_ <<- Top = point Top
@@ -181,12 +181,12 @@ instance Morphable (Rotate Up) ((Identity <:.:> Wye <::> Construction Wye := (:*
 		= Maybe <::> ((Identity <:.:> Wye <::> Construction Wye := (:*:)) <:.:> Bifurcation <::> Bicursor := (:*:))
 	morphing zipper = case run # premorph zipper of
 		focused :*: TT (TT (Rightward (Construct (T_U (Identity parent :*: rest)) next))) ->
-			lift . twosome % TT (TT next) $ twosome # Identity parent $ TT $ resolve
+			lift . twosome % TT (TT next) ! twosome # Identity parent ! TT ! resolve
 				# Both (_focused_part_to_nonempty_binary_tree focused)
 				# Left (_focused_part_to_nonempty_binary_tree focused)
 				# run rest
 		focused :*: TT (TT (Leftward (Construct (T_U (Identity parent :*: rest)) next))) ->
-			lift . twosome % TT (TT next) $ twosome # Identity parent $ TT $ resolve
+			lift . twosome % TT (TT next) ! twosome # Identity parent ! TT ! resolve
 				# Both % _focused_part_to_nonempty_binary_tree focused
 				# Right (_focused_part_to_nonempty_binary_tree focused)
 				# run rest
@@ -201,10 +201,10 @@ instance Morphable (Rotate (Down Left)) ((Identity <:.:> Wye <::> Construction W
 	morphing zipper = case run # premorph zipper of
 		T_U (Identity x :*: TT (Left lst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward $ Construct # twosome (Identity x) (TT Nothing) # next
+				. TT . TT . Leftward ! Construct # twosome (Identity x) (TT Nothing) # next
 		T_U (Identity x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward $ Construct # twosome (Identity x) (lift rst) # next
+				. TT . TT . Leftward ! Construct # twosome (Identity x) (lift rst) # next
 		_ -> TT Nothing
 
 instance Morphable (Rotate (Down Right)) ((Identity <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
@@ -213,10 +213,10 @@ instance Morphable (Rotate (Down Right)) ((Identity <:.:> Wye <::> Construction 
 	morphing zipper = case run # premorph zipper of
 		T_U (Identity x :*: TT (Right rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward $ Construct # twosome (Identity x) (TT Nothing) # next
+				. TT . TT . Rightward ! Construct # twosome (Identity x) (TT Nothing) # next
 		T_U (Identity x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward $ Construct # twosome (Identity x) (lift lst) # next
+				. TT . TT . Rightward ! Construct # twosome (Identity x) (lift lst) # next
 		_ -> TT Nothing
 
 leaf :: a :=> Nonempty Binary

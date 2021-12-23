@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Transformer.Construction where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-), (<-|-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -38,20 +38,20 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
 	f <-|- ~(Construct x xs) = Construct # f x # f <-|-|- xs
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Construction t) where
-	mult = Straight $ \(Construct x xs :*: Construct y ys) -> Construct # (x :*: y) # (mult @(-->) !) <-|- (mult @(-->) ! (xs :*: ys))
+	mult = Straight ! \(Construct x xs :*: Construct y ys) -> Construct # (x :*: y) # (mult @(-->) !) <-|- (mult @(-->) ! (xs :*: ys))
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
-	mult = Flip $ \(Construct (x :*: y) xys) -> (Construct x <-> Construct y)
-		$ (mult @(<--) !) $ (mult @(<--) !) <-|- xys
+	mult = Flip ! \(Construct (x :*: y) xys) -> (Construct x <-> Construct y)
+		. (mult @(<--) !) ! (mult @(<--) !) <-|- xys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Construction t) where
-	unit _ = Flip $ \(Construct x _) -> Straight (\_ -> x)
+	unit _ = Flip ! \(Construct x _) -> Straight (\_ -> x)
 
 --instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => Semimonoidal (-->) (:*:) (:+:) (Construction t) where
-	--mult = Straight $ \(Construct x xs :*: Construct y ys) ->
+	--mult = Straight ! \(Construct x xs :*: Construct y ys) ->
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Construction t) where
-	unit _ = Straight $ \f -> Construct # run f One # empty
+	unit _ = Straight ! \f -> Construct # run f One # empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
 	f <<- ~(Construct x xs) = Construct <-|- f x <-*- f <<-<<- xs
@@ -65,7 +65,7 @@ instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Lowerable (->) Constru
 	lower x = extract <-|- deconstruct x
 
 instance (forall u . Semimonoidal (<--) (:*:) (:*:) u, forall u . Covariant (->) (->) u) => Hoistable (->) Construction where
-	f /|\ x = Construct # extract x $ (/|\) @(->) f <-|- f (deconstruct x)
+	f /|\ x = Construct # extract x ! (/|\) @(->) f <-|- f (deconstruct x)
 
 instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Setoid (Construction t a) where
 	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)
@@ -77,7 +77,7 @@ instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) 
 	zero = Construct zero zero
 
 instance Monotonic a (t :. Construction t := a) => Monotonic a (Construction t a) where
-	reduce f r ~(Construct x xs) = f x $ reduce f r xs
+	reduce f r ~(Construct x xs) = f x ! reduce f r xs
 
 instance Monotonic a (t :. Construction t := a) => Monotonic a (t <::> Construction t := a) where
 	reduce f r = reduce f r . run
@@ -87,7 +87,7 @@ deconstruct ~(Construct _ xs) = xs
 
 -- Generate a construction from seed using effectful computation
 (.-+) :: Covariant (->) (->) t => a :=> t -> a :=> Construction t
-f .-+ x = Construct x $ (f .-+) <-|- f x
+f .-+ x = Construct x ! (f .-+) <-|- f x
 
 section :: (Comonad (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => t ~> Construction t
-section xs = Construct # extract xs $ section <<= xs
+section xs = Construct # extract xs ! section <<= xs

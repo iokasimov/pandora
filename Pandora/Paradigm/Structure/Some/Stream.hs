@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Stream where
 
 import Pandora.Core.Functor (type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((!), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), twosome)
@@ -27,16 +27,16 @@ instance Morphable (Rotate Left) (Identity <:.:> (Stream <:.:> Stream := (:*:)) 
 	type Morphing (Rotate Left) (Identity <:.:> (Stream <:.:> Stream := (:*:)) := (:*:)) =
 		Identity <:.:> (Stream <:.:> Stream := (:*:)) := (:*:)
 	morphing (run . premorph -> Identity x :*: T_U (bs :*: fs)) = twosome # Identity (extract bs)
-		$ twosome # extract (deconstruct bs) # Construct x (point fs)
+		! twosome # extract (deconstruct bs) # Construct x (point fs)
 
 instance Morphable (Rotate Right) (Identity <:.:> (Stream <:.:> Stream := (:*:)) := (:*:)) where
 	type Morphing (Rotate Right) (Identity <:.:> (Stream <:.:> Stream := (:*:)) := (:*:)) = Identity <:.:> (Stream <:.:> Stream := (:*:)) := (:*:)
 	morphing (run . premorph -> Identity x :*: T_U (bs :*: fs)) = twosome # Identity (extract fs)
-		$ twosome # Construct x (point bs) # extract (deconstruct fs)
+		! twosome # Construct x (point bs) # extract (deconstruct fs)
 
 instance {-# OVERLAPS #-} Extendable (->) (Identity <:.:> (Stream <:.:> Stream := (:*:)) := (:*:)) where
-	f <<= z = let move rtt = extract . deconstruct $ point . rtt .-+ z
+	f <<= z = let move rtt = extract . deconstruct ! point . rtt .-+ z
 		in f <-|- T_U (Identity z :*: twosome # move (rotate @Left) # move (rotate @Right))
 
 repeat :: a :=> Stream
-repeat x = Construct x . Identity $ repeat x
+repeat x = Construct x . Identity ! repeat x

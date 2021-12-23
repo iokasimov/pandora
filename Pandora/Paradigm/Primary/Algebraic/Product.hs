@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Algebraic.Product where
 
 import Pandora.Core.Functor (type (:=))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -28,7 +28,7 @@ instance Covariant (->) (->) ((:*:) s) where
 	f <-|- ~(s :*: x) = s :*: f x
 
 instance Covariant (->) (->) (Flip (:*:) a) where
-	f <-|- (Flip (x :*: y)) = Flip $ f x :*: y
+	f <-|- (Flip (x :*: y)) = Flip ! f x :*: y
 
 instance Extendable (->) ((:*:) s) where
 	f <<= ~(s :*: x) = s :*: f (s :*: x)
@@ -63,11 +63,11 @@ instance (Group s, Group a) => Group (s :*: a) where
 	invert ~(s :*: x) = invert # s :*: invert # x
 
 instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.:> u := (:*:)) where
-	mult = Straight $ \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U $ (mult @(-->) !) (xls :*: yls) :*: (mult @(-->) !) (xrs :*: yrs)
+	mult = Straight ! \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U ! (mult @(-->) !) (xls :*: yls) :*: (mult @(-->) !) (xrs :*: yrs)
 
 -- TODO: Generalize (:*:) as Bivariant p
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
-	mult = Flip $ \(T_U lrxys) ->
+	mult = Flip ! \(T_U lrxys) ->
 		-- TODO: I need matrix transposing here
 		let ((lxs :*: lys) :*: (rxs :*: rys)) = ((mult @(<--) !) <-> (mult @(<--) !)) lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
@@ -82,4 +82,4 @@ attached :: a :*: b -> a
 attached ~(x :*: _) = x
 
 twosome :: t a -> u a -> (<:.:>) t u (:*:) a
-twosome x y = T_U $ x :*: y
+twosome x y = T_U ! x :*: y

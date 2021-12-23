@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Validation where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((!), (#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -25,38 +25,38 @@ data Validation e a = Flaws e | Validated a
 
 instance Covariant (->) (->) (Validation e) where
 	_ <-|- Flaws e = Flaws e
-	f <-|- Validated x = Validated $ f x
+	f <-|- Validated x = Validated ! f x
 	_ <-|- Flaws e = Flaws e
-	f <-|- Validated x = Validated $ f x
+	f <-|- Validated x = Validated ! f x
 	_ <-|- Flaws e = Flaws e
-	f <-|- Validated x = Validated $ f x
+	f <-|- Validated x = Validated ! f x
 
 instance Covariant (->) (->) (Flip Validation a) where
-	f <-|- Flip (Flaws e) = Flip . Flaws $ f e
-	_ <-|- Flip (Validated x) = Flip $ Validated x
-	f <-|- Flip (Flaws e) = Flip . Flaws $ f e
-	_ <-|- Flip (Validated x) = Flip $ Validated x
-	f <-|- Flip (Flaws e) = Flip . Flaws $ f e
-	_ <-|- Flip (Validated x) = Flip $ Validated x
+	f <-|- Flip (Flaws e) = Flip . Flaws ! f e
+	_ <-|- Flip (Validated x) = Flip ! Validated x
+	f <-|- Flip (Flaws e) = Flip . Flaws ! f e
+	_ <-|- Flip (Validated x) = Flip ! Validated x
+	f <-|- Flip (Flaws e) = Flip . Flaws ! f e
+	_ <-|- Flip (Validated x) = Flip ! Validated x
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:*:) (Validation e) where
-	mult = Straight $ \case
-		Validated x :*: Validated y -> Validated $ x :*: y
-		Flaws x :*: Flaws y -> Flaws $ x + y
+	mult = Straight ! \case
+		Validated x :*: Validated y -> Validated ! x :*: y
+		Flaws x :*: Flaws y -> Flaws ! x + y
 		Validated _ :*: Flaws y -> Flaws y
 		Flaws x :*: Validated _ -> Flaws x
 
 instance Semigroup e => Monoidal (-->) (-->) (:*:) (:*:) (Validation e) where
-	unit _ = Straight $ Validated . ($ One) . run
+	unit _ = Straight ! Validated . (! One) . run
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Validation e) where
-	mult = Straight $ \case
+	mult = Straight ! \case
 		Flaws _ :*: y -> Adoption <-|- y
 		Validated x :*: _ -> Option <-|- Validated x
 
 instance Traversable (->) (->) (Validation e) where
 	f <<- Validated x = Validated <-|- f x
-	_ <<- Flaws e = point $ Flaws e
+	_ <<- Flaws e = point ! Flaws e
 
 instance Bivariant (->) (->) (->) Validation where
 	f <-> g = validation # Flaws . f # Validated . g
@@ -73,8 +73,8 @@ instance (Chain e, Chain a) => Chain (Validation e a) where
 	Validated _ <=> Flaws _ = Greater
 
 instance (Semigroup e, Semigroup a) => Semigroup (Validation e a) where
-	Validated x + Validated y = Validated $ x + y
-	Flaws x + Flaws y = Flaws $ x + y
+	Validated x + Validated y = Validated ! x + y
+	Flaws x + Flaws y = Flaws ! x + y
 	Flaws _ + Validated y = Validated y
 	Validated x + Flaws _ = Validated x
 

@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Primary.Linear.Vector where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($), (#))
+import Pandora.Pattern.Category ((!), (#))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -24,13 +24,13 @@ data Vector r a where
 	Vector :: a -> Vector r a -> Vector (a :*: r) a
 
 instance Semigroup a => Semigroup (Vector a a) where
-	~(Scalar x) + ~(Scalar y) = Scalar $ x + y
+	~(Scalar x) + ~(Scalar y) = Scalar ! x + y
 
 instance (Semigroup a, Semigroup r, Semigroup (a :*: r), Semigroup (Vector r a)) => Semigroup (Vector (a :*: r) a) where
 	Vector x xs + Vector y ys = Vector # x + y # xs + ys
 
 instance Ringoid a => Ringoid (Vector a a) where
-	~(Scalar x) * ~(Scalar y) = Scalar $ x * y
+	~(Scalar x) * ~(Scalar y) = Scalar ! x * y
 
 instance (Ringoid a, Ringoid r, Ringoid (a :*: r), Ringoid (Vector r a)) => Ringoid (Vector (a :*: r) a) where
 	Vector x xs * Vector y ys = Vector # x * y # xs * ys
@@ -48,7 +48,7 @@ instance (Quasiring a, Quasiring r, Quasiring (a :*: r), Quasiring (Vector r a))
 	one = Vector one one
 
 instance Group a => Group (Vector a a) where
-	invert ~(Scalar x) = Scalar $ invert x
+	invert ~(Scalar x) = Scalar ! invert x
 
 instance (Group a, Group r, Group (a :*: r), Group (Vector r a)) => Group (Vector (a :*: r) a) where
 	invert (Vector x xs) = Vector # invert x # invert xs
@@ -68,13 +68,13 @@ instance Monotonic a (Vector r a) => Monotonic a (Vector (a :*: r) a) where
 -- TODO: move these instances to somewhere else since they involve structures
 instance Morphable (Into List) (Vector r) where
 	type Morphing (Into List) (Vector r) = List
-	morphing (premorph -> Scalar x) = TT . Just $ Construct x Nothing
-	morphing (premorph -> Vector x xs) = item @Push x $ into @List xs
+	morphing (premorph -> Scalar x) = TT . Just ! Construct x Nothing
+	morphing (premorph -> Vector x xs) = item @Push x ! into @List xs
 
 instance Morphable (Into (Construction Maybe)) (Vector r) where
 	type Morphing (Into (Construction Maybe)) (Vector r) = Construction Maybe
 	morphing (premorph -> Scalar x) = Construct x Nothing
-	morphing (premorph -> Vector x xs) = item @Push x $ into @(Nonempty List) xs
+	morphing (premorph -> Vector x xs) = item @Push x ! into @(Nonempty List) xs
 
 class Vectorize a r where
 	vectorize :: r -> Vector r a
@@ -83,4 +83,4 @@ instance Vectorize a a where
 	vectorize x = Scalar x
 
 instance Vectorize a r => Vectorize a (a :*: r) where
-	vectorize (x :*: r) = Vector x $ vectorize r
+	vectorize (x :*: r) = Vector x ! vectorize r
