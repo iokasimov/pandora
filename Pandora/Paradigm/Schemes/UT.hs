@@ -5,7 +5,7 @@ module Pandora.Paradigm.Schemes.UT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (($), identity)
+import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
@@ -42,26 +42,26 @@ instance (Semigroupoid m, Covariant m m u, Covariant m m t, Covariant m (Betwixt
 	(<-|-) f = (||=) ((<-|-|-) f)
 
 instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <.:> u) where
-	mult = Straight $ UT . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
+	mult = Straight ! UT . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
 
 instance (Covariant (->) (->) u, Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:+:) t) => Semimonoidal (-->) (:*:) (:+:) (t <.:> u) where
-	mult = Straight $ \(UT x :*: UT y) -> UT $ (mult @(-->) @(:*:) @(:+:)) <-|- (mult @(-->) @(:*:) @(:*:) ! (x :*: y))
+	mult = Straight ! \(UT x :*: UT y) -> UT ! (mult @(-->) @(:*:) @(:+:)) <-|- (mult @(-->) @(:*:) @(:*:) ! (x :*: y))
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) u) => Monoidal (-->) (-->) (:*:) (:*:) (t <.:> u) where
-	unit _ = Straight $ UT . point . point . ($ One) . run
+	unit _ = Straight ! UT . point . point . (! One) . run
 
 instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Bindable (->) (t <.:> u) where
-	f =<< UT x = UT $ ((identity =<<) <-|-) . (run . f <<-) =<< x
+	f =<< UT x = UT ! ((identity =<<) <-|-) . (run . f <<-) =<< x
 
 instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <.:> u) where
-	mult = Flip $ \(UT xys) -> (UT <-> UT) . (mult @(<--) !) $ (mult @(<--) !) <-|- xys
+	mult = Flip ! \(UT xys) -> (UT <-> UT) . (mult @(<--) !) ! (mult @(<--) !) <-|- xys
 
 instance (Covariant (->) (->) u, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<--) (-->) (:*:) (:*:) u) => Monoidal (<--) (-->) (:*:) (:*:) (t <.:> u) where
-	unit _ = Flip $ \(UT x) -> Straight (\_ -> extract $ extract x)
+	unit _ = Flip ! \(UT x) -> Straight (\_ -> extract ! extract x)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) t => Liftable (->) (UT Covariant Covariant t) where
 	lift :: Covariant (->) (->) u => u ~> t <.:> u
-	lift x = UT $ point <-|- x
+	lift x = UT ! point <-|- x
 
 instance Monoidal (<--) (-->) (:*:) (:*:) t => Lowerable (->) (UT Covariant Covariant t) where
 	lower :: Covariant (->) (->) u => t <.:> u ~> u
