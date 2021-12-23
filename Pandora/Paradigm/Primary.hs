@@ -11,13 +11,13 @@ import Pandora.Paradigm.Primary.Algebraic as Exports
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (Category (($), (#)))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
@@ -25,7 +25,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
 
 instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
-	f -| x = \s -> f $ Flip $ x :*: s
+	f -| x = \s -> f . Flip ! x :*: s
 	f |- Flip (x :*: s) = f x s
 
 instance Morphable (Into Maybe) (Conclusion e) where
@@ -34,13 +34,13 @@ instance Morphable (Into Maybe) (Conclusion e) where
 
 instance Morphable (Into (Conclusion e)) Maybe where
 	type Morphing (Into (Conclusion e)) Maybe = (->) e <:.> Conclusion e
-	morphing (premorph -> Just x) = TU $ \_ -> Success x
-	morphing (premorph -> Nothing) = TU $ \e -> Failure e
+	morphing (premorph -> Just x) = TU ! \_ -> Success x
+	morphing (premorph -> Nothing) = TU ! \e -> Failure e
 
 instance Morphable (Into (Flip Conclusion e)) Maybe where
 	type Morphing (Into (Flip Conclusion e)) Maybe = (->) e <:.> Flip Conclusion e
-	morphing (run . premorph -> Just x) = TU $ \_ -> Flip $ Failure x
-	morphing (run . premorph -> Nothing) = TU $ Flip . Success
+	morphing (run . premorph -> Just x) = TU ! \_ -> Flip ! Failure x
+	morphing (run . premorph -> Nothing) = TU ! Flip . Success
 
 instance Morphable (Into (Left Maybe)) Wye where
 	type Morphing (Into (Left Maybe)) Wye = Maybe
@@ -90,17 +90,17 @@ instance Morphable (Into Wye) (Maybe <:.:> Maybe := (:*:)) where
 instance Substructure Left Wye where
 	type Available Left Wye = Maybe
 	type Substance Left Wye = Identity
-	substructure = P_Q_T $ \new -> case lower new of
-		End -> Store $ Nothing :*: lift . resolve Left End . (extract <-|-)
-		Left x -> Store $ Just (Identity x) :*: lift . resolve Left End . (extract <-|-)
-		Right y -> Store $ Nothing :*: lift . constant (Right y) . (extract <-|-)
-		Both x y -> Store $ Just (Identity x) :*: lift . resolve (Both % y) (Right y) . (extract <-|-)
+	substructure = P_Q_T ! \new -> case lower new of
+		End -> Store ! Nothing :*: lift . resolve Left End . (extract <-|-)
+		Left x -> Store ! Just (Identity x) :*: lift . resolve Left End . (extract <-|-)
+		Right y -> Store ! Nothing :*: lift . constant (Right y) . (extract <-|-)
+		Both x y -> Store ! Just (Identity x) :*: lift . resolve (Both % y) (Right y) . (extract <-|-)
 
 instance Substructure Right Wye where
 	type Available Right Wye = Maybe
 	type Substance Right Wye = Identity
-	substructure = P_Q_T $ \new -> case lower new of
-		End -> Store $ Nothing :*: lift . resolve Right End . (extract <-|-)
-		Left x -> Store $ Nothing :*: lift . constant (Left x) . (extract <-|-)
-		Right y -> Store $ Just (Identity y) :*: lift . resolve Right End . (extract <-|-)
-		Both x y -> Store $ Just (Identity y) :*: lift . resolve (Both x) (Left x) . (extract <-|-)
+	substructure = P_Q_T ! \new -> case lower new of
+		End -> Store ! Nothing :*: lift . resolve Right End . (extract <-|-)
+		Left x -> Store ! Nothing :*: lift . constant (Left x) . (extract <-|-)
+		Right y -> Store ! Just (Identity y) :*: lift . resolve Right End . (extract <-|-)
+		Both x y -> Store ! Just (Identity y) :*: lift . resolve (Both x) (Left x) . (extract <-|-)

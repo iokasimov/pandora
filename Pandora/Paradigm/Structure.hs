@@ -10,7 +10,7 @@ import Pandora.Paradigm.Structure.Some as Exports
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (($), (#), identity)
+import Pandora.Pattern.Category ((#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -38,21 +38,21 @@ instance Monotonic s a => Monotonic s (s :*: a) where
 	reduce f r x = reduce f # f (attached x) r # extract x
 
 instance Nullable Maybe where
-	null = Predicate $ \case { Just _ -> True ; _ -> False }
+	null = Predicate ! \case { Just _ -> True ; _ -> False }
 
 instance (Covariant (->) (->) t) => Substructure Tail (Tap t) where
 	type Available Tail (Tap t) = Identity
 	type Substance Tail (Tap t) = t
-	substructure = P_Q_T $ \tap -> case extract # run tap of
-		Tap x xs -> Store $ Identity xs :*: lift . Tap x . extract
+	substructure = P_Q_T ! \tap -> case extract # run tap of
+		Tap x xs -> Store ! Identity xs :*: lift . Tap x . extract
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
 	morphing nonempty_binary = case premorph nonempty_binary of
 		Construct x End -> Construct x Nothing
-		Construct x (Left lst) -> Construct x . Just $ into @(Preorder (Nonempty List)) lst
-		Construct x (Right rst) -> Construct x . Just $ into @(Preorder (Nonempty List)) rst
-		Construct x (Both lst rst) -> Construct x . Just $ into @(Preorder (Nonempty List)) lst + into @(Preorder (Nonempty List)) rst
+		Construct x (Left lst) -> Construct x . Just ! into @(Preorder (Nonempty List)) lst
+		Construct x (Right rst) -> Construct x . Just ! into @(Preorder (Nonempty List)) rst
+		Construct x (Both lst rst) -> Construct x . Just ! into @(Preorder (Nonempty List)) lst + into @(Preorder (Nonempty List)) rst
 
 instance Morphable (Into (Inorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Inorder (Construction Maybe))) (Construction Wye) = Construction Maybe
@@ -77,20 +77,20 @@ instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) B
 instance Substructure Left (Flip (:*:) a) where
 	type Available Left (Flip (:*:) a) = Identity
 	type Substance Left (Flip (:*:) a) = Identity
-	substructure = P_Q_T $ \product -> case run # lower product of
-		s :*: x -> Store $ Identity (Identity s) :*: lift . Flip . (:*: x) . extract . extract
+	substructure = P_Q_T ! \product -> case run # lower product of
+		s :*: x -> Store ! Identity (Identity s) :*: lift . Flip . (:*: x) . extract . extract
 
 instance Substructure Right ((:*:) s) where
 	type Available Right ((:*:) s) = Identity
 	type Substance Right ((:*:) s) = Identity
-	substructure = P_Q_T $ \product -> case lower product of
-		s :*: x -> Store $ Identity (Identity x) :*: lift . (s :*:) . extract . extract
+	substructure = P_Q_T ! \product -> case lower product of
+		s :*: x -> Store ! Identity (Identity x) :*: lift . (s :*:) . extract . extract
 
 instance Accessible s (s :*: a) where
-	access = P_Q_T $ \(s :*: x) -> Store $ Identity s :*: (:*: x) . extract
+	access = P_Q_T ! \(s :*: x) -> Store ! Identity s :*: (:*: x) . extract
 
 instance Accessible a (s :*: a) where
-	access = P_Q_T $ \(s :*: x) -> Store $ Identity x :*: (s :*:) . extract
+	access = P_Q_T ! \(s :*: x) -> Store ! Identity x :*: (s :*:) . extract
 
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @b . access @a
@@ -99,30 +99,30 @@ instance {-# OVERLAPS #-} (Accessible a s, Accessible b s) => Accessible (a :*: 
 	access = mult @(-->) @(:*:) @(:*:) ! (access @a :*: access @b)
 
 instance Accessible a (Identity a) where
-	access = P_Q_T $ \(Identity x) -> Store $ Identity x :*: identity
+	access = P_Q_T ! \(Identity x) -> Store ! Identity x :*: identity
 
 instance Possible a (Maybe a) where
-	perhaps = P_Q_T $ \x -> Store $ x :*: identity
+	perhaps = P_Q_T ! \x -> Store ! x :*: identity
 
 instance Accessible target source => Possible target (Maybe source) where
-	perhaps = let lst = access @target @source in P_Q_T $ \case
+	perhaps = let lst = access @target @source in P_Q_T ! \case
 		Just source -> let (Identity target :*: its) = run (lst ! source) in
-			Store $ Just target :*: (its . Identity <-|-)
-		Nothing -> Store $ Nothing :*: \_ -> Nothing
+			Store ! Just target :*: (its . Identity <-|-)
+		Nothing -> Store ! Nothing :*: \_ -> Nothing
 
 instance Accessible (Maybe target) source => Possible target source where
-	perhaps = let lst = access @(Maybe target) @source in P_Q_T $ \source ->
+	perhaps = let lst = access @(Maybe target) @source in P_Q_T ! \source ->
 		let target :*: imts = run (lst ! source) in
-			Store $ extract target :*: imts . Identity
+			Store ! extract target :*: imts . Identity
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
 	type Available Left (t <:.:> t := (:*:)) = Identity
 	type Substance Left (t <:.:> t := (:*:)) = t
-	substructure = P_Q_T $ \x -> case run # lower x of
-		ls :*: rs -> Store $ Identity ls :*: lift . (twosome % rs) . extract
+	substructure = P_Q_T ! \x -> case run # lower x of
+		ls :*: rs -> Store ! Identity ls :*: lift . (twosome % rs) . extract
 
 instance (Covariant (->) (->) t) => Substructure Right (t <:.:> t := (:*:)) where
 	type Available Right (t <:.:> t := (:*:)) = Identity
 	type Substance Right (t <:.:> t := (:*:)) = t
-	substructure = P_Q_T $ \x -> case run # lower x of
-		ls :*: rs -> Store $ Identity rs :*: lift . (twosome ls) . extract
+	substructure = P_Q_T ! \x -> case run # lower x of
+		ls :*: rs -> Store ! Identity rs :*: lift . (twosome ls) . extract
