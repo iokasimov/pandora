@@ -4,11 +4,12 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
+import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
-infixl 1 !
+infixl 0 !
 infixr 2 ||=, =||
 
 type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
@@ -65,3 +66,8 @@ instance Interpreted (->) (Straight v e) where
 	type Primary (Straight v e) a = v e a
 	run ~(Straight x) = x
 	unite = Straight
+
+instance Interpreted (->) ((->) e) where
+	type Primary ((->) e) a = e -> a
+	run = identity
+	unite = identity

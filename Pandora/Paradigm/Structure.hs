@@ -106,13 +106,13 @@ instance Possible a (Maybe a) where
 
 instance Accessible target source => Possible target (Maybe source) where
 	perhaps = let lst = access @target @source in P_Q_T $ \case
-		Just source -> let (Identity target :*: its) = run $ lst ! source in
+		Just source -> let (Identity target :*: its) = run (lst ! source) in
 			Store $ Just target :*: (its . Identity <-|-)
 		Nothing -> Store $ Nothing :*: \_ -> Nothing
 
 instance Accessible (Maybe target) source => Possible target source where
 	perhaps = let lst = access @(Maybe target) @source in P_Q_T $ \source ->
-		let target :*: imts = run $ lst ! source in
+		let target :*: imts = run (lst ! source) in
 			Store $ extract target :*: imts . Identity
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where

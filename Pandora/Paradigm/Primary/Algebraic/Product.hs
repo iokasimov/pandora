@@ -20,7 +20,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
-infixr 0 :*:
+infixr 1 :*:
 
 data (:*:) s a = s :*: a
 

@@ -38,8 +38,7 @@ instance Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap
 	mult = Straight $ \(Tap x xs :*: Tap y ys) -> Tap # (x :*: y) # (mult @(-->) ! (xs :*: ys))
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
-	mult = Flip $ \(Tap (x :*: y) xys) ->
-		(Tap x <-> Tap y) $ mult @(<--) ! xys
+	mult = Flip $ \(Tap (x :*: y) xys) -> (Tap x <-> Tap y) (mult @(<--) ! xys)
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Tap t) where
 	unit _ = Flip $ \(Tap x _) -> Straight (\_ -> x)

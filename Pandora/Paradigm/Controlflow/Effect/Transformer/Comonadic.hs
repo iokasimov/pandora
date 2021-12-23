@@ -32,7 +32,7 @@ instance Covariant (->) (->) (Schematic Comonad t u) => Covariant (->) (->) (t :
 	f <-|- TC x = TC $ f <-|- x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (-->) (:*:) (:*:) (t :< u) where
-	mult = Straight $ \(TC f :*: TC x) -> TC $ mult @(-->) @(:*:) @(:*:) ! (f :*: x)
+	mult = Straight $ \(TC f :*: TC x) -> TC (mult @(-->) @(:*:) @(:*:) ! f :*: x)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Schematic Comonad t u) => Monoidal (-->) (-->) (:*:) (:*:) (t :< u) where
 	unit _ = Straight $ TC . point . ($ One) . run
