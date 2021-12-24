@@ -95,8 +95,9 @@ instance Accessible a (s :*: a) where
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @b . access @a
 
-instance {-# OVERLAPS #-} (Accessible a s, Accessible b s) => Accessible (a :*: b) s where
-	access = mult @(-->) @(:*:) @(:*:) ! (access @a :*: access @b)
+-- TODO: Causes overlapping instances error when target is (a :*: b), it's better to use some wrapper instead
+-- instance {-# OVERLAPS #-} (Accessible a s, Accessible b s) => Accessible (a :*: b) s where
+	-- access = mult @(-->) @(:*:) @(:*:) ! (access @a :*: access @b)
 
 instance Accessible a (Identity a) where
 	access = P_Q_T ! \(Identity x) -> Store ! Identity x :*: identity
