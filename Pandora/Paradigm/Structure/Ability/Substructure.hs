@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Ability.Substructure where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category ((!), identity)
+import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -18,6 +18,7 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 data Segment a = Root a | Tail a
 

@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Wye where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category ((#), (!))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -10,6 +10,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 data Wye a = End | Left a | Right a | Both a a
 

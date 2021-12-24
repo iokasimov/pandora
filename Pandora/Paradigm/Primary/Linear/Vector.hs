@@ -1,9 +1,8 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Primary.Linear.Vector where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((!), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -18,6 +17,7 @@ import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Push), premorph, into, item)
 import Pandora.Paradigm.Structure.Some.List (List)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 data Vector r a where
 	Scalar :: a -> Vector a a

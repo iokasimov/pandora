@@ -1,11 +1,12 @@
 module Pandora.Paradigm.Primary.Functor.These where
 
-import Pandora.Pattern.Category ((!), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 data These e a = This a | That e | These e a
 

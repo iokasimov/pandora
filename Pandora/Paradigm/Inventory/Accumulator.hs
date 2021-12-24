@@ -1,10 +1,9 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, gather) where
 
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((!), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -14,7 +13,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic (point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
@@ -29,7 +28,7 @@ instance Semigroup e => Semimonoidal (-->) (:*:) (:*:) (Accumulator e) where
 		k ~(ex :*: x') ~(ey :*: y') = ex + ey :*: x' :*: y'
 
 instance Semigroup e => Bindable (->) (Accumulator e) where
-	f =<< Accumulator (e :*: x) = let e' :*: b = run ! f x in
+	f =<< Accumulator (e :*: x) = let e' :*: b = run @(->) ! f x in
 		Accumulator ! e + e':*: b
 
 type instance Schematic Monad (Accumulator e) = (<.:>) ((:*:) e)

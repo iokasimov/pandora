@@ -1,10 +1,9 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (~>), type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((!), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable ((=<<))
@@ -25,7 +24,7 @@ import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=||))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (=||))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (over, view)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -54,11 +53,11 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
 instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
 	morphing binary = case run # premorph binary of
-		Nothing -> T_U ! \(T_U (Identity x :*: _)) -> lift ! leaf x
-		Just non_empty_binary -> T_U ! \(T_U (Identity x :*: Convergence f)) ->
+		Nothing -> T_U ! \(T_U (Identity x :*: _)) -> lift # leaf x
+		Just non_empty_binary -> T_U ! \(T_U (Identity x :*: Convergence f)) -> lift @(->) !
 			let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
 			let change = Just . resolve continue (leaf x) in
-			lift ! f x # extract non_empty_binary & order # non_empty_binary
+			f x # extract non_empty_binary & order # non_empty_binary
 				# over (sub @Left) change non_empty_binary
 				# over (sub @Right) change non_empty_binary
 
@@ -181,12 +180,12 @@ instance Morphable (Rotate Up) ((Identity <:.:> Wye <::> Construction Wye := (:*
 		= Maybe <::> ((Identity <:.:> Wye <::> Construction Wye := (:*:)) <:.:> Bifurcation <::> Bicursor := (:*:))
 	morphing zipper = case run # premorph zipper of
 		focused :*: TT (TT (Rightward (Construct (T_U (Identity parent :*: rest)) next))) ->
-			lift . twosome % TT (TT next) ! twosome # Identity parent ! TT ! resolve
+			lift @(->) . (twosome % TT (TT next)) . twosome (Identity parent) . TT ! resolve
 				# Both (_focused_part_to_nonempty_binary_tree focused)
 				# Left (_focused_part_to_nonempty_binary_tree focused)
 				# run rest
 		focused :*: TT (TT (Leftward (Construct (T_U (Identity parent :*: rest)) next))) ->
-			lift . twosome % TT (TT next) ! twosome # Identity parent ! TT ! resolve
+			lift @(->) . (twosome % TT (TT next)) . twosome (Identity parent) . TT ! resolve
 				# Both % _focused_part_to_nonempty_binary_tree focused
 				# Right (_focused_part_to_nonempty_binary_tree focused)
 				# run rest

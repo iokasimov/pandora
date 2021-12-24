@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Some.List where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((!), (#), identity)
+import Pandora.Pattern.Category ((#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -30,7 +30,7 @@ import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Inventory.State (State, fold, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (Convex, Lens, view)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
@@ -80,15 +80,16 @@ instance Morphable (Delete First) List where
 	type Morphing (Delete First) List = Predicate <:.:> List := (->)
 	morphing list = case run # premorph list of
 		Nothing -> T_U ! \_ -> TT Nothing
-		Just (Construct x xs) -> T_U ! \p -> run p x ? TT xs
-			! lift . Construct x . run . filter @First @List p ! TT xs
+		Just (Construct x xs) -> T_U ! \p -> 
+			run p x ? TT xs ! lift . Construct x . run . filter @First @List p # TT xs
 
 instance Morphable (Delete All) List where
 	type Morphing (Delete All) List = Predicate <:.:> List := (->)
 	morphing list = case run # premorph list of
 		Nothing -> T_U ! \_ -> TT Nothing
-		Just (Construct x xs) -> T_U ! \p -> run p x ? filter @All @List p (TT xs)
-			! lift . Construct x . run . filter @All @List p ! TT xs
+		Just (Construct x xs) -> T_U ! \p ->
+			run p x ? filter @All @List p (TT xs)
+				! lift . Construct x . run . filter @All @List p # TT xs
 
 instance Stack List where
 
@@ -145,13 +146,13 @@ instance Substructure Root (Construction Maybe) where
 	type Available Root (Construction Maybe) = Identity
 	type Substance Root (Construction Maybe) = Identity
 	substructure = imply @(Convex Lens _ _) (Identity . extract . lower)
-		(\source target -> lift ! Construct # extract target # deconstruct (lower source))
+		(\source target -> lift (Construct # extract target # deconstruct (lower source)))
 
 instance Substructure Tail (Construction Maybe) where
 	type Available Tail (Construction Maybe) = Identity
 	type Substance Tail (Construction Maybe) = List
 	substructure = imply @(Convex Lens _ _) (TT . deconstruct . lower)
-		(\source target -> lift ! Construct # extract (lower source) # run target)
+		(\source target -> lift (Construct # extract (lower source) # run target))
 
 ---------------------------------------- Combinative list ------------------------------------------
 

@@ -1,11 +1,10 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
-
 module Pandora.Paradigm.Structure.Some.Splay where
 
 import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((!), (#))
+import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Primary ()
@@ -15,7 +14,7 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Inventory.Optics (over)
 import Pandora.Paradigm.Schemes (TT (TT), type (<::>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate, into)
@@ -27,27 +26,27 @@ data Splay a = Zig a | Zag a
 
 instance Morphable (Rotate (Left Zig)) Binary where
 	type Morphing (Rotate (Left Zig)) Binary = Binary
-	morphing (premorph -> binary) = unite ! run . rotate @(Left Zig) =<< run binary
+	morphing (premorph -> binary) = TT ! run . rotate @(Left Zig) =<< run binary
 
 instance Morphable (Rotate (Right Zig)) Binary where
 	type Morphing (Rotate (Right Zig)) Binary = Binary
-	morphing (premorph -> binary) = unite ! run . rotate @(Right Zig) =<< run binary
+	morphing (premorph -> binary) = TT ! run . rotate @(Right Zig) =<< run binary
 
 instance Morphable (Rotate (Left (Zig Zig))) Binary where
 	type Morphing (Rotate (Left (Zig Zig))) Binary = Binary
-	morphing (premorph -> binary) = unite ! run . rotate @(Left (Zig Zig)) =<< run binary
+	morphing (premorph -> binary) = TT ! run . rotate @(Left (Zig Zig)) =<< run binary
 
 instance Morphable (Rotate (Right (Zig Zig))) Binary where
 	type Morphing (Rotate (Right (Zig Zig))) Binary = Binary
-	morphing (premorph -> binary) = unite ! run . rotate @(Right (Zig Zig)) =<< run binary
+	morphing (premorph -> binary) = TT ! run . rotate @(Right (Zig Zig)) =<< run binary
 
 instance Morphable (Rotate (Left (Zig Zag))) Binary where
 	type Morphing (Rotate (Left (Zig Zag))) Binary = Binary
-	morphing (premorph -> binary) = unite ! run . rotate @(Left (Zig Zag)) =<< run binary
+	morphing (premorph -> binary) = TT ! run . rotate @(Left (Zig Zag)) =<< run binary
 
 instance Morphable (Rotate (Right (Zig Zag))) Binary where
 	type Morphing (Rotate (Right (Zig Zag))) Binary = Binary
-	morphing (premorph -> binary) = unite ! run . rotate @(Right (Zig Zag)) =<< run binary
+	morphing (premorph -> binary) = TT ! run . rotate @(Right (Zig Zag)) =<< run binary
 
 -------------------------------------- Non-empty Splay tree ----------------------------------------
 

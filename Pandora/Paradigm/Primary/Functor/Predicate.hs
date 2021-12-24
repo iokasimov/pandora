@@ -2,7 +2,6 @@ module Pandora.Paradigm.Primary.Functor.Predicate where
 
 import Pandora.Core.Functor (type (~>), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((!))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -13,7 +12,7 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:)(Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), type (<--))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!)))
 
 newtype Predicate a = Predicate (a -> Boolean)
 

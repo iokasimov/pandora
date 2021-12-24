@@ -2,11 +2,11 @@
 
 module Pandora.Paradigm.Primary.Linear.Matrix where
 
-import Pandora.Pattern.Category ((!))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Linear.Vector (Vector)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 newtype Matrix i j a = Matrix (Vector i (Vector j a))
 

@@ -4,7 +4,6 @@ module Pandora.Paradigm.Structure.Interface.Set where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((!))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((!=)))
@@ -21,7 +20,7 @@ import Pandora.Paradigm.Primary.Object.Numerator (Numerator (Zero))
 import Pandora.Paradigm.Schemes.T_U (type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing), Morph (Find), find)
 import Pandora.Paradigm.Inventory.State (State, modify)
-import Pandora.Paradigm.Controlflow.Effect (run)
+import Pandora.Paradigm.Controlflow.Effect (run, (!))
 
 type Set t f a = (Traversable (->) (->) t, Setoid a, Setoid (t a), Morphable (Find f) t)
 
