@@ -11,6 +11,7 @@ import Pandora.Paradigm.Structure.Some as Exports
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((#), identity)
+import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -20,6 +21,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=), (!))
 import Pandora.Paradigm.Inventory.Optics ()
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
+import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
@@ -104,6 +106,11 @@ instance Accessible a (Identity a) where
 
 instance Possible a (Maybe a) where
 	perhaps = P_Q_T ! \x -> Store ! x :*: identity
+
+instance Possible a (o :+: a) where
+	perhaps = P_Q_T ! \case
+		Option s -> Store ! Nothing :*: resolve @a @(Maybe a) Adoption (Option s)
+		Adoption x -> Store ! Just x :*: resolve @a @(Maybe a) Adoption (Adoption x)
 
 instance Accessible target source => Possible target (Maybe source) where
 	perhaps = let lst = access @target @source in P_Q_T ! \case

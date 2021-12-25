@@ -9,9 +9,9 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 infixr 0 :+:
 
-data (:+:) s a = Option s | Adoption a
+data (:+:) o a = Option o | Adoption a
 
-instance Covariant (->) (->) ((:+:) s) where
+instance Covariant (->) (->) ((:+:) o) where
 	_ <-|- Option s = Option s
 	f <-|- Adoption x = Adoption ! f x
 
