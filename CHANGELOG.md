@@ -648,3 +648,5 @@
 * Change priority of `:*:` operator
 * Change priority of `!` operator
 * Remove `$` operator in favor of `!`
+
+# 0.5.0
