@@ -107,12 +107,12 @@ instance Accessible a (Identity a) where
 instance Possible a (Maybe a) where
 	perhaps = P_Q_T ! \x -> Store ! x :*: identity
 
-instance Possible a (o :+: a) where
+instance {-# OVERLAPS #-} Possible a (o :+: a) where
 	perhaps = P_Q_T ! \case
 		Option s -> Store ! Nothing :*: resolve @a @(Maybe a) Adoption (Option s)
 		Adoption x -> Store ! Just x :*: resolve @a @(Maybe a) Adoption (Adoption x)
 
-instance Possible o (o :+: a) where
+instance {-# OVERLAPS #-} Possible o (o :+: a) where
 	perhaps = P_Q_T ! \case
 		Option s -> Store ! Just s :*: resolve @o @(Maybe o) Option (Option s)
 		Adoption x -> Store ! Nothing :*: resolve @o @(Maybe o) Option (Adoption x)
@@ -123,11 +123,10 @@ instance Accessible target source => Possible target (Maybe source) where
 			Store ! Just target :*: (its . Identity <-|-)
 		Nothing -> Store ! Nothing :*: \_ -> Nothing
 
--- TODO: Causes overlapping instandes error
--- instance Accessible (Maybe target) source => Possible target source where
-	-- perhaps = let lst = access @(Maybe target) @source in P_Q_T ! \source ->
-		-- let target :*: imts = run (lst ! source) in
-			-- Store ! extract target :*: imts . Identity
+instance Accessible (Maybe target) source => Possible target source where
+	perhaps = let lst = access @(Maybe target) @source in P_Q_T ! \source ->
+		let target :*: imts = run (lst ! source) in
+			Store ! extract target :*: imts . Identity
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
 	type Available Left (t <:.:> t := (:*:)) = Identity
