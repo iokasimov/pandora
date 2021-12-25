@@ -123,10 +123,11 @@ instance Accessible target source => Possible target (Maybe source) where
 			Store ! Just target :*: (its . Identity <-|-)
 		Nothing -> Store ! Nothing :*: \_ -> Nothing
 
-instance Accessible (Maybe target) source => Possible target source where
-	perhaps = let lst = access @(Maybe target) @source in P_Q_T ! \source ->
-		let target :*: imts = run (lst ! source) in
-			Store ! extract target :*: imts . Identity
+-- TODO: Causes overlapping instandes error
+-- instance Accessible (Maybe target) source => Possible target source where
+	-- perhaps = let lst = access @(Maybe target) @source in P_Q_T ! \source ->
+		-- let target :*: imts = run (lst ! source) in
+			-- Store ! extract target :*: imts . Identity
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
 	type Available Left (t <:.:> t := (:*:)) = Identity
