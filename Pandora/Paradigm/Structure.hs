@@ -112,6 +112,11 @@ instance Possible a (o :+: a) where
 		Option s -> Store ! Nothing :*: resolve @a @(Maybe a) Adoption (Option s)
 		Adoption x -> Store ! Just x :*: resolve @a @(Maybe a) Adoption (Adoption x)
 
+instance Possible o (o :+: a) where
+	perhaps = P_Q_T ! \case
+		Option s -> Store ! Just s :*: resolve @o @(Maybe o) Option (Option s)
+		Adoption x -> Store ! Nothing :*: resolve @o @(Maybe o) Option (Adoption x)
+
 instance Accessible target source => Possible target (Maybe source) where
 	perhaps = let lst = access @target @source in P_Q_T ! \case
 		Just source -> let (Identity target :*: its) = run (lst ! source) in
