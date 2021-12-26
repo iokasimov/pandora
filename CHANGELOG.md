@@ -650,3 +650,4 @@
 * Remove `$` operator in favor of `!`
 
 0.5.0
+* Define experimental `<-|-<-|-` and `<-|->-|-` methods

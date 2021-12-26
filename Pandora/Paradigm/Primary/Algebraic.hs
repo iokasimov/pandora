@@ -13,13 +13,14 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-), (<-|-|-|-))
+import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((!), (=||)))
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
@@ -137,3 +138,13 @@ empty = unit @(-->) Proxy ! Straight absurd
 
 --instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
 --	f ! (x :*: y) = f x ! y
+
+(<-|-<-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
+	(Covariant m m (p a), Covariant m m (Flip p d), Interpreted m (Flip p d))
+	=> m a b :*: m c d -> m (p a c) (p b d)
+(<-|-<-|-) (f :*: g) = (=||) @m @(Flip p d) ((<-|-) f) . ((<-|-) g)
+
+(<-|->-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
+	(Contravariant m m (p a), Covariant m m (Flip p c), Interpreted m (Flip p c))
+	=> m a b :*: m c d -> m (p a d) (p b c)
+(<-|->-|-) (f :*: g) = (=||) @m @(Flip p c) ((<-|-) f) . ((>-|-) g)
