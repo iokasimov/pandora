@@ -22,7 +22,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption), sum)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (empty, point, extract)
+import Pandora.Paradigm.Primary.Algebraic (empty, point, extract, (<-|-<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
@@ -44,7 +44,7 @@ instance (Semigroupoid m, Covariant m m t, Covariant (Betwixt m m) m t, Covarian
 	(<-|-) f = (||=) ((<-|-|-) f)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.> u) where
-	mult = Straight ! TU . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run @(->) <-> run @(->))
+	mult = Straight ! TU . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run :*: run <-|-<-|-)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) u) => Monoidal (-->) (-->) (:*:) (:*:) (t <:.> u) where
 	unit _ = Straight ! TU . point . point . (! One) . run

@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (.-*-), (<-*-*-), (.-*-*-), forever_, (<-+-), (-+-), void, empty, point, pass, extract) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (.-*-), (<-*-*-), (.-*-*-), forever_, (<-+-), (-+-), void, empty, point, pass, extract, (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -28,6 +28,7 @@ type instance Unit (:+:) = Zero
 infixl 4 <-*-, .-*-
 infixl 3 <-*-*-, .-*-*-
 infixl 3 <-+-, -+-
+infixl 0 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
 (!>-) :: Covariant (->) (->) t => t a -> b -> t b
 x !>- r = constant r <-|- x
@@ -145,6 +146,16 @@ empty = unit @(-->) Proxy ! Straight absurd
 (<-|-<-|-) (f :*: g) = (=||) @m @(Flip p d) ((<-|-) f) . ((<-|-) g)
 
 (<-|->-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
-	(Contravariant m m (p a), Covariant m m (Flip p c), Interpreted m (Flip p c))
+	(Covariant m m (Flip p c), Contravariant m m (p a), Interpreted m (Flip p c))
 	=> m a b :*: m c d -> m (p a d) (p b c)
 (<-|->-|-) (f :*: g) = (=||) @m @(Flip p c) ((<-|-) f) . ((>-|-) g)
+
+(>-|-<-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
+	(Contravariant m m (Flip p d), Covariant m m (p b), Interpreted m (Flip p d))
+	=> m a b :*: m c d -> m (p b c) (p a d)
+(>-|-<-|-) (f :*: g) = (=||) @m @(Flip p d) ((>-|-) f) . ((<-|-) g)
+
+(>-|->-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
+	(Contravariant m m (p b), Contravariant m m (Flip p c), Interpreted m (Flip p c))
+	=> m a b :*: m c d -> m (p b d) (p a c)
+(>-|->-|-) (f :*: g) = (=||) @m @(Flip p c) ((>-|-) f) . ((>-|-) g)
