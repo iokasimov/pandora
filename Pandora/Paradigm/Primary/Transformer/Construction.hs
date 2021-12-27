@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (empty)
+import Pandora.Paradigm.Primary.Algebraic (empty, (<-|-<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
@@ -41,7 +41,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoid
 	mult = Straight ! \(Construct x xs :*: Construct y ys) -> Construct # (x :*: y) # (mult @(-->) !) <-|- (mult @(-->) ! (xs :*: ys))
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
-	mult = Flip ! \(Construct (x :*: y) xys) -> (Construct x <-> Construct y)
+	mult = Flip ! \(Construct (x :*: y) xys) -> (Construct x :*: Construct y <-|-<-|-)
 		. (mult @(<--) !) ! (mult @(<--) !) <-|- xys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Construction t) where

@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point, extract)
+import Pandora.Paradigm.Primary.Algebraic (point, extract, (<-|-<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!), (||=)))
@@ -50,7 +50,7 @@ instance (Adjoint (->) (->) t' t, Bindable (->) u) => Semimonoidal (-->) (:*:) (
 	mult = Straight ! \(TUT x :*: TUT y) -> TUT ((((\r -> (<-|-|-|-) (r :*:) y) |-) =<<) <-|- x)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
-	mult = Flip ! (TUT <-> TUT) . (mult @(<--) !) . (<-|-) (mult @(<--) !) . (<-|-|-) @_ @(->) (mult @(<--) !) . run
+	mult = Flip ! (TUT :*: TUT <-|-<-|-) . (mult @(<--) !) . (<-|-) (mult @(<--) !) . (<-|-|-) @_ @(->) (mult @(<--) !) . run
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (-->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Flip ! \(TUT xys) -> Straight (\_ -> (extract |-) xys)

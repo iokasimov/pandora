@@ -8,6 +8,7 @@ import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
 import Pandora.Paradigm.Primary.Algebraic.Zero as Exports
 import Pandora.Paradigm.Primary.Algebraic.One as Exports
 
+import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
@@ -20,6 +21,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((!), (=||)))
 
 type instance Unit (:*:) = One
@@ -41,6 +43,12 @@ x !!!>- r = constant r <-|-|-|- x
 
 void :: Covariant (->) (->) t => t a -> t ()
 void x = x !>- ()
+
+instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
+	mult = Flip ! \(T_U lrxys) ->
+		-- TODO: I need matrix transposing here
+		let ((lxs :*: lys) :*: (rxs :*: rys)) = ((mult @(<--) !) :*: (mult @(<--) !) <-|-<-|-) lrxys in
+		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
 instance Traversable (->) (->) ((:*:) s) where
 	f <<- x = (attached x :*:) <-|- f (extract x)

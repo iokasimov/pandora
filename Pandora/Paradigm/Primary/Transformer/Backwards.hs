@@ -16,7 +16,7 @@ import Pandora.Paradigm.Primary.Algebraic ((<-*-))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point, extract)
+import Pandora.Paradigm.Primary.Algebraic (point, extract, (<-|-<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!)))
@@ -34,7 +34,7 @@ instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal
 	unit _ = Straight ! Backwards . point . (! One) . run
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Backwards t) where
-	mult = Flip ! (Backwards <-> Backwards) . run (mult @(<--)) . run
+	mult = Flip ! (Backwards :*: Backwards <-|-<-|-) . run (mult @(<--)) . run
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Backwards t) where
 	unit _ = Flip ! \(Backwards x) -> Straight (\_ -> extract x)

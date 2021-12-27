@@ -19,14 +19,16 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), (-.#..-), extract, point, empty)
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
+import Pandora.Paradigm.Primary.Algebraic ((<-|-<-|-))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
+import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Inventory.State (State, fold, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (Convex, Lens, view)
@@ -221,13 +223,13 @@ instance Morphable (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) (
 instance Morphable (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) where
 	type Morphing (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) =
 		Identity <:.:> (List <:.:> List := (:*:)) := (:*:)
-	morphing (premorph -> zipper) = ((lift @(->) <-> lift @(->) ||=) <-|-) ||= zipper
+	morphing (premorph -> zipper) = (((lift :*: lift <-|-<-|-) ||=) <-|-) ||= zipper
 
 instance Morphable (Into (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:))) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) where
 	type Morphing (Into (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:))) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) =
 		Maybe <::> (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:))
 	morphing (premorph -> zipper) = let spread x y = (:*:) <-|- x <-*- y in
-		TT ! T_U . (Identity (extract zipper) :*:) . T_U <-|- ((spread |-) . (run @(->) <-> run @(->)) . run . extract ! run zipper)
+		TT ! T_U . (Identity (extract zipper) :*:) . T_U <-|- ((spread |-) . (run :*: run <-|-<-|-) . run . extract ! run zipper)
 
 instance Morphable (Into (Construction Maybe)) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) where
 	type Morphing (Into (Construction Maybe)) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) = Construction Maybe

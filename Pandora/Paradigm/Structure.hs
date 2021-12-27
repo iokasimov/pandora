@@ -20,7 +20,7 @@ import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (||=), (!))
 import Pandora.Paradigm.Inventory.Optics ()
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached, twosome)
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic (extract)
@@ -30,9 +30,12 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
+import Pandora.Paradigm.Primary.Linear.Vector (Vector (Scalar, Vector))
+import Pandora.Paradigm.Primary (twosome)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
+import Pandora.Paradigm.Schemes.TT (TT (TT))
 import Pandora.Paradigm.Schemes.T_U ( type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 
@@ -139,3 +142,13 @@ instance (Covariant (->) (->) t) => Substructure Right (t <:.:> t := (:*:)) wher
 	type Substance Right (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T ! \x -> case run # lower x of
 		ls :*: rs -> Store ! Identity rs :*: lift . (twosome ls) . extract
+
+instance Morphable (Into List) (Vector r) where
+	type Morphing (Into List) (Vector r) = List
+	morphing (premorph -> Scalar x) = TT . Just ! Construct x Nothing
+	morphing (premorph -> Vector x xs) = item @Push x ! into @List xs
+
+instance Morphable (Into (Construction Maybe)) (Vector r) where
+	type Morphing (Into (Construction Maybe)) (Vector r) = Construction Maybe
+	morphing (premorph -> Scalar x) = Construct x Nothing
+	morphing (premorph -> Vector x xs) = item @Push x ! into @(Nonempty List) xs

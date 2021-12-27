@@ -56,7 +56,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:)
 	unit _ = Straight ! \_ -> TU empty
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.> u) where
-	mult = Flip ! \(TU xys) -> (TU <-> TU) . (mult @(<--) !) ! (mult @(<--) !) <-|- xys
+	mult = Flip ! \(TU xys) -> (TU :*: TU <-|-<-|-) . (mult @(<--) !) ! (mult @(<--) !) <-|- xys
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<--) (-->) (:*:) (:*:) u) => Monoidal (<--) (-->) (:*:) (:*:) (t <:.> u) where
 	unit _ = Flip ! \(TU x) -> Straight (\_ -> extract ! extract x)

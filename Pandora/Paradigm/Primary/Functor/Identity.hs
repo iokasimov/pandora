@@ -26,7 +26,7 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (extract)
+import Pandora.Paradigm.Primary.Algebraic (extract, (<-|-<-|-))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 
 newtype Identity a = Identity a
@@ -35,7 +35,7 @@ instance Covariant (->) (->) Identity where
 	f <-|- Identity x = Identity ! f x
 
 instance Semimonoidal (-->) (:*:) (:*:) Identity where
-	mult = Straight ! Identity . (extract <-> extract)
+	mult = Straight ! Identity . (extract :*: extract <-|-<-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) Identity where
 	unit _ = Straight ! Identity . (! One) . run

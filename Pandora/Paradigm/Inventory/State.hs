@@ -24,7 +24,7 @@ import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (.-*-), delta)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (Pointable, point)
+import Pandora.Paradigm.Primary.Algebraic (Pointable, point, (<-|-<-|-))
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
@@ -47,7 +47,7 @@ instance Bindable (->) (State s) where
 instance Monad (->) (State s) where
 
 instance Invariant (Flip State r) where
-	f <!< g = ((g >-> ((<->) @_ @(->) @(->) f identity) ||=) ||=)
+	f <!< g = ((g >-> (f :*: identity <-|-<-|-) ||=) ||=)
 
 instance Interpreted (->) (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a

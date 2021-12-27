@@ -5,7 +5,6 @@ import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
-import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -17,7 +16,6 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 infixr 1 :*:
@@ -32,9 +30,6 @@ instance Covariant (->) (->) (Flip (:*:) a) where
 
 instance Extendable (->) ((:*:) s) where
 	f <<= ~(s :*: x) = s :*: f (s :*: x)
-
-instance Bivariant (->) (->) (->) (:*:) where
-	f <-> g = \ ~(s :*: x) -> f s :*: g x
 
 instance (Setoid s, Setoid a) => Setoid (s :*: a) where
 	~(sx :*: x) == ~(sy :*: y) = (sx == sy) * (x == y)
@@ -62,16 +57,6 @@ instance (Lattice s, Lattice a) => Lattice (s :*: a) where
 instance (Group s, Group a) => Group (s :*: a) where
 	invert ~(s :*: x) = invert # s :*: invert # x
 
-instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.:> u := (:*:)) where
-	mult = Straight ! \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U ! (mult @(-->) !) (xls :*: yls) :*: (mult @(-->) !) (xrs :*: yrs)
-
--- TODO: Generalize (:*:) as Bivariant p
-instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
-	mult = Flip ! \(T_U lrxys) ->
-		-- TODO: I need matrix transposing here
-		let ((lxs :*: lys) :*: (rxs :*: rys)) = ((mult @(<--) !) <-> (mult @(<--) !)) lrxys in
-		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
-
 delta :: a -> a :*: a
 delta x = x :*: x
 
@@ -80,6 +65,3 @@ swap ~(x :*: y) = y :*: x
 
 attached :: a :*: b -> a
 attached ~(x :*: _) = x
-
-twosome :: t a -> u a -> (<:.:>) t u (:*:) a
-twosome x y = T_U ! x :*: y

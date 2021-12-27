@@ -16,7 +16,6 @@ import Pandora.Paradigm.Schemes.TT (TT (TT))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Push), premorph, into, item)
-import Pandora.Paradigm.Structure.Some.List (List)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 data Vector r a where
@@ -64,17 +63,6 @@ instance Monotonic a (Vector a a) where
 
 instance Monotonic a (Vector r a) => Monotonic a (Vector (a :*: r) a) where
 	reduce f r (Vector x xs) = reduce f # f x r # xs
-
--- TODO: move these instances to somewhere else since they involve structures
-instance Morphable (Into List) (Vector r) where
-	type Morphing (Into List) (Vector r) = List
-	morphing (premorph -> Scalar x) = TT . Just ! Construct x Nothing
-	morphing (premorph -> Vector x xs) = item @Push x ! into @List xs
-
-instance Morphable (Into (Construction Maybe)) (Vector r) where
-	type Morphing (Into (Construction Maybe)) (Vector r) = Construction Maybe
-	morphing (premorph -> Scalar x) = Construct x Nothing
-	morphing (premorph -> Vector x xs) = item @Push x ! into @(Nonempty List) xs
 
 class Vectorize a r where
 	vectorize :: r -> Vector r a

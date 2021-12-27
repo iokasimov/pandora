@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary (module Exports) where
+module Pandora.Paradigm.Primary (module Exports, twosome) where
 
 import Pandora.Paradigm.Primary.Linear as Exports
 import Pandora.Paradigm.Primary.Transformer as Exports
@@ -9,17 +9,19 @@ import Pandora.Paradigm.Primary.Object as Exports
 import Pandora.Paradigm.Primary.Algebraic as Exports
 
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
+import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
@@ -104,3 +106,9 @@ instance Substructure Right Wye where
 		Left x -> Store ! Nothing :*: lift . constant (Left x) . (extract <-|-)
 		Right y -> Store ! Just (Identity y) :*: lift . resolve Right End . (extract <-|-)
 		Both x y -> Store ! Just (Identity y) :*: lift . resolve (Both x) (Left x) . (extract <-|-)
+
+instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.:> u := (:*:)) where
+	mult = Straight ! \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U ! (mult @(-->) !) (xls :*: yls) :*: (mult @(-->) !) (xrs :*: yrs)
+
+twosome :: t a -> u a -> (<:.:>) t u (:*:) a
+twosome x y = T_U ! x :*: y
