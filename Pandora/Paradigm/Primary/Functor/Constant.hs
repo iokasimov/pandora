@@ -4,7 +4,6 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
-import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -31,9 +30,6 @@ instance Contravariant (->) (->) (Constant a) where
 
 instance Invariant (Constant a) where
 	_ <!< _ = \(Constant x) -> Constant x
-
-instance Bivariant (->) (->) (->) Constant where
-	f <-> _ = \(Constant x) -> Constant ! f x
 
 instance Setoid a => Setoid (Constant a b) where
 	Constant x == Constant y = x == y

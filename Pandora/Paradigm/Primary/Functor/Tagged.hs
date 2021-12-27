@@ -13,7 +13,6 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -67,9 +66,6 @@ instance Extendable (->) (Tagged tag) where
 	f <<= x = Tag . f ! x
 
 instance Comonad (->) (Tagged tag)
-
-instance Bivariant (->) (->) (->) Tagged where
-	_ <-> g = \(Tag x) -> Tag ! g x
 
 instance Setoid a => Setoid (Tagged tag a) where
 	Tag x == Tag y = x == y

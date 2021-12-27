@@ -651,3 +651,5 @@
 
 0.5.0
 * Define experimental `<-|-<-|-`, `<-|->-|-`, `>-|->-|-`, `>-|-<-|-` methods
+* Define `>-|-|-` method in `Contravariant` typeclass
+* Remove `Bivariant` typeclass

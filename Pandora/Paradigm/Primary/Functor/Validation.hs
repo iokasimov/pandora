@@ -6,7 +6,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bivariant (Bivariant ((<->)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -57,9 +56,6 @@ instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Validation e) where
 instance Traversable (->) (->) (Validation e) where
 	f <<- Validated x = Validated <-|- f x
 	_ <<- Flaws e = point ! Flaws e
-
-instance Bivariant (->) (->) (->) Validation where
-	f <-> g = validation # Flaws . f # Validated . g
 
 instance (Setoid e, Setoid a) => Setoid (Validation e a) where
 	Validated x == Validated y = x == y
