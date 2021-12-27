@@ -156,7 +156,6 @@ library
     Pandora.Pattern.Functor.Monad
     Pandora.Pattern.Functor.Representable
     Pandora.Pattern.Functor.Traversable
-    Pandora.Pattern.Functor.Divariant
     -- Typeclassess about object internals
     Pandora.Pattern.Object
     Pandora.Pattern.Object.Setoid

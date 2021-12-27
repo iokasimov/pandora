@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Primary.Algebraic.Exponential where
 
 import Pandora.Pattern.Betwixt (Betwixt)
@@ -10,7 +9,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Divariant (Divariant ((>->)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -39,9 +37,6 @@ instance Distributive (->) (->) ((->) e) where
 
 instance Bindable (->) ((->) e) where
 	f =<< g = \x -> f # g x # x
-
-instance Divariant ((->)) (->) (->) (->) where
-	(>->) ab cd bc = cd . bc . ab
 
 instance Semigroup r => Semigroup (e -> r) where
 	f + g = \e -> f e + g e

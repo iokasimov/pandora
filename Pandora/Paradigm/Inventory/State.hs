@@ -15,7 +15,6 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
-import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=), (!)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -23,7 +22,7 @@ import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (.-*-), delta)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (Pointable, point, (<-|-<-|-))
+import Pandora.Paradigm.Primary.Algebraic (Pointable, point, (<-|-<-|-), (>-|-<-|-))
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s := a)
@@ -46,7 +45,7 @@ instance Bindable (->) (State s) where
 instance Monad (->) (State s) where
 
 instance Invariant (Flip State r) where
-	f <!< g = ((g >-> (f :*: identity <-|-<-|-) ||=) ||=)
+	f <!< g = (((g :*: (f :*: identity <-|-<-|-) >-|-<-|-) ||=) ||=)
 
 instance Interpreted (->) (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a

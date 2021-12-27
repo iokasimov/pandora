@@ -9,14 +9,13 @@ import Pandora.Pattern.Category (Category (identity, (#)))
 import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
-import Pandora.Pattern.Functor.Divariant ((>->))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (!)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
-import Pandora.Paradigm.Primary.Algebraic (extract)
+import Pandora.Paradigm.Primary.Algebraic (extract, (>-|-<-|-))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -31,7 +30,7 @@ infixl 2 #=@
 type Lens = P_Q_T (->) Store
 
 instance Invariant (Flip (Lens available) tgt) where
-	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T ! g >-> (f <-|-) # lens
+	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T ! (g :*: (f <-|-) >-|-<-|-) lens
 
 type family Convex lens where
 	Convex Lens = Lens Identity
