@@ -37,7 +37,7 @@ import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
-import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Zipper)
+import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Zipper, Tape)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
@@ -60,7 +60,7 @@ instance Semigroup (List a) where
 		! TT @Covariant @Covariant xs + TT @Covariant @Covariant ys
 
 instance Monoid (List a) where
-	zero = TT Nothing
+	zero = empty
 
 instance Morphable Push List where
 	type Morphing Push List = Identity <:.:> List := (->)
@@ -80,14 +80,14 @@ instance Morphable (Find Element) List where
 instance Morphable (Delete First) List where
 	type Morphing (Delete First) List = Predicate <:.:> List := (->)
 	morphing list = case run # premorph list of
-		Nothing -> T_U ! \_ -> TT Nothing
+		Nothing -> T_U ! \_ -> empty
 		Just (Construct x xs) -> T_U ! \p -> 
 			run p x ? TT xs ! lift . Construct x . run . filter @First @List p # TT xs
 
 instance Morphable (Delete All) List where
 	type Morphing (Delete All) List = Predicate <:.:> List := (->)
 	morphing list = case run # premorph list of
-		Nothing -> T_U ! \_ -> TT Nothing
+		Nothing -> T_U ! \_ -> empty
 		Just (Construct x xs) -> T_U ! \p ->
 			run p x ? filter @All @List p (TT xs)
 				! lift . Construct x . run . filter @All @List p # TT xs
@@ -137,7 +137,7 @@ instance Morphable (Into List) (Construction Maybe <::> Maybe) where
 	morphing nonempty_list_with_maybe_elements = case run . premorph # nonempty_list_with_maybe_elements of
 		Construct (Just x) (Just xs) -> item @Push x # into @List (TT @Covariant @Covariant xs)
 		Construct (Just x) Nothing -> point x
-		Construct Nothing Nothing -> TT Nothing -- empty
+		Construct Nothing Nothing -> empty
 
 instance Morphable Push (Construction Maybe) where
 	type Morphing Push (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
@@ -164,38 +164,38 @@ type instance Combinative List = Comprehension Maybe
 instance Zippable List where
 	type Breadcrumbs List = (List <:.:> List := (:*:))
 
-instance {-# OVERLAPS #-} Traversable (->) (->) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) where
+instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 	f <<- T_U (Identity x :*: T_U (future :*: past)) = (\past' x' future' -> twosome (Identity x') ! twosome # future' # run past')
 		<-|- f <<- Reverse past <-*- f x <-*- f <<- future
 
-instance {-# OVERLAPS #-} Extendable (->) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) where
+instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
 	f <<= z = let move rtt = TT . deconstruct ! run . rtt .-+ z in
 		twosome (Identity # f z) ! twosome # f <-|- move (rotate @Left) # f <-|- move (rotate @Right)
 
-instance Morphable (Rotate Left) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) where
-	type Morphing (Rotate Left) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) = Maybe <::> (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))
+instance Morphable (Rotate Left) (Tape List) where
+	type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (future :*: past))) =
 		let subtree = twosome # extract (view (sub @Tail) future) # item @Push x past in
 		TT ! (twosome . Identity . extract) % subtree <-|- view (sub @Root) future
 
-instance Morphable (Rotate Right) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) where
-	type Morphing (Rotate Right) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) = Maybe <::> (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))
+instance Morphable (Rotate Right) (Tape List) where
+	type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (future :*: past))) =
 		let subtree = twosome # item @Push x future # extract (view (sub @Tail) past) in
 		TT ! (twosome . Identity . extract) % subtree <-|- view (sub @Root) past
 
-instance Morphable (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) List where
-	type Morphing (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) List = Maybe <::> (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))
+instance Morphable (Into (Tape List)) List where
+	type Morphing (Into (Tape List)) List = Maybe <::> Tape List
 	morphing (premorph -> list) = (into @(Zipper List) <-|-) ||= list
 
-instance Morphable (Into List) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) where
-	type Morphing (Into List) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) = List
+instance Morphable (Into List) (Tape List) where
+	type Morphing (Into List) (Tape List) = List
 	morphing (premorph -> T_U (Identity x :*: T_U (future :*: past))) = attached ! run @(->) @(State _)
 		# modify . item @Push @List <<- past
 		# item @Push x future
 
-instance Morphable (Into (Comprehension Maybe)) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) where
-	type Morphing (Into (Comprehension Maybe)) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) = Comprehension Maybe
+instance Morphable (Into (Comprehension Maybe)) (Tape List) where
+	type Morphing (Into (Comprehension Maybe)) (Tape List) = Comprehension Maybe
 	morphing (premorph -> T_U (Identity x :*: T_U (future :*: past))) = attached ! run @(->) @(State _)
 		# modify . item @Push @(Comprehension Maybe) <<- past
 		# item @Push x (Comprehension future)
@@ -205,39 +205,39 @@ instance Morphable (Into (Comprehension Maybe)) (Identity <:.:> (List <:.:> List
 instance Zippable (Construction Maybe) where
 	type Breadcrumbs (Construction Maybe) = (Construction Maybe <:.:> Construction Maybe := (:*:))
 
-instance Morphable (Rotate Left) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) where
-	type Morphing (Rotate Left) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) =
-		Maybe <::> (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:))
+instance Morphable (Rotate Left) (Tape (Construction Maybe)) where
+	type Morphing (Rotate Left) (Tape (Construction Maybe)) =
+		Maybe <::> (Tape (Construction Maybe))
 	morphing (premorph -> T_U (Identity x :*: T_U (future :*: past))) = TT ! T_U . (Identity (extract future) :*:) . twosome % item @Push x past <-|- deconstruct future
 
-instance Morphable (Rotate Right) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) where
-	type Morphing (Rotate Right) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) =
-		Maybe <::> (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:))
+instance Morphable (Rotate Right) (Tape (Construction Maybe)) where
+	type Morphing (Rotate Right) (Tape (Construction Maybe)) =
+		Maybe <::> (Tape (Construction Maybe))
 	morphing (premorph -> T_U (Identity x :*: T_U (future :*: past))) = TT ! T_U . (Identity (extract past) :*:) . twosome (item @Push x future) <-|- deconstruct past
 
-instance Morphable (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) (Construction Maybe) where
-	type Morphing (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) (Construction Maybe) = Identity <:.:> (List <:.:> List := (:*:)) := (:*:)
+instance Morphable (Into (Tape List)) (Construction Maybe) where
+	type Morphing (Into (Tape List)) (Construction Maybe) = Tape List
 	morphing (premorph -> ne) = twosome # Identity (extract ne) ! twosome # extract (view # sub @Tail # ne) # zero
 
-instance Morphable (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) where
-	type Morphing (Into (Identity <:.:> (List <:.:> List := (:*:)) := (:*:))) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) =
+instance Morphable (Into (Tape List)) (Tape (Construction Maybe)) where
+	type Morphing (Into (Tape List)) (Tape (Construction Maybe)) =
 		Identity <:.:> (List <:.:> List := (:*:)) := (:*:)
 	morphing (premorph -> zipper) = (((lift :*: lift <-|-<-|-) ||=) <-|-) ||= zipper
 
-instance Morphable (Into (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:))) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) where
-	type Morphing (Into (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:))) (Identity <:.:> (List <:.:> List := (:*:)) := (:*:)) =
-		Maybe <::> (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:))
+instance Morphable (Into (Tape (Construction Maybe))) (Tape List) where
+	type Morphing (Into (Tape (Construction Maybe))) (Tape List) =
+		Maybe <::> (Tape (Construction Maybe))
 	morphing (premorph -> zipper) = let spread x y = (:*:) <-|- x <-*- y in
 		TT ! T_U . (Identity (extract zipper) :*:) . T_U <-|- ((spread |-) . (run :*: run <-|-<-|-) . run . extract ! run zipper)
 
-instance Morphable (Into (Construction Maybe)) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) where
-	type Morphing (Into (Construction Maybe)) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) = Construction Maybe
+instance Morphable (Into (Construction Maybe)) (Tape (Construction Maybe)) where
+	type Morphing (Into (Construction Maybe)) (Tape (Construction Maybe)) = Construction Maybe
 	morphing (premorph -> T_U (Identity x :*: T_U (future :*: past))) = attached ! run @(->) @(State _)
 		# modify . item @Push @(Nonempty List) <<- past
 		# item @Push x future
 
-instance Morphable (Into List) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) where
-	type Morphing (Into List) (Identity <:.:> (Construction Maybe <:.:> Construction Maybe := (:*:)) := (:*:)) = List
+instance Morphable (Into List) (Tape (Construction Maybe)) where
+	type Morphing (Into List) (Tape (Construction Maybe)) = List
 	morphing (premorph -> T_U (Identity x :*: T_U (future :*: past))) = attached ! run @(->) @(State _)
 		# modify . item @Push @List <<- past
 		# item @Push x (lift future)
