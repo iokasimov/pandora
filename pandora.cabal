@@ -118,6 +118,7 @@ library
     Pandora.Paradigm.Structure.Modification.Combinative
     Pandora.Paradigm.Structure.Modification.Comprehension
     Pandora.Paradigm.Structure.Modification.Prefixed
+    Pandora.Paradigm.Structure.Modification.Round
     Pandora.Paradigm.Structure.Interface
     Pandora.Paradigm.Structure.Interface.Set
     Pandora.Paradigm.Structure.Interface.Dictionary
