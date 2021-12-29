@@ -655,3 +655,4 @@
 * Remove `Bivariant` typeclass
 * Remove `Divariant` typeclass
 * Define `Round` wrapper for data structures that can that can be rotated indefinitely
+* Wrap left part of `Tape` into `Reverse`
