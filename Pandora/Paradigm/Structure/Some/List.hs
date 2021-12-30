@@ -16,7 +16,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
-import Pandora.Paradigm.Primary.Algebraic ((<-*-), (-.#..-), extract, point, empty)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), (-+-), (-.#..-), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic ((<-|-<-|-))
@@ -46,6 +46,7 @@ import Pandora.Paradigm.Structure.Interface.Stack (Stack)
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
+import Pandora.Paradigm.Structure.Modification.Turnover (Turnover (Turnover))
 
 -- | Linear data structure that serves as a collection of elements
 type List = Maybe <::> Construction Maybe
@@ -182,6 +183,38 @@ instance Morphable (Rotate Right) (Tape List) where
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
 		let subtree = twosome # Reverse (item @Push x left) # extract (view (sub @Tail) right) in
 		TT ! (twosome . Identity . extract) % subtree <-|- view (sub @Root) right
+
+instance Morphable (Rotate Left) (Turnover (Tape List)) where
+	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)
+	morphing s@(premorph -> Turnover (T_U (Identity x :*: T_U (Reverse left :*: right)))) =
+		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run right) -+- (rotate_left x right <-|- run left) where
+
+		rotate_left :: a -> List a -> Nonempty List a -> Tape List a
+		rotate_left x right (Construct lx lxs) = twosome # point lx
+			! twosome # Reverse (TT lxs) # item @Push x right
+
+		rotate_over :: a -> Nonempty List a -> Tape List a
+		rotate_over x right = let new_left = attached (put_over <<- right ! point x) in
+			twosome # point (extract new_left) ! twosome (Reverse . TT # deconstruct new_left) empty
+
+		put_over :: a -> State (Nonempty List a) ()
+		put_over = void . modify @(Nonempty List _) . item @Push
+
+instance Morphable (Rotate Right) (Turnover (Tape List)) where
+	type Morphing (Rotate Right) (Turnover (Tape List)) = Turnover (Tape List)
+	morphing s@(premorph -> Turnover (T_U (Identity x :*: T_U (Reverse left :*: right)))) =
+		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run left) -+- (rotate_right x left <-|- run right) where
+
+		rotate_right :: a -> List a -> Nonempty List a -> Tape List a
+		rotate_right x left (Construct rx rxs) = twosome # point rx
+			! twosome # Reverse (item @Push x left) # TT rxs
+
+		rotate_over :: a -> Nonempty List a -> Tape List a
+		rotate_over x left = let new_right = attached (put_over <<- left ! point x) in
+			twosome # point (extract new_right) ! twosome (Reverse empty) (TT # deconstruct new_right)
+
+		put_over :: a -> State (Nonempty List a) ()
+		put_over = void . modify @(Nonempty List _) . item @Push
 
 instance Morphable (Into (Tape List)) List where
 	type Morphing (Into (Tape List)) List = Maybe <::> Tape List
