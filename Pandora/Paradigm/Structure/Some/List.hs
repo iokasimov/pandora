@@ -16,7 +16,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), (?))
-import Pandora.Paradigm.Primary.Algebraic ((<-*-), (-+-), (-.#..-), extract, point, empty, void)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), (.-+-), (-.#..-), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic ((<-|-<-|-))
@@ -187,7 +187,7 @@ instance Morphable (Rotate Right) (Tape List) where
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
 	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)
 	morphing s@(premorph -> Turnover (T_U (Identity x :*: T_U (Reverse left :*: right)))) =
-		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run right) -+- (rotate_left x right <-|- run left) where
+		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run right) .-+- (rotate_left x right <-|- run left) where
 
 		rotate_left :: a -> List a -> Nonempty List a -> Tape List a
 		rotate_left x right (Construct lx lxs) = twosome # point lx
@@ -203,7 +203,7 @@ instance Morphable (Rotate Left) (Turnover (Tape List)) where
 instance Morphable (Rotate Right) (Turnover (Tape List)) where
 	type Morphing (Rotate Right) (Turnover (Tape List)) = Turnover (Tape List)
 	morphing s@(premorph -> Turnover (T_U (Identity x :*: T_U (Reverse left :*: right)))) =
-		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run left) -+- (rotate_right x left <-|- run right) where
+		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run left) .-+- (rotate_right x left <-|- run right) where
 
 		rotate_right :: a -> List a -> Nonempty List a -> Tape List a
 		rotate_right x left (Construct rx rxs) = twosome # point rx
