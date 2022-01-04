@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Inventory.Store where
 
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))

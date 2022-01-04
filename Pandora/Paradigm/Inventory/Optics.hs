@@ -1,6 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE UndecidableInstances #-}
-
 module Pandora.Paradigm.Inventory.Optics where
 
 import Pandora.Core.Impliable (Impliable (Arguments, imply))

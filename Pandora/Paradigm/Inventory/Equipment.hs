@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
 
 import Pandora.Pattern.Semigroupoid ((.))

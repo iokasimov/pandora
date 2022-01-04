@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Inventory.State where
 
 import Pandora.Pattern.Morphism.Flip (Flip)

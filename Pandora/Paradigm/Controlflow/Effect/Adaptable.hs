@@ -1,19 +1,17 @@
 {-# LANGUAGE UndecidableInstances #-}
-
 module Pandora.Paradigm.Controlflow.Effect.Adaptable where
 
 import Pandora.Core.Functor (type (#))
-import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
-import Pandora.Pattern.Transformer (Liftable (lift), Lowerable (lower))
+import Pandora.Pattern.Transformer (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
-import Pandora.Paradigm.Primary.Algebraic (Extractable, Pointable, extract, point)
+import Pandora.Paradigm.Primary.Algebraic (Pointable, extract, point)
 import Pandora.Paradigm.Primary.Functor.Identity (Identity)
-import Pandora.Paradigm.Controlflow.Effect.Transformer (Monadic, Comonadic, wrap, bring, (:>), (:<))
+import Pandora.Paradigm.Controlflow.Effect.Transformer (Monadic, wrap, (:>))
 
 class Adaptable u m t where
 	{-# MINIMAL adapt #-}

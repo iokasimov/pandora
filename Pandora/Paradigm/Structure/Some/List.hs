@@ -30,7 +30,7 @@ import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Inventory.State (State, fold, modify)
 import Pandora.Paradigm.Inventory.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Optics (Convex, Lens, view)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=), (=||))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
@@ -137,6 +137,7 @@ instance Morphable (Into List) (Construction Maybe <::> Maybe) where
 	morphing nonempty_list_with_maybe_elements = case run . premorph # nonempty_list_with_maybe_elements of
 		Construct (Just x) (Just xs) -> item @Push x # into @List (TT @Covariant @Covariant xs)
 		Construct (Just x) Nothing -> point x
+		Construct Nothing (Just xs) -> into @List (TT @Covariant @Covariant xs)
 		Construct Nothing Nothing -> empty
 
 instance Morphable Push (Construction Maybe) where
@@ -165,7 +166,7 @@ instance Zippable List where
 	type Breadcrumbs List = (Reverse List <:.:> List := (:*:))
 
 instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
-	f <<- T_U (Identity x :*: T_U (left :*: right)) = (\past' x' left -> twosome (Identity x') ! twosome # left # run past')
+	f <<- T_U (Identity x :*: T_U (left :*: right)) = (\past' x' left' -> twosome (Identity x') ! twosome # left' # run past')
 		<-|- f <<- Reverse right <-*- f x <-*- f <<- left
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
@@ -190,11 +191,11 @@ instance Morphable (Rotate Left) (Turnover (Tape List)) where
 		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run right) .-+- (rotate_left x right <-|- run left) where
 
 		rotate_left :: a -> List a -> Nonempty List a -> Tape List a
-		rotate_left x right (Construct lx lxs) = twosome # point lx
-			! twosome # Reverse (TT lxs) # item @Push x right
+		rotate_left focused rs (Construct lx lxs) = twosome # point lx
+			! twosome # Reverse (TT lxs) # item @Push focused rs
 
 		rotate_over :: a -> Nonempty List a -> Tape List a
-		rotate_over x right = let new_left = attached (put_over <<- right ! point x) in
+		rotate_over focused rs = let new_left = attached (put_over <<- rs ! point focused) in
 			twosome # point (extract new_left) ! twosome (Reverse . TT # deconstruct new_left) empty
 
 		put_over :: a -> State (Nonempty List a) ()
@@ -206,11 +207,11 @@ instance Morphable (Rotate Right) (Turnover (Tape List)) where
 		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run left) .-+- (rotate_right x left <-|- run right) where
 
 		rotate_right :: a -> List a -> Nonempty List a -> Tape List a
-		rotate_right x left (Construct rx rxs) = twosome # point rx
-			! twosome # Reverse (item @Push x left) # TT rxs
+		rotate_right focused ls (Construct rx rxs) = twosome # point rx
+			! twosome # Reverse (item @Push focused ls) # TT rxs
 
 		rotate_over :: a -> Nonempty List a -> Tape List a
-		rotate_over x left = let new_right = attached (put_over <<- left ! point x) in
+		rotate_over focused ls = let new_right = attached (put_over <<- ls ! point focused) in
 			twosome # point (extract new_right) ! twosome (Reverse empty) (TT # deconstruct new_right)
 
 		put_over :: a -> State (Nonempty List a) ()
