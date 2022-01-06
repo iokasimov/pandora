@@ -98,6 +98,8 @@ library
     Pandora.Paradigm.Inventory
     Pandora.Paradigm.Inventory.Ability
     Pandora.Paradigm.Inventory.Ability.Viewable
+    Pandora.Paradigm.Inventory.Ability.Replaceable
+    Pandora.Paradigm.Inventory.Ability.Modifiable
     Pandora.Paradigm.Inventory.Accumulator
     Pandora.Paradigm.Inventory.Provision
     Pandora.Paradigm.Inventory.Equipment

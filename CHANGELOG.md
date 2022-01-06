@@ -658,3 +658,4 @@
 * Wrap left part of `Tape` into `Reverse`
 * Rename `-+-` operator to `.-+-` in Algebraic module
 * Define `Ability` umbrella module (like in `Structure`)
+* Define experimenal `Viewable`, `Replaceable` and `Modifiable` typeclasses
