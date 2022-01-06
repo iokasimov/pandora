@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory.Accumulator (Accumulator (..), Accumulated, gather) where
+module Pandora.Paradigm.Inventory.Some.Accumulator (Accumulator (..), Accumulated, gather) where
 
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))

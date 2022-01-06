@@ -28,8 +28,8 @@ import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate), Vertical (Up, Down))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=))
-import Pandora.Paradigm.Inventory.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Optics (set, view)
+import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
+import Pandora.Paradigm.Inventory.Some.Optics (set, view)
 
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *

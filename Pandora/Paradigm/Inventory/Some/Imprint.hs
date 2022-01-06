@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory.Imprint (Imprint (..), Traceable) where
+module Pandora.Paradigm.Inventory.Some.Imprint (Imprint (..), Traceable) where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))

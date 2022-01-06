@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory.Equipment (Equipment (..), retrieve) where
+module Pandora.Paradigm.Inventory.Some.Equipment (Equipment (..), retrieve) where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))

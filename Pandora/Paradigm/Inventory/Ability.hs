@@ -1,5 +1,5 @@
-module Pandora.Paradigm.Inventory.Ability (module Exports) where
+module Pandora.Paradigm.Inventory.Some.Ability (module Exports) where
 
-import Pandora.Paradigm.Inventory.Ability.Modifiable as Exports
-import Pandora.Paradigm.Inventory.Ability.Replaceable as Exports
-import Pandora.Paradigm.Inventory.Ability.Viewable as Exports
+import Pandora.Paradigm.Inventory.Some.Ability.Modifiable as Exports
+import Pandora.Paradigm.Inventory.Some.Ability.Replaceable as Exports
+import Pandora.Paradigm.Inventory.Some.Ability.Viewable as Exports

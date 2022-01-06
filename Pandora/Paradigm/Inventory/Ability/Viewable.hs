@@ -1,5 +1,5 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
-module Pandora.Paradigm.Inventory.Ability.Viewable where
+module Pandora.Paradigm.Inventory.Some.Ability.Viewable where
 
 class Viewable i where
 	type family Viewing i e r :: *

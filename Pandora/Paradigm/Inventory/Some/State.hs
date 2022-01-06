@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory.State where
+module Pandora.Paradigm.Inventory.Some.State where
 
 import Pandora.Pattern.Morphism.Flip (Flip)
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))

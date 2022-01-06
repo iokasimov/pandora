@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory.Provision where
+module Pandora.Paradigm.Inventory.Some.Provision where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, (#))

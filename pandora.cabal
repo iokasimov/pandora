@@ -100,13 +100,14 @@ library
     Pandora.Paradigm.Inventory.Ability.Viewable
     Pandora.Paradigm.Inventory.Ability.Replaceable
     Pandora.Paradigm.Inventory.Ability.Modifiable
-    Pandora.Paradigm.Inventory.Accumulator
-    Pandora.Paradigm.Inventory.Provision
-    Pandora.Paradigm.Inventory.Equipment
-    Pandora.Paradigm.Inventory.Imprint
-    Pandora.Paradigm.Inventory.Optics
-    Pandora.Paradigm.Inventory.State
-    Pandora.Paradigm.Inventory.Store
+    Pandora.Paradigm.Inventory.Some
+    Pandora.Paradigm.Inventory.Some.Accumulator
+    Pandora.Paradigm.Inventory.Some.Provision
+    Pandora.Paradigm.Inventory.Some.Equipment
+    Pandora.Paradigm.Inventory.Some.Imprint
+    Pandora.Paradigm.Inventory.Some.Optics
+    Pandora.Paradigm.Inventory.Some.State
+    Pandora.Paradigm.Inventory.Some.Store
     -- Tree-based datastructures
     Pandora.Paradigm.Structure
     Pandora.Paradigm.Structure.Ability

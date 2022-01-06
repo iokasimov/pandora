@@ -659,3 +659,4 @@
 * Rename `-+-` operator to `.-+-` in Algebraic module
 * Define `Ability` umbrella module (like in `Structure`)
 * Define experimenal `Viewable`, `Replaceable` and `Modifiable` typeclasses
+* Define `Some` umbrella module (like in `Structure`)

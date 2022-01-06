@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE UndecidableInstances #-}
-module Pandora.Paradigm.Inventory.Optics where
+module Pandora.Paradigm.Inventory.Some.Optics where
 
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Primary.Object.Boolean ((?))
-import Pandora.Paradigm.Inventory.Store (Store (Store), position, look, retrofit)
+import Pandora.Paradigm.Inventory.Some.Store (Store (Store), position, look, retrofit)
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 

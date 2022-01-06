@@ -1,5 +1,5 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
-module Pandora.Paradigm.Inventory.Ability.Replaceable where
+module Pandora.Paradigm.Inventory.Some.Ability.Replaceable where
 
 class Replaceable i where
 	type family Replacement i l r :: *

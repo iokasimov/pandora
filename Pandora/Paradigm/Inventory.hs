@@ -1,15 +1,14 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, (=<>), (~<>)) where
 
-import Pandora.Paradigm.Inventory.Optics as Exports
-import Pandora.Paradigm.Inventory.Store as Exports
-import Pandora.Paradigm.Inventory.State as Exports
-import Pandora.Paradigm.Inventory.Imprint as Exports
-import Pandora.Paradigm.Inventory.Equipment as Exports
-import Pandora.Paradigm.Inventory.Provision as Exports
-import Pandora.Paradigm.Inventory.Accumulator as Exports
+import Pandora.Paradigm.Inventory.Some.Optics as Exports
+import Pandora.Paradigm.Inventory.Some.Store as Exports
+import Pandora.Paradigm.Inventory.Some.State as Exports
+import Pandora.Paradigm.Inventory.Some.Imprint as Exports
+import Pandora.Paradigm.Inventory.Some.Equipment as Exports
+import Pandora.Paradigm.Inventory.Some.Provision as Exports
+import Pandora.Paradigm.Inventory.Some.Accumulator as Exports
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((#))

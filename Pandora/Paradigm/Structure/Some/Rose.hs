@@ -19,7 +19,7 @@ import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
-import Pandora.Paradigm.Inventory.Store (Store (Store))
+import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
