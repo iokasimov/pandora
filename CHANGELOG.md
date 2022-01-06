@@ -657,3 +657,4 @@
 * Define `Turnover` wrapper for data structures that can that can be rotated indefinitely
 * Wrap left part of `Tape` into `Reverse`
 * Rename `-+-` operator to `.-+-` in Algebraic module
+* Define `Ability` umbrella module (like in `Structure`)
