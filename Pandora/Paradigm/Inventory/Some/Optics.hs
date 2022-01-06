@@ -12,9 +12,12 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (!)))
+import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view_))
+import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace_))
+import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify_))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
-import Pandora.Paradigm.Primary.Algebraic (extract, (>-|-<-|-))
+import Pandora.Paradigm.Primary.Algebraic (Pointable, point, extract, (>-|-<-|-))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -117,3 +120,19 @@ instance Lensic Identity Maybe where
 		(Identity between :*: ibs) -> case run # to between of
 			(Just target :*: mtb) -> Store ! Just target :*: ibs . Identity . mtb
 			(Nothing :*: _) -> Store ! Nothing :*: \_ -> source
+
+instance Viewable (Lens Identity) where
+	type instance Viewing (Lens Identity) source target = Lens Identity source target -> source -> target
+	view_ lens source = extract # view lens source
+
+instance Viewable (Lens Maybe) where
+	type instance Viewing (Lens Maybe) source target = Lens Maybe source target -> source -> Maybe target
+	view_ lens source = view lens source
+
+instance Pointable t => Replaceable (Lens t) where
+	type instance Replacement (Lens t) source target = target -> Lens t source target -> source -> source
+	replace_ target lens source = set lens # point target # source
+
+instance (Viewable (Lens t), Covariant (->) (->) t, Pointable t) => Modifiable (Lens t) where
+	type instance Modification (Lens t) source target = (target -> target) -> Lens t source target -> source -> source
+	modify_ f lens source = over lens (f <-|-) source
