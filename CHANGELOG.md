@@ -665,3 +665,4 @@
 * Rename `replace_` method of `Replaceable` ability to `replace`
 * Remove `view` method of `Lens`
 * Rename `view_` method of `Viewable` ability to `view`
+* Remove `set` method of `Lens`

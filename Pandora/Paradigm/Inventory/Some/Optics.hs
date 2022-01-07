@@ -83,10 +83,6 @@ instance Category (Lens Maybe) where
 -- Lens as natural transformation
 type (#=@) source target available = forall a . Lens available (source a) (target a)
 
--- Replace focused target value with new value
-set :: Lens available source target -> available target -> source -> source
-set lens new = look new . run lens
-
 -- | Modify focused target value
 over :: Lens available source target -> (available target -> available target) -> source -> source
 over lens f = extract . retrofit f . run lens
@@ -127,7 +123,7 @@ instance Viewable (Lens Maybe) where
 
 instance Pointable t => Replaceable (Lens t) where
 	type instance Replacement (Lens t) source target = target -> Lens t source target -> source -> source
-	replace target lens source = set lens # point target # source
+	replace new lens source = look @(t _) # point new # run lens source
 
 instance (Viewable (Lens t), Covariant (->) (->) t, Pointable t) => Modifiable (Lens t) where
 	type instance Modification (Lens t) source target = (target -> target) -> Lens t source target -> source -> source

@@ -29,8 +29,9 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate), 
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=))
 import Pandora.Paradigm.Inventory.Ability.Viewable (view)
+import Pandora.Paradigm.Inventory.Ability.Replaceable (replace)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, set)
+import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex)
 
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *
@@ -92,7 +93,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructu
 	type Substance Left (Tape t <::> Tape t) = Tape t <::> Reverse t
 	substructure = P_Q_T ! \ii ->
 		let target = (view @(Convex Lens) (sub @Left) <-|-) ||= (lower ii) in
-		let updated new = set (sub @Left) . Identity <-|- new <-*- run (lower ii) in
+		let updated new = (replace @(Convex Lens) % sub @Left) <-|- new <-*- run (lower ii) in
 		Store ! Identity target :*: lift . (updated ||=) . extract
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure Right (Tape t <::> Tape t) where
@@ -100,5 +101,5 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructu
 	type Substance Right (Tape t <::> Tape t) = Tape t <::> t
 	substructure = P_Q_T ! \ii ->
 		let target = (view @(Convex Lens) (sub @Right) <-|-) ||= lower ii in
-		let updated new = set (sub @Right) . Identity <-|- new <-*- run (lower ii) in
+		let updated new = (replace @(Convex Lens) % sub @Right) <-|- new <-*- run (lower ii) in
 		Store ! Identity target :*: lift . (updated ||=) . extract
