@@ -65,10 +65,6 @@ type Stateful s t = Adaptable t (->) (State s)
 current :: Stateful s t => t s
 current = adapt # State delta
 
--- | Modify stored value with a function
-modify :: Stateful s t => (s -> s) -> t s
-modify f = adapt . State ! \s -> let r = f s in r :*: r
-
 -- | Replace current value with another one
 replace :: Stateful s t => s -> t s
 replace s = adapt . State ! \_ -> s :*: s

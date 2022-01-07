@@ -19,7 +19,10 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (<--))
-import Pandora.Paradigm.Primary.Algebraic (extract)
+import Pandora.Paradigm.Primary.Algebraic (Pointable, extract)
+import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view_))
+import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace_))
+import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify_))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 
@@ -46,8 +49,10 @@ zoom lens less = adapt . State ! \source -> restruct |- run (lens ! source) wher
 overlook :: (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => State s result -> State (t s) (t result)
 overlook (State state) = State ! \ts -> mult @(<--) @(:*:) @(:*:) ! (state <-|- ts)
 
-(=<>) :: Stateful src t => Lens available src tgt -> available tgt -> t src
-lens =<> new = modify ! set lens new
+(=<>) :: (Pointable available, Stateful src t)
+	=> Lens available src tgt -> tgt -> t src
+lens =<> new = adapt (modify_ @State ! replace_ @(Lens _) new lens)
 
-(~<>) :: Stateful src t => Lens available src tgt -> (available tgt -> available tgt) -> t src
-lens ~<> f = modify ! over lens f
+(~<>) :: (Pointable available, Covariant (->) (->) available, Viewable (Lens available), Stateful src t)
+	=> Lens available src tgt -> (tgt -> tgt) -> t src
+lens ~<> f = adapt (modify_ @State ! modify_ @(Lens _) f lens)

@@ -27,7 +27,8 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary (twosome)
-import Pandora.Paradigm.Inventory.Some.State (State, fold, modify)
+import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify_))
+import Pandora.Paradigm.Inventory.Some.State (State, fold)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Convex, Lens, view)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=))
@@ -199,7 +200,7 @@ instance Morphable (Rotate Left) (Turnover (Tape List)) where
 			twosome # point (extract new_left) ! twosome (Reverse . TT # deconstruct new_left) empty
 
 		put_over :: a -> State (Nonempty List a) ()
-		put_over = void . modify @(Nonempty List _) . item @Push
+		put_over = void . modify_ @State . item @Push
 
 instance Morphable (Rotate Right) (Turnover (Tape List)) where
 	type Morphing (Rotate Right) (Turnover (Tape List)) = Turnover (Tape List)
@@ -215,7 +216,7 @@ instance Morphable (Rotate Right) (Turnover (Tape List)) where
 			twosome # point (extract new_right) ! twosome (Reverse empty) (TT # deconstruct new_right)
 
 		put_over :: a -> State (Nonempty List a) ()
-		put_over = void . modify @(Nonempty List _) . item @Push
+		put_over = void . modify_ @State . item @Push
 
 instance Morphable (Into (Tape List)) List where
 	type Morphing (Into (Tape List)) List = Maybe <::> Tape List
@@ -224,13 +225,13 @@ instance Morphable (Into (Tape List)) List where
 instance Morphable (Into List) (Tape List) where
 	type Morphing (Into List) (Tape List) = List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
-		# modify . item @Push @List <<- right
+		# modify_ @State . item @Push @List <<- right
 		# item @Push x left
 
 instance Morphable (Into (Comprehension Maybe)) (Tape List) where
 	type Morphing (Into (Comprehension Maybe)) (Tape List) = Comprehension Maybe
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
-		# modify . item @Push @(Comprehension Maybe) <<- right
+		# modify_ @State . item @Push @(Comprehension Maybe) <<- right
 		# item @Push x (Comprehension left)
 
 ------------------------------------- Zipper of non-empty list -------------------------------------
@@ -267,13 +268,13 @@ instance Morphable (Into (Tape (Construction Maybe))) (Tape List) where
 instance Morphable (Into (Construction Maybe)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Construction Maybe)) (Tape (Construction Maybe)) = Construction Maybe
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
-		# modify . item @Push @(Nonempty List) <<- right
+		# modify_ @State . item @Push @(Nonempty List) <<- right
 		# item @Push x left
 
 instance Morphable (Into List) (Tape (Construction Maybe)) where
 	type Morphing (Into List) (Tape (Construction Maybe)) = List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
-		# modify . item @Push @List <<- right
+		# modify_ @State . item @Push @List <<- right
 		# item @Push x (lift left)
 
 ------------------------------------ Zipper of combinative list ------------------------------------
