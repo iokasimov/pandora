@@ -664,3 +664,4 @@
 * Rename `modify_` method of `Modifiable` ability to `modify`
 * Rename `replace_` method of `Replaceable` ability to `replace`
 * Remove `view` method of `Lens`
+* Rename `view_` method of `Viewable` ability to `view`

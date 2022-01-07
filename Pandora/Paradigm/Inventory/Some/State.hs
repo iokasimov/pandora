@@ -17,7 +17,7 @@ import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=), (!)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
-import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view_))
+import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view))
 import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
@@ -62,16 +62,16 @@ instance Monadic (->) (State s) where
 type Stateful s t = Adaptable t (->) (State s)
 
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable t (->) u) => (s -> u s) -> t s
-reconcile f = adapt . replace @State =<< adapt . f =<< adapt (view_ @State)
+reconcile f = adapt . replace @State =<< adapt . f =<< adapt (view @State)
 
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = adapt (view_ @State) .-*- adapt . modify @State . op <<- struct
+fold op struct = adapt (view @State) .-*- adapt . modify @State . op <<- struct
 
 instance Viewable State where
 	type Viewing State state ouput = State state state
-	view_ = State delta
+	view = State delta
 
 instance Replaceable State where
 	type Replacement State state output = state -> State state state

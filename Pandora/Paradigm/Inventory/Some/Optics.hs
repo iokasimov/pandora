@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (!)))
-import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view_))
+import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view))
 import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
@@ -119,11 +119,11 @@ instance Lensic Identity Maybe where
 
 instance Viewable (Lens Identity) where
 	type instance Viewing (Lens Identity) source target = Lens Identity source target -> source -> target
-	view_ lens = extract @Identity . position @_ @(Store _) . run lens
+	view lens = extract @Identity . position @_ @(Store _) . run lens
 
 instance Viewable (Lens Maybe) where
 	type instance Viewing (Lens Maybe) source target = Lens Maybe source target -> source -> Maybe target
-	view_ lens = position @_ @(Store _) . run lens
+	view lens = position @_ @(Store _) . run lens
 
 instance Pointable t => Replaceable (Lens t) where
 	type instance Replacement (Lens t) source target = target -> Lens t source target -> source -> source

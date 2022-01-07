@@ -28,7 +28,7 @@ import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate), Vertical (Up, Down))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=))
-import Pandora.Paradigm.Inventory.Ability.Viewable (view_)
+import Pandora.Paradigm.Inventory.Ability.Viewable (view)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, set)
 
@@ -91,7 +91,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructu
 	type Available Left (Tape t <::> Tape t) = Identity
 	type Substance Left (Tape t <::> Tape t) = Tape t <::> Reverse t
 	substructure = P_Q_T ! \ii ->
-		let target = (view_ @(Convex Lens) (sub @Left) <-|-) ||= (lower ii) in
+		let target = (view @(Convex Lens) (sub @Left) <-|-) ||= (lower ii) in
 		let updated new = set (sub @Left) . Identity <-|- new <-*- run (lower ii) in
 		Store ! Identity target :*: lift . (updated ||=) . extract
 
@@ -99,6 +99,6 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructu
 	type Available Right (Tape t <::> Tape t) = Identity
 	type Substance Right (Tape t <::> Tape t) = Tape t <::> t
 	substructure = P_Q_T ! \ii ->
-		let target = (view_ @(Convex Lens) (sub @Right) <-|-) ||= lower ii in
+		let target = (view @(Convex Lens) (sub @Right) <-|-) ||= lower ii in
 		let updated new = set (sub @Right) . Identity <-|- new <-*- run (lower ii) in
 		Store ! Identity target :*: lift . (updated ||=) . extract

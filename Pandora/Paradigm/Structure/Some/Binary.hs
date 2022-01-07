@@ -25,7 +25,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (=||))
-import Pandora.Paradigm.Inventory.Ability.Viewable (view_)
+import Pandora.Paradigm.Inventory.Ability.Viewable (view)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, Obscure, over)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -129,8 +129,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		Nothing -> TT ! \_ -> Nothing
 		Just tree -> TT ! \key ->
 			let root = extract tree in key <=> attached root & order (Just # extract root)
-				(lookup @Key key . Prefixed =<< view_ @(Obscure Lens) # sub @Left # tree)
-				(lookup @Key key . Prefixed =<< view_ @(Obscure Lens) # sub @Right # tree)
+				(lookup @Key key . Prefixed =<< view @(Obscure Lens) # sub @Left # tree)
+				(lookup @Key key . Prefixed =<< view @(Obscure Lens) # sub @Right # tree)
 
 instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Identity) <:.:> Prefixed Binary k := (->)
@@ -149,8 +149,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT ! \key ->
 		key <=> attached x & order (Just # extract x)
-			(lookup @Key key . Prefixed . extract =<< view_ @(Obscure Lens) # sub @Left # xs)
-			(lookup @Key key . Prefixed . extract =<< view_ @(Obscure Lens) # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract =<< view @(Obscure Lens) # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract =<< view @(Obscure Lens) # sub @Left # xs)
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 
