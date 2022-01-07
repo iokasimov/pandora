@@ -83,10 +83,6 @@ instance Category (Lens Maybe) where
 -- Lens as natural transformation
 type (#=@) source target available = forall a . Lens available (source a) (target a)
 
--- | Get focused target value
-view :: Lens available source target -> source -> available target
-view lens = position @_ @(Store _) . run lens
-
 -- Replace focused target value with new value
 set :: Lens available source target -> available target -> source -> source
 set lens new = look new . run lens
@@ -123,11 +119,11 @@ instance Lensic Identity Maybe where
 
 instance Viewable (Lens Identity) where
 	type instance Viewing (Lens Identity) source target = Lens Identity source target -> source -> target
-	view_ lens source = extract # view lens source
+	view_ lens = extract @Identity . position @_ @(Store _) . run lens
 
 instance Viewable (Lens Maybe) where
 	type instance Viewing (Lens Maybe) source target = Lens Maybe source target -> source -> Maybe target
-	view_ lens source = view lens source
+	view_ lens = position @_ @(Store _) . run lens
 
 instance Pointable t => Replaceable (Lens t) where
 	type instance Replacement (Lens t) source target = target -> Lens t source target -> source -> source

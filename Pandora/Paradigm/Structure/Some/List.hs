@@ -27,10 +27,11 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary (twosome)
+import Pandora.Paradigm.Inventory.Ability.Viewable (view_)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Inventory.Some.State (State, fold)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Convex, Lens, view)
+import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (||=))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
@@ -177,14 +178,14 @@ instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
 instance Morphable (Rotate Left) (Tape List) where
 	type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		let subtree = twosome # Reverse (extract # view (sub @Tail) left) # item @Push x right in
-		TT ! (twosome . Identity . extract) % subtree <-|- view (sub @Root) left
+		let subtree = twosome # Reverse (view_ @(Convex Lens) # sub @Tail # left) # item @Push x right in
+		TT ! (twosome . Identity . extract) % subtree <-|- view_ @(Obscure Lens) (sub @Root) left
 
 instance Morphable (Rotate Right) (Tape List) where
 	type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		let subtree = twosome # Reverse (item @Push x left) # extract (view (sub @Tail) right) in
-		TT ! (twosome . Identity . extract) % subtree <-|- view (sub @Root) right
+		let subtree = twosome # Reverse (item @Push x left) # view_ @(Convex Lens) (sub @Tail) right in
+		TT ! twosome % subtree <-|- view_ @(Obscure Lens) (sub @Root) right
 
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
 	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)
@@ -253,7 +254,7 @@ instance Morphable (Rotate Right) (Tape (Construction Maybe)) where
 
 instance Morphable (Into (Tape List)) (Construction Maybe) where
 	type Morphing (Into (Tape List)) (Construction Maybe) = Tape List
-	morphing (premorph -> ne) = twosome # Identity (extract ne) ! twosome # Reverse zero # extract (view # sub @Tail # ne)
+	morphing (premorph -> ne) = twosome # Identity (extract ne) ! twosome # Reverse zero # (view_ @(Convex Lens) # sub @Tail # ne)
 
 instance Morphable (Into (Tape List)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Tape List)) (Tape (Construction Maybe)) = Tape List

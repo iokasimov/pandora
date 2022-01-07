@@ -663,3 +663,4 @@
 * Remove `current`, `replace`, `modify` methods of `State` effect
 * Rename `modify_` method of `Modifiable` ability to `modify`
 * Rename `replace_` method of `Replaceable` ability to `replace`
+* Remove `view` method of `Lens`
