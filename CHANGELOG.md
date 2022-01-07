@@ -660,5 +660,6 @@
 * Define `Ability` umbrella module (like in `Structure`)
 * Define experimenal `Viewable`, `Replaceable` and `Modifiable` typeclasses
 * Define `Some` umbrella module (like in `Structure`)
-* Remove `modify` method of `State` effect
+* Remove `current`, `replace`, `modify` methods of `State` effect
 * Rename `modify_` method of `Modifiable` ability to `modify`
+* Rename `replace_` method of `Replaceable` ability to `replace`

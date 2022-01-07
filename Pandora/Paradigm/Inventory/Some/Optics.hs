@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (!)))
 import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view_))
-import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace_))
+import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
@@ -131,7 +131,7 @@ instance Viewable (Lens Maybe) where
 
 instance Pointable t => Replaceable (Lens t) where
 	type instance Replacement (Lens t) source target = target -> Lens t source target -> source -> source
-	replace_ target lens source = set lens # point target # source
+	replace target lens source = set lens # point target # source
 
 instance (Viewable (Lens t), Covariant (->) (->) t, Pointable t) => Modifiable (Lens t) where
 	type instance Modification (Lens t) source target = (target -> target) -> Lens t source target -> source -> source

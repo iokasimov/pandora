@@ -18,7 +18,7 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=), (!)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view_))
-import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace_))
+import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
@@ -61,16 +61,8 @@ instance Monadic (->) (State s) where
 
 type Stateful s t = Adaptable t (->) (State s)
 
--- | Get current value
-current :: Stateful s t => t s
-current = adapt # State delta
-
--- | Replace current value with another one
-replace :: Stateful s t => s -> t s
-replace s = adapt . State ! \_ -> s :*: s
-
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable t (->) u) => (s -> u s) -> t s
-reconcile f = adapt . replace_ @State =<< adapt . f =<< adapt (view_ @State)
+reconcile f = adapt . replace @State =<< adapt . f =<< adapt (view_ @State)
 
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 
@@ -83,7 +75,7 @@ instance Viewable State where
 
 instance Replaceable State where
 	type Replacement State state output = state -> State state state
-	replace_ new = State ! \_ -> new :*: new
+	replace new = State ! \_ -> new :*: new
 
 instance Modifiable State where
 	type Modification State state output = (state -> state) -> State state state
