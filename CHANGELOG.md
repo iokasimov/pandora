@@ -661,3 +661,4 @@
 * Define experimenal `Viewable`, `Replaceable` and `Modifiable` typeclasses
 * Define `Some` umbrella module (like in `Structure`)
 * Remove `modify` method of `State` effect
+* Rename `modify_` method of `Modifiable` ability to `modify`

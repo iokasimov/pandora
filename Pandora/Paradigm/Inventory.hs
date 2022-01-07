@@ -22,7 +22,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (<--))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, extract)
 import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view_))
 import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace_))
-import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify_))
+import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 
@@ -51,8 +51,8 @@ overlook (State state) = State ! \ts -> mult @(<--) @(:*:) @(:*:) ! (state <-|- 
 
 (=<>) :: (Pointable available, Stateful src t)
 	=> Lens available src tgt -> tgt -> t src
-lens =<> new = adapt (modify_ @State ! replace_ @(Lens _) new lens)
+lens =<> new = adapt (modify @State ! replace_ @(Lens _) new lens)
 
 (~<>) :: (Pointable available, Covariant (->) (->) available, Viewable (Lens available), Stateful src t)
 	=> Lens available src tgt -> (tgt -> tgt) -> t src
-lens ~<> f = adapt (modify_ @State ! modify_ @(Lens _) f lens)
+lens ~<> f = adapt (modify @State ! modify @(Lens _) f lens)

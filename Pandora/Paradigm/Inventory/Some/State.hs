@@ -19,7 +19,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view_))
 import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace_))
-import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify_))
+import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic ((:*:) ((:*:)), (.-*-), delta)
@@ -75,7 +75,7 @@ reconcile f = adapt . replace_ @State =<< adapt . f =<< adapt (view_ @State)
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = adapt (view_ @State) .-*- adapt . modify_ @State . op <<- struct
+fold op struct = adapt (view_ @State) .-*- adapt . modify @State . op <<- struct
 
 instance Viewable State where
 	type Viewing State state ouput = State state state
@@ -87,4 +87,4 @@ instance Replaceable State where
 
 instance Modifiable State where
 	type Modification State state output = (state -> state) -> State state state
-	modify_ f = State ! \s -> let r = f s in r :*: r
+	modify f = State ! \s -> let r = f s in r :*: r
