@@ -77,22 +77,22 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where
-	type Morphing (Rotate (Left (Zig Zig))) (Construction Wye) = Binary
+	type Morphing (Rotate (Left (Zig Zig))) (Construction Wye) = Maybe <::> Construction Wye
 	morphing (premorph -> tree) = TT ! run . rotate @(Left Zig) =<< run # rotate @(Left Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
-	type Morphing (Rotate (Right (Zig Zig))) (Construction Wye) = Binary
+	type Morphing (Rotate (Right (Zig Zig))) (Construction Wye) = Maybe <::> Construction Wye
 	morphing (premorph -> tree) = TT ! run . rotate @(Right Zig) =<< run # rotate @(Right Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
-	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Binary
+	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Maybe <::> Construction Wye
 	morphing = rotate @(Left Zig) . over (sub @Left) (run . rotate @(Right Zig) =<<) . premorph
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zag))) (Construction Wye) where
-	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Binary
+	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Maybe <::> Construction Wye
 	morphing = rotate @(Right Zig) . over (sub @Right) (run . rotate @(Left Zig) =<<) . premorph
 
 branch :: forall b . Morphable (Into (b Maybe)) Wye => Wye ~> Morphing (Into (b Maybe)) Wye

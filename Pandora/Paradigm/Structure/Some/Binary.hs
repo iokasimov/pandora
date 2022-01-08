@@ -26,8 +26,10 @@ import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (=||))
 import Pandora.Paradigm.Inventory.Ability.Viewable (view)
+import Pandora.Paradigm.Inventory.Ability.Replaceable (replace)
+import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, Obscure, over)
+import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, Obscure)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
@@ -57,10 +59,11 @@ instance Morphable Insert Binary where
 		Nothing -> T_U ! \(T_U (Identity x :*: _)) -> lift # leaf x
 		Just non_empty_binary -> T_U ! \(T_U (Identity x :*: Convergence f)) -> lift @(->) !
 			let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
-			let change = Just . resolve continue (leaf x) in
+			let stop lens = replace @(Obscure Lens) # leaf x # lens # non_empty_binary in
+			let go_on lens rest = replace @(Obscure Lens) # (continue rest) # lens # non_empty_binary in
 			f x # extract non_empty_binary & order # non_empty_binary
-				# over (sub @Left) change non_empty_binary
-				# over (sub @Right) change non_empty_binary
+				# (resolve (go_on (sub @Left)) (stop # sub @Left) ! view @(Obscure Lens) (sub @Left) non_empty_binary)
+				# (resolve (go_on (sub @Right)) (stop # sub @Right) ! view @(Obscure Lens) (sub @Right) non_empty_binary)
 
 instance Nullable Binary where
 	null = Predicate ! \case { TT Nothing -> True ; _ -> False }
@@ -91,10 +94,11 @@ instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
 	morphing (premorph -> nonempty_list) = T_U ! \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
-		let change = Just . resolve continue (leaf x) in
+		let stop lens = replace @(Obscure Lens) # leaf x # lens # nonempty_list in
+		let go_on lens rest = replace @(Obscure Lens) # (continue rest) # lens # nonempty_list in
 		order # nonempty_list
-			# over (sub @Left) change nonempty_list
-			# over (sub @Right) change nonempty_list
+			# (resolve (go_on (sub @Left)) (stop # sub @Left) ! view @(Obscure Lens) (sub @Left) nonempty_list)
+			# (resolve (go_on (sub @Right)) (stop # sub @Right) ! view @(Obscure Lens) (sub @Right) nonempty_list)
 			# f x (extract nonempty_list)
 
 instance Substructure Root (Construction Wye) where
@@ -132,16 +136,16 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 				(lookup @Key key . Prefixed =<< view @(Obscure Lens) # sub @Left # tree)
 				(lookup @Key key . Prefixed =<< view @(Obscure Lens) # sub @Right # tree)
 
-instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
-	type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Identity) <:.:> Prefixed Binary k := (->)
-	morphing prefixed_tree = case run . run . premorph ! prefixed_tree of
-		Nothing -> T_U ! \(TT (key :*: Identity value)) -> Prefixed . lift . leaf ! key :*: value
-		Just tree -> T_U ! \(TT (key :*: Identity value)) ->
-			let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||)
-			in let root = extract tree in Prefixed . lift ! key <=> attached root & order
-				# over (sub @Root) (!!!>- value) tree
-				# over (sub @Left) continue tree
-				# over (sub @Right) continue tree
+-- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
+	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Identity) <:.:> Prefixed Binary k := (->)
+	-- morphing prefixed_tree = case run . run . premorph ! prefixed_tree of
+		-- Nothing -> T_U ! \(TT (key :*: Identity value)) -> Prefixed . lift . leaf ! key :*: value
+		-- Just tree -> T_U ! \(TT (key :*: Identity value)) ->
+			-- let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||) in
+			-- Prefixed . lift ! key <=> attached (extract tree) & order
+				-- # over (sub @Root) (!!!>- value) tree
+				-- # over (sub @Left) continue tree
+				-- # over (sub @Right) continue tree
 
 ---------------------------------- Prefixed non-empty binary tree ----------------------------------
 
