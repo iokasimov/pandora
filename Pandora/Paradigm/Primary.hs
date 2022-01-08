@@ -19,6 +19,7 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Conditional (Conditional ((?#)))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
@@ -28,6 +29,14 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available,
 instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
 	f -| x = \s -> f . Flip ! x :*: s
 	f |- Flip (x :*: s) = f x s
+
+instance Conditional Boolean where
+	(?#) True x _ = x
+	(?#) False _ y = y
+
+instance Conditional (Maybe a) where
+	(?#) (Just _) x _ = x
+	(?#) Nothing _ y = y
 
 instance Morphable (Into Maybe) (Conclusion e) where
 	type Morphing (Into Maybe) (Conclusion e) = Maybe
