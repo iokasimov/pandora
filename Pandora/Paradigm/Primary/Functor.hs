@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison, match) where
+module Pandora.Paradigm.Primary.Functor (module Exports, Equivalence, Comparison) where
 
 import Pandora.Paradigm.Primary.Functor.Fix as Exports
 import Pandora.Paradigm.Primary.Functor.Convergence as Exports
@@ -17,12 +17,12 @@ import Pandora.Paradigm.Primary.Functor.Constant as Exports
 import Pandora.Paradigm.Primary.Functor.Identity as Exports
 
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Object.Boolean (Boolean, (?))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean)
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 type Equivalence = Convergence Boolean
 type Comparison = Convergence Ordering
 
-match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
-match (Predicate p) f x r = p x ? (f x :*: x) ! r :*: x
+-- match :: Predicate a -> (a -> r) -> a -> r -> r :*: a
+-- match (Predicate p) f x r = p x ? (f x :*: x) ! r :*: x

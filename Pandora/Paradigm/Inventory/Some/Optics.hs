@@ -11,6 +11,7 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Paradigm.Controlflow.Effect.Conditional (Conditional ((?#)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (!)))
 import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view))
 import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
@@ -22,7 +23,6 @@ import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Primary.Object.Boolean ((?))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store), position, look, retrofit)
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
@@ -89,7 +89,7 @@ over lens f = extract . retrofit f . run lens
 
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
-represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate ! \r' -> r' == r ? target ! r' <#> source)
+represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate ! \r' -> r' == r ?# target ! r' <#> source)
 
 class Lensic previous next where
 	type Lensally previous next :: * -> *

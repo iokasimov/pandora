@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Primary (module Exports, twosome) where
 
 import Pandora.Paradigm.Primary.Linear as Exports
@@ -29,14 +28,6 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available,
 instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
 	f -| x = \s -> f . Flip ! x :*: s
 	f |- Flip (x :*: s) = f x s
-
-instance Conditional Boolean where
-	(?#) True x _ = x
-	(?#) False _ y = y
-
-instance Conditional (Maybe a) where
-	(?#) (Just _) x _ = x
-	(?#) Nothing _ y = y
 
 instance Morphable (Into Maybe) (Conclusion e) where
 	type Morphing (Into Maybe) (Conclusion e) = Maybe

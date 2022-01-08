@@ -1,6 +1,6 @@
 module Pandora.Pattern.Object.Setoid (Setoid (..)) where
 
-import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False, True), (?))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False, True))
 
 infix 4 ==, !=
 
@@ -17,4 +17,6 @@ class Setoid a where
 	(==) :: a -> a -> Boolean
 
 	(!=) :: a -> a -> Boolean
-	(!=) x y = (x == y ? False) True
+	(!=) x y = case x == y of
+		True -> False
+		False -> True
