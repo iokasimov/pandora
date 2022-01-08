@@ -667,3 +667,4 @@
 * Rename `view_` method of `Viewable` ability to `view`
 * Remove `set` method of `Lens`
 * Define experimental `Conditional` typeclass
+* Remove `?` method of `Boolean` datatype

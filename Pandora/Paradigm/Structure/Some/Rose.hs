@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>))
-import Pandora.Paradigm.Controlflow.Effect.Conditional (Conditional ((?#)))
+import Pandora.Paradigm.Controlflow.Effect.Conditional (Conditional ((?)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
@@ -79,8 +79,8 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 --	type Morphing (Vary Element) (Prefixed Rose k) = ((:*:) (Nonempty List k) <:.> Identity) <:.:> Prefixed Rose k := (->)
 --	morphing (run . run . premorph -> Nothing) = T_U ! \(TU (Construct key _ :*: Identity value)) -> Prefixed . lift ! Construct (key :*: value) empty
 --	morphing (run . run . premorph -> Just (Construct focused subtree)) = T_U ! \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
---		Construct key Nothing -> Prefixed . lift ! attached focused == key ?# Construct (key :*: value) subtree ! Construct focused subtree
---		Construct key (Just keys) -> Prefixed . lift ! attached focused != key ?# Construct focused subtree
+--		Construct key Nothing -> Prefixed . lift ! attached focused == key ? Construct (key :*: value) subtree ! Construct focused subtree
+--		Construct key (Just keys) -> Prefixed . lift ! attached focused != key ? Construct focused subtree
 --			! Construct focused ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value =||!> subtree
 
 ---------------------------------- Non-empty prefixed rose tree ------------------------------------
@@ -90,17 +90,17 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 --	type Morphing (Vary Element) (Prefixed (Construction List) k) =
 --		((:*:) (Nonempty List k) <:.> Identity) <:.:> Prefixed (Construction List) k := (->)
 --	morphing (run . premorph -> Construct x (TU Nothing)) = T_U ! \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
---		Construct key Nothing -> Prefixed ! attached x == key ?# Construct (key :*: value) empty ! Construct x empty
+--		Construct key Nothing -> Prefixed ! attached x == key ? Construct (key :*: value) empty ! Construct x empty
 --		Construct _ (Just _) -> Prefixed ! Construct x (TU Nothing)
 --	morphing (run . premorph -> Construct x (TU (Just subtree))) = T_U ! \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
---		Construct key Nothing -> Prefixed ! attached x != key ?# Construct x # lift subtree
+--		Construct key Nothing -> Prefixed ! attached x != key ? Construct x # lift subtree
 --			! Construct (key :*: value) (lift subtree)
---		Construct key (Just keys) -> Prefixed ! attached x != key ?# Construct x # lift subtree
+--		Construct key (Just keys) -> Prefixed ! attached x != key ? Construct x # lift subtree
 --			! Construct (key :*: value) . lift ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value =||!> subtree
 
 find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose := k :*: a -> Maybe a
-find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ?# Just (extract ! extract tree) ! Nothing
-find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ?# Nothing ! find_rose_sub_tree ks =<< subtree where
+find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? Just (extract ! extract tree) ! Nothing
+find_rose_sub_tree (Construct k (Just ks)) tree = k != attached (extract tree) ? Nothing ! find_rose_sub_tree ks =<< subtree where
 
 	subtree :: Maybe :. Nonempty Rose := k :*: a
 	subtree = find @Element # attached . extract >-|- equate (extract ks) # deconstruct tree
