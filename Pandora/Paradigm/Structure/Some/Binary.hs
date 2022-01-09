@@ -26,7 +26,7 @@ import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Conditional ((?))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (=||))
-import Pandora.Paradigm.Inventory.Ability.Viewable (view)
+import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Replaceable (replace)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
@@ -60,7 +60,7 @@ instance Morphable Insert Binary where
 		Nothing -> T_U ! \(T_U (Identity x :*: _)) -> lift # leaf x
 		Just struct -> T_U ! \(T_U (Identity x :*: Convergence f)) -> lift @(->) !
 			let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
-			let step = (?) <-|-|- view @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- replace @(Obscure Lens) (leaf x) in
+			let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- replace @(Obscure Lens) (leaf x) in
 			order struct ! step # sub @Left # struct ! step # sub @Right # struct ! f x # extract struct
 
 instance Nullable Binary where
@@ -92,7 +92,7 @@ instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
 	morphing (premorph -> struct) = T_U ! \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
-		let step = (?) <-|-|- view @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- replace @(Obscure Lens) (leaf x) in
+		let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- replace @(Obscure Lens) (leaf x) in
 		order struct ! step # sub @Left # struct ! step # sub @Right # struct ! f x # extract struct
 
 instance Substructure Root (Construction Wye) where
@@ -127,8 +127,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		Nothing -> TT ! \_ -> Nothing
 		Just tree -> TT ! \key ->
 			let root = extract tree in key <=> attached root & order (Just # extract root)
-				(lookup @Key key . Prefixed =<< view @(Obscure Lens) # sub @Left # tree)
-				(lookup @Key key . Prefixed =<< view @(Obscure Lens) # sub @Right # tree)
+				(lookup @Key key . Prefixed =<< get @(Obscure Lens) # sub @Left # tree)
+				(lookup @Key key . Prefixed =<< get @(Obscure Lens) # sub @Right # tree)
 
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Identity) <:.:> Prefixed Binary k := (->)
@@ -147,8 +147,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT ! \key ->
 		key <=> attached x & order (Just # extract x)
-			(lookup @Key key . Prefixed . extract =<< view @(Obscure Lens) # sub @Left # xs)
-			(lookup @Key key . Prefixed . extract =<< view @(Obscure Lens) # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract =<< get @(Obscure Lens) # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract =<< get @(Obscure Lens) # sub @Left # xs)
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 

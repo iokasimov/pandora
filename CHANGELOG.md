@@ -658,7 +658,7 @@
 * Wrap left part of `Tape` into `Reverse`
 * Rename `-+-` operator to `.-+-` in Algebraic module
 * Define `Ability` umbrella module (like in `Structure`)
-* Define experimenal `Viewable`, `Replaceable` and `Modifiable` typeclasses
+* Define experimenal `Gettable`, `Replaceable` and `Modifiable` typeclasses
 * Define `Some` umbrella module (like in `Structure`)
 * Remove `current`, `replace`, `modify` methods of `State` effect
 * Rename `modify_` method of `Modifiable` ability to `modify`

@@ -1,6 +1,6 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
-module Pandora.Paradigm.Inventory.Ability.Viewable where
+module Pandora.Paradigm.Inventory.Ability.Gettable where
 
-class Viewable i where
-	type family Viewing i e r :: *
-	view :: Viewing i e r
+class Gettable i where
+	type family Getting i e r :: *
+	get :: Getting i e r

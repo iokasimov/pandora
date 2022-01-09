@@ -20,7 +20,7 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (<--))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, extract)
-import Pandora.Paradigm.Inventory.Ability.Viewable (Viewable (Viewing, view))
+import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
@@ -53,6 +53,6 @@ overlook (State state) = State ! \ts -> mult @(<--) @(:*:) @(:*:) ! (state <-|- 
 	=> Lens available src tgt -> tgt -> t src
 lens =<> new = adapt (modify @State ! replace @(Lens _) new lens)
 
-(~<>) :: (Pointable available, Covariant (->) (->) available, Viewable (Lens available), Stateful src t)
+(~<>) :: (Pointable available, Covariant (->) (->) available, Gettable (Lens available), Stateful src t)
 	=> Lens available src tgt -> (tgt -> tgt) -> t src
 lens ~<> f = adapt (modify @State ! modify @(Lens _) f lens)

@@ -27,7 +27,7 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary (twosome)
-import Pandora.Paradigm.Inventory.Ability.Viewable (view)
+import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Inventory.Some.State (State, fold)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
@@ -179,14 +179,14 @@ instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
 instance Morphable (Rotate Left) (Tape List) where
 	type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		let subtree = twosome # Reverse (view @(Convex Lens) # sub @Tail # left) # item @Push x right in
-		TT ! (twosome . Identity . extract) % subtree <-|- view @(Obscure Lens) (sub @Root) left
+		let subtree = twosome # Reverse (get @(Convex Lens) # sub @Tail # left) # item @Push x right in
+		TT ! (twosome . Identity . extract) % subtree <-|- get @(Obscure Lens) (sub @Root) left
 
 instance Morphable (Rotate Right) (Tape List) where
 	type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		let subtree = twosome # Reverse (item @Push x left) # view @(Convex Lens) (sub @Tail) right in
-		TT ! twosome % subtree <-|- view @(Obscure Lens) (sub @Root) right
+		let subtree = twosome # Reverse (item @Push x left) # get @(Convex Lens) (sub @Tail) right in
+		TT ! twosome % subtree <-|- get @(Obscure Lens) (sub @Root) right
 
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
 	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)
@@ -255,7 +255,7 @@ instance Morphable (Rotate Right) (Tape (Construction Maybe)) where
 
 instance Morphable (Into (Tape List)) (Construction Maybe) where
 	type Morphing (Into (Tape List)) (Construction Maybe) = Tape List
-	morphing (premorph -> ne) = twosome # Identity (extract ne) ! twosome # Reverse zero # (view @(Convex Lens) # sub @Tail # ne)
+	morphing (premorph -> ne) = twosome # Identity (extract ne) ! twosome # Reverse zero # (get @(Convex Lens) # sub @Tail # ne)
 
 instance Morphable (Into (Tape List)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Tape List)) (Tape (Construction Maybe)) = Tape List
