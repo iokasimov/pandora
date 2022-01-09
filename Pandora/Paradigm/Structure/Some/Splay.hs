@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Splay where
 
 import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#))
+import Pandora.Pattern.Category ((#), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Primary ()
@@ -15,11 +15,13 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
-import Pandora.Paradigm.Inventory.Some.Optics (over)
+import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
+import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure)
 import Pandora.Paradigm.Schemes (TT (TT), type (<::>))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate, Into), premorph, rotate, into)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morphed, Morph (Rotate, Into), premorph, rotate, into)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (sub)
+import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Some.Binary (Binary)
 
 data Splay a = Zig a | Zag a
@@ -88,12 +90,15 @@ instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Maybe <::> Construction Wye
-	morphing = rotate @(Left Zig) . over (sub @Left) (run . rotate @(Right Zig) =<<) . premorph
+	morphing (premorph -> struct) = rotate @(Left Zig) ! modify @(Obscure Lens) # try_to_rotate @(Right Zig) # sub @Left # struct
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Maybe <::> Construction Wye
-	morphing = rotate @(Right Zig) . over (sub @Right) (run . rotate @(Left Zig) =<<) . premorph
+	morphing (premorph -> struct) = rotate @(Right Zig) ! modify @(Obscure Lens) # try_to_rotate @(Left Zig) # sub @Right # struct
 
 branch :: forall b . Morphable (Into (b Maybe)) Wye => Wye ~> Morphing (Into (b Maybe)) Wye
 branch = into @(b Maybe)
+
+try_to_rotate :: forall direction . Morphed (Rotate direction) (Nonempty Binary) Binary => Nonempty Binary ~> Nonempty Binary
+try_to_rotate tree = resolve @(Nonempty Binary _) identity tree ! run # rotate @direction tree

@@ -668,3 +668,4 @@
 * Remove `set` method of `Lens`
 * Define experimental `Conditional` typeclass
 * Remove `?` method of `Boolean` datatype
+* Remove `over` method of `Lens`

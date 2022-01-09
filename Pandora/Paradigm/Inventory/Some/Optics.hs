@@ -83,10 +83,6 @@ instance Category (Lens Maybe) where
 -- Lens as natural transformation
 type (#=@) source target available = forall a . Lens available (source a) (target a)
 
--- | Modify focused target value
-over :: Lens available source target -> (available target -> available target) -> source -> source
-over lens f = extract . retrofit f . run lens
-
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
 represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate ! \r' -> r' == r ? target ! r' <#> source)
@@ -127,4 +123,4 @@ instance Pointable t => Replaceable (Lens t) where
 
 instance (Viewable (Lens t), Covariant (->) (->) t, Pointable t) => Modifiable (Lens t) where
 	type instance Modification (Lens t) source target = (target -> target) -> Lens t source target -> source -> source
-	modify f lens source = over lens (f <-|-) source
+	modify f lens = extract . retrofit (f <-|-) . run lens
