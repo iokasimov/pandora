@@ -2,13 +2,8 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, (=<>), (~<>)) where
 
-import Pandora.Paradigm.Inventory.Some.Optics as Exports
-import Pandora.Paradigm.Inventory.Some.Store as Exports
-import Pandora.Paradigm.Inventory.Some.State as Exports
-import Pandora.Paradigm.Inventory.Some.Imprint as Exports
-import Pandora.Paradigm.Inventory.Some.Equipment as Exports
-import Pandora.Paradigm.Inventory.Some.Provision as Exports
-import Pandora.Paradigm.Inventory.Some.Accumulator as Exports
+import Pandora.Paradigm.Inventory.Ability as Exports
+import Pandora.Paradigm.Inventory.Some as Exports
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((#))
@@ -20,9 +15,6 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (<--))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, extract)
-import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
-import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
-import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 
