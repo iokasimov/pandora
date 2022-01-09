@@ -98,8 +98,8 @@ library
     -- Tools for datastructures
     Pandora.Paradigm.Inventory
     Pandora.Paradigm.Inventory.Ability
-    Pandora.Paradigm.Inventory.Ability.Viewable
-    Pandora.Paradigm.Inventory.Ability.Replaceable
+    Pandora.Paradigm.Inventory.Ability.Gettable
+    Pandora.Paradigm.Inventory.Ability.Settable
     Pandora.Paradigm.Inventory.Ability.Modifiable
     Pandora.Paradigm.Inventory.Some
     Pandora.Paradigm.Inventory.Some.Accumulator

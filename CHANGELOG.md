@@ -657,14 +657,11 @@
 * Define `Turnover` wrapper for data structures that can that can be rotated indefinitely
 * Wrap left part of `Tape` into `Reverse`
 * Rename `-+-` operator to `.-+-` in Algebraic module
-* Define `Ability` umbrella module (like in `Structure`)
+* Define `Ability` umbrella module (like in `Structure`) in `Inventory`
 * Define experimenal `Gettable`, `Settable` and `Modifiable` typeclasses
-* Define `Some` umbrella module (like in `Structure`)
+* Define `Some` umbrella module (like in `Structure`) in `Inventory`
 * Remove `current`, `replace`, `modify` methods of `State` effect
-* Rename `modify_` method of `Modifiable` ability to `modify`
-* Rename `replace_` method of `Replaceable` ability to `replace`
 * Remove `view` method of `Lens`
-* Rename `view_` method of `Viewable` ability to `view`
 * Remove `set` method of `Lens`
 * Define experimental `Conditional` typeclass
 * Remove `?` method of `Boolean` datatype
