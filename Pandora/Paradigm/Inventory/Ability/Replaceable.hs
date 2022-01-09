@@ -1,7 +1,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
-module Pandora.Paradigm.Inventory.Ability.Replaceable where
+module Pandora.Paradigm.Inventory.Ability.Settable where
 
-class Replaceable i where
-	type family Replacement i e r :: *
-	replace:: Replacement i e r
+class Settable i where
+	type family Setting i e r :: *
+	set:: Setting i e r
 

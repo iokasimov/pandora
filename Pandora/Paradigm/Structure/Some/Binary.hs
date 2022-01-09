@@ -27,7 +27,7 @@ import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>),
 import Pandora.Paradigm.Controlflow.Effect.Conditional ((?))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!), (=||))
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
-import Pandora.Paradigm.Inventory.Ability.Replaceable (replace)
+import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, Obscure)
@@ -60,7 +60,7 @@ instance Morphable Insert Binary where
 		Nothing -> T_U ! \(T_U (Identity x :*: _)) -> lift # leaf x
 		Just struct -> T_U ! \(T_U (Identity x :*: Convergence f)) -> lift @(->) !
 			let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
-			let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- replace @(Obscure Lens) (leaf x) in
+			let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) (leaf x) in
 			order struct ! step # sub @Left # struct ! step # sub @Right # struct ! f x # extract struct
 
 instance Nullable Binary where
@@ -92,7 +92,7 @@ instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
 	morphing (premorph -> struct) = T_U ! \(T_U (Identity x :*: Convergence f)) ->
 		let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
-		let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- replace @(Obscure Lens) (leaf x) in
+		let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) (leaf x) in
 		order struct ! step # sub @Left # struct ! step # sub @Right # struct ! f x # extract struct
 
 instance Substructure Root (Construction Wye) where

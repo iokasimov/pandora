@@ -18,7 +18,7 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=), (!)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
-import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
+import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
@@ -62,7 +62,7 @@ instance Monadic (->) (State s) where
 type Stateful s t = Adaptable t (->) (State s)
 
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable t (->) u) => (s -> u s) -> t s
-reconcile f = adapt . replace @State =<< adapt . f =<< adapt (get @State)
+reconcile f = adapt . set @State =<< adapt . f =<< adapt (get @State)
 
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 
@@ -73,9 +73,9 @@ instance Gettable State where
 	type Getting State state ouput = State state state
 	get = State delta
 
-instance Replaceable State where
-	type Replacement State state output = state -> State state state
-	replace new = State ! \_ -> new :*: new
+instance Settable State where
+	type Setting State state output = state -> State state state
+	set new = State ! \_ -> new :*: new
 
 instance Modifiable State where
 	type Modification State state output = (state -> state) -> State state state

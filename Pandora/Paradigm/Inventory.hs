@@ -21,7 +21,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (<--))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, extract)
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
-import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
+import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -51,7 +51,7 @@ overlook (State state) = State ! \ts -> mult @(<--) @(:*:) @(:*:) ! (state <-|- 
 
 (=<>) :: (Pointable available, Stateful src t)
 	=> Lens available src tgt -> tgt -> t src
-lens =<> new = adapt (modify @State ! replace @(Lens _) new lens)
+lens =<> new = adapt (modify @State ! set @(Lens _) new lens)
 
 (~<>) :: (Pointable available, Covariant (->) (->) available, Gettable (Lens available), Stateful src t)
 	=> Lens available src tgt -> (tgt -> tgt) -> t src

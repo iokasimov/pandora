@@ -14,7 +14,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Conditional (Conditional ((?)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (!)))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
-import Pandora.Paradigm.Inventory.Ability.Replaceable (Replaceable (Replacement, replace))
+import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
@@ -117,9 +117,9 @@ instance Gettable (Lens Maybe) where
 	type instance Getting (Lens Maybe) source target = Lens Maybe source target -> source -> Maybe target
 	get lens = position @_ @(Store _) . run lens
 
-instance Pointable t => Replaceable (Lens t) where
-	type instance Replacement (Lens t) source target = target -> Lens t source target -> source -> source
-	replace new lens source = look @(t _) # point new # run lens source
+instance Pointable t => Settable (Lens t) where
+	type instance Setting (Lens t) source target = target -> Lens t source target -> source -> source
+	set new lens source = look @(t _) # point new # run lens source
 
 instance (Gettable (Lens t), Covariant (->) (->) t, Pointable t) => Modifiable (Lens t) where
 	type instance Modification (Lens t) source target = (target -> target) -> Lens t source target -> source -> source
