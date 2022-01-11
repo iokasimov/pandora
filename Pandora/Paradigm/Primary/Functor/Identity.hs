@@ -95,3 +95,7 @@ instance Lattice a => Lattice (Identity a) where
 
 instance Group a => Group (Identity a) where
 	invert (Identity x) = Identity ! invert x
+
+type family Simplification (t :: * -> *) (a :: *) where
+	Simplification Identity a = a
+	Simplification t a = t a
