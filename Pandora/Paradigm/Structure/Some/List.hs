@@ -28,7 +28,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
-import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
+import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.State (State, fold)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens)

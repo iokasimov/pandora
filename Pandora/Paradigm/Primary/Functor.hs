@@ -16,10 +16,8 @@ import Pandora.Paradigm.Primary.Functor.Tagged as Exports
 import Pandora.Paradigm.Primary.Functor.Constant as Exports
 import Pandora.Paradigm.Primary.Functor.Identity as Exports
 
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean)
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 type Equivalence = Convergence Boolean
 type Comparison = Convergence Ordering

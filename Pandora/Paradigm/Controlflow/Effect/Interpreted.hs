@@ -2,7 +2,7 @@ module Pandora.Paradigm.Controlflow.Effect.Interpreted where
 
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))

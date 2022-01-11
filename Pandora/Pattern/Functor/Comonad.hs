@@ -1,6 +1,6 @@
 module Pandora.Pattern.Functor.Comonad where
 
-import Pandora.Pattern.Morphism.Straight (Straight (Straight))
+import Pandora.Pattern.Morphism.Straight (Straight)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Extendable (Extendable)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))

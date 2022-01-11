@@ -1,7 +1,6 @@
 module Pandora.Pattern.Kernel (Kernel (..)) where
 
-import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (Category (identity))
+import Pandora.Pattern.Category (Category)
 
 {- |
 > When providing a new instance, you should ensure it satisfies:

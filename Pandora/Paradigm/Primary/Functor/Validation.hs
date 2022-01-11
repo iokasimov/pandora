@@ -1,7 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Validation where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -25,16 +24,8 @@ data Validation e a = Flaws e | Validated a
 instance Covariant (->) (->) (Validation e) where
 	_ <-|- Flaws e = Flaws e
 	f <-|- Validated x = Validated ! f x
-	_ <-|- Flaws e = Flaws e
-	f <-|- Validated x = Validated ! f x
-	_ <-|- Flaws e = Flaws e
-	f <-|- Validated x = Validated ! f x
 
 instance Covariant (->) (->) (Flip Validation a) where
-	f <-|- Flip (Flaws e) = Flip . Flaws ! f e
-	_ <-|- Flip (Validated x) = Flip ! Validated x
-	f <-|- Flip (Flaws e) = Flip . Flaws ! f e
-	_ <-|- Flip (Validated x) = Flip ! Validated x
 	f <-|- Flip (Flaws e) = Flip . Flaws ! f e
 	_ <-|- Flip (Validated x) = Flip ! Validated x
 

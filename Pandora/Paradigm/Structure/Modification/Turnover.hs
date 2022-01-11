@@ -6,7 +6,7 @@ import Pandora.Pattern.Transformer.Hoistable ((/|\))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic ((>-|-<-|-))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=)))
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure, sub), Segment (Root, Tail))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
 
 newtype Turnover t a = Turnover (t a)
 
