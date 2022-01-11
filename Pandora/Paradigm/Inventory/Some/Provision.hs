@@ -20,6 +20,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
+import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Provision e a = Provision (e -> a)
@@ -58,3 +59,7 @@ type Provided e t = Adaptable t (->) (Provision e)
 
 provided :: Provided e t => t e
 provided = adapt # Provision identity
+
+instance Gettable Provision where
+	type Getting Provision p ouput = Provision p p
+	get = Provision identity
