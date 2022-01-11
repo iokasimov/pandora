@@ -649,7 +649,7 @@
 * Change priority of `!` operator
 * Remove `$` operator in favor of `!`
 
-0.5.0
+# 0.5.0
 * Define experimental `<-|-<-|-`, `<-|->-|-`, `>-|->-|-`, `>-|-<-|-` methods
 * Define `>-|-|-` method in `Contravariant` typeclass
 * Remove `Bivariant` typeclass
@@ -666,3 +666,5 @@
 * Define experimental `Conditional` typeclass
 * Remove `?` method of `Boolean` datatype
 * Remove `over` method of `Lens`
+
+# 0.5.1
