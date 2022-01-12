@@ -671,3 +671,4 @@
 * Define `Simplification` type family to extract type parameter from Identity
 * Redefine `Stack` structure interface
 * Define experimental `<-.-` operator in `Category` typeclass
+* Define experimental `-.->` operator in `Category` typeclass
