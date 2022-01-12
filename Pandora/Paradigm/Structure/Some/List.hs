@@ -5,6 +5,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((#), identity)
+import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -16,7 +17,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
-import Pandora.Paradigm.Primary.Algebraic ((<-*-), (.-+-), (-.#..-), extract, point, empty, void)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), (.-*-), (.-+-), (-.#..-), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic ((<-|-<-|-))
@@ -29,6 +30,7 @@ import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
+import Pandora.Paradigm.Inventory.Some.Equipment (Equipment (Equipment))
 import Pandora.Paradigm.Inventory.Some.State (State, fold)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens)
@@ -45,7 +47,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure, sub), Segment (Root, Tail))
-import Pandora.Paradigm.Structure.Interface.Stack (Stack)
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Topping, push, pop, top))
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
@@ -96,7 +98,17 @@ instance Morphable (Delete All) List where
 				! lift . Construct x . run . filter @All @List p # TT xs
 
 instance Stack List where
-
+	type Topping List = Maybe
+	type Popping List = Construction Maybe
+	push x = point x .-*- modify @State (item @Push x)
+	pop (TT (Just xs)) = Equipment ! deconstruct xs :*: Just (extract xs)
+	pop (TT Nothing) = Equipment ! Nothing :*: Nothing
+	top = P_Q_T ! \list -> case list of
+		TT Nothing -> Store ! Nothing :*: constant (TT Nothing)
+		TT (Just xs) -> Store ! Just (extract xs) :*: \new -> case new of
+			Nothing -> TT ! deconstruct xs
+			Just x -> TT ! Construct x . Just <-|- deconstruct xs
+		
 instance Nullable List where
 	null = Predicate ! \case { TT Nothing -> True ; _ -> False }
 
@@ -158,6 +170,13 @@ instance Substructure Tail (Construction Maybe) where
 	type Substance Tail (Construction Maybe) = List
 	substructure = imply @(Convex Lens _ _) (TT . deconstruct . lower)
 		(\source target -> lift (Construct # extract (lower source) # run target))
+
+instance Stack (Construction Maybe) where
+	type Topping (Construction Maybe) = Identity
+	type Popping (Construction Maybe) = Construction Maybe
+	push x = point x .-*- modify @State (Construct x . Just)
+	pop xs = Equipment ! deconstruct xs :*: extract xs
+	top = P_Q_T ! \xs -> Store ! Identity (extract xs) :*: \(Identity new) -> Construct new # deconstruct xs
 
 ---------------------------------------- Combinative list ------------------------------------------
 

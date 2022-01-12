@@ -669,3 +669,4 @@
 
 # 0.5.1
 * Define `Simplification` type family to extract type parameter from Identity
+* Redefine `Stack` structure interface
