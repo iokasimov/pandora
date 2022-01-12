@@ -10,6 +10,7 @@ import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
+import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 
 newtype Equipment e a = Equipment (e :*: a)
@@ -37,3 +38,7 @@ instance {-# OVERLAPS #-} Extendable (->) u => Extendable (->) ((:*:) e <:.> u) 
 
 retrieve :: Equipped e t => t a -> e
 retrieve = attached . run @(->) @(Equipment _) . adapt
+
+instance Gettable Equipment where
+	type Getting Equipment e output = Equipment e output -> e
+	get (Equipment (e :*: x)) = e
