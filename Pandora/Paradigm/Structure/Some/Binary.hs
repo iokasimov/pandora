@@ -3,7 +3,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (~>), type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#))
+import Pandora.Pattern.Category ((#), (<-.-))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable ((=<<))
@@ -58,10 +58,10 @@ instance Morphable Insert Binary where
 	type Morphing Insert Binary = (Identity <:.:> Comparison := (:*:)) <:.:> Binary := (->)
 	morphing struct = case run # premorph struct of
 		Nothing -> T_U ! \(T_U (Identity x :*: _)) -> lift # leaf x
-		Just struct -> T_U ! \(T_U (Identity x :*: Convergence f)) -> lift @(->) !
-			let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
+		Just binary -> T_U ! \(T_U (Identity x :*: Convergence f)) -> lift @(->) !
+			let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome <-.- Identity x <-.- Convergence f in
 			let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) (leaf x) in
-			order struct ! step # sub @Left # struct ! step # sub @Right # struct ! f x # extract struct
+			order binary ! step <-.- sub @Left <-.- binary ! step <-.- sub @Right <-.- binary ! f x <-.- extract binary
 
 instance Nullable Binary where
 	null = Predicate ! \case { TT Nothing -> True ; _ -> False }
@@ -91,9 +91,9 @@ instance Morphable (Into Binary) (Construction Wye) where
 instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Identity <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
 	morphing (premorph -> struct) = T_U ! \(T_U (Identity x :*: Convergence f)) ->
-		let continue xs = run # morph @Insert @(Nonempty Binary) xs ! twosome # Identity x # Convergence f in
+		let continue xs = run <-.- morph @Insert @(Nonempty Binary) xs ! twosome <-.- Identity x <-.- Convergence f in
 		let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) (leaf x) in
-		order struct ! step # sub @Left # struct ! step # sub @Right # struct ! f x # extract struct
+		order struct ! step <-.- sub @Left <-.- struct ! step <-.- sub @Right <-.- struct ! f x <-.- extract struct
 
 instance Substructure Root (Construction Wye) where
 	type Available Root (Construction Wye) = Identity
@@ -127,8 +127,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		Nothing -> TT ! \_ -> Nothing
 		Just tree -> TT ! \key ->
 			let root = extract tree in key <=> attached root & order (Just # extract root)
-				(lookup @Key key . Prefixed =<< get @(Obscure Lens) # sub @Left # tree)
-				(lookup @Key key . Prefixed =<< get @(Obscure Lens) # sub @Right # tree)
+				(lookup @Key key . Prefixed =<< get @(Obscure Lens) <-.- sub @Left <-.- tree)
+				(lookup @Key key . Prefixed =<< get @(Obscure Lens) <-.- sub @Right <-.- tree)
 
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Identity) <:.:> Prefixed Binary k := (->)
@@ -147,8 +147,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT ! \key ->
 		key <=> attached x & order (Just # extract x)
-			(lookup @Key key . Prefixed . extract =<< get @(Obscure Lens) # sub @Left # xs)
-			(lookup @Key key . Prefixed . extract =<< get @(Obscure Lens) # sub @Left # xs)
+			(lookup @Key key . Prefixed . extract =<< get @(Obscure Lens) <-.- sub @Left <-.- xs)
+			(lookup @Key key . Prefixed . extract =<< get @(Obscure Lens) <-.- sub @Left <-.- xs)
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 
@@ -172,7 +172,7 @@ instance Zippable (Construction Wye) where
 	type Breadcrumbs (Construction Wye) = (Wye <::> Construction Wye) <:.:> (Bifurcation <::> Bicursor) := (:*:)
 
 _focused_part_to_nonempty_binary_tree :: (Identity <:.:> Wye <::> Construction Wye := (:*:)) ~> Construction Wye
-_focused_part_to_nonempty_binary_tree (T_U (Identity x :*: xs)) = Construct x # run xs
+_focused_part_to_nonempty_binary_tree (T_U (Identity x :*: xs)) = Construct x <-.- run xs
 
 instance Morphable (Rotate Up) ((Identity <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
 	type Morphing (Rotate Up) ((Identity <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:))
@@ -180,18 +180,18 @@ instance Morphable (Rotate Up) ((Identity <:.:> Wye <::> Construction Wye := (:*
 	morphing struct = case run # premorph struct of
 		focused :*: TT (TT (Rightward (Construct (T_U (Identity parent :*: rest)) next))) ->
 			lift . (twosome % TT (TT next)) . twosome (Identity parent) . TT ! resolve
-				# Both (_focused_part_to_nonempty_binary_tree focused)
-				# Left (_focused_part_to_nonempty_binary_tree focused)
-				# run rest
+				<-.- Both (_focused_part_to_nonempty_binary_tree focused)
+				<-.- Left (_focused_part_to_nonempty_binary_tree focused)
+				<-.- run rest
 		focused :*: TT (TT (Leftward (Construct (T_U (Identity parent :*: rest)) next))) ->
 			lift . (twosome % TT (TT next)) . twosome (Identity parent) . TT ! resolve
-				# Both % _focused_part_to_nonempty_binary_tree focused
-				# Right (_focused_part_to_nonempty_binary_tree focused)
-				# run rest
+				<-.- Both % _focused_part_to_nonempty_binary_tree focused
+				<-.- Right (_focused_part_to_nonempty_binary_tree focused)
+				<-.- run rest
 		_ -> TT Nothing
 
 _nonempty_binary_tree_to_focused_part :: Construction Wye ~> Identity <:.:> Wye <::> Construction Wye := (:*:)
-_nonempty_binary_tree_to_focused_part (Construct x xs) = twosome # Identity x # TT xs
+_nonempty_binary_tree_to_focused_part (Construct x xs) = twosome <-.- Identity x <-.- TT xs
 
 instance Morphable (Rotate (Down Left)) ((Identity <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
 	type Morphing (Rotate (Down Left)) ((Identity <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:))
@@ -199,10 +199,10 @@ instance Morphable (Rotate (Down Left)) ((Identity <:.:> Wye <::> Construction W
 	morphing struct = case run # premorph struct of
 		T_U (Identity x :*: TT (Left lst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward ! Construct # twosome (Identity x) (TT Nothing) # next
+				. TT . TT . Leftward ! Construct <-.- twosome (Identity x) (TT Nothing) <-.- next
 		T_U (Identity x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward ! Construct # twosome (Identity x) (lift rst) # next
+				. TT . TT . Leftward ! Construct <-.- twosome (Identity x) (lift rst) <-.- next
 		_ -> TT Nothing
 
 instance Morphable (Rotate (Down Right)) ((Identity <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
@@ -211,10 +211,10 @@ instance Morphable (Rotate (Down Right)) ((Identity <:.:> Wye <::> Construction 
 	morphing struct = case run # premorph struct of
 		T_U (Identity x :*: TT (Right rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward ! Construct # twosome (Identity x) (TT Nothing) # next
+				. TT . TT . Rightward ! Construct # twosome <-.- Identity x <-.- TT Nothing # next
 		T_U (Identity x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward ! Construct # twosome (Identity x) (lift lst) # next
+				. TT . TT . Rightward ! Construct # twosome <-.- Identity x <-.- lift lst # next
 		_ -> TT Nothing
 
 leaf :: a :=> Nonempty Binary
