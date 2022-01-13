@@ -5,6 +5,7 @@
 module Pandora.Paradigm.Structure.Ability.Zipper where
 
 import Pandora.Core.Functor (type (:=), type (:::))
+import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
@@ -20,7 +21,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-))
 import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
-import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
+import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
@@ -54,6 +55,10 @@ type family Fastenable structure rs where
 
 type Tape t = Identity <:.:> (Reverse t <:.:> t := (:*:)) := (:*:)
 
+instance Impliable (Tape t a) where
+	type Arguments (Tape t a) = a -> t a -> t a -> Tape t a
+	imply focused left right = twosome # Identity focused ! twosome # Reverse left # right
+
 -- TODO: It's too fragile to define such an instance without any hints about zippers?
 -- Should we wrap Zipper in Tagged Zippable?
 instance Covariant (->) (->) t => Substructure Root (Tape t) where
@@ -66,27 +71,28 @@ instance Covariant (->) (->) t => Substructure Left (Tape t) where
 	type Available Left (Tape t) = Identity
 	type Substance Left (Tape t) = Reverse t
 	substructure = P_Q_T ! \zipper -> case run # lower zipper of
-		Identity x :*: T_U (ls :*: rs) -> Store ! Identity ls :*: lift . T_U . (Identity x :*:) . T_U . (:*: rs) . extract
+		Identity x :*: T_U (ls :*: rs) -> Store ! Identity ls :*: lift . (imply @(Tape t _) x % rs) . run . extract
+		-- Identity x :*: T_U (ls :*: rs) -> Store ! Identity ls :*: lift . T_U . (Identity x :*:) . T_U . (:*: rs) . extract
 
 instance Covariant (->) (->) t => Substructure Right (Tape t) where
 	type Available Right (Tape t) = Identity
 	type Substance Right (Tape t) = t
 	substructure = P_Q_T ! \zipper -> case run # lower zipper of
-		Identity x :*: T_U (ls :*: rs) -> Store ! Identity rs :*: lift . T_U . (Identity x :*:) . T_U . (ls :*:) . extract
+		Identity x :*: T_U (Reverse ls :*: rs) -> Store ! Identity rs :*: lift . imply @(Tape t _) x ls . extract
 
 instance Covariant (->) (->) t => Substructure Up (Tape t <::> Tape t) where
 	type Available Up (Tape t <::> Tape t) = Identity
 	type Substance Up (Tape t <::> Tape t) = t <::> Tape t
 	substructure = P_Q_T ! \x -> case run . run . extract . run # x of
-		Identity focused :*: T_U (d :*: u) ->
-			Store ! Identity (TT u) :*: lift . TT . twosome (Identity focused) . twosome d . run . extract
+		Identity focused :*: T_U (Reverse d :*: u) ->
+			Store ! Identity (TT u) :*: lift . TT . imply @(Tape t _) focused d . run . extract
 
 instance Covariant (->) (->) t => Substructure Down (Tape t <::> Tape t) where
 	type Available Down (Tape t <::> Tape t) = Identity
 	type Substance Down (Tape t <::> Tape t) = Reverse t <::> Tape t
 	substructure = P_Q_T ! \ii -> case run . run . extract . run # ii of
-		Identity focused :*: T_U (d :*: u) -> 
-			Store ! Identity (TT d) :*: lift . TT . twosome (Identity focused) . (twosome % u) . run . extract
+		Identity focused :*: T_U (d :*: u) ->
+			Store ! Identity (TT d) :*: lift . TT . (imply @(Tape t _) focused % u) . run . run . extract
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure Left (Tape t <::> Tape t) where
 	type Available Left (Tape t <::> Tape t) = Identity

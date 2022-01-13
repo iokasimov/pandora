@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.List where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#), (<-.-), identity)
+import Pandora.Pattern.Category ((#), (<-.-), (-.->), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -193,9 +193,7 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
 	f <<= z = let move rtt = TT . deconstruct ! run . rtt .-+ z in
-		twosome # Identity <-.- f z ! twosome
-			# Reverse (f <-|- move <-.- rotate @Left)
-			# f <-|- move <-.- rotate @Right
+		imply @(Tape List _) <-.- f z <-.- (f <-|- move <-.- rotate @Left) <-.- (f <-|- move <-.- rotate @Right)
 
 instance Morphable (Rotate Left) (Tape List) where
 	type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
@@ -206,7 +204,7 @@ instance Morphable (Rotate Left) (Tape List) where
 instance Morphable (Rotate Right) (Tape List) where
 	type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		let subtree = twosome # Reverse (item @Push x left) # get @(Convex Lens) (sub @Tail) right in
+		let subtree = twosome # Reverse (item @Push x left) # TT -.-> get @Equipment -.-> pop right in
 		TT ! twosome % subtree <-|- get @(Obscure Lens) <-.- sub @Root <-.- right
 
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
@@ -215,12 +213,11 @@ instance Morphable (Rotate Left) (Turnover (Tape List)) where
 		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run right) .-+- (rotate_left x right <-|- run left) where
 
 		rotate_left :: a -> List a -> Nonempty List a -> Tape List a
-		rotate_left focused rs (Construct lx lxs) = twosome # point lx
-			! twosome # Reverse (TT lxs) # item @Push focused rs
+		rotate_left focused rs (Construct lx lxs) = imply @(Tape List _) ! lx ! TT lxs ! item @Push focused rs
 
 		rotate_over :: a -> Nonempty List a -> Tape List a
 		rotate_over focused rs = let new_left = attached (put_over <<- rs ! point focused) in
-			twosome # point (extract new_left) ! twosome # Reverse . TT <-.- deconstruct new_left # empty
+			imply @(Tape List _) ! extract new_left ! TT <-.- deconstruct new_left ! empty
 
 		put_over :: a -> State (Nonempty List a) ()
 		put_over = void . modify @State . item @Push
@@ -231,12 +228,11 @@ instance Morphable (Rotate Right) (Turnover (Tape List)) where
 		resolve @(Tape List _) Turnover # premorph s ! (rotate_over x <-|- run left) .-+- (rotate_right x left <-|- run right) where
 
 		rotate_right :: a -> List a -> Nonempty List a -> Tape List a
-		rotate_right focused ls (Construct rx rxs) = twosome # point rx
-			! twosome # Reverse <-.- item @Push focused ls # TT rxs
+		rotate_right focused ls (Construct rx rxs) = imply @(Tape List _) ! rx ! item @Push focused ls ! TT rxs
 
 		rotate_over :: a -> Nonempty List a -> Tape List a
 		rotate_over focused ls = let new_right = attached (put_over <<- ls ! point focused) in
-			twosome # point <-.- extract new_right ! twosome # Reverse empty # TT <-.- deconstruct new_right
+			imply @(Tape List _) ! extract new_right ! empty ! TT <-.- deconstruct new_right
 
 		put_over :: a -> State (Nonempty List a) ()
 		put_over = void . modify @State . item @Push
