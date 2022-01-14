@@ -1,5 +1,4 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
-
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
 import Pandora.Core.Functor (type (:=), type (~>), type (:=:=>))

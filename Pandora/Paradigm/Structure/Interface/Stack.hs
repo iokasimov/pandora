@@ -1,9 +1,7 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
 module Pandora.Paradigm.Structure.Interface.Stack where
 
-import Pandora.Core.Functor (type (#))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
-import Pandora.Paradigm.Primary.Functor.Identity (Simplification)
-import Pandora.Paradigm.Inventory.Some.Equipment (Equipment)
 import Pandora.Paradigm.Inventory.Some.State (State)
 import Pandora.Paradigm.Inventory.Some.Optics (Lens)
 
@@ -15,6 +13,7 @@ import Pandora.Paradigm.Inventory.Some.Optics (Lens)
 class Stack t where
 	type Topping t :: * -> *
 	type Popping t :: * -> *
-	push :: e -> State (t e) e
-	top :: Lens # Topping t # t e # e
-	pop :: t e -> Equipment # Maybe ((Popping t) e) # Simplification (Topping t) e
+	type Pushing t :: * -> *
+	top :: Lens (Topping t) (t e) e
+	pop :: State ((Popping t) e) (Maybe e)
+	push :: e -> State ((Pushing t) e) e

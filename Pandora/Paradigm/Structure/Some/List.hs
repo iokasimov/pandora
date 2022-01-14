@@ -6,7 +6,7 @@ import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((#), (<-.-), (-.->), identity)
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -29,6 +29,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
+import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.Equipment (Equipment (Equipment))
 import Pandora.Paradigm.Inventory.Some.State (State, fold)
@@ -47,7 +48,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure, sub), Segment (Root, Tail))
-import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Topping, push, pop, top))
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Pushing, Topping, push, pop, top))
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
@@ -99,16 +100,16 @@ instance Morphable (Delete All) List where
 
 instance Stack List where
 	type Topping List = Maybe
-	type Popping List = Construction Maybe
-	push x = point x .-*- modify @State (item @Push x)
-	pop (TT (Just xs)) = Equipment ! deconstruct xs :*: Just (extract xs)
-	pop (TT Nothing) = Equipment ! Nothing :*: Nothing
+	type Popping List = List
+	type Pushing List = Construction Maybe
 	top = P_Q_T ! \list -> case list of
 		TT Nothing -> Store ! Nothing :*: constant (TT Nothing)
 		TT (Just xs) -> Store ! Just (extract xs) :*: \new -> case new of
 			Nothing -> TT ! deconstruct xs
 			Just x -> TT ! Construct x . Just <-|- deconstruct xs
-		
+	pop = resolve @(Nonempty List _) (\(Construct x xs) -> constant -.-> Just x <-|- set @State <-.- TT xs) (point Nothing) . run =<< get @State
+	push x = point x .-*- modify @State (item @Push x)
+
 instance Nullable List where
 	null = Predicate ! \case { TT Nothing -> True ; _ -> False }
 
@@ -174,9 +175,11 @@ instance Substructure Tail (Construction Maybe) where
 instance Stack (Construction Maybe) where
 	type Topping (Construction Maybe) = Identity
 	type Popping (Construction Maybe) = Construction Maybe
-	push x = point x .-*- modify @State (Construct x . Just)
-	pop xs = Equipment ! deconstruct xs :*: extract xs
+	type Pushing (Construction Maybe) = Construction Maybe
 	top = P_Q_T ! \xs -> Store ! Identity (extract xs) :*: \(Identity new) -> Construct new # deconstruct xs
+	-- It will never return you the last element
+	pop = (\(Construct x xs) -> constant x <-|-|- set @State <<- xs) =<< get @State
+	push x = point x .-*- modify @State (Construct x . Just)
 
 ---------------------------------------- Combinative list ------------------------------------------
 
@@ -201,10 +204,11 @@ instance Morphable (Rotate Left) (Tape List) where
 		let subtree = twosome # Reverse (get @(Convex Lens) # sub @Tail # left) # item @Push x right in
 		TT ! (twosome . Identity . extract) % subtree <-|- get @(Obscure Lens) <-.- sub @Root <-.- left
 
+-- TODO: refactor it so that we dissect right list once
 instance Morphable (Rotate Right) (Tape List) where
 	type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		let subtree = twosome # Reverse (item @Push x left) # TT -.-> get @Equipment -.-> pop right in
+		let subtree = twosome ! Reverse (item @Push x left) ! attached (pop @List ! right) in
 		TT ! twosome % subtree <-|- get @(Obscure Lens) <-.- sub @Root <-.- right
 
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
@@ -274,7 +278,7 @@ instance Morphable (Rotate Right) (Tape (Construction Maybe)) where
 
 instance Morphable (Into (Tape List)) (Construction Maybe) where
 	type Morphing (Into (Tape List)) (Construction Maybe) = Tape List
-	morphing (premorph -> ne) = twosome # Identity (extract ne) ! twosome # Reverse zero # TT . get @Equipment <-.- pop ne
+	morphing (premorph -> ne) = imply @(Tape List _) ! extract ne ! empty ! TT -.-> deconstruct ne
 
 instance Morphable (Into (Tape List)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Tape List)) (Tape (Construction Maybe)) = Tape List

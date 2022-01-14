@@ -1,5 +1,4 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
-
 module Pandora.Paradigm.Structure.Interface.Set where
 
 import Pandora.Core.Functor (type (:=))
