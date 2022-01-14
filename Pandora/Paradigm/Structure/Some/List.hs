@@ -101,7 +101,7 @@ instance Morphable (Delete All) List where
 instance Stack List where
 	type Topping List = Maybe
 	type Popping List = List
-	type Pushing List = Construction Maybe
+	type Pushing List = List
 	top = P_Q_T ! \list -> case list of
 		TT Nothing -> Store ! Nothing :*: constant (TT Nothing)
 		TT (Just xs) -> Store ! Just (extract xs) :*: \new -> case new of
