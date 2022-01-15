@@ -672,3 +672,4 @@
 * Redefine `Stack` structure interface
 * Define experimental `<-.-` operator in `Category` typeclass
 * Define experimental `-.->` operator in `Category` typeclass
+* Define experimental `Zoomable` typeclass

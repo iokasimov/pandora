@@ -1,10 +1,11 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, (=<>), (~<>)) where
+module Pandora.Paradigm.Inventory (module Exports, Zoomable (Zooming, zoom_), zoom, overlook, (=<>), (~<>)) where
 
 import Pandora.Paradigm.Inventory.Ability as Exports
 import Pandora.Paradigm.Inventory.Some as Exports
 
+import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((#))
 import Pandora.Pattern.Kernel (constant)
@@ -12,6 +13,8 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (<--))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, extract)
@@ -31,6 +34,28 @@ instance Adjoint (->) (->) (Accumulator e) (Imprint e) where
 instance Adjoint (->) (->) (Equipment e) (Provision e) where
 	f -| x = Provision ! f . Equipment -| x
 	g |- x = run . g |- run x
+
+class Zoomable (available :: * -> *) where
+	type Zooming available target :: *
+	zoom_ :: Lens available bg ls -> State (Zooming available ls) ~> State bg
+
+instance Zoomable Identity where
+	type Zooming Identity target = target
+
+	zoom_ :: forall ls bg result . Convex Lens bg ls -> State ls result -> State bg result
+	zoom_ lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
+
+		restruct :: (Identity ls -> bg) -> Identity ls -> bg :*: result
+		restruct to (Identity target) = run # to . Identity <-|- Flip (less ! target)
+
+instance Zoomable Maybe where
+	type Zooming Maybe target = Maybe target
+
+	zoom_ :: forall ls bg result . Obscure Lens bg ls -> State (Maybe ls) result -> State bg result
+	zoom_ lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
+
+		restruct :: (Maybe ls -> bg) -> Maybe ls -> bg :*: result
+		restruct to target = run # to <-|- Flip (less ! target)
 
 zoom :: forall bg ls t u result . Stateful bg t => Lens u bg ls -> State (u ls) result -> t result
 zoom lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
