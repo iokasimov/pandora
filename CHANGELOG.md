@@ -673,3 +673,4 @@
 * Define experimental `<---` operator in `Category` typeclass
 * Define experimental `--->` operator in `Category` typeclass
 * Define experimental `Zoomable` typeclass
+* Rename `-.#..-` operator to `.:..`

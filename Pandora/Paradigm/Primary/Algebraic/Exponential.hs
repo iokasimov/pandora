@@ -14,7 +14,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
-infixr 7 -.#..-
+infixr 7 .:..
 infixr 9 %
 infixl 1 &
 
@@ -54,8 +54,8 @@ type (-->) = Straight (->)
 instance Covariant (->) (->) ((-->) b) where
 	f <-|- Straight g = Straight (f . g)
 
-(-.#..-) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
-(-.#..-) f = (<-|-) (f .)
+(.:..) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
+(.:..) f = (<-|-) (f .)
 
 {-# INLINE (%) #-}
 (%) :: (a -> b -> c) -> b -> a -> c
