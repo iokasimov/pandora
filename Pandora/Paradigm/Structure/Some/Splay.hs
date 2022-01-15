@@ -5,7 +5,7 @@ module Pandora.Paradigm.Structure.Some.Splay where
 import Pandora.Core.Functor (type (~>), type (:.), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#), (<-.-), identity)
+import Pandora.Pattern.Category ((#), (<---), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Primary ()
@@ -81,22 +81,22 @@ instance Morphable (Rotate (Right Zig)) (Construction Wye) where
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zig))) (Construction Wye) = Maybe <::> Construction Wye
-	morphing (premorph -> tree) = TT ! run . rotate @(Left Zig) =<< run <-.- rotate @(Left Zig) tree
+	morphing (premorph -> tree) = TT ! run . rotate @(Left Zig) =<< run <--- rotate @(Left Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zig))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zig))) (Construction Wye) = Maybe <::> Construction Wye
-	morphing (premorph -> tree) = TT ! run . rotate @(Right Zig) =<< run <-.- rotate @(Right Zig) tree
+	morphing (premorph -> tree) = TT ! run . rotate @(Right Zig) =<< run <--- rotate @(Right Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Left (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Left (Zig Zag))) (Construction Wye) = Maybe <::> Construction Wye
-	morphing (premorph -> struct) = rotate @(Left Zig) ! modify @(Obscure Lens) <-.- try_to_rotate @(Right Zig) <-.- sub @Left <-.- struct
+	morphing (premorph -> struct) = rotate @(Left Zig) ! modify @(Obscure Lens) <--- try_to_rotate @(Right Zig) <--- sub @Left <--- struct
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate (Right (Zig Zag))) (Construction Wye) where
 	type Morphing (Rotate (Right (Zig Zag))) (Construction Wye) = Maybe <::> Construction Wye
-	morphing (premorph -> struct) = rotate @(Right Zig) ! modify @(Obscure Lens) <-.- try_to_rotate @(Left Zig) <-.- sub @Right <-.- struct
+	morphing (premorph -> struct) = rotate @(Right Zig) ! modify @(Obscure Lens) <--- try_to_rotate @(Left Zig) <--- sub @Right <--- struct
 
 branch :: forall b . Morphable (Into (b Maybe)) Wye => Wye ~> Morphing (Into (b Maybe)) Wye
 branch = into @(b Maybe)

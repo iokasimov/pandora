@@ -3,7 +3,7 @@ module Pandora.Paradigm.Structure.Some.Stream where
 
 import Pandora.Core.Functor (type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#), (<-.-), (-.->))
+import Pandora.Pattern.Category ((#), (<---), (--->))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
@@ -26,17 +26,17 @@ instance Zippable (Construction Identity) where
 
 instance Morphable (Rotate Left) (Tape Stream) where
 	type Morphing (Rotate Left) (Tape Stream) = Tape Stream
-	morphing (run . premorph -> Identity x :*: T_U (Reverse bs :*: fs)) = twosome # Identity <-.- extract bs
-		! twosome # Reverse -.-> extract <-.- deconstruct bs # Construct x <-.- point fs
+	morphing (run . premorph -> Identity x :*: T_U (Reverse bs :*: fs)) = twosome # Identity <--- extract bs
+		! twosome # Reverse ---> extract <--- deconstruct bs # Construct x <--- point fs
 
 instance Morphable (Rotate Right) (Tape Stream) where
 	type Morphing (Rotate Right) (Tape Stream) = Tape Stream
 	morphing (run . premorph -> Identity x :*: T_U (Reverse bs :*: fs)) = twosome # Identity (extract fs)
-		! twosome # Reverse -.-> Construct x <-.- point bs # extract (deconstruct fs)
+		! twosome # Reverse ---> Construct x <--- point bs # extract (deconstruct fs)
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
 	f <<= z = let move rtt = extract . deconstruct ! point . rtt .-+ z in
-		f <-|- twosome <-.- Identity z <-.- (twosome ! Reverse -.-> move -.-> rotate @Left ! move -.-> rotate @Right)
+		f <-|- twosome <--- Identity z <--- (twosome ! Reverse ---> move ---> rotate @Left ! move ---> rotate @Right)
 
 repeat :: a :=> Stream
 repeat x = Construct x . Identity ! repeat x

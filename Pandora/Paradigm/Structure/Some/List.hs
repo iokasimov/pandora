@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.List where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#), (<-.-), (-.->), identity)
+import Pandora.Pattern.Category ((#), (<---), (--->), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -96,7 +96,7 @@ instance Morphable (Delete All) List where
 		Nothing -> T_U ! \_ -> empty
 		Just (Construct x xs) -> T_U ! \p ->
 			run p x ? filter @All @List p (TT xs)
-				! lift . Construct x . run . filter @All @List p <-.- TT xs
+				! lift . Construct x . run . filter @All @List p <--- TT xs
 
 instance Stack List where
 	type Topping List = Maybe
@@ -107,7 +107,7 @@ instance Stack List where
 		TT (Just xs) -> Store ! Just (extract xs) :*: \new -> case new of
 			Nothing -> TT ! deconstruct xs
 			Just x -> TT ! Construct x . Just <-|- deconstruct xs
-	pop = resolve @(Nonempty List _) (\(Construct x xs) -> constant -.-> Just x <-|- set @State <-.- TT xs) (point Nothing) . run =<< get @State
+	pop = resolve @(Nonempty List _) (\(Construct x xs) -> constant ---> Just x <-|- set @State <--- TT xs) (point Nothing) . run =<< get @State
 	push x = point x .-*- modify @State (item @Push x)
 
 instance Nullable List where
@@ -164,13 +164,13 @@ instance Substructure Root (Construction Maybe) where
 	type Available Root (Construction Maybe) = Identity
 	type Substance Root (Construction Maybe) = Identity
 	substructure = imply @(Convex Lens _ _) (Identity . extract . lower)
-		(\source target -> lift (Construct <-.- extract target <-.- deconstruct (lower source)))
+		(\source target -> lift (Construct <--- extract target <--- deconstruct (lower source)))
 
 instance Substructure Tail (Construction Maybe) where
 	type Available Tail (Construction Maybe) = Identity
 	type Substance Tail (Construction Maybe) = List
 	substructure = imply @(Convex Lens _ _) (TT . deconstruct . lower)
-		(\source target -> lift (Construct <-.- extract (lower source) <-.- run target))
+		(\source target -> lift (Construct <--- extract (lower source) <--- run target))
 
 instance Stack (Construction Maybe) where
 	type Topping (Construction Maybe) = Identity
@@ -196,20 +196,20 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
 	f <<= z = let move rtt = TT . deconstruct ! run . rtt .-+ z in
-		imply @(Tape List _) <-.- f z <-.- (f <-|- move <-.- rotate @Left) <-.- (f <-|- move <-.- rotate @Right)
+		imply @(Tape List _) <--- f z <--- (f <-|- move <--- rotate @Left) <--- (f <-|- move <--- rotate @Right)
 
 instance Morphable (Rotate Left) (Tape List) where
 	type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
 		let subtree = twosome # Reverse (get @(Convex Lens) # sub @Tail # left) # item @Push x right in
-		TT ! (twosome . Identity . extract) % subtree <-|- get @(Obscure Lens) <-.- sub @Root <-.- left
+		TT ! (twosome . Identity . extract) % subtree <-|- get @(Obscure Lens) <--- sub @Root <--- left
 
 -- TODO: refactor it so that we dissect right list once
 instance Morphable (Rotate Right) (Tape List) where
 	type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
 		let subtree = twosome ! Reverse (item @Push x left) ! attached (pop @List ! right) in
-		TT ! twosome % subtree <-|- get @(Obscure Lens) <-.- sub @Root <-.- right
+		TT ! twosome % subtree <-|- get @(Obscure Lens) <--- sub @Root <--- right
 
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
 	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)
@@ -221,7 +221,7 @@ instance Morphable (Rotate Left) (Turnover (Tape List)) where
 
 		rotate_over :: a -> Nonempty List a -> Tape List a
 		rotate_over focused rs = let new_left = attached (put_over <<- rs ! point focused) in
-			imply @(Tape List _) ! extract new_left ! TT <-.- deconstruct new_left ! empty
+			imply @(Tape List _) ! extract new_left ! TT <--- deconstruct new_left ! empty
 
 		put_over :: a -> State (Nonempty List a) ()
 		put_over = void . modify @State . item @Push
@@ -236,7 +236,7 @@ instance Morphable (Rotate Right) (Turnover (Tape List)) where
 
 		rotate_over :: a -> Nonempty List a -> Tape List a
 		rotate_over focused ls = let new_right = attached (put_over <<- ls ! point focused) in
-			imply @(Tape List _) ! extract new_right ! empty ! TT <-.- deconstruct new_right
+			imply @(Tape List _) ! extract new_right ! empty ! TT <--- deconstruct new_right
 
 		put_over :: a -> State (Nonempty List a) ()
 		put_over = void . modify @State . item @Push
@@ -272,13 +272,13 @@ instance Morphable (Rotate Right) (Tape (Construction Maybe)) where
 	type Morphing (Rotate Right) (Tape (Construction Maybe)) =
 		Maybe <::> Tape (Construction Maybe)
 	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		TT ! twosome (Identity <-.- extract right)
-			<-|- twosome (Reverse <-.- item @Push x left)
+		TT ! twosome (Identity <--- extract right)
+			<-|- twosome (Reverse <--- item @Push x left)
 			<-|- deconstruct right
 
 instance Morphable (Into (Tape List)) (Construction Maybe) where
 	type Morphing (Into (Tape List)) (Construction Maybe) = Tape List
-	morphing (premorph -> ne) = imply @(Tape List _) ! extract ne ! empty ! TT -.-> deconstruct ne
+	morphing (premorph -> ne) = imply @(Tape List _) ! extract ne ! empty ! TT ---> deconstruct ne
 
 instance Morphable (Into (Tape List)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Tape List)) (Tape (Construction Maybe)) = Tape List
