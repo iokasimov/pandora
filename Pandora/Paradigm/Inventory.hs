@@ -37,12 +37,12 @@ instance Adjoint (->) (->) (Equipment e) (Provision e) where
 
 class Zoomable (available :: * -> *) where
 	type Zooming available target :: *
-	zoom_ :: Lens available bg ls -> State (Zooming available ls) ~> State bg
+	zoom_ :: forall bg ls t . Stateful bg t => Lens available bg ls -> State (Zooming available ls) ~> t
 
 instance Zoomable Identity where
 	type Zooming Identity target = target
 
-	zoom_ :: forall ls bg result . Convex Lens bg ls -> State ls result -> State bg result
+	zoom_ :: forall bg ls t result . Stateful bg t => Convex Lens bg ls -> State ls result -> t result
 	zoom_ lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
 
 		restruct :: (Identity ls -> bg) -> Identity ls -> bg :*: result
@@ -51,7 +51,7 @@ instance Zoomable Identity where
 instance Zoomable Maybe where
 	type Zooming Maybe target = Maybe target
 
-	zoom_ :: forall ls bg result . Obscure Lens bg ls -> State (Maybe ls) result -> State bg result
+	zoom_ :: forall bg ls t result . Stateful bg t => Obscure Lens bg ls -> State (Maybe ls) result -> t result
 	zoom_ lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
 
 		restruct :: (Maybe ls -> bg) -> Maybe ls -> bg :*: result
