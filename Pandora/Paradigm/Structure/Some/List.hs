@@ -4,7 +4,6 @@ module Pandora.Paradigm.Structure.Some.List where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
--- import Pandora.Pattern.Category ((#), (<---), (--->), identity)
 import Pandora.Pattern.Category ((<---), (--->), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|-|-)))
@@ -18,7 +17,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
-import Pandora.Paradigm.Primary.Algebraic ((<-*-), (.-*-), (.-+-), (-.#..-), extract, point, empty, void)
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), (.-*-), (.-+-), (.:..), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic ((<-|-<-|-))
@@ -127,9 +126,9 @@ instance Substructure Tail List where
 		Just ns -> lift . lift @(->) <-|- run (sub @Tail) ns
 		Nothing -> Store ! Identity zero :*: lift . identity . extract
 
--- | Transform any traversable structure into a stack
+-- | Transform any traversable structure into a list
 linearize :: forall t a . Traversable (->) (->) t => t a -> List a
-linearize = TT . extract . (run @(->) @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just -.#..- Construct)
+linearize = TT . extract . (run @(->) @(State (Maybe :. Nonempty List := a)) % Nothing) . fold (Just .:.. Construct)
 
 ----------------------------------------- Non-empty list -------------------------------------------
 
@@ -153,7 +152,7 @@ instance Morphable (Into List) (Construction Maybe <::> Maybe) where
 	morphing nonempty_list_with_maybe_elements = case run . premorph ---> nonempty_list_with_maybe_elements of
 		Construct (Just x) (Just xs) -> item @Push x ---> into @List ---> TT @Covariant @Covariant xs
 		Construct (Just x) Nothing -> point x
-		Construct Nothing (Just xs) -> into @List (TT @Covariant @Covariant xs)
+		Construct Nothing (Just xs) -> into @List ---> TT @Covariant @Covariant xs
 		Construct Nothing Nothing -> empty
 
 instance Morphable Push (Construction Maybe) where

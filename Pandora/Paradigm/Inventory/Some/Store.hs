@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint ((-|))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%), (-.#..-))
+import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%), (.:..))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic (extract, (<-|-<-|-), (>-|-<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -39,7 +39,7 @@ instance Monoidal (<--) (-->) (:*:) (:*:) (Store s) where
 
 -- TODO: Try to generalize (->) here
 instance Extendable (->) (Store s) where
-	f <<= Store x = Store ! f <-|-|- (Store -.#..- (identity @(->) -|) <-|- x)
+	f <<= Store x = Store ! f <-|-|- (Store .:.. (identity @(->) -|) <-|- x)
 
 instance Comonad (->) (Store s) where
 
