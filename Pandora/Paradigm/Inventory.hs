@@ -1,6 +1,6 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory (module Exports, Zoomable (Zooming, zoom_), zoom, overlook, (=<>), (~<>)) where
+module Pandora.Paradigm.Inventory (module Exports, Zoomable' (zoom'), Zoomable (Zooming, zoom_), zoom, overlook, (=<>), (~<>)) where
 
 import Pandora.Paradigm.Inventory.Ability as Exports
 import Pandora.Paradigm.Inventory.Some as Exports
@@ -13,7 +13,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity), Simplification)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (<--))
@@ -34,6 +34,23 @@ instance Adjoint (->) (->) (Accumulator e) (Imprint e) where
 instance Adjoint (->) (->) (Equipment e) (Provision e) where
 	f -| x = Provision ! f . Equipment -| x
 	g |- x = run . g |- run x
+
+class Zoomable' (tool :: * -> * -> *) (available :: * -> *) where
+	zoom' :: forall bg ls t . Adaptable t (->) (tool bg) => Lens available bg ls -> tool (Simplification available ls) ~> t
+
+instance Zoomable' State Identity where
+	zoom' :: forall bg ls t result . Stateful bg t => Convex Lens bg ls -> State ls result -> t result
+	zoom' lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
+
+		restruct :: (Identity ls -> bg) -> Identity ls -> bg :*: result
+		restruct to (Identity target) = run # to . Identity <-|- Flip (less ! target)
+
+instance Zoomable' State Maybe where
+	zoom' :: forall bg ls t result . Stateful bg t => Obscure Lens bg ls -> State (Maybe ls) result -> t result
+	zoom' lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
+
+		restruct :: (Maybe ls -> bg) -> Maybe ls -> bg :*: result
+		restruct to target = run # to <-|- Flip (less ! target)
 
 class Zoomable (available :: * -> *) where
 	type Zooming available target :: *
