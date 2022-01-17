@@ -1,5 +1,4 @@
 {-# LANGUAGE UndecidableInstances #-}
-
 module Pandora.Paradigm.Primary.Transformer.Jack where
 
 import Pandora.Pattern.Semigroupoid ((.))

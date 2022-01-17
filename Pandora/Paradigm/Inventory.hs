@@ -7,7 +7,7 @@ import Pandora.Paradigm.Inventory.Some as Exports
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#))
+import Pandora.Pattern.Category ((#), (<--))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -50,7 +50,7 @@ instance Zoomable State Maybe where
 	zoom lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
 
 		restruct :: (Maybe ls -> bg) -> Maybe ls -> bg :*: result
-		restruct to target = run # to <-|- Flip (less ! target)
+		restruct to target = run (to <-|- Flip <-- run less target)
 
 overlook :: (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => State s result -> State (t s) (t result)
 overlook (State state) = State ! \ts -> mult @(<--) @(:*:) @(:*:) ! (state <-|- ts)

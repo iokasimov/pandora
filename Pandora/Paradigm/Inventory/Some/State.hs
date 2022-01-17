@@ -5,7 +5,7 @@ import Pandora.Pattern.Morphism.Flip (Flip)
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (identity)
+import Pandora.Pattern.Category ((<--), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -39,7 +39,7 @@ instance Semimonoidal (-->) (:*:) (:*:) (State s) where
 		new :*: x :*: y
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (State s) where
-	unit _ = Straight ! State . (identity @(->) -|) . (! One) . run
+	unit _ = Straight ! State . (identity @(->) -|) . (<-- One) . run
 
 instance Bindable (->) (State s) where
 	f =<< x = State ! (run . f |-) <-|- run x
@@ -62,12 +62,12 @@ instance Monadic (->) (State s) where
 type Stateful s t = Adaptable t (->) (State s)
 
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable t (->) u) => (s -> u s) -> t s
-reconcile f = adapt . set @State =<< adapt . f =<< adapt (get @State)
+reconcile f = adapt . set @State =<< adapt . f =<< adapt <-- get @State
 
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = adapt (get @State) .-*- adapt . modify @State . op <<- struct
+fold op struct = adapt <-- get @State .-*- adapt . modify @State . op <<- struct
 
 instance Gettable State where
 	type Getting State state ouput = State state state

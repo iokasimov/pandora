@@ -3,7 +3,7 @@ module Pandora.Paradigm.Inventory.Some.Store where
 
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (identity)
+import Pandora.Pattern.Category ((-->), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
-import Pandora.Pattern.Functor.Adjoint ((-|))
+import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%), (.:..))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic (extract, (<-|-<-|-), (>-|-<-|-))
@@ -35,11 +35,11 @@ instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 		Store (s :*: constant x) :*: Store (s :*: constant y)
 
 instance Monoidal (<--) (-->) (:*:) (:*:) (Store s) where
-	unit _ = Flip ! \(Store (s :*: f)) -> Straight (\_ -> f s)
+	unit _ = Flip ! Straight . constant . ((-->) |-) . run
 
 -- TODO: Try to generalize (->) here
 instance Extendable (->) (Store s) where
-	f <<= Store x = Store ! f <-|-|- (Store .:.. (identity @(->) -|) <-|- x)
+	f <<= Store x = Store ! f <-|-|- Store .:.. (identity @(->) -|) <-|- x
 
 instance Comonad (->) (Store s) where
 
