@@ -17,7 +17,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!), (=||))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -57,19 +57,19 @@ instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->)
 		Tap (x :*: y) . T_U ! (mult @(-->) ! xls :*: yls) :*: (mult @(-->) ! xrs :*: yrs)
 
 instance (Covariant (->) (->) t) => Substructure Root (Tap (t <:.:> t := (:*:))) where
-	type Available Root (Tap (t <:.:> t := (:*:))) = Identity
-	type Substance Root (Tap (t <:.:> t := (:*:))) = Identity
+	type Available Root (Tap (t <:.:> t := (:*:))) = Exactly
+	type Substance Root (Tap (t <:.:> t := (:*:))) = Exactly
 	substructure = P_Q_T ! \zipper -> case lower zipper of
-		Tap x xs -> Store ! Identity (Identity x) :*: lift . (Tap % xs) . extract . extract
+		Tap x xs -> Store ! Exactly (Exactly x) :*: lift . (Tap % xs) . extract . extract
 
 instance (Covariant (->) (->) t) => Substructure Left (Tap (t <:.:> t := (:*:))) where
-	type Available Left (Tap (t <:.:> t := (:*:))) = Identity
+	type Available Left (Tap (t <:.:> t := (:*:))) = Exactly
 	type Substance Left (Tap (t <:.:> t := (:*:))) = t
 	substructure = P_Q_T ! \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store ! Identity future :*: lift . Tap x . T_U . (:*: past) . extract
+		Tap x (T_U (future :*: past)) -> Store ! Exactly future :*: lift . Tap x . T_U . (:*: past) . extract
 
 instance (Covariant (->) (->) t) => Substructure Right (Tap (t <:.:> t := (:*:))) where
-	type Available Right (Tap (t <:.:> t := (:*:))) = Identity
+	type Available Right (Tap (t <:.:> t := (:*:))) = Exactly
 	type Substance Right (Tap (t <:.:> t := (:*:))) = t
 	substructure = P_Q_T ! \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store ! Identity past :*: lift . Tap x . T_U . (future :*:) . extract
+		Tap x (T_U (future :*: past)) -> Store ! Exactly past :*: lift . Tap x . T_U . (future :*:) . extract

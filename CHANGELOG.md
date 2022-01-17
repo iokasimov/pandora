@@ -676,3 +676,4 @@
 * Define experimental `Zoomable` typeclass
 * Define experimental `Zoomable'` typeclass
 * Rename `-.#..-` operator to `.:..`
+* Rename `Identity` to `Exactly`

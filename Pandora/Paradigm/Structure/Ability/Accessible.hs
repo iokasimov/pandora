@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Structure.Ability.Accessible where
 
-import Pandora.Paradigm.Primary.Functor.Identity (Identity)
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly)
 import Pandora.Paradigm.Inventory.Some.Optics (Lens)
 
 class Accessible target source where
-	access :: Lens Identity source target
+	access :: Lens Exactly source target

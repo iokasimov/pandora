@@ -44,7 +44,7 @@ library
     Pandora.Paradigm.Primary.Functor.Edges
     Pandora.Paradigm.Primary.Functor.Endo
     Pandora.Paradigm.Primary.Functor.Fix
-    Pandora.Paradigm.Primary.Functor.Identity
+    Pandora.Paradigm.Primary.Functor.Exactly
     Pandora.Paradigm.Primary.Functor.Maybe
     Pandora.Paradigm.Primary.Functor.Proxy
     Pandora.Paradigm.Primary.Functor.Tagged

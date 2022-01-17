@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 > Let f :: Distributive g => (a -> g b)
 
 > When providing a new instance, you should ensure it satisfies:
-> * Identity morphism: (identity -<<) . (identity -<<) ≡ identity
+> * Exactly morphism: (identity -<<) . (identity -<<) ≡ identity
 > * Interchange collection: (f -<<) ≡ (identity -<<) . (f <-|-)
 -}
 

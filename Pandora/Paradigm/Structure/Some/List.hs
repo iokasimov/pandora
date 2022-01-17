@@ -22,7 +22,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic ((<-|-<-|-))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
@@ -68,7 +68,7 @@ instance Monoid (List a) where
 	zero = empty
 
 instance Morphable Push List where
-	type Morphing Push List = Identity <:.:> List := (->)
+	type Morphing Push List = Exactly <:.:> List := (->)
 	morphing (premorph -> xs) = T_U ! lift . (Construct % run xs) . extract
 
 instance Morphable Pop List where
@@ -114,17 +114,17 @@ instance Nullable List where
 
 instance Substructure Root List where
 	type Available Root List = Maybe
-	type Substance Root List = Identity
+	type Substance Root List = Exactly
 	substructure = P_Q_T ! \zipper -> case run --> lower zipper of
-		Just (Construct x xs) -> Store ! Just <-- Identity x :*: lift . resolve (lift . (Construct % xs) . extract @Identity) zero
-		Nothing -> Store ! Nothing :*: lift . resolve (lift . point . extract @Identity) zero
+		Just (Construct x xs) -> Store ! Just <-- Exactly x :*: lift . resolve (lift . (Construct % xs) . extract @Exactly) zero
+		Nothing -> Store ! Nothing :*: lift . resolve (lift . point . extract @Exactly) zero
 
 instance Substructure Tail List where
-	type Available Tail List = Identity
+	type Available Tail List = Exactly
 	type Substance Tail List = List
 	substructure = P_Q_T ! \x -> case run . extract . run ! x of
 		Just ns -> lift . lift @(->) <-|- run (sub @Tail) ns
-		Nothing -> Store ! Identity zero :*: lift . identity . extract
+		Nothing -> Store ! Exactly zero :*: lift . identity . extract
 
 -- | Transform any traversable structure into a list
 linearize :: forall t a . Traversable (->) (->) t => t a -> List a
@@ -156,27 +156,27 @@ instance Morphable (Into List) (Construction Maybe <::> Maybe) where
 		Construct Nothing Nothing -> empty
 
 instance Morphable Push (Construction Maybe) where
-	type Morphing Push (Construction Maybe) = Identity <:.:> Construction Maybe := (->)
-	morphing (premorph -> xs) = T_U ! \(Identity x) -> Construct x ! Just xs
+	type Morphing Push (Construction Maybe) = Exactly <:.:> Construction Maybe := (->)
+	morphing (premorph -> xs) = T_U ! \(Exactly x) -> Construct x ! Just xs
 
 instance Substructure Root (Construction Maybe) where
-	type Available Root (Construction Maybe) = Identity
-	type Substance Root (Construction Maybe) = Identity
-	substructure = imply @(Convex Lens _ _) (Identity . extract . lower)
+	type Available Root (Construction Maybe) = Exactly
+	type Substance Root (Construction Maybe) = Exactly
+	substructure = imply @(Convex Lens _ _) (Exactly . extract . lower)
 		(\source target -> lift ----> Construct <--- extract target <--- deconstruct --> lower source)
 
 instance Substructure Tail (Construction Maybe) where
-	type Available Tail (Construction Maybe) = Identity
+	type Available Tail (Construction Maybe) = Exactly
 	type Substance Tail (Construction Maybe) = List
 	substructure = imply @(Convex Lens _ _)
 		<----- TT . deconstruct . lower
 		<----- (\source target -> lift ----> Construct <--- extract (lower source) <--- run target)
 
 instance Stack (Construction Maybe) where
-	type Topping (Construction Maybe) = Identity
+	type Topping (Construction Maybe) = Exactly
 	type Popping (Construction Maybe) = Construction Maybe
 	type Pushing (Construction Maybe) = Construction Maybe
-	top = P_Q_T ! \xs -> Store ! Identity (extract xs) :*: \(Identity new) -> Construct new <--- deconstruct xs
+	top = P_Q_T ! \xs -> Store ! Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
 	pop = (\(Construct x xs) -> constant x <-|-|- set @State <<- xs) =<< get @State
 	push x = point x .-*- modify @State <--- Construct x . Just
@@ -191,7 +191,7 @@ instance Zippable List where
 	type Breadcrumbs List = Reverse List <:.:> List := (:*:)
 
 instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
-	f <<- T_U (Identity x :*: T_U (left :*: right)) = (\past' x' left' -> twosome (Identity x') ! twosome <--- left' <--- run past')
+	f <<- T_U (Exactly x :*: T_U (left :*: right)) = (\past' x' left' -> twosome (Exactly x') ! twosome <--- left' <--- run past')
 		<-|- f <<- Reverse right <-*- f x <-*- f <<- left
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
@@ -203,20 +203,20 @@ instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
 
 instance Morphable (Rotate Left) (Tape List) where
 	type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
-	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
 		let subtree = twosome <--- Reverse (get @(Convex Lens) <--- sub @Tail <--- left) <--- item @Push x right in
 		TT ! twosome % subtree <-|- get @(Obscure Lens) <--- sub @Root <--- left
 
 -- TODO: refactor it so that we dissect right list once
 instance Morphable (Rotate Right) (Tape List) where
 	type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
-	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
 		let subtree = twosome ! Reverse (item @Push x left) ! attached (pop @List ! right) in
 		TT ! twosome % subtree <-|- get @(Obscure Lens) <--- sub @Root <--- right
 
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
 	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)
-	morphing s@(premorph -> Turnover (T_U (Identity x :*: T_U (Reverse left :*: right)))) =
+	morphing s@(premorph -> Turnover (T_U (Exactly x :*: T_U (Reverse left :*: right)))) =
 		resolve @(Tape List _) <--- Turnover <--- premorph s !
 			rotate_over x <-|- run right .-+- rotate_left x right <-|- run left where
 
@@ -232,7 +232,7 @@ instance Morphable (Rotate Left) (Turnover (Tape List)) where
 
 instance Morphable (Rotate Right) (Turnover (Tape List)) where
 	type Morphing (Rotate Right) (Turnover (Tape List)) = Turnover (Tape List)
-	morphing s@(premorph -> Turnover (T_U (Identity x :*: T_U (Reverse left :*: right)))) =
+	morphing s@(premorph -> Turnover (T_U (Exactly x :*: T_U (Reverse left :*: right)))) =
 		resolve @(Tape List _) <--- Turnover <--- premorph s
 			! rotate_over x <-|- run left .-+- rotate_right x left <-|- run right where
 
@@ -252,13 +252,13 @@ instance Morphable (Into (Tape List)) List where
 
 instance Morphable (Into List) (Tape List) where
 	type Morphing (Into List) (Tape List) = List
-	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
 		<------- modify @State . item @Push @List <<- right
 		<------- item @Push x left
 
 instance Morphable (Into (Comprehension Maybe)) (Tape List) where
 	type Morphing (Into (Comprehension Maybe)) (Tape List) = Comprehension Maybe
-	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
 		<------- modify @State . item @Push @(Comprehension Maybe) <<- right
 		<------- item @Push x <-- Comprehension left
 
@@ -270,14 +270,14 @@ instance Zippable (Construction Maybe) where
 instance Morphable (Rotate Left) (Tape (Construction Maybe)) where
 	type Morphing (Rotate Left) (Tape (Construction Maybe)) =
 		Maybe <::> (Tape (Construction Maybe))
-	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		TT ! T_U . (Identity (extract left) :*:) . (twosome % item @Push x right) . Reverse <-|- deconstruct left
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
+		TT ! T_U . (Exactly (extract left) :*:) . (twosome % item @Push x right) . Reverse <-|- deconstruct left
 
 instance Morphable (Rotate Right) (Tape (Construction Maybe)) where
 	type Morphing (Rotate Right) (Tape (Construction Maybe)) =
 		Maybe <::> Tape (Construction Maybe)
-	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) =
-		TT ! twosome (Identity <--- extract right)
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
+		TT ! twosome (Exactly <--- extract right)
 			<-|- twosome (Reverse <--- item @Push x left)
 			<-|- deconstruct right
 
@@ -293,17 +293,17 @@ instance Morphable (Into (Tape (Construction Maybe))) (Tape List) where
 	type Morphing (Into (Tape (Construction Maybe))) (Tape List) =
 		Maybe <::> Tape (Construction Maybe)
 	morphing (premorph -> zipper) = let spread x y = (\x' y' -> Reverse x' :*: y') <-|- x <-*- y in
-		TT ! T_U . (Identity (extract zipper) :*:) . T_U <-|- ((spread |-) . (run . run :*: run <-|-<-|-) . run . extract ! run zipper)
+		TT ! T_U . (Exactly (extract zipper) :*:) . T_U <-|- ((spread |-) . (run . run :*: run <-|-<-|-) . run . extract ! run zipper)
 
 instance Morphable (Into (Construction Maybe)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Construction Maybe)) (Tape (Construction Maybe)) = Construction Maybe
-	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
 		<------- modify @State . item @Push @(Nonempty List) <<- right
 		<------- item @Push x left
 
 instance Morphable (Into List) (Tape (Construction Maybe)) where
 	type Morphing (Into List) (Tape (Construction Maybe)) = List
-	morphing (premorph -> T_U (Identity x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
 		<------- modify @State . item @Push @List <<- right
 		<------- item @Push x <-- lift left
 

@@ -13,7 +13,7 @@ import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, type (#=@))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic ((>-|-<-|-))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity)
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
@@ -34,10 +34,10 @@ class Substructure segment (structure :: * -> *) where
 
 -- TODO: generalize `available` and then rename to `singleton`
 -- The main problem is that we should handle (Maybe target -> sourse)
--- For Convex Lens: we can ignore Identity cause we can wrap/unwrap its value
+-- For Convex Lens: we can ignore Exactly cause we can wrap/unwrap its value
 -- For Obscure Lens: if we got nothing -> nothing should change
-only :: forall segment structure element . (Covariant (->) (->) structure, Substructured segment structure Identity Identity) => Convex Lens (structure element) element
-only = inner . ((sub @segment) :: Convex Lens (structure element) (Identity element)) where
+only :: forall segment structure element . (Covariant (->) (->) structure, Substructured segment structure Exactly Exactly) => Convex Lens (structure element) element
+only = inner . ((sub @segment) :: Convex Lens (structure element) (Exactly element)) where
 
-	inner :: Convex Lens (Identity element) element
+	inner :: Convex Lens (Exactly element) element
 	inner = P_Q_T ! \x -> Store ! x :*: identity

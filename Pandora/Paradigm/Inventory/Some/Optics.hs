@@ -19,7 +19,7 @@ import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, 
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, point, extract, (>-|-<-|-))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -35,30 +35,30 @@ instance Invariant (Flip (Lens available) tgt) where
 	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T ! (g :*: (f <-|-) >-|-<-|-) lens
 
 type family Convex lens where
-	Convex Lens = Lens Identity
+	Convex Lens = Lens Exactly
 
-instance Semigroupoid (Lens Identity) where
+instance Semigroupoid (Lens Exactly) where
 	(.) :: Convex Lens between target -> Convex Lens source between -> Convex Lens source target
 	P_Q_T to . P_Q_T from = P_Q_T ! \source ->
-		let (Identity between :*: bs) = run # from source in
-		let (Identity target :*: tb) = run # to between in
-		Store ! Identity target :*: bs . Identity . tb
+		let (Exactly between :*: bs) = run # from source in
+		let (Exactly target :*: tb) = run # to between in
+		Store ! Exactly target :*: bs . Exactly . tb
 
-instance Category (Lens Identity) where
+instance Category (Lens Exactly) where
 	identity :: Convex Lens source source
 	identity = imply @(Convex Lens _ _) identity ((%) constant)
 
-instance Semimonoidal (-->) (:*:) (:*:) (Lens Identity source) where
+instance Semimonoidal (-->) (:*:) (:*:) (Lens Exactly source) where
 	mult = Straight ! \(P_Q_T x :*: P_Q_T y) -> P_Q_T ! \source ->
-		let Store (Identity xt :*: ixts) :*: Store (Identity yt :*: _) = x source :*: y source in
-		Store ! Identity (xt :*: yt) :*: \(Identity (xt_ :*: yt_)) ->
-			let modified = ixts (Identity xt_) in
-			extract # run (y modified) # Identity yt_
+		let Store (Exactly xt :*: ixts) :*: Store (Exactly yt :*: _) = x source :*: y source in
+		Store ! Exactly (xt :*: yt) :*: \(Exactly (xt_ :*: yt_)) ->
+			let modified = ixts (Exactly xt_) in
+			extract # run (y modified) # Exactly yt_
 
-instance Impliable (P_Q_T (->) Store Identity source target) where
-	type Arguments (P_Q_T (->) Store Identity source target) =
-		(source -> target) -> (source -> target -> source) -> Lens Identity source target
-	imply getter setter = P_Q_T ! \source -> Store ! Identity # getter source :*: setter source . extract
+instance Impliable (P_Q_T (->) Store Exactly source target) where
+	type Arguments (P_Q_T (->) Store Exactly source target) =
+		(source -> target) -> (source -> target -> source) -> Lens Exactly source target
+	imply getter setter = P_Q_T ! \source -> Store ! Exactly # getter source :*: setter source . extract
 
 type family Obscure lens where
 	Obscure Lens = Lens Maybe
@@ -95,23 +95,23 @@ instance Semigroupoid (Lens t) => Lensic t t where
 	type Lensally t t = t
 	x >>> y = y . x
 
-instance Lensic Maybe Identity where
-	type Lensally Maybe Identity = Maybe
+instance Lensic Maybe Exactly where
+	type Lensally Maybe Exactly = Maybe
 	P_Q_T from >>> P_Q_T to = P_Q_T ! \source -> case run # from source of
 		(Nothing :*: _) -> Store ! Nothing :*: \_ -> source
 		(Just between :*: mbs) -> case run # to between of
-			(Identity target :*: itb) -> Store ! Just target :*: \mt -> mbs ! itb . Identity <-|- mt
+			(Exactly target :*: itb) -> Store ! Just target :*: \mt -> mbs ! itb . Exactly <-|- mt
 
-instance Lensic Identity Maybe where
-	type Lensally Identity Maybe = Maybe
+instance Lensic Exactly Maybe where
+	type Lensally Exactly Maybe = Maybe
 	P_Q_T from >>> P_Q_T to = P_Q_T ! \source -> case run # from source of
-		(Identity between :*: ibs) -> case run # to between of
-			(Just target :*: mtb) -> Store ! Just target :*: ibs . Identity . mtb
+		(Exactly between :*: ibs) -> case run # to between of
+			(Just target :*: mtb) -> Store ! Just target :*: ibs . Exactly . mtb
 			(Nothing :*: _) -> Store ! Nothing :*: \_ -> source
 
-instance Gettable (Lens Identity) where
-	type instance Getting (Lens Identity) source target = Lens Identity source target -> source -> target
-	get lens = extract @Identity . position @_ @(Store _) . run lens
+instance Gettable (Lens Exactly) where
+	type instance Getting (Lens Exactly) source target = Lens Exactly source target -> source -> target
+	get lens = extract @Exactly . position @_ @(Store _) . run lens
 
 instance Gettable (Lens Maybe) where
 	type instance Getting (Lens Maybe) source target = Lens Maybe source target -> source -> Maybe target

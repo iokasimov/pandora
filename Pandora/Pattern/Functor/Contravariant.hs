@@ -8,7 +8,7 @@ infixl 3 >-|-|-, >$$<
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
-> * Identity morphism: (identity >-|-) ≡ identity
+> * Exactly morphism: (identity >-|-) ≡ identity
 > * Interpreted of morphisms: (f >-|-) . (g >-|-) ≡ (g . f >-|-)
 -}
 

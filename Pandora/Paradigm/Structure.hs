@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
@@ -44,10 +44,10 @@ instance Nullable Maybe where
 	null = Predicate ! \case { Just _ -> True ; _ -> False }
 
 instance (Covariant (->) (->) t) => Substructure Tail (Tap t) where
-	type Available Tail (Tap t) = Identity
+	type Available Tail (Tap t) = Exactly
 	type Substance Tail (Tap t) = t
 	substructure = P_Q_T ! \tap -> case extract # run tap of
-		Tap x xs -> Store ! Identity xs :*: lift . Tap x . extract
+		Tap x xs -> Store ! Exactly xs :*: lift . Tap x . extract
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
@@ -78,22 +78,22 @@ instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) B
 	morphing (premorph -> xs) = (into @(o ds) <-|-) ||= xs
 
 instance Substructure Left (Flip (:*:) a) where
-	type Available Left (Flip (:*:) a) = Identity
-	type Substance Left (Flip (:*:) a) = Identity
+	type Available Left (Flip (:*:) a) = Exactly
+	type Substance Left (Flip (:*:) a) = Exactly
 	substructure = P_Q_T ! \product -> case run # lower product of
-		s :*: x -> Store ! Identity (Identity s) :*: lift . Flip . (:*: x) . extract . extract
+		s :*: x -> Store ! Exactly (Exactly s) :*: lift . Flip . (:*: x) . extract . extract
 
 instance Substructure Right ((:*:) s) where
-	type Available Right ((:*:) s) = Identity
-	type Substance Right ((:*:) s) = Identity
+	type Available Right ((:*:) s) = Exactly
+	type Substance Right ((:*:) s) = Exactly
 	substructure = P_Q_T ! \product -> case lower product of
-		s :*: x -> Store ! Identity (Identity x) :*: lift . (s :*:) . extract . extract
+		s :*: x -> Store ! Exactly (Exactly x) :*: lift . (s :*:) . extract . extract
 
 instance Accessible s (s :*: a) where
-	access = P_Q_T ! \(s :*: x) -> Store ! Identity s :*: (:*: x) . extract
+	access = P_Q_T ! \(s :*: x) -> Store ! Exactly s :*: (:*: x) . extract
 
 instance Accessible a (s :*: a) where
-	access = P_Q_T ! \(s :*: x) -> Store ! Identity x :*: (s :*:) . extract
+	access = P_Q_T ! \(s :*: x) -> Store ! Exactly x :*: (s :*:) . extract
 
 instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 	access = access @b . access @a
@@ -102,8 +102,8 @@ instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 -- instance {-# OVERLAPS #-} (Accessible a s, Accessible b s) => Accessible (a :*: b) s where
 	-- access = mult @(-->) @(:*:) @(:*:) ! (access @a :*: access @b)
 
-instance Accessible a (Identity a) where
-	access = P_Q_T ! \(Identity x) -> Store ! Identity x :*: identity
+instance Accessible a (Exactly a) where
+	access = P_Q_T ! \(Exactly x) -> Store ! Exactly x :*: identity
 
 instance Possible a (Maybe a) where
 	perhaps = P_Q_T ! \x -> Store ! x :*: identity
@@ -120,26 +120,26 @@ instance {-# OVERLAPS #-} Possible o (o :+: a) where
 
 instance Accessible target source => Possible target (Maybe source) where
 	perhaps = let lst = access @target @source in P_Q_T ! \case
-		Just source -> let (Identity target :*: its) = run (lst ! source) in
-			Store ! Just target :*: (its . Identity <-|-)
+		Just source -> let (Exactly target :*: its) = run (lst ! source) in
+			Store ! Just target :*: (its . Exactly <-|-)
 		Nothing -> Store ! Nothing :*: \_ -> Nothing
 
 instance Accessible (Maybe target) source => Possible target source where
 	perhaps = let lst = access @(Maybe target) @source in P_Q_T ! \source ->
 		let target :*: imts = run (lst ! source) in
-			Store ! extract target :*: imts . Identity
+			Store ! extract target :*: imts . Exactly
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
-	type Available Left (t <:.:> t := (:*:)) = Identity
+	type Available Left (t <:.:> t := (:*:)) = Exactly
 	type Substance Left (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T ! \x -> case run # lower x of
-		ls :*: rs -> Store ! Identity ls :*: lift . (twosome % rs) . extract
+		ls :*: rs -> Store ! Exactly ls :*: lift . (twosome % rs) . extract
 
 instance (Covariant (->) (->) t) => Substructure Right (t <:.:> t := (:*:)) where
-	type Available Right (t <:.:> t := (:*:)) = Identity
+	type Available Right (t <:.:> t := (:*:)) = Exactly
 	type Substance Right (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T ! \x -> case run # lower x of
-		ls :*: rs -> Store ! Identity rs :*: lift . (twosome ls) . extract
+		ls :*: rs -> Store ! Exactly rs :*: lift . (twosome ls) . extract
 
 instance Morphable (Into List) (Vector r) where
 	type Morphing (Into List) (Vector r) = List

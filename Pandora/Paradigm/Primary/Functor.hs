@@ -14,7 +14,7 @@ import Pandora.Paradigm.Primary.Functor.Endo as Exports
 import Pandora.Paradigm.Primary.Functor.Proxy as Exports
 import Pandora.Paradigm.Primary.Functor.Tagged as Exports
 import Pandora.Paradigm.Primary.Functor.Constant as Exports
-import Pandora.Paradigm.Primary.Functor.Identity as Exports
+import Pandora.Paradigm.Primary.Functor.Exactly as Exports
 
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean)
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering)

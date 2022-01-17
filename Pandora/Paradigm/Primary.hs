@@ -90,21 +90,21 @@ instance Morphable (Into Wye) (Maybe <:.:> Maybe := (:*:)) where
 
 instance Substructure Left Wye where
 	type Available Left Wye = Maybe
-	type Substance Left Wye = Identity
+	type Substance Left Wye = Exactly
 	substructure = P_Q_T ! \new -> case lower new of
 		End -> Store ! Nothing :*: lift . resolve Left End . (extract <-|-)
-		Left x -> Store ! Just (Identity x) :*: lift . resolve Left End . (extract <-|-)
+		Left x -> Store ! Just (Exactly x) :*: lift . resolve Left End . (extract <-|-)
 		Right y -> Store ! Nothing :*: lift . constant (Right y) . (extract <-|-)
-		Both x y -> Store ! Just (Identity x) :*: lift . resolve (Both % y) (Right y) . (extract <-|-)
+		Both x y -> Store ! Just (Exactly x) :*: lift . resolve (Both % y) (Right y) . (extract <-|-)
 
 instance Substructure Right Wye where
 	type Available Right Wye = Maybe
-	type Substance Right Wye = Identity
+	type Substance Right Wye = Exactly
 	substructure = P_Q_T ! \new -> case lower new of
 		End -> Store ! Nothing :*: lift . resolve Right End . (extract <-|-)
 		Left x -> Store ! Nothing :*: lift . constant (Left x) . (extract <-|-)
-		Right y -> Store ! Just (Identity y) :*: lift . resolve Right End . (extract <-|-)
-		Both x y -> Store ! Just (Identity y) :*: lift . resolve (Both x) (Left x) . (extract <-|-)
+		Right y -> Store ! Just (Exactly y) :*: lift . resolve Right End . (extract <-|-)
+		Both x y -> Store ! Just (Exactly y) :*: lift . resolve (Both x) (Left x) . (extract <-|-)
 
 instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	mult = Straight ! \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U ! (mult @(-->) !) (xls :*: yls) :*: (mult @(-->) !) (xrs :*: yrs)

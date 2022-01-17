@@ -10,7 +10,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, equate)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
@@ -44,14 +44,14 @@ rotate = morphing . TT . Tag @(Rotate mod)
 into :: forall mod struct . Morphable (Into mod) struct => struct ~> Morphing (Into mod) struct
 into = morphing . TT . Tag @(Into mod)
 
-insert :: forall mod struct a . Morphed (Insert mod) struct (Identity <:.:> struct := (->)) => a :=:=> struct
-insert new xs = run # morph @(Insert mod) xs # Identity new
+insert :: forall mod struct a . Morphed (Insert mod) struct (Exactly <:.:> struct := (->)) => a :=:=> struct
+insert new xs = run # morph @(Insert mod) xs # Exactly new
 
-item :: forall mod struct a . Morphed mod struct (Identity <:.:> struct := (->)) => a :=:=> struct
-item new xs = run # morph @mod xs # Identity new
+item :: forall mod struct a . Morphed mod struct (Exactly <:.:> struct := (->)) => a :=:=> struct
+item new xs = run # morph @mod xs # Exactly new
 
-collate :: forall mod struct a . (Chain a, Morphed mod struct ((Identity <:.:> Comparison := (:*:)) <:.:> struct := (->))) => a :=:=> struct
-collate new xs = run # morph @mod xs # T_U (Identity new :*: Convergence (<=>))
+collate :: forall mod struct a . (Chain a, Morphed mod struct ((Exactly <:.:> Comparison := (:*:)) <:.:> struct := (->))) => a :=:=> struct
+collate new xs = run # morph @mod xs # T_U (Exactly new :*: Convergence (<=>))
 
 delete :: forall mod struct a . (Setoid a, Morphed (Delete mod) struct (Predicate <:.:> struct := (->))) => a :=:=> struct
 delete x xs = run # morph @(Delete mod) xs # equate x
@@ -65,5 +65,5 @@ find p xs = run # morph @(Find mod) xs # p
 lookup :: forall mod key struct a . (Morphed (Lookup mod) struct ((->) key <::> Maybe)) => key -> struct a -> Maybe a
 lookup key struct = run # morph @(Lookup mod) struct # key
 
-vary :: forall mod key value struct . (Morphed (Vary mod) struct (((:*:) key <::> Identity) <:.:> struct := (->))) => key -> value -> struct value -> struct value
-vary key value xs = run # morph @(Vary mod) @struct xs # TT (key :*: Identity value)
+vary :: forall mod key value struct . (Morphed (Vary mod) struct (((:*:) key <::> Exactly) <:.:> struct := (->))) => key -> value -> struct value -> struct value
+vary key value xs = run # morph @(Vary mod) @struct xs # TT (key :*: Exactly value)

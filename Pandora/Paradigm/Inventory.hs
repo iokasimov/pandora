@@ -13,7 +13,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity), Simplification)
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly), Simplification)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (<--))
@@ -38,12 +38,12 @@ instance Adjoint (->) (->) (Equipment e) (Provision e) where
 class Zoomable' (tool :: * -> * -> *) (available :: * -> *) where
 	zoom' :: forall bg ls t . Adaptable t (->) (tool bg) => Lens available bg ls -> tool (Simplification available ls) ~> t
 
-instance Zoomable' State Identity where
+instance Zoomable' State Exactly where
 	zoom' :: forall bg ls t result . Stateful bg t => Convex Lens bg ls -> State ls result -> t result
 	zoom' lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
 
-		restruct :: (Identity ls -> bg) -> Identity ls -> bg :*: result
-		restruct to (Identity target) = run # to . Identity <-|- Flip (less ! target)
+		restruct :: (Exactly ls -> bg) -> Exactly ls -> bg :*: result
+		restruct to (Exactly target) = run # to . Exactly <-|- Flip (less ! target)
 
 instance Zoomable' State Maybe where
 	zoom' :: forall bg ls t result . Stateful bg t => Obscure Lens bg ls -> State (Maybe ls) result -> t result
@@ -56,14 +56,14 @@ class Zoomable (available :: * -> *) where
 	type Zooming available target :: *
 	zoom_ :: forall bg ls t . Stateful bg t => Lens available bg ls -> State (Zooming available ls) ~> t
 
-instance Zoomable Identity where
-	type Zooming Identity target = target
+instance Zoomable Exactly where
+	type Zooming Exactly target = target
 
 	zoom_ :: forall bg ls t result . Stateful bg t => Convex Lens bg ls -> State ls result -> t result
 	zoom_ lens less = adapt . State ! \source -> restruct |- run (lens ! source) where
 
-		restruct :: (Identity ls -> bg) -> Identity ls -> bg :*: result
-		restruct to (Identity target) = run # to . Identity <-|- Flip (less ! target)
+		restruct :: (Exactly ls -> bg) -> Exactly ls -> bg :*: result
+		restruct to (Exactly target) = run # to . Exactly <-|- Flip (less ! target)
 
 instance Zoomable Maybe where
 	type Zooming Maybe target = Maybe target

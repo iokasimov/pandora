@@ -10,7 +10,7 @@ import Pandora.Pattern.Transformer (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, extract, point)
-import Pandora.Paradigm.Primary.Functor.Identity (Identity)
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly)
 import Pandora.Paradigm.Controlflow.Effect.Transformer (Monadic, wrap, (:>))
 
 class Adaptable u m t where
@@ -20,7 +20,7 @@ class Adaptable u m t where
 instance Category m => Adaptable t m t where
 	adapt = identity @m
 
-instance {-# OVERLAPS #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable u (->) Identity where
+instance {-# OVERLAPS #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable u (->) Exactly where
 	adapt = point . extract
 
 class Effectful m v t u where

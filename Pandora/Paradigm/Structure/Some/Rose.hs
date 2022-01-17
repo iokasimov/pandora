@@ -13,7 +13,7 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic (extract)
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate), equate)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
@@ -37,34 +37,34 @@ instance Nullable Rose where
 -- FIXME: If we want to remove root node, we ruin the whole tree
 --instance Substructure Root Rose where
 --	type Available Root Rose = Maybe
---	type Substance Root Rose = Identity
+--	type Substance Root Rose = Exactly
 --	substructure = P_Q_T ! \rose -> case run # lower rose of
 --		Nothing -> Store ! Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <-|-)
---		Just nonempty_rose -> Store ! Just (Identity # extract nonempty_rose) :*: \case
---			Just (Identity new) -> lift . TU . Just . Construct new ! deconstruct nonempty_rose
+--		Just nonempty_rose -> Store ! Just (Exactly # extract nonempty_rose) :*: \case
+--			Just (Exactly new) -> lift . TU . Just . Construct new ! deconstruct nonempty_rose
 --			Nothing -> lift empty
 
 --instance Substructure Just Rose where
---	type Available Just Rose = Identity
+--	type Available Just Rose = Exactly
 --	type Substance Just Rose = List <:.> Construction List
 --	substructure = P_Q_T ! \rose -> case run . extract . run # rose of
---		Nothing -> Store ! Identity empty :*: constant (lift empty)
---		Just (Construct x xs) -> Store ! Identity (TU xs) :*: lift . lift . Construct x . run . extract
+--		Nothing -> Store ! Exactly empty :*: constant (lift empty)
+--		Just (Construct x xs) -> Store ! Exactly (TU xs) :*: lift . lift . Construct x . run . extract
 
 --------------------------------------- Non-empty rose tree ----------------------------------------
 
 type instance Nonempty Rose = Construction List
 
 instance Substructure Root (Construction List) where
-	type Available Root (Construction List) = Identity
-	type Substance Root (Construction List) = Identity
-	substructure = P_Q_T ! \rose -> Store ! Identity (Identity # extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
+	type Available Root (Construction List) = Exactly
+	type Substance Root (Construction List) = Exactly
+	substructure = P_Q_T ! \rose -> Store ! Exactly (Exactly # extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
 
 instance Substructure Tail (Construction List) where
-	type Available Tail (Construction List) = Identity
+	type Available Tail (Construction List) = Exactly
 	type Substance Tail (Construction List) = List <:.> Construction List
 	substructure = P_Q_T ! \rose -> case extract # run rose of
-		Construct x xs -> Store ! Identity (TU xs) :*: lift . Construct x . run . extract
+		Construct x xs -> Store ! Exactly (TU xs) :*: lift . Construct x . run . extract
 
 --------------------------------------- Prefixed rose tree -----------------------------------------
 
@@ -76,9 +76,9 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 --instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where
---	type Morphing (Vary Element) (Prefixed Rose k) = ((:*:) (Nonempty List k) <:.> Identity) <:.:> Prefixed Rose k := (->)
---	morphing (run . run . premorph -> Nothing) = T_U ! \(TU (Construct key _ :*: Identity value)) -> Prefixed . lift ! Construct (key :*: value) empty
---	morphing (run . run . premorph -> Just (Construct focused subtree)) = T_U ! \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
+--	type Morphing (Vary Element) (Prefixed Rose k) = ((:*:) (Nonempty List k) <:.> Exactly) <:.:> Prefixed Rose k := (->)
+--	morphing (run . run . premorph -> Nothing) = T_U ! \(TU (Construct key _ :*: Exactly value)) -> Prefixed . lift ! Construct (key :*: value) empty
+--	morphing (run . run . premorph -> Just (Construct focused subtree)) = T_U ! \(TU (breadcrumbs :*: Exactly value)) -> case breadcrumbs of
 --		Construct key Nothing -> Prefixed . lift ! attached focused == key ? Construct (key :*: value) subtree ! Construct focused subtree
 --		Construct key (Just keys) -> Prefixed . lift ! attached focused != key ? Construct focused subtree
 --			! Construct focused ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value =||!> subtree
@@ -88,11 +88,11 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 --instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) where
 --	type Morphing (Vary Element) (Prefixed (Construction List) k) =
---		((:*:) (Nonempty List k) <:.> Identity) <:.:> Prefixed (Construction List) k := (->)
---	morphing (run . premorph -> Construct x (TU Nothing)) = T_U ! \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
+--		((:*:) (Nonempty List k) <:.> Exactly) <:.:> Prefixed (Construction List) k := (->)
+--	morphing (run . premorph -> Construct x (TU Nothing)) = T_U ! \(TU (breadcrumbs :*: Exactly value)) -> case breadcrumbs of
 --		Construct key Nothing -> Prefixed ! attached x == key ? Construct (key :*: value) empty ! Construct x empty
 --		Construct _ (Just _) -> Prefixed ! Construct x (TU Nothing)
---	morphing (run . premorph -> Construct x (TU (Just subtree))) = T_U ! \(TU (breadcrumbs :*: Identity value)) -> case breadcrumbs of
+--	morphing (run . premorph -> Construct x (TU (Just subtree))) = T_U ! \(TU (breadcrumbs :*: Exactly value)) -> case breadcrumbs of
 --		Construct key Nothing -> Prefixed ! attached x != key ? Construct x # lift subtree
 --			! Construct (key :*: value) (lift subtree)
 --		Construct key (Just keys) -> Prefixed ! attached x != key ? Construct x # lift subtree

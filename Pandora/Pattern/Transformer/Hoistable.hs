@@ -4,7 +4,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 
 {- |
 > When providing a new instance, you should ensure it satisfies one law:
-> * Identity morphism: (identity /|\) ≡ identity
+> * Exactly morphism: (identity /|\) ≡ identity
 > * Interpreted of morphisms: (f . g /|\) ≡ (f /|\) . (g /|\)
 -}
 

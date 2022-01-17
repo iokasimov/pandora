@@ -15,7 +15,7 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Paradigm.Primary.Functor.Identity (Identity (Identity))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!)))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
@@ -59,8 +59,8 @@ instance Monoid (t <::> Construction t := a) => Monoid (Comprehension t a) where
 	zero = Comprehension zero
 
 instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Morphable Push (Comprehension t) where
-	type Morphing Push (Comprehension t) = Identity <:.:> Comprehension t := (->)
-	morphing (run . premorph -> xs) = T_U ! \(Identity x) -> Comprehension . lift . Construct x . run ! xs
+	type Morphing Push (Comprehension t) = Exactly <:.:> Comprehension t := (->)
+	morphing (run . premorph -> xs) = T_U ! \(Exactly x) -> Comprehension . lift . Construct x . run ! xs
 
 instance Nullable (t <::> Construction t) => Nullable (Comprehension t) where
 	null = run @(->) >-|- null
