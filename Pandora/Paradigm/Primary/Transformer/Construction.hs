@@ -1,5 +1,4 @@
 {-# LANGUAGE UndecidableInstances #-}
-
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (:=>), type (~>))
