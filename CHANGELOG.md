@@ -673,7 +673,7 @@
 * Define experimental from `<--` to `<----------`, operators in `Category` typeclass
 * Define experimental from `-->` to `---------->`, operators in `Category` typeclass
 * Define experimental `-->` operator in `Category` typeclass
-* Define experimental `Zoomable` typeclass
-* Define experimental `Zoomable'` typeclass
+* Remove `zoom` method in `Inventory` module
+* Define `Zoomable` typeclass with `zoom` method
 * Rename `-.#..-` operator to `.:..`
 * Rename `Identity` to `Exactly`
