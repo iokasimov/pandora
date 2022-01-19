@@ -1,5 +1,4 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
-
 module Pandora.Pattern.Functor.Covariant where
 
 import Pandora.Pattern.Betwixt (Betwixt)

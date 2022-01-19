@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Wye where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Pattern.Category ((#))
+import Pandora.Pattern.Category ((<--), (<-----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -16,9 +16,9 @@ data Wye a = End | Left a | Right a | Both a a
 
 instance Covariant (->) (->) Wye where
 	_ <-|- End = End
-	f <-|- Left x = Left # f x
-	f <-|- Right y = Right # f y
-	f <-|- Both x y = Both # f x # f y
+	f <-|- Left x = Left <-- f x
+	f <-|- Right y = Right <-- f y
+	f <-|- Both x y = Both <-- f x <-- f y
 
 instance Semimonoidal (<--) (:*:) (:*:) Wye where
 	mult = Flip ! \case
@@ -30,21 +30,21 @@ instance Semimonoidal (<--) (:*:) (:*:) Wye where
 instance Monotonic a (Wye a) where
 	reduce f r (Left x) = f x r
 	reduce f r (Right x) = f x r
-	reduce f r (Both x y) = f y (f x r)
+	reduce f r (Both x y) = f y <-- f x r
 	reduce _ r End = r
 
 instance Semigroup a => Semigroup (Wye a) where
 	End + x = x
 	x + End = x
-	Left x + Left x' = Left # x + x'
-	Left x + Right y = Both x y
-	Left x + Both x' y = Both # x + x' # y
-	Right y + Left x = Both x y
-	Right y + Right y' = Right # y + y'
-	Right y + Both x y' = Both x # y + y'
-	Both x y + Left x' = Both # x + x' # y
-	Both x y + Right y' = Both # x # y + y'
-	Both x y + Both x' y' = Both # x + x' # y + y'
+	Left x + Left x' = Left <----- x + x'
+	Left x + Right y = Both <----- x <----- y
+	Left x + Both x' y = Both <----- x + x' <----- y
+	Right y + Left x = Both <----- x <----- y
+	Right y + Right y' = Right <----- y + y'
+	Right y + Both x y' = Both <----- x <----- y + y'
+	Both x y + Left x' = Both <----- x + x' <----- y
+	Both x y + Right y' = Both <----- x <----- y + y'
+	Both x y + Both x' y' = Both <----- x + x' <----- y + y'
 
 instance Semigroup a => Monoid (Wye a) where
 	zero = End
