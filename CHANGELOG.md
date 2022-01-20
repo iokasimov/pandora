@@ -677,3 +677,4 @@
 * Define `Zoomable` typeclass with `zoom` method
 * Rename `-.#..-` operator to `.:..`
 * Rename `Identity` to `Exactly`
+* Change precedence for `:*:`, `<-|-|-`, `<-|-|-|-`, `=<<`, `<<=`, `<#>`

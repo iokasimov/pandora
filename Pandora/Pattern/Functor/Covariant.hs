@@ -5,8 +5,8 @@ import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid)
 
 infixl 4 <-|-, <$>
-infixl 3 <-|-|-, <$$>
-infixl 2 <-|-|-|-, <$$$>
+infixl 4 <-|-|-, <$$>
+infixl 4 <-|-|-|-, <$$$>
 
 {- |
 > When providing a new instance, you should ensure it satisfies:

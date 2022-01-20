@@ -2,7 +2,7 @@ module Pandora.Pattern.Functor.Extendable where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
 
-infixr 1 <<=
+infixr 2 <<=
 
 {- |
 > When providing a new instance, you should ensure it satisfies:

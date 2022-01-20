@@ -14,7 +14,7 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
-infixr 1 :*:
+infixr 6 :*:
 
 data (:*:) s a = s :*: a
 

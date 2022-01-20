@@ -10,7 +10,7 @@ import Pandora.Core.Functor (type (<:=))
 > * Interchange tabulation: comap f . tabulate ≡ tabulate . comap f
 -}
 
-infixr 6 <#>
+infixr 5 <#>
 
 class Representable t where
 	{-# MINIMAL (<#>), tabulate #-}

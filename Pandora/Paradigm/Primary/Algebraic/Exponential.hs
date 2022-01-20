@@ -15,7 +15,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
 infixr 7 .:..
-infixr 9 %
+infixr 8 %
 infixl 1 &
 
 type instance Betwixt (->) (->) = (->)
