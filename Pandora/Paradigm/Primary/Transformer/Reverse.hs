@@ -3,7 +3,7 @@
 module Pandora.Paradigm.Primary.Transformer.Reverse where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#))
+import Pandora.Pattern.Category ((<--), (<--------))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -25,7 +25,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 newtype Reverse t a = Reverse (t a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Reverse t) where
-	f <-|- Reverse x = Reverse # f <-|- x
+	f <-|- Reverse x = Reverse <-------- f <-|- x
 
 instance (Semimonoidal (-->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (-->) (:*:) (:*:) (Reverse t) where
 	mult = Straight ! \(Reverse x :*: Reverse y) -> Reverse (mult @(-->) ! x :*: y)
@@ -46,7 +46,7 @@ instance Distributive (->) (->) t => Distributive (->) (->) (Reverse t) where
 	f -<< x = Reverse ! run . f -<< x
 
 instance Contravariant (->) (->) t => Contravariant (->) (->) (Reverse t) where
-	f >-|- Reverse x = Reverse # f >-|- x
+	f >-|- Reverse x = Reverse <-------- f >-|- x
 
 instance Interpreted (->) (Reverse t) where
 	type Primary (Reverse t) a = t a
@@ -60,4 +60,4 @@ instance Lowerable (->) Reverse where
 	lower = run
 
 instance Hoistable (->) Reverse where
-	f /|\ Reverse x = Reverse # f x
+	f /|\ Reverse x = Reverse <-- f x
