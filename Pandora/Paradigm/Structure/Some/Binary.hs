@@ -3,7 +3,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (~>), type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (-->), (--->))
+import Pandora.Pattern.Category ((<--), (<---), (<----), (-->), (--->))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable ((=<<))
@@ -94,9 +94,9 @@ instance Morphable (Into Binary) (Construction Wye) where
 instance Morphable Insert (Construction Wye) where
 	type Morphing Insert (Construction Wye) = (Exactly <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
 	morphing (premorph -> struct) = T_U ! \(T_U (Exactly x :*: Convergence f)) ->
-		let continue xs = run <--- morph @Insert @(Nonempty Binary) xs ! twosome <--- Exactly x <--- Convergence f in
+		let continue xs = run <-- morph @Insert @(Nonempty Binary) xs ! twosome <-- Exactly x <-- Convergence f in
 		let step = (?) <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) (leaf x) in
-		order struct ! step <--- sub @Left <--- struct ! step <--- sub @Right <--- struct ! f x <--- extract struct
+		order struct ! step <-- sub @Left <-- struct ! step <-- sub @Right <-- struct ! f x <-- extract struct
 
 instance Substructure Root (Construction Wye) where
 	type Available Root (Construction Wye) = Exactly
@@ -183,9 +183,9 @@ instance Morphable (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye := (:*:
 	morphing struct = case run ---> premorph struct of
 		focused :*: TT (TT (Rightward (Construct (T_U (Exactly parent :*: rest)) next))) ->
 			lift . (twosome % TT (TT next)) . twosome (Exactly parent) . TT ! resolve
-				<--- Both (_focused_part_to_nonempty_binary_tree focused)
-				<--- Left (_focused_part_to_nonempty_binary_tree focused)
-				<--- run rest
+				<-- Both (_focused_part_to_nonempty_binary_tree focused)
+				<-- Left (_focused_part_to_nonempty_binary_tree focused)
+				<-- run rest
 		focused :*: TT (TT (Leftward (Construct (T_U (Exactly parent :*: rest)) next))) ->
 			lift . (twosome % TT (TT next)) . twosome (Exactly parent) . TT ! resolve
 				<--- Both % _focused_part_to_nonempty_binary_tree focused
@@ -194,7 +194,7 @@ instance Morphable (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye := (:*:
 		_ -> TT Nothing
 
 _nonempty_binary_tree_to_focused_part :: Construction Wye ~> Exactly <:.:> Wye <::> Construction Wye := (:*:)
-_nonempty_binary_tree_to_focused_part (Construct x xs) = twosome <--- Exactly x <--- TT xs
+_nonempty_binary_tree_to_focused_part (Construct x xs) = twosome <-- Exactly x <-- TT xs
 
 instance Morphable (Rotate (Down Left)) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
 	type Morphing (Rotate (Down Left)) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:))
@@ -202,10 +202,10 @@ instance Morphable (Rotate (Down Left)) ((Exactly <:.:> Wye <::> Construction Wy
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Left lst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward ! Construct <--- twosome (Exactly x) (TT Nothing) <--- next
+				. TT . TT . Leftward ! Construct <-- twosome (Exactly x) (TT Nothing) <-- next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward ! Construct <--- twosome <-- Exactly x <-- lift rst <--- next
+				. TT . TT . Leftward <---- Construct <--- twosome <-- Exactly x <-- lift rst <--- next
 		_ -> TT Nothing
 
 instance Morphable (Rotate (Down Right)) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
@@ -214,10 +214,10 @@ instance Morphable (Rotate (Down Right)) ((Exactly <:.:> Wye <::> Construction W
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Right rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward ! Construct (twosome <--- Exactly x <--- TT Nothing) next
+				. TT . TT . Rightward ! Construct (twosome <-- Exactly x <-- TT Nothing) next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward ! Construct (twosome <--- Exactly x <--- lift lst) next
+				. TT . TT . Rightward <---- Construct <--- twosome <-- Exactly x <-- lift lst <--- next
 		_ -> TT Nothing
 
 leaf :: a :=> Nonempty Binary

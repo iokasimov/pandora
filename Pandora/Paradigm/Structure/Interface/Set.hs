@@ -28,4 +28,4 @@ subset :: forall t f a . (Set t f a, Morphing (Find f) t ~ (Predicate <:.:> Mayb
 subset = Convergence ! \s ss -> Nothing != (find @f @t @Maybe % s) . equate <<- ss
 
 cardinality :: Traversable (->) (->) t => t a -> Numerator
-cardinality s = attached . run @(->) @(State _) % Zero ! constant (modify @State (+ one)) <<- s
+cardinality s = attached . (run @(->) @(State _) % Zero) ! constant (modify @State (+ one)) <<- s

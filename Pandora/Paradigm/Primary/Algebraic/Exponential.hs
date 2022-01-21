@@ -33,7 +33,7 @@ instance Covariant (->) (->) ((->) a) where
 	(<-|-) = (.)
 
 instance Distributive (->) (->) ((->) e) where
-	f -<< g = \e -> (f % e) <-|- g
+	f -<< g = \e -> f % e <-|- g
 
 instance Bindable (->) ((->) e) where
 	f =<< g = \x -> f <-- g x <-- x
