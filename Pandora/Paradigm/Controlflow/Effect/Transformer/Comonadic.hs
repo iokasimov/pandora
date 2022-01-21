@@ -6,7 +6,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (--<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -39,7 +39,7 @@ instance Traversable (->) (->) (Schematic Comonad t u) => Traversable (->) (->) 
 	f <<- TC x = TC <-|- f <<- x
 
 instance Distributive (->) (->) (Schematic Comonad t u) => Distributive (->) (->) (t :< u) where
-	f -<< x = TC ! tc . f -<< x
+	f -<< x = TC ! tc . f --<< x
 
 instance Bindable (->) (Schematic Comonad t u) => Bindable (->) (t :< u) where
 	f =<< TC x = TC ! tc . f =<< x

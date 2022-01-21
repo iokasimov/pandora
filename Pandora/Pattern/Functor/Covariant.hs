@@ -4,9 +4,14 @@ module Pandora.Pattern.Functor.Covariant where
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid)
 
-infixl 4 <-|-, <$>
-infixl 4 <-|-|-, <$$>
-infixl 4 <-|-|-|-, <$$$>
+infixl 1 <-|--------
+infixl 2 <-|-------
+infixl 3 <-|------, <-|-|-, <$$>
+infixl 4 <-|-----, <-|-|-|-, <$$$>
+infixl 5 <-|----
+infixl 6 <-|---
+infixl 7 <-|--
+infixl 8 <-|-
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
@@ -16,6 +21,16 @@ infixl 4 <-|-|-|-, <$$$>
 
 class (Semigroupoid source, Semigroupoid target) => Covariant source target t where
 	(<-|-) :: source a b -> target (t a) (t b)
+	
+	(<-|--), (<-|---), (<-|----), (<-|-----), (<-|------),
+		(<-|-------), (<-|--------) :: source a b -> target (t a) (t b)
+	(<-|--) = (<-|-)
+	(<-|---) = (<-|-)
+	(<-|----) = (<-|-)
+	(<-|-----) = (<-|-)
+	(<-|------) = (<-|-)
+	(<-|-------) = (<-|-)
+	(<-|--------) = (<-|-)
 
 	(<-|-|-) :: (Covariant source (Betwixt source target) u, Covariant (Betwixt source target) target t)
 		=> source a b -> target (t (u a)) (t (u b))

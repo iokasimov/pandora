@@ -5,7 +5,7 @@ import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category ((<--), identity))
 import Pandora.Pattern.Kernel (Kernel (constant))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -33,7 +33,7 @@ instance Covariant (->) (->) ((->) a) where
 	(<-|-) = (.)
 
 instance Distributive (->) (->) ((->) e) where
-	f -<< g = \e -> f % e <-|- g
+	f -<< g = \e -> f % e <-|-- g
 
 instance Bindable (->) ((->) e) where
 	f =<< g = \x -> f <-- g x <-- x

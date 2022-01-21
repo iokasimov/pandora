@@ -5,7 +5,7 @@ import Pandora.Core.Impliable (imply)
 import Pandora.Core.Functor (type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (-->))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|--)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic (extract)
@@ -36,7 +36,7 @@ instance Morphable (Rotate Right) (Tape Stream) where
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
 	f <<= z = let move rtt = extract . deconstruct ! point . rtt .-+ z in
-		f <-|- imply @(Tape Stream _) <-- z <-- move (rotate @Left) <-- move (rotate @Right)
+		f <-|-- imply @(Tape Stream _) <-- z <-- move (rotate @Left) <-- move (rotate @Right)
 
 repeat :: a :=> Stream
 repeat x = Construct x . Exactly ! repeat x

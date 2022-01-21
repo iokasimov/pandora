@@ -28,7 +28,7 @@ type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
 
 infixl 4 <-*-, .-*-
-infixl 4 <-*-*-, .-*-*-
+infixl 3 <-*-*-, .-*-*-
 infixl 3 <-+-, .-+-
 infixl 0 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 

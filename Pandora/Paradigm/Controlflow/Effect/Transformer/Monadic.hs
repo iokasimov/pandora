@@ -6,7 +6,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (--<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -43,7 +43,7 @@ instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t
 	f <<- TM x = TM <-|- f <<- x
 
 instance Distributive (->) (->) (Schematic Monad t u) => Distributive (->) (->) (t :> u) where
-	f -<< x = TM ! tm . f -<< x
+	f -<< x = TM ! tm . f --<< x
 
 instance Bindable (->) (Schematic Monad t u) => Bindable (->) (t :> u) where
 	f =<< TM x = TM ! tm . f =<< x
