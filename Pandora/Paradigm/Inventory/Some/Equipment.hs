@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Some.Equipment (Equipment (..), retrieve) wher
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
@@ -34,7 +34,7 @@ type instance Schematic Comonad (Equipment e) = (<:.>) ((:*:) e)
 type Equipped e t = Adaptable (Equipment e) (->) t
 
 instance {-# OVERLAPS #-} Extendable (->) u => Extendable (->) ((:*:) e <:.> u) where
-	f <<= TU (e :*: x) = TU . (:*:) e ! f . TU . (:*:) e <<= x
+	f <<= TU (e :*: x) = TU . (:*:) e ! f . TU . (:*:) e <<== x
 
 retrieve :: Equipped e t => t a -> e
 retrieve = attached . run @(->) @(Equipment _) . adapt

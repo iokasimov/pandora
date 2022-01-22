@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -44,7 +44,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where
 	f <<- Tap x xs = Tap <-|- f x <-*- f <<- xs
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable (->) t, Covariant (->) (->) t) => Extendable (->) (Tap t) where
-	f <<= x = Tap # f x ! f . Tap (extract x) <<= lower x
+	f <<= x = Tap # f x ! f . Tap (extract x) <<== lower x
 
 instance Lowerable (->) Tap where
 	lower (Tap _ xs) = xs

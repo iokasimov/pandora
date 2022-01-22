@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (--<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -45,7 +45,7 @@ instance Bindable (->) (Schematic Comonad t u) => Bindable (->) (t :< u) where
 	f =<< TC x = TC ! tc . f =<< x
 
 instance Extendable (->) (Schematic Comonad t u) => Extendable (->) (t :< u) where
-	f <<= TC x = TC ! f . TC <<= x
+	f <<= TC x = TC ! f . TC <<== x
 
 instance (Extractable (t :< u), Extendable (->) (t :< u)) => Comonad (->) (t :< u) where
 

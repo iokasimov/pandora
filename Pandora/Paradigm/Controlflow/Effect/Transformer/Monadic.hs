@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (--<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -49,7 +49,7 @@ instance Bindable (->) (Schematic Monad t u) => Bindable (->) (t :> u) where
 	f =<< TM x = TM ! tm . f =<< x
 
 instance Extendable (->) (Schematic Monad t u) => Extendable (->) (t :> u) where
-	f <<= TM x = TM ! f . TM <<= x
+	f <<= TM x = TM ! f . TM <<== x
 
 instance (Covariant (->) (->) (Schematic Monad t u), Monoidal (-->) (-->) (:*:) (:*:) (Schematic Monad t u), Bindable (->) (t :> u)) => Monad (->) (t :> u) where
 
