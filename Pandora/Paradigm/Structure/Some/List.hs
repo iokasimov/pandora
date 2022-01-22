@@ -107,7 +107,7 @@ instance Stack List where
 			Nothing -> TT ! deconstruct xs
 			Just x -> TT ! Construct x . Just <-|- deconstruct xs
 	pop = resolve @(Nonempty List _) (\(Construct x xs) -> constant <-- Just x <-|-- set @State <-- TT xs) (point Nothing) . run ===<< get @State
-	push x = point x .-*- modify @State <-- item @Push x
+	push x = point x .-*- (modify @State <-- item @Push x)
 
 instance Nullable List where
 	null = Predicate ! \case { TT Nothing -> True ; _ -> False }
@@ -184,7 +184,7 @@ instance Stack (Construction Maybe) where
 	top = P_Q_T ! \xs -> Store ! Exactly (extract xs) :*: \(Exactly new) -> Construct new <-- deconstruct xs
 	-- It will never return you the last element
 	pop = (\(Construct x xs) -> constant x <-|-|- set @State <<- xs) =<< get @State
-	push x = point x .-*- modify @State <-- Construct x . Just
+	push x = point x .-*- (modify @State <-- Construct x . Just)
 
 ---------------------------------------- Combinative list ------------------------------------------
 

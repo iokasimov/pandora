@@ -27,8 +27,8 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((!), (=||))
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
 
-infixl 4 <-*-, .-*-
-infixl 3 <-*-*-, .-*-*-
+infixl 8 <-*-, .-*-
+infixl 7 <-*-*-, .-*-*-
 infixl 3 <-+-, .-+-
 infixl 0 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 

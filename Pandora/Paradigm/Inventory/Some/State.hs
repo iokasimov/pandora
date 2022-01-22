@@ -67,7 +67,7 @@ reconcile f = adapt . set @State ===<< adapt . f ===<< adapt <-- get @State
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = adapt <-- get @State .-*- adapt . modify @State . op <<-- struct
+fold op struct = adapt <-- get @State .-*- (adapt . modify @State . op <<-- struct)
 
 instance Gettable State where
 	type Getting State state ouput = State state state

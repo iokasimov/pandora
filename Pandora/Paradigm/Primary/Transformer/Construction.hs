@@ -53,7 +53,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->
 	unit _ = Straight ! \f -> Construct <-- run f One <-- empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
-	f <<- ~(Construct x xs) = Construct <-|- f x <-*- f <<-<<- xs
+	f <<- ~(Construct x xs) = Construct <-|- f x <-*- (f <<-<<- xs)
 
 instance Covariant (->) (->) t => Extendable (->) (Construction t) where
 	f <<= x = Construct <-------- f x <-------- (f <<=) <-|- deconstruct x

@@ -11,4 +11,4 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Jet t) where
 	f <-|- Jet x xs = Jet (f x) (f <-|-|- xs)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Jet t) where
-	f <<- Jet x xs = Jet <-|- f x <-*- f <<-<<- xs
+	f <<- Jet x xs = Jet <-|- f x <-*- (f <<-<<- xs)

@@ -16,8 +16,6 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 > * Preserving apply: f (x <.-*- y) ≡ f x <.-*- f y
 -}
 
-infixl 8 <<-<<-
-
 infixl 1 <<---------
 infixl 2 <<--------
 infixl 3 <<-------
@@ -25,7 +23,7 @@ infixl 4 <<------
 infixl 5 <<-----
 infixl 6 <<----
 infixl 7 <<---
-infixl 8 <<--
+infixl 8 <<--, <<-<<-
 infixl 9 <<-
 
 class Covariant source target t => Traversable source target t where
