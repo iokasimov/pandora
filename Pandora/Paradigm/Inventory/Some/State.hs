@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-), (<<--)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (===<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -62,7 +62,7 @@ instance Monadic (->) (State s) where
 type Stateful s t = Adaptable t (->) (State s)
 
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable t (->) u) => (s -> u s) -> t s
-reconcile f = adapt . set @State =<< adapt . f =<< adapt <-- get @State
+reconcile f = adapt . set @State ===<< adapt . f ===<< adapt <-- get @State
 
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 

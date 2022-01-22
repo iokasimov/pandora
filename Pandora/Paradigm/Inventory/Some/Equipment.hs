@@ -41,4 +41,4 @@ retrieve = attached . run @(->) @(Equipment _) . adapt
 
 instance Gettable Equipment where
 	type Getting Equipment e output = Equipment e output -> e
-	get (Equipment (e :*: x)) = e
+	get (Equipment (e :*: _)) = e

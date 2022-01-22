@@ -6,7 +6,7 @@ import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-))
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
@@ -31,7 +31,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Jack t) where
 
 instance (Monoidal (-->) (-->) (:*:) (:*:) t, Bindable (->) t) => Bindable (->) (Jack t) where
 	f =<< It x = f x
-	f =<< Other x = Other ! jack point identity . f =<< x
+	f =<< Other x = Other ! jack point identity . f ==<< x
 
 instance Extendable (->) t => Extendable (->) (Jack t) where
 	f <<= It x = It . f ! It x
