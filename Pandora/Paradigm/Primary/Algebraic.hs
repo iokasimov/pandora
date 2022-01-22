@@ -1,6 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (.-*-), (<-*-*-), (.-*-*-), forever_, (<-+-), (.-+-), void, empty, point, pass, extract, (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (<-*-), (.-*-), (<-*-*-), (.-*-*-), forever_, (<-+-), (.-+-), void, empty, point, pass, extract, (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -12,8 +11,9 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-), (<-|-|-|-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
@@ -29,20 +29,11 @@ type instance Unit (:+:) = Zero
 
 infixl 8 <-*-, .-*-
 infixl 7 <-*-*-, .-*-*-
-infixl 3 <-+-, .-+-
-infixl 0 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
-
-(!>-) :: Covariant (->) (->) t => t a -> b -> t b
-x !>- r = constant r <-|- x
-
-(!!>-) :: (Covariant (->) (->) t, Covariant (->) (->) u) => t (u a) -> b -> t (u b)
-x !!>- r = constant r <-|-|- x
-
-(!!!>-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Covariant (->) (->) v) => t (u (v a)) -> b -> t (u (v b))
-x !!!>- r = constant r <-|-|-|- x
+infixl 8 <-+-, .-+-
+infixl 4 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
 void :: Covariant (->) (->) t => t a -> t ()
-void x = x !>- ()
+void x = constant () <-|- x
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	mult = Flip ! \(T_U lrxys) ->
@@ -61,47 +52,47 @@ instance Adjoint (->) (->) ((:*:) s) ((->) s) where
 
 instance Semimonoidal (-->) (:*:) (:*:) ((->) e) where
 	mult :: ((e -> a) :*: (e -> b)) --> (e -> (a :*: b))
-	mult = Straight ! \(g :*: h) -> \x -> g x :*: h x
+	mult = Straight <-- \(g :*: h) -> \x -> g x :*: h x
 
 instance Monoidal (-->) (-->) (:*:) (:*:) ((->) e) where
-	unit _ = Straight ! constant . (! One)
+	unit _ = Straight <-- constant . (! One)
 
 instance Semimonoidal (<--) (:*:) (:*:) ((->) e) where
 	mult :: ((e -> a) :*: (e -> b)) <-- (e -> a :*: b)
-	mult = Flip ! \f -> attached . f :*: extract . f
+	mult = Flip <-- \f -> attached . f :*: extract . f
 
 instance Semimonoidal (-->) (:*:) (:+:) ((:+:) e) where
 	mult :: ((e :+: a) :*: (e :+: b)) --> (e :+: a :+: b)
-	mult = Straight ! \case
+	mult = Straight <-- \case
 		Option _ :*: Option e' -> Option e'
-		Option _ :*: Adoption y -> Adoption ! Adoption y
-		Adoption x :*: _ -> Adoption ! Option x
+		Option _ :*: Adoption y -> Adoption <-- Adoption y
+		Adoption x :*: _ -> Adoption <-- Option x
 
 instance Semimonoidal (-->) (:*:) (:*:) ((:+:) e) where
-	mult = Straight ! \case
-		Adoption x :*: Adoption y -> Adoption ! x :*: y
+	mult = Straight <-- \case
+		Adoption x :*: Adoption y -> Adoption (x :*: y)
 		Option e :*: _ -> Option e
 		_ :*: Option e -> Option e
 
 instance Monoidal (-->) (-->) (:*:) (:*:) ((:+:) e) where
-	unit _ = Straight ! Adoption . (! One)
+	unit _ = Straight <-- Adoption . (! One)
 
 instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
-	mult = Flip ! \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
+	mult = Flip <-- \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
 
 instance Monoidal (<--) (-->) (:*:) (:*:) ((:*:) s) where
-	unit _ = Flip ! \(_ :*: x) -> Straight (\_ -> x)
+	unit _ = Flip <-- \(_ :*: x) -> Straight (\_ -> x)
 
 instance Comonad (->) ((:*:) s) where
 
 instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
-	mult = Flip ! \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
+	mult = Flip <-- \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
 
 instance Monoidal (<--) (-->) (:*:) (:*:) (Flip (:*:) a) where
-	unit _ = Flip ! \(Flip (s :*: _)) -> Straight (\_ -> s)
+	unit _ = Flip <-- \(Flip (s :*: _)) -> Straight (\_ -> s)
 
 --instance Semimonoidal (-->) (:*:) (:*:) (Flip (:*:) a) where
---mult = Straight ! \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
+--mult = Straight <-- \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
 
 type Applicative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) t)
 type Alternative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:+:) t)
@@ -124,7 +115,7 @@ forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> 
 forever_ x = let r = r .-*- x in r
 
 (<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
-y <-+- x = \f -> f <-|- (mult @(-->) ! (x :*: y))
+y <-+- x = \f -> f <-|- (mult @(-->) ! x :*: y)
 
 (.-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
 y .-+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|- (mult @(-->) ! (x :*: y))
@@ -137,7 +128,7 @@ extract :: Extractable t => t a -> a
 extract j = unit @(<--) @(-->) Proxy ! j ! One
 
 point :: Pointable t => a -> t a
-point x = unit @(-->) Proxy ! (Straight ! \One -> x)
+point x = unit @(-->) Proxy ! (Straight <-- \One -> x)
 
 pass :: Pointable t => t ()
 pass = point ()

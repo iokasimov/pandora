@@ -222,8 +222,8 @@ instance Morphable (Rotate Right) (Tape List) where
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
 	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)
 	morphing s@(premorph -> Turnover (T_U (Exactly x :*: T_U (Reverse left :*: right)))) =
-		resolve @(Tape List _) <-- Turnover <-- premorph s !
-			rotate_over x <-|- run right .-+- rotate_left x right <-|- run left where
+		resolve @(Tape List _) <--- Turnover <--- premorph s <---
+			(rotate_over x <-|- run right) .-+- (rotate_left x right <-|- run left) where
 
 		rotate_left :: a -> List a -> Nonempty List a -> Tape List a
 		rotate_left focused rs (Construct lx lxs) = imply @(Tape List _) <-- lx <-- TT lxs <-- item @Push focused rs
@@ -239,7 +239,7 @@ instance Morphable (Rotate Right) (Turnover (Tape List)) where
 	type Morphing (Rotate Right) (Turnover (Tape List)) = Turnover (Tape List)
 	morphing s@(premorph -> Turnover (T_U (Exactly x :*: T_U (Reverse left :*: right)))) =
 		resolve @(Tape List _) <--- Turnover <--- premorph s
-			! rotate_over x <-|- run left .-+- rotate_right x left <-|- run right where
+			<--- (rotate_over x <-|- run left) .-+- (rotate_right x left <-|- run right) where
 
 		rotate_right :: a -> List a -> Nonempty List a -> Tape List a
 		rotate_right focused ls (Construct rx rxs) = imply @(Tape List _) <-- rx <-- item @Push focused ls <-- TT rxs
@@ -257,13 +257,13 @@ instance Morphable (Into (Tape List)) List where
 
 instance Morphable (Into List) (Tape List) where
 	type Morphing (Into List) (Tape List) = List
-	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
 		<--- modify @State . item @Push @List <<-- right
 		<--- item @Push x left
 
 instance Morphable (Into (Comprehension Maybe)) (Tape List) where
 	type Morphing (Into (Comprehension Maybe)) (Tape List) = Comprehension Maybe
-	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
 		<--- modify @State . item @Push @(Comprehension Maybe) <<-- right
 		<--- item @Push x <-- Comprehension left
 
