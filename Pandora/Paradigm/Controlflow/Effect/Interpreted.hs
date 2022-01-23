@@ -10,7 +10,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 infixl 0 !
-infixr 2 ||=, =||
+infixr 9 ||=, =||
 
 type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 

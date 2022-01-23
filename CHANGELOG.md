@@ -678,3 +678,7 @@
 * Rename `-.#..-` operator to `.:..`
 * Rename `Identity` to `Exactly`
 * Change precedence for `:*:`, `<-|-|-`, `<-|-|-|-`, `=<<`, `<<=`, `<#>`
+* Define length-encoded operators for Covariant, Contravariant
+* Define length-encoded operators for Traversable, Distributive
+* Define length-encoded operators for Bindable, Extentable
+* Define length-encoded operators for Adjoint
