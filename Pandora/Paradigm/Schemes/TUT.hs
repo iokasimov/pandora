@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (--|), (|-), (|--)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
@@ -63,13 +63,13 @@ product_over_sum (Option (s :*: x)) = s :*: Option x
 product_over_sum (Adoption (s :*: y)) = s :*: Adoption y
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable (->) u) => Bindable (->) (t <:<.>:> t' := u) where
-	f =<< x = TUT ! ((run . f |-) =<<) <-|- run x
+	f =<< x = TUT ! ((run . f |--) =<<) <-|- run x
 
 instance (Bindable (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (-->) (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Straight ! unite . (point -|) . (! One) . run
 
 instance (Adjoint (->) (->) t' t, Extendable (->) u) => Extendable (->) (t' <:<.>:> t := u) where
-	f <<= x = TUT ! ((f . unite -|) <<=) <-|- run x
+	f <<= x = TUT ! ((f . unite --|) <<=) <-|- run x
 
 instance (Adjoint (->) (->) t' t, Distributive (->) (->) t) => Liftable (->) (t <:<.>:> t') where
 	lift :: Covariant (->) (->) u => u ~> t <:<.>:> t' := u

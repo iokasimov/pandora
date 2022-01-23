@@ -12,7 +12,7 @@ import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (--|), (|-), (|--)))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly), Simplification)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
@@ -28,12 +28,12 @@ instance Adjoint (->) (->) (Store s) (State s) where
 	g |- Store (s :*: f) = extract . (run % s) . g ! f s
 
 instance Adjoint (->) (->) (Accumulator e) (Imprint e) where
-	f -| x = Imprint ! f . Accumulator -| x
-	g |- x = run . g |- run x
+	f -| x = Imprint ! f . Accumulator --| x
+	g |- x = run . g |-- run x
 
 instance Adjoint (->) (->) (Equipment e) (Provision e) where
-	f -| x = Provision ! f . Equipment -| x
-	g |- x = run . g |- run x
+	f -| x = Provision ! f . Equipment --| x
+	g |- x = run . g |-- run x
 
 class Zoomable (tool :: * -> * -> *) (available :: * -> *) where
 	zoom :: forall bg ls t . Adaptable t (->) (tool bg) => Lens available bg ls -> tool (Simplification available ls) ~> t
