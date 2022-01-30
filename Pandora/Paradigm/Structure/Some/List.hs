@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.List where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<-----), (<-------), (<--------), (-->), (--->), (---->), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->), (---->), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|--), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-), (<<--)))
@@ -197,9 +197,9 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
 	f <<= z = let move rtt = TT . deconstruct <----- run . rtt .-+ z in
 		imply @(Tape List _)
-			<-------- f z
-			<-------- f <-|- move <-- rotate @Left
-			<-------- f <-|- move <-- rotate @Right
+			<---- f z
+			<---- f <-|-- move <-- rotate @Left
+			<---- f <-|-- move <-- rotate @Right
 
 instance Morphable (Rotate Left) (Tape List) where
 	type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
@@ -253,14 +253,14 @@ instance Morphable (Into (Tape List)) List where
 instance Morphable (Into List) (Tape List) where
 	type Morphing (Into List) (Tape List) = List
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
-		<------- modify @State . item @Push @List <<-- right
-		<------- item @Push x left
+		<--- modify @State . item @Push @List <<-- right
+		<--- item @Push x left
 
 instance Morphable (Into (Comprehension Maybe)) (Tape List) where
 	type Morphing (Into (Comprehension Maybe)) (Tape List) = Comprehension Maybe
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
-		<------- modify @State . item @Push @(Comprehension Maybe) <<-- right
-		<------- item @Push x <-- Comprehension left
+		<--- modify @State . item @Push @(Comprehension Maybe) <<-- right
+		<--- item @Push x <-- Comprehension left
 
 ------------------------------------- Zipper of non-empty list -------------------------------------
 
@@ -277,8 +277,8 @@ instance Morphable (Rotate Right) (Tape (Construction Maybe)) where
 	type Morphing (Rotate Right) (Tape (Construction Maybe)) =
 		Maybe <::> Tape (Construction Maybe)
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
-		TT ! twosome (Exactly <--- extract right)
-			<-|- twosome (Reverse <--- item @Push x left)
+		TT ! twosome <-- (Exactly <-- extract right)
+			<-|- twosome (Reverse <-- item @Push x left)
 			<-|- deconstruct right
 
 instance Morphable (Into (Tape List)) (Construction Maybe) where
@@ -298,14 +298,14 @@ instance Morphable (Into (Tape (Construction Maybe))) (Tape List) where
 instance Morphable (Into (Construction Maybe)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Construction Maybe)) (Tape (Construction Maybe)) = Construction Maybe
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
-		<------- modify @State . item @Push @(Nonempty List) <<-- right
-		<------- item @Push x left
+		<--- modify @State . item @Push @(Nonempty List) <<-- right
+		<--- item @Push x left
 
 instance Morphable (Into List) (Tape (Construction Maybe)) where
 	type Morphing (Into List) (Tape (Construction Maybe)) = List
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached ! run @(->) @(State _)
-		<------- modify @State . item @Push @List <<-- right
-		<------- item @Push x <-- lift left
+		<--- modify @State . item @Push @List <<-- right
+		<--- item @Push x <-- lift left
 
 ------------------------------------ Zipper of combinative list ------------------------------------
 
