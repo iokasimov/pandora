@@ -22,7 +22,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((!), (=||)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((!), (-#=)))
 
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
@@ -151,19 +151,19 @@ empty = unit @(-->) Proxy ! Straight absurd
 (<-|-<-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
 	(Covariant m m (p a), Covariant m m (Flip p d), Interpreted m (Flip p d))
 	=> m a b :*: m c d -> m (p a c) (p b d)
-(<-|-<-|-) (f :*: g) = (=||) @m @(Flip p d) ((<-|-) f) . ((<-|-) g)
+(<-|-<-|-) (f :*: g) = (-#=) @m @(Flip p d) ((<-|-) f) . ((<-|-) g)
 
 (<-|->-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
 	(Covariant m m (Flip p c), Contravariant m m (p a), Interpreted m (Flip p c))
 	=> m a b :*: m c d -> m (p a d) (p b c)
-(<-|->-|-) (f :*: g) = (=||) @m @(Flip p c) ((<-|-) f) . ((>-|-) g)
+(<-|->-|-) (f :*: g) = (-#=) @m @(Flip p c) ((<-|-) f) . ((>-|-) g)
 
 (>-|-<-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
 	(Contravariant m m (Flip p d), Covariant m m (p b), Interpreted m (Flip p d))
 	=> m a b :*: m c d -> m (p b c) (p a d)
-(>-|-<-|-) (f :*: g) = (=||) @m @(Flip p d) ((>-|-) f) . ((<-|-) g)
+(>-|-<-|-) (f :*: g) = (-#=) @m @(Flip p d) ((>-|-) f) . ((<-|-) g)
 
 (>-|->-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
 	(Contravariant m m (p b), Contravariant m m (Flip p c), Interpreted m (Flip p c))
 	=> m a b :*: m c d -> m (p b d) (p a c)
-(>-|->-|-) (f :*: g) = (=||) @m @(Flip p c) ((>-|-) f) . ((>-|-) g)
+(>-|->-|-) (f :*: g) = (-#=) @m @(Flip p c) ((>-|-) f) . ((>-|-) g)

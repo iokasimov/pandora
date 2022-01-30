@@ -22,7 +22,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point, extract, (<-|-<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!), (||=)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!), (=#-)))
 
 newtype TUT ct ct' cu t t' u a = TUT (t :. u :. t' := a)
 
@@ -43,7 +43,7 @@ instance Interpreted (->) (TUT ct ct' cu t t' u) where
 	unite = TUT
 
 instance (Semigroupoid m, Covariant m m t, Covariant (Betwixt (Betwixt m m) m) m t, Covariant (Betwixt m (Betwixt m m)) (Betwixt (Betwixt m m) m) u, Covariant m (Betwixt m (Betwixt m m)) t', Interpreted m (t <:<.>:> t' := u)) => Covariant m m (t <:<.>:> t' := u) where
-	(<-|-) f = (||=) ((<-|-|-|-) f)
+	(<-|-) f = (=#-) ((<-|-|-|-) f)
 
 instance (Adjoint (->) (->) t' t, Bindable (->) u) => Semimonoidal (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	mult = Straight ! \(TUT x :*: TUT y) -> TUT ((((\r -> (<-|-|-|-) (r :*:) y) |-) =<<) <-|- x)

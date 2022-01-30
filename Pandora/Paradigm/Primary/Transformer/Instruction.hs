@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Transformer.Instruction where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
@@ -43,7 +43,7 @@ instance Monad (->) t => Monad (->) (Instruction t) where
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Instruction t) where
 	f <<- Enter x = Enter <-|- f x
-	f <<- Instruct xs = Instruct <-|- f <<-<<- xs
+	f <<- Instruct xs = Instruct <-|-- f <<-<<- xs
 
 instance Liftable (->) Instruction where
 	lift x = Instruct ! Enter <-|- x

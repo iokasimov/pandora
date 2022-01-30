@@ -16,10 +16,31 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 > * Preserving apply: f (x <.-*- y) ≡ f x <.-*- f y
 -}
 
-infixl 5 <<-, <<-<<-
+infixl 8 <<-<<-
+
+infixl 1 <<---------
+infixl 2 <<--------
+infixl 3 <<-------
+infixl 4 <<------
+infixl 5 <<-----
+infixl 6 <<----
+infixl 7 <<---
+infixl 8 <<--
+infixl 9 <<-
 
 class Covariant source target t => Traversable source target t where
 	(<<-) :: (Covariant source target u, Monoidal (Straight source) (Straight target) (:*:) (:*:) u) => source a (u b) -> target (t a) (u (t b))
+
+	(<<--), (<<---), (<<----), (<<-----), (<<------),
+		(<<-------), (<<--------), (<<---------) :: (Covariant source target u, Monoidal (Straight source) (Straight target) (:*:) (:*:) u) => source a (u b) -> target (t a) (u (t b))
+	(<<--) = (<<-)
+	(<<---) = (<<-)
+	(<<----) = (<<-)
+	(<<-----) = (<<-)
+	(<<------) = (<<-)
+	(<<-------) = (<<-)
+	(<<--------) = (<<-)
+	(<<---------) = (<<-)
 
 (<<-<<-) :: forall t u v category a b .
 	(Traversable category category t, Covariant category category u, Monoidal (Straight category) (Straight category) (:*:) (:*:) u, Traversable category category v)

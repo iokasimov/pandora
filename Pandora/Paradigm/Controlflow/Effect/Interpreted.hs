@@ -10,7 +10,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
 infixl 0 !
-infixr 2 ||=, =||
+infixr 2 =#-, -#=
 
 type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 
@@ -23,35 +23,35 @@ class Interpreted m t where
 	(!) :: m (t a) (Primary t a)
 	(!) = run
 
-	(||=) :: (Semigroupoid m, Interpreted m u) => m (Primary t a) (Primary u b) -> m (t a) (u b)
-	(||=) f = unite . f . run
+	(=#-) :: (Semigroupoid m, Interpreted m u) => m (Primary t a) (Primary u b) -> m (t a) (u b)
+	(=#-) f = unite . f . run
 
-	(=||) :: (Semigroupoid m, Interpreted m u) => m (t a) (u b) -> m (Primary t a) (Primary u b)
-	(=||) f = run . f . unite
+	(-#=) :: (Semigroupoid m, Interpreted m u) => m (t a) (u b) -> m (Primary t a) (Primary u b)
+	(-#=) f = run . f . unite
 
-	(<$||=) :: (Semigroupoid m, Covariant m m j, Interpreted m u)
+	(<$=#-) :: (Semigroupoid m, Covariant m m j, Interpreted m u)
                 => m (Primary t a) (Primary u b) -> m (j := t a) (j := u b)
-	(<$||=) f = (<-|-) ((||=) f)
+	(<$=#-) f = (<-|-) ((=#-) f)
 
-	--(<$$||=) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Interpreted m u)
+	--(<$$=#-) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Interpreted m u)
 	--	=> m (Primary t a) (Primary u b) -> m (j :. k := t a) (j :. k := u b)
-	--(<$$||=) f = (<$$>) @m @m ((||=) f)
+	--(<$$=#-) f = (<$$>) @m @m ((=#-) f)
 
-	--(<$$$||=) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Covariant m m l, Interpreted m u)
+	--(<$$$=#-) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Covariant m m l, Interpreted m u)
 	--	=> m (Primary t a) (Primary u b) -> m (j :. k :. l := t a) (j :. k :. l := u b)
-	--(-<$$$||=) f = (<$$$>) @m @m @m ((||=) f)
+	--(-<$$$=#-) f = (<$$$>) @m @m @m ((=#-) f)
 
-	(=||$>) :: (Covariant m m j, Interpreted m u)
+	(-#=$>) :: (Covariant m m j, Interpreted m u)
 		=> m (t a) (u b) -> m (j := Primary t a) (j := Primary u b)
-	(=||$>) f = (<-|-) ((=||) f)
+	(-#=$>) f = (<-|-) ((-#=) f)
 
-	--(=||$$>) :: (Covariant m m j, Covariant m m k, Interpreted m u)
+	--(-#=$$>) :: (Covariant m m j, Covariant m m k, Interpreted m u)
 	--	=> m (t a) (u b) -> m (j :. k := Primary t a) (j :. k := Primary u b)
-	--(=||$$>) f = (<$$>) @m @m ((=||) f)
+	--(-#=$$>) f = (<$$>) @m @m ((-#=) f)
 
-	--(=||$$$>) :: (Covariant m m j, Covariant m m k, Covariant m m l, Interpreted m u)
+	--(-#=$$$>) :: (Covariant m m j, Covariant m m k, Covariant m m l, Interpreted m u)
 	--	=> m (t a) (u b) -> m (j :. k :. l := Primary t a) (j :. k :. l := Primary u b)
-	--(=||$$$>) f = (<$$$>) @m @m @m ((=||) f)
+	--(-#=$$$>) f = (<$$$>) @m @m @m ((-#=) f)
 
 (-=:) :: (Liftable m t, Interpreted m (t u), Interpreted m (t v), Covariant m m u)
 	=> m (t u a) (t v b) -> m (u a) (Primary (t v) b)

@@ -81,7 +81,7 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 --	morphing (run . run . premorph -> Just (Construct focused subtree)) = T_U ! \(TU (breadcrumbs :*: Exactly value)) -> case breadcrumbs of
 --		Construct key Nothing -> Prefixed . lift ! attached focused == key ? Construct (key :*: value) subtree ! Construct focused subtree
 --		Construct key (Just keys) -> Prefixed . lift ! attached focused != key ? Construct focused subtree
---			! Construct focused ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value =||!> subtree
+--			! Construct focused ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value -#=!> subtree
 
 ---------------------------------- Non-empty prefixed rose tree ------------------------------------
 
@@ -96,7 +96,7 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 --		Construct key Nothing -> Prefixed ! attached x != key ? Construct x # lift subtree
 --			! Construct (key :*: value) (lift subtree)
 --		Construct key (Just keys) -> Prefixed ! attached x != key ? Construct x # lift subtree
---			! Construct (key :*: value) . lift ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value =||!> subtree
+--			! Construct (key :*: value) . lift ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value -#=!> subtree
 
 find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose := k :*: a -> Maybe a
 find_rose_sub_tree (Construct k Nothing) tree = k == attached (extract tree) ? Just (extract ! extract tree) ! Nothing

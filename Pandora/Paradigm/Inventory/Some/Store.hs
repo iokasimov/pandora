@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Algebraic (extract, (<-|-<-|-), (>-|-<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (||=), (!)), Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-), (!)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 
@@ -27,7 +27,7 @@ newtype Store s a = Store ((:*:) s :. (->) s := a)
 
 -- TODO: Try to generalize (->) here
 instance Covariant (->) (->) (Store s) where
-	(<-|-) f = (||=) (f <-|-|-)
+	(<-|-) f = (=#-) (f <-|-|-)
 
 instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
 	mult = Flip ! \(Store (s :*: f)) ->
@@ -39,12 +39,12 @@ instance Monoidal (<--) (-->) (:*:) (:*:) (Store s) where
 
 -- TODO: Try to generalize (->) here
 instance Extendable (->) (Store s) where
-	f <<= Store x = Store ! f <-|-|- Store .:.. (identity @(->) -|) <-|- x
+	f <<= Store x = Store ! f <-|-|- ((Store .:.. (identity @(->) -|)) <-|- x)
 
 instance Comonad (->) (Store s) where
 
 instance Invariant (Flip Store r) where
-	f <!< g = \(Flip x) -> Flip ! (f :*: (g :*: identity >-|-<-|-) <-|-<-|-) ||= x
+	f <!< g = \(Flip x) -> Flip ! (f :*: (g :*: identity >-|-<-|-) <-|-<-|-) =#- x
 
 instance Interpreted (->) (Store s) where
 	type Primary (Store s) a = (:*:) s :. (->) s := a

@@ -8,7 +8,7 @@ import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((||=))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((=#-))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, type (#=@))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
@@ -30,7 +30,7 @@ class Substructure segment (structure :: * -> *) where
 	substructure :: (Tagged segment <:.> structure) #=@ Substance segment structure := Available segment structure
 
 	sub :: (Covariant (->) (->) structure) => structure #=@ Substance segment structure := Available segment structure
-	sub = (lift :*: (lower @(->) <-|-) >-|-<-|-) ||= substructure @segment @structure
+	sub = (lift :*: (lower @(->) <-|-) >-|-<-|-) =#- substructure @segment @structure
 
 -- TODO: generalize `available` and then rename to `singleton`
 -- The main problem is that we should handle (Maybe target -> sourse)

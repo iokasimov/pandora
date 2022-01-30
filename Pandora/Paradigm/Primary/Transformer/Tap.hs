@@ -8,12 +8,12 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!), (=||))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!), (-#=))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%))
@@ -35,7 +35,7 @@ instance Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap
 	mult = Straight ! \(Tap x xs :*: Tap y ys) -> Tap # (x :*: y) # (mult @(-->) ! (xs :*: ys))
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
-	mult = Flip ! \(Tap (x :*: y) xys) -> ((=||) @(->) @(Flip _ _) (Tap x <-|-) . (Tap y <-|-)) (mult @(<--) ! xys)
+	mult = Flip ! \(Tap (x :*: y) xys) -> ((-#=) @(->) @(Flip _ _) (Tap x <-|-) . (Tap y <-|-)) (mult @(<--) ! xys)
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Tap t) where
 	unit _ = Flip ! \(Tap x _) -> Straight (\_ -> x)
@@ -44,7 +44,7 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where
 	f <<- Tap x xs = Tap <-|- f x <-*- f <<- xs
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable (->) t, Covariant (->) (->) t) => Extendable (->) (Tap t) where
-	f <<= x = Tap # f x ! f . Tap (extract x) <<= lower x
+	f <<= x = Tap # f x ! f . Tap (extract x) <<== lower x
 
 instance Lowerable (->) Tap where
 	lower (Tap _ xs) = xs

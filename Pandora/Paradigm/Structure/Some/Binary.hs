@@ -6,7 +6,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (-->), (--->))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable ((=<<))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (===<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -130,15 +130,15 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		Nothing -> TT ! \_ -> Nothing
 		Just tree -> TT ! \key ->
 			key <=> attached <-- extract tree & order (Just --> extract --> extract tree)
-				(lookup @Key key . Prefixed =<< get @(Obscure Lens) <-- sub @Left <-- tree)
-				(lookup @Key key . Prefixed =<< get @(Obscure Lens) <-- sub @Right <-- tree)
+				(lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Left <-- tree)
+				(lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Right <-- tree)
 
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Exactly) <:.:> Prefixed Binary k := (->)
 	-- morphing struct = case run . run . premorph ! struct of
 		-- Nothing -> T_U ! \(TT (key :*: Exactly value)) -> Prefixed . lift . leaf ! key :*: value
 		-- Just tree -> T_U ! \(TT (key :*: Exactly value)) ->
-			-- let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value =||) =||) in
+			-- let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value -#=) -#=) in
 			-- Prefixed . lift ! key <=> attached (extract tree) & order
 				-- # over (sub @Root) (!!!>- value) tree
 				-- # over (sub @Left) continue tree
@@ -150,8 +150,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT ! \key ->
 		key <=> attached x & order (Just ---> extract x)
-			(lookup @Key key . Prefixed . extract =<< get @(Obscure Lens) <-- sub @Left <-- xs)
-			(lookup @Key key . Prefixed . extract =<< get @(Obscure Lens) <-- sub @Left <-- xs)
+			(lookup @Key key . Prefixed . extract ===<< get @(Obscure Lens) <-- sub @Left <-- xs)
+			(lookup @Key key . Prefixed . extract ===<< get @(Obscure Lens) <-- sub @Left <-- xs)
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 
