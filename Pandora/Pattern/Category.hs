@@ -11,6 +11,7 @@ infixl 6 <-----
 infixl 7 <----
 infixl 8 <---
 infixl 9 <--
+
 infixr 1 ---------->
 infixr 2 --------->
 infixr 3 -------->

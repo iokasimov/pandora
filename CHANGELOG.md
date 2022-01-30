@@ -677,3 +677,9 @@
 * Define `Zoomable` typeclass with `zoom` method
 * Rename `-.#..-` operator to `.:..`
 * Rename `Identity` to `Exactly`
+* Define length encoding operators in `Covariant` class
+* Define length encoding operators in `Contravariant` class
+* Define length encoding operators in `Traversable` class
+* Define length encoding operators in `Distributive` class
+* Define length encoding operators in `Extendable` class
+* Define length encoding operators in `Bindable` class
