@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<--)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (===<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
+import Pandora.Pattern.Functor.Adjoint ((-|), (|--))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-), (!)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
@@ -42,7 +42,7 @@ instance Monoidal (-->) (-->) (:*:) (:*:) (State s) where
 	unit _ = Straight ! State . (identity @(->) -|) . (<-- One) . run
 
 instance Bindable (->) (State s) where
-	f =<< x = State ! (run . f |-) <-|- run x
+	f =<< x = State ! (run . f |--) <-|- run x
 
 instance Monad (->) (State s) where
 
