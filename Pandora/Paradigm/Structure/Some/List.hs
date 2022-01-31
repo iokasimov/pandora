@@ -179,7 +179,7 @@ instance Stack (Construction Maybe) where
 	top = P_Q_T ! \xs -> Store ! Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
 	pop = (\(Construct x xs) -> constant x <-|-|- set @State <<- xs) =<< get @State
-	push x = point x .-*- modify @State <--- Construct x . Just
+	push x = point x .-*- (modify @State <-- Construct x . Just)
 
 ---------------------------------------- Combinative list ------------------------------------------
 
