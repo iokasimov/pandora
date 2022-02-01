@@ -683,3 +683,7 @@
 * Define length encoding operators in `Distributive` class
 * Define length encoding operators in `Extendable` class
 * Define length encoding operators in `Bindable` class
+* Define length encoding operators in `Adjoint` class
+* Change precedence for `<-*-*-` and `.-*-*-`
+* Change precedence for `<-|-<-|-`, `<-|->-|-`, `>-|->-|-`, `>-|-<-|-`
+* Define length encoding operators from `<-*--` to `<-*-------`

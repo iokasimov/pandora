@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (.-*-), (<-*-*-), (.-*-*-), forever_, (<-+-), (.-+-), void, empty, point, pass, extract, (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*-----), (<-*------), (<-*-------), (.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*-----), (.-*------), (.-*-------), (<-*-*-), (.-*-*-), forever_, (<-+-), (.-+-), void, empty, point, pass, extract, (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -27,9 +27,15 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((!), (-#=))
 type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
 
+infixl 1 <-*--------, .-*--------
+infixl 2 <-*-------, .-*-------
+infixl 3 <-*------, .-*------
+infixl 4 <-*-----, .-*-----
+infixl 5 <-*----, .-*----
+infixl 6 <-*---, .-*---
+infixl 7 <-*--, .-*--, <-*-*-, .-*-*-
 infixl 8 <-*-, .-*-
-infixl 7 <-*-*-, .-*-*-
-infixl 3 <-+-, .-+-
+infixl 8 <-+-, .-+-
 infixl 6 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
 (!>-) :: Covariant (->) (->) t => t a -> b -> t b
@@ -108,13 +114,27 @@ type Alternative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, M
 type Divisible t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Monoidal (-->) (<--) (:*:) (:*:) t)
 type Decidable t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:+:) t, Monoidal (-->) (<--) (:*:) (:+:) t)
 
-(<-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t (a -> b) -> t a -> t b
+(<-*--------), (<-*-------), (<-*------), (<-*-----), (<-*----), (<-*---), (<-*--), (<-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t (a -> b) -> t a -> t b
+f <-*-------- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
+f <-*------- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
+f <-*------ x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
+f <-*----- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
+f <-*---- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
+f <-*--- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
+f <-*-- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
 f <-*- x = (|-) @(->) @(->) (&) <-|- (mult @(-->) @_ @(:*:) ! (f :*: x))
 
 (<-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u (a -> b)) -> t (u a) -> t (u b)
 f <-*-*- x = (<-*-) <-|- f <-*- x
 
-(.-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
+(.-*--------), (.-*-------), (.-*------), (.-*-----), (.-*----), (.-*---), (.-*--), (.-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
+y .-*-------- x = (\_ y' -> y') <-|- x <-*- y
+y .-*------- x = (\_ y' -> y') <-|- x <-*- y
+y .-*------ x = (\_ y' -> y') <-|- x <-*- y
+y .-*----- x = (\_ y' -> y') <-|- x <-*- y
+y .-*---- x = (\_ y' -> y') <-|- x <-*- y
+y .-*--- x = (\_ y' -> y') <-|- x <-*- y
+y .-*-- x = (\_ y' -> y') <-|- x <-*- y
 y .-*- x = (\_ y' -> y') <-|- x <-*- y
 
 (.-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u b) -> t (u a) -> t (u b)
