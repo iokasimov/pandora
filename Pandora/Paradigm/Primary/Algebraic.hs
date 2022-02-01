@@ -42,7 +42,7 @@ x !!>- r = constant r <-|-|- x
 x !!!>- r = constant r <-|-|-|- x
 
 void :: Covariant (->) (->) t => t a -> t ()
-void x = x !>- ()
+void x = constant () <-|- x
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	mult = Flip ! \(T_U lrxys) ->
@@ -55,7 +55,7 @@ instance Traversable (->) (->) ((:*:) s) where
 
 instance Adjoint (->) (->) ((:*:) s) ((->) s) where
 	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)
-	f -| x = \s -> f ! s :*: x
+	f -| x = \s -> f (s :*: x)
 	(|-) :: (a -> s -> b) -> (s :*: a) -> b
 	f |- ~(s :*: x) = f x s
 

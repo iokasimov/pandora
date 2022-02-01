@@ -62,7 +62,7 @@ instance Setoid a => Setoid (List a) where
 instance Semigroup (List a) where
 	TT Nothing + TT ys = TT ys
 	TT (Just (Construct x xs)) + TT ys = lift . Construct x . run
-		! TT @Covariant @Covariant xs + TT @Covariant @Covariant ys
+		<---- TT @Covariant @Covariant xs + TT @Covariant @Covariant ys
 
 instance Monoid (List a) where
 	zero = empty
