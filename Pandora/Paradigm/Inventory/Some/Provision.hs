@@ -32,7 +32,7 @@ instance Contravariant (->) (->) (Flip Provision a) where
 	f >-|- Flip (Provision g) = Flip . Provision ! g . f
 
 instance Semimonoidal (-->) (:*:) (:*:) (Provision e) where
-	mult = Straight ! Provision . (mult @(-->) !) . (run :*: run <-|-<-|-)
+	mult = Straight ! Provision . (mult @(-->) !) . ((run :*: run) <-|-<-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Provision e) where
 	unit _ = Straight ! \f -> Provision ! \_ -> run f One

@@ -49,7 +49,7 @@ instance (Adjoint (->) (->) t' t, Bindable (->) u) => Semimonoidal (-->) (:*:) (
 	mult = Straight ! \(TUT x :*: TUT y) -> TUT ((((\r -> (<-|-|-|-) (r :*:) y) |-) =<<) <-|- x)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) u, Covariant (->) (->) t', Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <:<.>:> t' := u) where
-	mult = Flip ! (TUT :*: TUT <-|-<-|-) . (mult @(<--) !) . (<-|-) (mult @(<--) !) . (<-|-|-) @_ @(->) (mult @(<--) !) . run
+	mult = Flip ! ((TUT :*: TUT) <-|-<-|-) . (mult @(<--) !) . (<-|-) (mult @(<--) !) . (<-|-|-) @_ @(->) (mult @(<--) !) . run
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t', Monoidal (<--) (-->) (:*:) (:*:) u, Adjoint (->) (->) t t') => Monoidal (<--) (-->) (:*:) (:*:) (t <:<.>:> t' := u) where
 	unit _ = Flip ! \(TUT xys) -> Straight (\_ -> (extract |-) xys)

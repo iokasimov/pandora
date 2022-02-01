@@ -40,7 +40,7 @@ instance Covariant (->) (->) (Flip Tagged a) where
 	_ <-|- Flip (Tag x) = Flip ! Tag x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Tagged tag) where
-	mult = Straight ! Tag . (extract :*: extract <-|-<-|-)
+	mult = Straight ! Tag . ((extract :*: extract) <-|-<-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Tagged tag) where
 	unit _ = Straight ! Tag . (! One) . run

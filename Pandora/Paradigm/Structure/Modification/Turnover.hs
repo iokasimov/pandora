@@ -21,4 +21,4 @@ instance Interpreted (->) (Turnover t) where
 instance (Covariant (->) (->) structure, Substructure segment structure) => Substructure segment (Turnover structure) where
 	type Available segment (Turnover structure) = Available segment structure
 	type Substance segment (Turnover structure) = Substance segment structure
-	substructure = ((run /|\) :*: ((unite /|\) <-|-) >-|-<-|-) =#- substructure @segment @structure
+	substructure = (((run /|\) :*: ((unite /|\) <-|-)) >-|-<-|-) =#- substructure @segment @structure

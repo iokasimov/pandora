@@ -28,9 +28,9 @@ type instance Unit (:*:) = One
 type instance Unit (:+:) = Zero
 
 infixl 8 <-*-, .-*-
-infixl 3 <-*-*-, .-*-*-
+infixl 7 <-*-*-, .-*-*-
 infixl 3 <-+-, .-+-
-infixl 0 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
+infixl 6 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
 (!>-) :: Covariant (->) (->) t => t a -> b -> t b
 x !>- r = constant r <-|- x
@@ -47,7 +47,7 @@ void x = constant () <-|- x
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	mult = Flip ! \(T_U lrxys) ->
 		-- TODO: I need matrix transposing here
-		let ((lxs :*: lys) :*: (rxs :*: rys)) = ((mult @(<--) !) :*: (mult @(<--) !) <-|-<-|-) lrxys in
+		let ((lxs :*: lys) :*: (rxs :*: rys)) = (((mult @(<--) !) :*: (mult @(<--) !)) <-|-<-|-) lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
 instance Traversable (->) (->) ((:*:) s) where
@@ -124,10 +124,10 @@ forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> 
 forever_ x = let r = r .-*- x in r
 
 (<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
-y <-+- x = \f -> f <-|- (mult @(-->) ! (x :*: y))
+y <-+- x = \f -> f <-|- (mult @(-->) ! x :*: y)
 
 (.-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
-y .-+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|- (mult @(-->) ! (x :*: y))
+y .-+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|- (mult @(-->) ! x :*: y)
 
 type Extractable t = Monoidal (<--) (-->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t
@@ -144,9 +144,6 @@ pass = point ()
 
 empty :: Emptiable t => t a
 empty = unit @(-->) Proxy ! Straight absurd
-
---instance Appliable (->) b c (->) e d => Appliable (->) a (b -> c) (->) (a :*: e) d where
---	f ! (x :*: y) = f x ! y
 
 (<-|-<-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
 	(Covariant m m (p a), Covariant m m (Flip p d), Interpreted m (Flip p d))

@@ -32,7 +32,7 @@ infixl 2 #=@
 type Lens = P_Q_T (->) Store
 
 instance Invariant (Flip (Lens available) tgt) where
-	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T ! (g :*: (f <-|-) >-|-<-|-) lens
+	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T ! ((g :*: (f <-|-)) >-|-<-|-) lens
 
 type family Convex lens where
 	Convex Lens = Lens Exactly

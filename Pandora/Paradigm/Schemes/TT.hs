@@ -42,7 +42,7 @@ instance (Semigroupoid m, Covariant m m t, Covariant (Betwixt m m) m t, Covarian
 	(<-|-) f = (=#-) ((<-|-|-) f)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) t') => Semimonoidal (-->) (:*:) (:*:) (t <::> t') where
-	mult = Straight ! TT . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run :*: run <-|-<-|-)
+	mult = Straight ! TT . (<-|-) (mult @(-->) !) . (mult @(-->) !) . ((run :*: run) <-|-<-|-)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Semimonoidal (-->) (:*:) (:*:) t', Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) t') => Monoidal (-->) (-->) (:*:) (:*:) (t <::> t') where
 	unit _ = Straight ! TT . point . point . (! One) . run
@@ -54,7 +54,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) t', Semimonoidal (-->) (:*:
 	unit _ = Straight ! \_ -> TT empty
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <::> t') where
-	mult = Flip ! \(TT xys) -> (TT :*: TT <-|-<-|-) . (mult @(<--) !) ! (mult @(<--) !) <-|- xys
+	mult = Flip ! \(TT xys) -> ((TT :*: TT) <-|-<-|-) . (mult @(<--) !) ! (mult @(<--) !) <-|- xys
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<--) (-->) (:*:) (:*:) t') => Monoidal (<--) (-->) (:*:) (:*:) (t <::> t') where
 	unit _ = Flip ! \(TT x) -> Straight (\_ -> extract ! extract x)

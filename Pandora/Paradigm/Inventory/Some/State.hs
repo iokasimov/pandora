@@ -47,7 +47,7 @@ instance Bindable (->) (State s) where
 instance Monad (->) (State s) where
 
 instance Invariant (Flip State r) where
-	f <!< g = (((g :*: (f :*: identity <-|-<-|-) >-|-<-|-) =#-) =#-)
+	f <!< g = ((((g :*: ((f :*: identity) <-|-<-|-)) >-|-<-|-) =#-) =#-)
 
 instance Interpreted (->) (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s := a

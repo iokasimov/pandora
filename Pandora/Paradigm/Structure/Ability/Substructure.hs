@@ -30,7 +30,7 @@ class Substructure segment (structure :: * -> *) where
 	substructure :: (Tagged segment <:.> structure) #=@ Substance segment structure := Available segment structure
 
 	sub :: (Covariant (->) (->) structure) => structure #=@ Substance segment structure := Available segment structure
-	sub = (lift :*: (lower @(->) <-|-) >-|-<-|-) =#- substructure @segment @structure
+	sub = ((lift :*: (lower @(->) <-|-)) >-|-<-|-) =#- substructure @segment @structure
 
 -- TODO: generalize `available` and then rename to `singleton`
 -- The main problem is that we should handle (Maybe target -> sourse)

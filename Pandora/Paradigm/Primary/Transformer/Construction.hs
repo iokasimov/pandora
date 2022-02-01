@@ -39,7 +39,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoid
 	mult = Straight ! \(Construct x xs :*: Construct y ys) -> Construct # (x :*: y) # (mult @(-->) !) <-|- (mult @(-->) ! (xs :*: ys))
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
-	mult = Flip ! \(Construct (x :*: y) xys) -> (Construct x :*: Construct y <-|-<-|-)
+	mult = Flip ! \(Construct (x :*: y) xys) -> ((Construct x :*: Construct y) <-|-<-|-)
 		. (mult @(<--) !) ! (mult @(<--) !) <-|- xys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Construction t) where

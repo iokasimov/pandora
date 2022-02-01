@@ -11,7 +11,6 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
---import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -34,7 +33,7 @@ instance Covariant (->) (->) Exactly where
 	f <-|- Exactly x = Exactly ! f x
 
 instance Semimonoidal (-->) (:*:) (:*:) Exactly where
-	mult = Straight ! Exactly . (extract :*: extract <-|-<-|-)
+	mult = Straight ! Exactly . ((extract :*: extract) <-|-<-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) Exactly where
 	unit _ = Straight ! Exactly . (! One) . run

@@ -33,7 +33,7 @@ instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal
 	unit _ = Straight ! Backwards . point . (! One) . run
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Backwards t) where
-	mult = Flip ! (Backwards :*: Backwards <-|-<-|-) . run (mult @(<--)) . run
+	mult = Flip ! ((Backwards :*: Backwards) <-|-<-|-) . run (mult @(<--)) . run
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Backwards t) where
 	unit _ = Flip ! \(Backwards x) -> Straight (\_ -> extract x)

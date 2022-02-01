@@ -18,7 +18,7 @@ instance Interpreted (->) Endo where
 	unite = Endo
 
 instance Invariant Endo where
-	f <!< g = ((g :*: f >-|-<-|-) =#-)
+	f <!< g = (((g :*: f) >-|-<-|-) =#-)
 
 instance Semigroup (Endo a) where
 	Endo f + Endo g = Endo # g . f

@@ -287,13 +287,13 @@ instance Morphable (Into (Tape List)) (Construction Maybe) where
 
 instance Morphable (Into (Tape List)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Tape List)) (Tape (Construction Maybe)) = Tape List
-	morphing (premorph -> zipper) = ((((lift =#-) :*: lift <-|-<-|-) =#-) <-|-) =#- zipper
+	morphing (premorph -> zipper) = (((((lift =#-) :*: lift) <-|-<-|-) =#-) <-|-) =#- zipper
 
 instance Morphable (Into (Tape (Construction Maybe))) (Tape List) where
 	type Morphing (Into (Tape (Construction Maybe))) (Tape List) =
 		Maybe <::> Tape (Construction Maybe)
 	morphing (premorph -> zipper) = let spread x y = (\x' y' -> Reverse x' :*: y') <-|- x <-*- y in
-		TT ! T_U . (Exactly (extract zipper) :*:) . T_U <-|- ((spread |-) . (run . run :*: run <-|-<-|-) . run . extract ! run zipper)
+		TT ! T_U . (Exactly (extract zipper) :*:) . T_U <-|- ((spread |-) . ((run . run :*: run) <-|-<-|-) . run . extract ! run zipper)
 
 instance Morphable (Into (Construction Maybe)) (Tape (Construction Maybe)) where
 	type Morphing (Into (Construction Maybe)) (Tape (Construction Maybe)) = Construction Maybe

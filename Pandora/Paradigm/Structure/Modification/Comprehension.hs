@@ -41,7 +41,7 @@ instance Traversable (->) (->) (t <::> Construction t) => Traversable (->) (->) 
 	f <<- Comprehension x = Comprehension <-|- f <<- x
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) right t, Semimonoidal (-->) (:*:) right (t <::> Construction t)) => Semimonoidal (-->) (:*:) right (Comprehension t) where
-	mult = Straight ! Comprehension . (mult @(-->) @(:*:) @right !) . (run :*: run <-|-<-|-)
+	mult = Straight ! Comprehension . (mult @(-->) @(:*:) @right !) . ((run :*: run) <-|-<-|-)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) (Construction t), Semimonoidal (-->) (:*:) (:+:) t, Semimonoidal (-->) (:*:) (:+:) (Construction t), Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (Comprehension t) where
 	unit _ = Straight ! \_ -> Comprehension empty
