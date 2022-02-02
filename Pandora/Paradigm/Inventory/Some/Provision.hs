@@ -2,7 +2,7 @@
 module Pandora.Paradigm.Inventory.Some.Provision where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (identity, (#))
+import Pandora.Pattern.Category (identity, (<--), (<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -11,8 +11,8 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
-import Pandora.Paradigm.Primary.Algebraic ((<-|-<-|-))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic ((<-||-))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -26,22 +26,22 @@ import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 newtype Provision e a = Provision (e -> a)
 
 instance Covariant (->) (->) (Provision e) where
-	f <-|- Provision x = Provision ! f . x
+	f <-|- Provision x = Provision <-- f . x
 
 instance Contravariant (->) (->) (Flip Provision a) where
-	f >-|- Flip (Provision g) = Flip . Provision ! g . f
+	f >-|- Flip (Provision g) = Flip . Provision <-- g . f
 
 instance Semimonoidal (-->) (:*:) (:*:) (Provision e) where
-	mult = Straight ! Provision . (mult @(-->) !) . ((run :*: run) <-|-<-|-)
+	mult = Straight <-- Provision . (mult @(-->) !) . (run <-||-) . (run @(->) <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Provision e) where
-	unit _ = Straight ! \f -> Provision ! \_ -> run f One
+	unit _ = Straight <-- \f -> Provision <-- \_ -> run f One
 
 instance Distributive (->) (->) (Provision e) where
-	f -<< g = Provision ! (run @(->) <-|- f) -<< g
+	f -<< g = Provision <-- (run @(->) <-|- f) -<< g
 
 instance Bindable (->) (Provision e) where
-	f =<< Provision x = Provision ! \e -> (run % e) . f . x ! e
+	f =<< Provision x = Provision <-- \e -> (run % e) . f . x <-- e
 
 instance Monad (->) (Provision e) where
 
@@ -53,12 +53,12 @@ instance Interpreted (->) (Provision e) where
 type instance Schematic Monad (Provision e) = (<:.>) ((->) e)
 
 instance Monadic (->) (Provision e) where
-	wrap x = TM . TU ! point <-|- run x
+	wrap x = TM . TU <--- point <-|- run x
 
 type Provided e t = Adaptable t (->) (Provision e)
 
 provided :: Provided e t => t e
-provided = adapt # Provision identity
+provided = adapt <-- Provision identity
 
 instance Gettable Provision where
 	type Getting Provision p ouput = Provision p p
