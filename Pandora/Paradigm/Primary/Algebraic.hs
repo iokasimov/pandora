@@ -1,6 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*-----), (<-*------), (<-*-------), (.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*-----), (.-*------), (.-*-------), (<-*-*-), (.-*-*-), forever_, (<-+-), (.-+-), void, empty, point, pass, extract, (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*-----), (<-*------), (<-*-------), (.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*-----), (.-*------), (.-*-------), (<-*-*-), (.-*-*-), forever_, (<-+-), (.-+-), void, empty, point, pass, extract, (<-||-), (>-||-), (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -36,6 +35,7 @@ infixl 6 <-*---, .-*---
 infixl 7 <-*--, .-*--, <-*-*-, .-*-*-
 infixl 8 <-*-, .-*-
 infixl 8 <-+-, .-+-
+infixl 8 <-||-, >-||-
 infixl 6 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
 (!>-) :: Covariant (->) (->) t => t a -> b -> t b
@@ -164,6 +164,14 @@ pass = point ()
 
 empty :: Emptiable t => t a
 empty = unit @(-->) Proxy ! Straight absurd
+
+(<-||-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .
+	(Covariant m m (Flip p c), Interpreted m (Flip p c)) => m a b -> m (p a c) (p b c)
+(<-||-) f = (-#=) @m @(Flip p c) ((<-|-) f)
+
+(>-||-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .
+	(Contravariant m m (Flip p c), Interpreted m (Flip p c)) => m a b -> m (p b c) (p a c)
+(>-||-) f = (-#=) @m @(Flip p c) ((>-|-) f)
 
 (<-|-<-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
 	(Covariant m m (p a), Covariant m m (Flip p d), Interpreted m (Flip p d))

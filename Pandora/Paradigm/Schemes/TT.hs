@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
-import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (--<<)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((--<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:), bitraverse_sum)
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (empty, point, extract, (<-|-<-|-))
+import Pandora.Paradigm.Primary.Algebraic (empty, point, extract, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
@@ -42,7 +42,7 @@ instance (Semigroupoid m, Covariant m m t, Covariant (Betwixt m m) m t, Covarian
 	(<-|-) f = (=#-) ((<-|-|-) f)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) t') => Semimonoidal (-->) (:*:) (:*:) (t <::> t') where
-	mult = Straight ! TT . (<-|-) (mult @(-->) !) . (mult @(-->) !) . ((run :*: run) <-|-<-|-)
+	mult = Straight ! TT . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run <-||-) . (run @(->) <-|-)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Semimonoidal (-->) (:*:) (:*:) t', Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) t') => Monoidal (-->) (-->) (:*:) (:*:) (t <::> t') where
 	unit _ = Straight ! TT . point . point . (! One) . run
@@ -54,7 +54,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) t', Semimonoidal (-->) (:*:
 	unit _ = Straight ! \_ -> TT empty
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <::> t') where
-	mult = Flip ! \(TT xys) -> ((TT :*: TT) <-|-<-|-) . (mult @(<--) !) ! (mult @(<--) !) <-|- xys
+	mult = Flip ! \(TT xys) -> (TT <-||-) . (TT <-|-) . (mult @(<--) !) ! (mult @(<--) !) <-|- xys
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<--) (-->) (:*:) (:*:) t') => Monoidal (<--) (-->) (:*:) (:*:) (t <::> t') where
 	unit _ = Flip ! \(TT x) -> Straight (\_ -> extract ! extract x)

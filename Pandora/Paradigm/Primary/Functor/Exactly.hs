@@ -1,6 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Exactly where
 
 import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -24,19 +25,19 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (extract, (<-|-<-|-))
+import Pandora.Paradigm.Primary.Algebraic (extract, (<-||-))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 
 newtype Exactly a = Exactly a
 
 instance Covariant (->) (->) Exactly where
-	f <-|- Exactly x = Exactly ! f x
+	f <-|- Exactly x = Exactly <-- f x
 
 instance Semimonoidal (-->) (:*:) (:*:) Exactly where
-	mult = Straight ! Exactly . ((extract :*: extract) <-|-<-|-)
+	mult = Straight <-- Exactly . (extract <-||-) .  (extract <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) Exactly where
-	unit _ = Straight ! Exactly . (! One) . run
+	unit _ = Straight <-- Exactly . (<-- One) . run
 
 instance Semimonoidal (<--) (:*:) (:*:) Exactly where
 	mult = Flip ! \(Exactly (x :*: y)) -> Exactly x :*: Exactly y

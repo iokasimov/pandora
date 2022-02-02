@@ -2,6 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Tagged where
 
 import Pandora.Core.Functor (type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -25,8 +26,8 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (extract, (<-|-<-|-))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Primary.Algebraic (extract, (<-||-))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 newtype Tagged tag a = Tag a
 
@@ -34,28 +35,28 @@ infixr 0 :#
 type (:#) tag = Tagged tag
 
 instance Covariant (->) (->) (Tagged tag) where
-	f <-|- Tag x = Tag ! f x
+	f <-|- Tag x = Tag <-- f x
 
 instance Covariant (->) (->) (Flip Tagged a) where
-	_ <-|- Flip (Tag x) = Flip ! Tag x
+	_ <-|- Flip (Tag x) = Flip <-- Tag x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Tagged tag) where
-	mult = Straight ! Tag . ((extract :*: extract) <-|-<-|-)
+	mult = Straight <-- Tag . (extract <-||-) . (extract <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Tagged tag) where
-	unit _ = Straight ! Tag . (! One) . run
+	unit _ = Straight <-- Tag . (<-- One) . run
 
 instance Semimonoidal (<--) (:*:) (:*:) (Tagged tag) where
-	mult = Flip ! \(Tag (x :*: y)) -> Tag x :*: Tag y
+	mult = Flip <-- \(Tag (x :*: y)) -> Tag x :*: Tag y
 
 instance Monoidal (<--) (-->) (:*:) (:*:) (Tagged tag) where
-	unit _ = Flip ! \(Tag x) -> Straight (\_ -> x)
+	unit _ = Flip <-- \(Tag x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) (Tagged tag) where
 	f <<- Tag x = Tag <-|- f x
 
 instance Distributive (->) (->) (Tagged tag) where
-	f -<< x = Tag ! extract . f <-|- x
+	f -<< x = Tag <--- extract . f <-|- x
 
 instance Bindable (->) (Tagged tag) where
 	f =<< Tag x = f x
@@ -63,7 +64,7 @@ instance Bindable (->) (Tagged tag) where
 instance Monad (->) (Tagged tag)
 
 instance Extendable (->) (Tagged tag) where
-	f <<= x = Tag . f ! x
+	f <<= x = Tag <-- f x
 
 instance Comonad (->) (Tagged tag)
 
@@ -74,27 +75,27 @@ instance Chain a => Chain (Tagged tag a) where
 	Tag x <=> Tag y = x <=> y
 
 instance Semigroup a => Semigroup (Tagged tag a) where
-	Tag x + Tag y = Tag ! x + y
+	Tag x + Tag y = Tag <---- x + y
 
 instance Monoid a => Monoid (Tagged tag a) where
 	 zero = Tag zero
 
 instance Ringoid a => Ringoid (Tagged tag a) where
-	Tag x * Tag y = Tag ! x * y
+	Tag x * Tag y = Tag <--- x * y
 
 instance Quasiring a => Quasiring (Tagged tag a) where
 	one = Tag one
 
 instance Infimum a => Infimum (Tagged tag a) where
-	Tag x /\ Tag y = Tag ! x /\ y
+	Tag x /\ Tag y = Tag <-- x /\ y
 
 instance Supremum a => Supremum (Tagged tag a) where
-	Tag x \/ Tag y = Tag ! x \/ y
+	Tag x \/ Tag y = Tag <-- x \/ y
 
 instance Lattice a => Lattice (Tagged tag a) where
 
 instance Group a => Group (Tagged tag a) where
-	invert (Tag x) = Tag ! invert x
+	invert (Tag x) = Tag <-- invert x
 
 retag :: forall new old . Tagged old ~> Tagged new
 retag (Tag x) = Tag x
