@@ -11,7 +11,7 @@ infixl 6 <----
 infixl 7 <---
 infixl 8 <--
 
-infixr 1 ---------->
+infixr 1 --------->
 infixr 2 -------->
 infixr 3 ------->
 infixr 4 ------>
@@ -42,10 +42,7 @@ class Semigroupoid m => Category m where
 	(<---) = identity . identity
 	(<--) = identity . identity
 
-	(---------->), (--------->), (-------->),
-		(------->), (------>), (----->), (---->),
-			(--->), (-->) :: m (m a b) (m a b)
-	(---------->) = identity . identity
+	(--------->), (-------->), (------->), (------>), (----->), (---->), (--->), (-->) :: m (m a b) (m a b)
 	(--------->) = identity . identity
 	(-------->) = identity . identity
 	(------->) = identity . identity

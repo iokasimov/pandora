@@ -1,22 +1,22 @@
 module Pandora.Paradigm.Primary.Algebraic.Sum where
 
 import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
-infixr 0 :+:
+infixr 5 :+:
 
 data (:+:) o a = Option o | Adoption a
 
 instance Covariant (->) (->) ((:+:) o) where
 	_ <-|- Option s = Option s
-	f <-|- Adoption x = Adoption ! f x
+	f <-|- Adoption x = Adoption <-- f x
 
 instance Covariant (->) (->) (Flip (:+:) a) where
-	_ <-|- Flip (Adoption x) = Flip ! Adoption x
-	f <-|- Flip (Option y) = Flip . Option ! f y
+	_ <-|- Flip (Adoption x) = Flip . Adoption <-- x
+	f <-|- Flip (Option y) = Flip . Option <-- f y
 
 sum :: (e -> r) -> (a -> r) -> e :+: a -> r
 sum f _ (Option x) = f x
