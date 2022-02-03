@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Some.Optics where
 
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (Category (identity, (#)))
+import Pandora.Pattern.Category (Category (identity, (<--)))
 import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
@@ -40,8 +40,8 @@ type family Convex lens where
 instance Semigroupoid (Lens Exactly) where
 	(.) :: Convex Lens between target -> Convex Lens source between -> Convex Lens source target
 	P_Q_T to . P_Q_T from = P_Q_T ! \source ->
-		let (Exactly between :*: bs) = run # from source in
-		let (Exactly target :*: tb) = run # to between in
+		let (Exactly between :*: bs) = run <-- from source in
+		let (Exactly target :*: tb) = run <-- to between in
 		Store ! Exactly target :*: bs . Exactly . tb
 
 instance Category (Lens Exactly) where
@@ -53,12 +53,12 @@ instance Semimonoidal (-->) (:*:) (:*:) (Lens Exactly source) where
 		let Store (Exactly xt :*: ixts) :*: Store (Exactly yt :*: _) = x source :*: y source in
 		Store ! Exactly (xt :*: yt) :*: \(Exactly (xt_ :*: yt_)) ->
 			let modified = ixts (Exactly xt_) in
-			extract # run (y modified) # Exactly yt_
+			extract <-- run (y modified) <-- Exactly yt_
 
 instance Impliable (P_Q_T (->) Store Exactly source target) where
 	type Arguments (P_Q_T (->) Store Exactly source target) =
 		(source -> target) -> (source -> target -> source) -> Lens Exactly source target
-	imply getter setter = P_Q_T ! \source -> Store ! Exactly # getter source :*: setter source . extract
+	imply getter setter = P_Q_T ! \source -> Store ! Exactly <-- getter source :*: setter source . extract
 
 type family Obscure lens where
 	Obscure Lens = Lens Maybe
@@ -70,15 +70,15 @@ instance Impliable (P_Q_T (->) Store Maybe source target) where
 
 instance Semigroupoid (Lens Maybe) where
 	(.) :: Obscure Lens between target -> Obscure Lens source between -> Obscure Lens source target
-	P_Q_T to . P_Q_T from = P_Q_T ! \source -> case run # from source of
+	P_Q_T to . P_Q_T from = P_Q_T ! \source -> case run <-- from source of
 		(Nothing :*: _) -> Store ! Nothing :*: \_ -> source
-		(Just between :*: mbs) -> case run # to between of
+		(Just between :*: mbs) -> case run <-- to between of
 			(Nothing :*: _) -> Store ! Nothing :*: \_ -> source
 			(Just target :*: mtb) -> Store ! Just target :*: mbs . Just . mtb
 
 instance Category (Lens Maybe) where
 	identity :: Obscure Lens source source
-	identity = imply @(Obscure Lens _ _) # Just # resolve identity
+	identity = imply @(Obscure Lens _ _) <-- Just <-- resolve identity
 
 -- Lens as natural transformation
 type (#=@) source target available = forall a . Lens available (source a) (target a)
@@ -97,15 +97,15 @@ instance Semigroupoid (Lens t) => Lensic t t where
 
 instance Lensic Maybe Exactly where
 	type Lensally Maybe Exactly = Maybe
-	P_Q_T from >>> P_Q_T to = P_Q_T ! \source -> case run # from source of
+	P_Q_T from >>> P_Q_T to = P_Q_T ! \source -> case run <-- from source of
 		(Nothing :*: _) -> Store ! Nothing :*: \_ -> source
-		(Just between :*: mbs) -> case run # to between of
+		(Just between :*: mbs) -> case run <-- to between of
 			(Exactly target :*: itb) -> Store ! Just target :*: \mt -> mbs ! itb . Exactly <-|- mt
 
 instance Lensic Exactly Maybe where
 	type Lensally Exactly Maybe = Maybe
-	P_Q_T from >>> P_Q_T to = P_Q_T ! \source -> case run # from source of
-		(Exactly between :*: ibs) -> case run # to between of
+	P_Q_T from >>> P_Q_T to = P_Q_T ! \source -> case run <-- from source of
+		(Exactly between :*: ibs) -> case run <-- to between of
 			(Just target :*: mtb) -> Store ! Just target :*: ibs . Exactly . mtb
 			(Nothing :*: _) -> Store ! Nothing :*: \_ -> source
 
@@ -119,7 +119,7 @@ instance Gettable (Lens Maybe) where
 
 instance Pointable t => Settable (Lens t) where
 	type instance Setting (Lens t) source target = target -> Lens t source target -> source -> source
-	set new lens source = look @(t _) # point new # run lens source
+	set new lens source = look @(t _) <-- point new <-- run lens source
 
 instance (Gettable (Lens t), Covariant (->) (->) t, Pointable t) => Modifiable (Lens t) where
 	type instance Modification (Lens t) source target = (target -> target) -> Lens t source target -> source -> source

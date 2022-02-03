@@ -45,6 +45,7 @@ class Semigroupoid m => Category m where
 	(---------->), (--------->), (-------->),
 		(------->), (------>), (----->), (---->),
 			(--->), (-->) :: m (m a b) (m a b)
+	(---------->) = identity . identity
 	(--------->) = identity . identity
 	(-------->) = identity . identity
 	(------->) = identity . identity

@@ -688,3 +688,4 @@
 * Change precedence for `<-|-<-|-`, `<-|->-|-`, `>-|->-|-`, `>-|-<-|-`
 * Define length encoding operators from `<-*--` to `<-*-------`
 * Define `<-||-` and `>-||-` operators in `Algebraic` module
+* Change precedence for `:*:`
