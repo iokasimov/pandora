@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Transformer.Tap where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#))
+import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -29,10 +29,10 @@ import Pandora.Paradigm.Structure.Ability.Substructure
 data Tap t a = Tap a (t a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Tap t) where
-	f <-|- Tap x xs = Tap # f x # f <-|- xs
+	f <-|- Tap x xs = Tap <--- f x <--- f <-|- xs
 
 instance Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap t) where
-	mult = Straight ! \(Tap x xs :*: Tap y ys) -> Tap # (x :*: y) # (mult @(-->) ! (xs :*: ys))
+	mult = Straight ! \(Tap x xs :*: Tap y ys) -> Tap <--- (x :*: y) <--- (mult @(-->) ! (xs :*: ys))
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
 	mult = Flip ! \(Tap (x :*: y) xys) -> ((-#=) @(->) @(Flip _ _) (Tap x <-|-) . (Tap y <-|-)) (mult @(<--) ! xys)
@@ -44,13 +44,13 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where
 	f <<- Tap x xs = Tap <-|- f x <-*- f <<- xs
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable (->) t, Covariant (->) (->) t) => Extendable (->) (Tap t) where
-	f <<= x = Tap # f x ! f . Tap (extract x) <<== lower x
+	f <<= x = Tap <--- f x <--- f . Tap (extract x) <<== lower x
 
 instance Lowerable (->) Tap where
 	lower (Tap _ xs) = xs
 
 instance Hoistable (->) Tap where
-	f /|\ Tap x xs = Tap x # f xs
+	f /|\ Tap x xs = Tap x <-- f xs
 
 instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap (t <:.:> t := (:*:))) where
 	mult = Straight ! \(Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) ->

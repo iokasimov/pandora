@@ -4,7 +4,7 @@ module Pandora.Paradigm.Primary.Transformer.Continuation where
 
 import Pandora.Core.Functor (type (:.), type (:=), type (::|:.))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#))
+import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
@@ -24,27 +24,29 @@ instance Interpreted (->) (Continuation r t) where
 	unite = Continuation
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Continuation r t) where
-	f <-|- Continuation continuation = Continuation ! continuation . (. f)
+	f <-|- Continuation continuation = Continuation <-- continuation . (. f)
 
 instance Covariant (->) (->) t => Bindable (->) (Continuation r t) where
-	f =<< x = Continuation ! \g -> run x ! \y -> run # f y # g
+	f =<< x = Continuation <-- \g -> run x <-- \y -> run <-- f y <-- g
 
---instance Monad t => Monad (Continuation r t) where
+-- TODO: Define Monoidal (-->) (-->) (:*:) (:*:) (Continuation r t)
+
+-- instance (Monoidal (-->) (-->) (:*:) (:*:) t, Monad (->) t) => Monad (->) (Continuation r t) where
 
 instance (forall u . Bindable (->) u) => Liftable (->) (Continuation r) where
 	lift = Continuation . (%) (=<<)
 
 -- | Call with current continuation
 cwcc :: ((a -> Continuation r t b) -> Continuation r t a) -> Continuation r t a
-cwcc f = Continuation ! \g -> (run % g) . f ! Continuation . constant . g
+cwcc f = Continuation <-- \g -> (! g) . f <-- Continuation . constant . g
 
 -- | Delimit the continuation of any 'shift'
 reset :: (forall u . Bindable (->) u, Monad (->) t) => Continuation r t r -> Continuation s t r
-reset = lift . (run % point)
+reset = lift . (! point)
 
 -- | Capture the continuation up to the nearest enclosing 'reset' and pass it
 shift :: Monoidal (-->) (-->) (:*:) (:*:) t => ((a -> t r) -> Continuation r t r) -> Continuation r t a
-shift f = Continuation ! (run % point) . f
+shift f = Continuation <-- (! point) . f
 
 interruptable :: Monoidal (-->) (-->) (:*:) (:*:) t => ((a -> Continuation a t a) -> Continuation a t a) -> t a
-interruptable = (run % point) . cwcc
+interruptable = (! point) . cwcc

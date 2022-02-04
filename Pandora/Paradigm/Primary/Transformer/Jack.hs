@@ -2,7 +2,7 @@
 module Pandora.Paradigm.Primary.Transformer.Jack where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (identity)
+import Pandora.Pattern.Category ((<--), (<---), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-))
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
@@ -17,13 +17,12 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 data Jack t a = It a | Other (t a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Jack t) where
-	f <-|- It x = It ! f x
-	f <-|- Other y = Other ! f <-|- y
+	f <-|- It x = It <-- f x
+	f <-|- Other y = Other <--- f <-|- y
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Jack t) where
 	f <<- It x = It <-|- f x
@@ -31,18 +30,18 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Jack t) where
 
 instance (Monoidal (-->) (-->) (:*:) (:*:) t, Bindable (->) t) => Bindable (->) (Jack t) where
 	f =<< It x = f x
-	f =<< Other x = Other ! jack point identity . f ==<< x
+	f =<< Other x = Other <--- jack point identity . f ==<< x
 
 instance Extendable (->) t => Extendable (->) (Jack t) where
-	f <<= It x = It . f ! It x
-	f <<= Other x = Other ! f . Other <<== x
+	f <<= It x = It . f <-- It x
+	f <<= Other x = Other <--- f . Other <<== x
 
 instance Liftable (->) Jack where
 	lift = Other
 
 instance Hoistable (->) Jack where
 	_ /|\ It x = It x
-	f /|\ Other x = Other ! f x
+	f /|\ Other x = Other <-- f x
 
 instance (Setoid a, Setoid (t a)) => Setoid (Jack t a) where
 	It x == It y = x == y

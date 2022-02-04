@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Transformer.Backwards where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#), (<--), (<---))
+import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -27,7 +27,7 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Backwards t) where
 
 -- TODO: check that effects evaluation goes in opposite order
 instance (Semimonoidal (-->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (-->) (:*:) (:*:) (Backwards t) where
-	mult = Straight <-- \(Backwards x :*: Backwards y) -> Backwards # ((:*:) %) <-|- y <-*- x
+	mult = Straight <-- \(Backwards x :*: Backwards y) -> Backwards <--- ((:*:) %) <-|- y <-*- x
 
 instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Backwards t) where
 	unit _ = Straight <-- Backwards . point . (<-- One) . run
