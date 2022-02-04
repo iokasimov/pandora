@@ -32,7 +32,6 @@ import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Nullable (Nullable (null))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
 	, Morph (Rotate, Into, Insert, Lookup, Key), Vertical (Up, Down), lookup)
@@ -65,9 +64,6 @@ instance Morphable Insert Binary where
 				<--- step <-- sub @Left <-- binary
 				<--- step <-- sub @Right <-- binary
 				<--- f x <-- extract binary
-
-instance Nullable Binary where
-	null = Predicate ! \case { TT Nothing -> True ; _ -> False }
 
 instance Substructure Left Binary where
 	type Available Left Binary = Maybe

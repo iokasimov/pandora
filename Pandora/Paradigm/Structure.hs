@@ -22,10 +22,8 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Algebraic (extract)
-import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Primary.Linear.Vector (Vector (Scalar, Vector))
@@ -39,9 +37,6 @@ import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 
 instance Monotonic s a => Monotonic s (s :*: a) where
 	reduce f r x = reduce f # f (attached x) r # extract x
-
-instance Nullable Maybe where
-	null = Predicate ! \case { Just _ -> True ; _ -> False }
 
 instance (Covariant (->) (->) t) => Substructure Tail (Tap t) where
 	type Available Tail (Tap t) = Exactly

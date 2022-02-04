@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*-----), (<-*------), (<-*-------), (.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*-----), (.-*------), (.-*-------), (<-*-*-), (.-*-*-), forever_, (<-+-), (.-+-), void, empty, point, pass, extract, (<-||-), (>-||-), (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*-----), (<-*------), (<-*-------), (<-*--------), (.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*-----), (.-*------), (.-*-------), (.-*--------), (<-*-*-), (.-*-*-), loop, (<-+-), (.-+-), void, empty, point, pass, extract, (<-||-), (>-||-), (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -140,8 +140,8 @@ y .-*- x = (\_ y' -> y') <-|- x <-*- y
 (.-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u b) -> t (u a) -> t (u b)
 y .-*-*- x = (\_ y' -> y') <-|-|- x <-*-*- y
 
-forever_ :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
-forever_ x = let r = r .-*- x in r
+loop :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
+loop x = let r = r .-*- x in r
 
 (<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
 y <-+- x = \f -> f <-|- (mult @(-->) ! x :*: y)

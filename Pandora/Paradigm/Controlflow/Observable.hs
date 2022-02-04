@@ -3,7 +3,7 @@ module Pandora.Paradigm.Controlflow.Observable (Observable, observe,
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((#))
-import Pandora.Paradigm.Primary.Algebraic (Applicative, forever_)
+import Pandora.Paradigm.Primary.Algebraic (Applicative, loop)
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
 
@@ -23,9 +23,9 @@ notify r action = captured ! run r # Capture . action
 (.:~.) :: Observable t a r -> (a -> t r) -> t r
 (.:~.) = notify
 
--- | Listen only first event, call back forever_
+-- | Listen only first event, call back loop
 follow :: Applicative t => Observable t a r -> (a -> t r) -> t r
-follow r action = captured ! run r # Capture . forever_ . action
+follow r action = captured ! run r # Capture . loop . action
 
 -- | Infix version of 'follow'
 (.:~*) :: Applicative t => Observable t a r -> (a -> t r) -> t r
@@ -33,15 +33,15 @@ follow r action = captured ! run r # Capture . forever_ . action
 
 -- | Listen all events from action, call back just once
 subscribe :: Applicative t => Observable t a r -> (a -> t r) -> t r
-subscribe r action = forever_ ! captured ! run r # Capture . action
+subscribe r action = loop ! captured ! run r # Capture . action
 
 -- | Infix version of 'subscribe'
 (*:~.) :: Applicative t => Observable t a r -> (a -> t r) -> t r
 (*:~.) = subscribe
 
--- | Listen all events from action, call back forever_
+-- | Listen all events from action, call back loop
 watch :: Applicative t => Observable t a r -> (a -> t r) -> t r
-watch r action = forever_ ! captured ! run r # Capture . forever_ . action
+watch r action = loop ! captured ! run r # Capture . loop . action
 
 -- | Infix version of 'watch'
 (*:~*) :: Applicative t => Observable t a r -> (a -> t r) -> t r

@@ -690,3 +690,5 @@
 * Define `<-||-` and `>-||-` operators in `Algebraic` module
 * Change precedence for `:*:`
 * Change precedence for `:+:`
+* Rename 'forever_' to 'loop'
+* Remove `Nullable` typeclass
