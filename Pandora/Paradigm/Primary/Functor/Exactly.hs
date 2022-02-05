@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Exactly where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--))
+import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -26,7 +26,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (extract, (<-||-))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 newtype Exactly a = Exactly a
 
@@ -40,10 +40,10 @@ instance Monoidal (-->) (-->) (:*:) (:*:) Exactly where
 	unit _ = Straight <-- Exactly . (<-- One) . run
 
 instance Semimonoidal (<--) (:*:) (:*:) Exactly where
-	mult = Flip ! \(Exactly (x :*: y)) -> Exactly x :*: Exactly y
+	mult = Flip <-- \(Exactly (x :*: y)) -> Exactly x :*: Exactly y
 
 instance Monoidal (<--) (-->) (:*:) (:*:) Exactly where
-	unit _ = Flip ! \(Exactly x) -> Straight (\_ -> x)
+	unit _ = Flip <-- \(Exactly x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) Exactly where
 	f <<- Exactly x = Exactly <-|- f x
@@ -54,7 +54,7 @@ instance Bindable (->) Exactly where
 instance Monad (->) Exactly
 
 instance Extendable (->) Exactly where
-	f <<= x = Exactly . f ! x
+	f <<= x = Exactly . f <-- x
 
 instance Comonad (->) Exactly
 
@@ -64,8 +64,8 @@ instance Comonad (->) Exactly
 	--tabulate f = Exactly ! f ()
 
 instance Adjoint (->) (->) Exactly Exactly where
-	f -| x = Exactly . f . Exactly ! x
-	g |- x = extract . extract . (g <-|-) ! x
+	f -| x = Exactly . f . Exactly <-- x
+	g |- x = extract . extract . (g <-|-) <-- x
 
 instance Setoid a => Setoid (Exactly a) where
 	Exactly x == Exactly y = x == y
@@ -74,27 +74,27 @@ instance Chain a => Chain (Exactly a) where
 	Exactly x <=> Exactly y = x <=> y
 
 instance Semigroup a => Semigroup (Exactly a) where
-	Exactly x + Exactly y = Exactly ! x + y
+	Exactly x + Exactly y = Exactly <---- x + y
 
 instance Monoid a => Monoid (Exactly a) where
 	 zero = Exactly zero
 
 instance Ringoid a => Ringoid (Exactly a) where
-	Exactly x * Exactly y = Exactly ! x * y
+	Exactly x * Exactly y = Exactly <--- x * y
 
 instance Quasiring a => Quasiring (Exactly a) where
 	 one = Exactly one
 
 instance Infimum a => Infimum (Exactly a) where
-	Exactly x /\ Exactly y = Exactly ! x /\ y
+	Exactly x /\ Exactly y = Exactly <-- x /\ y
 
 instance Supremum a => Supremum (Exactly a) where
-	Exactly x \/ Exactly y = Exactly ! x \/ y
+	Exactly x \/ Exactly y = Exactly <-- x \/ y
 
 instance Lattice a => Lattice (Exactly a) where
 
 instance Group a => Group (Exactly a) where
-	invert (Exactly x) = Exactly ! invert x
+	invert (Exactly x) = Exactly <-- invert x
 
 type family Simplification (t :: * -> *) (a :: *) where
 	Simplification Exactly a = a

@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
@@ -37,8 +37,8 @@ instance Covariant (->) (->) (Flip Conclusion e) where
 	f <-|- Flip (Failure y) = Flip . Failure <--- f y
 
 instance Semimonoidal (-->) (:*:) (:*:) (Conclusion e) where
-	mult = Straight ! \case
-		Success x :*: Success y -> Success ! x :*: y
+	mult = Straight <-- \case
+		Success x :*: Success y -> Success <----- x :*: y
 		Failure x :*: _ -> Failure x
 		_ :*: Failure x -> Failure x
 
@@ -46,7 +46,7 @@ instance Monoidal (-->) (-->) (:*:) (:*:) (Conclusion e) where
 	unit _ = Straight <--- Success . (<-- One) . run
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Conclusion e) where
-	mult = Straight ! \case
+	mult = Straight <-- \case
 		Failure _ :*: x -> Adoption <-|- x
 		Success x :*: _ -> Option <-|- Success x
 
@@ -111,4 +111,4 @@ instance Catchable e (Conclusion e) where
 
 instance (Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = let conclude = conclusion <--- run . handle <--- point . Success
-		in UT ! conclude =<< x
+		in UT <-- conclude =<< x

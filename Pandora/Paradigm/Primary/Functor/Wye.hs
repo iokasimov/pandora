@@ -10,7 +10,6 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 data Wye a = End | Left a | Right a | Both a a
 
@@ -21,7 +20,7 @@ instance Covariant (->) (->) Wye where
 	f <-|- Both x y = Both <-- f x <-- f y
 
 instance Semimonoidal (<--) (:*:) (:*:) Wye where
-	mult = Flip ! \case
+	mult = Flip <-- \case
 		End -> End :*: End
 		Left (x :*: y) -> Left x :*: Left y
 		Right (x :*: y) -> Right x :*: Right y
