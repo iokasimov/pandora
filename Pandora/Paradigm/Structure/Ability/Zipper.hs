@@ -1,7 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
-
 module Pandora.Paradigm.Structure.Ability.Zipper where
 
 import Pandora.Core.Functor (type (:=), type (:::))
@@ -9,7 +8,7 @@ import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((#))
+import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -57,40 +56,40 @@ type Tape t = Exactly <:.:> (Reverse t <:.:> t := (:*:)) := (:*:)
 
 instance Impliable (Tape t a) where
 	type Arguments (Tape t a) = a -> t a -> t a -> Tape t a
-	imply focused left right = twosome # Exactly focused ! twosome # Reverse left # right
+	imply focused left right = twosome <-- Exactly focused <--- twosome <-- Reverse left <-- right
 
 -- TODO: It's too fragile to define such an instance without any hints about zippers?
 -- Should we wrap Zipper in Tagged Zippable?
 instance Covariant (->) (->) t => Substructure Root (Tape t) where
 	type Available Root (Tape t) = Exactly
 	type Substance Root (Tape t) = Exactly
-	substructure = P_Q_T ! \zipper -> case run # lower zipper of
+	substructure = P_Q_T ! \zipper -> case run <-- lower zipper of
 		 Exactly x :*: xs -> Store ! Exactly (Exactly x) :*: lift . T_U . (:*: xs) . extract
 
 instance Covariant (->) (->) t => Substructure Left (Tape t) where
 	type Available Left (Tape t) = Exactly
 	type Substance Left (Tape t) = Reverse t
-	substructure = P_Q_T ! \zipper -> case run # lower zipper of
+	substructure = P_Q_T ! \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (ls :*: rs) -> Store ! Exactly ls :*: lift . (imply @(Tape t _) x % rs) . run . extract
 		-- Exactly x :*: T_U (ls :*: rs) -> Store ! Exactly ls :*: lift . T_U . (Exactly x :*:) . T_U . (:*: rs) . extract
 
 instance Covariant (->) (->) t => Substructure Right (Tape t) where
 	type Available Right (Tape t) = Exactly
 	type Substance Right (Tape t) = t
-	substructure = P_Q_T ! \zipper -> case run # lower zipper of
+	substructure = P_Q_T ! \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (Reverse ls :*: rs) -> Store ! Exactly rs :*: lift . imply @(Tape t _) x ls . extract
 
 instance Covariant (->) (->) t => Substructure Up (Tape t <::> Tape t) where
 	type Available Up (Tape t <::> Tape t) = Exactly
 	type Substance Up (Tape t <::> Tape t) = t <::> Tape t
-	substructure = P_Q_T ! \x -> case run . run . extract . run # x of
+	substructure = P_Q_T ! \x -> case run . run . extract . run <-- x of
 		Exactly focused :*: T_U (Reverse d :*: u) ->
 			Store ! Exactly (TT u) :*: lift . TT . imply @(Tape t _) focused d . run . extract
 
 instance Covariant (->) (->) t => Substructure Down (Tape t <::> Tape t) where
 	type Available Down (Tape t <::> Tape t) = Exactly
 	type Substance Down (Tape t <::> Tape t) = Reverse t <::> Tape t
-	substructure = P_Q_T ! \ii -> case run . run . extract . run # ii of
+	substructure = P_Q_T ! \ii -> case run . run . extract . run <-- ii of
 		Exactly focused :*: T_U (d :*: u) ->
 			Store ! Exactly (TT d) :*: lift . TT . (imply @(Tape t _) focused % u) . run . run . extract
 

@@ -3,7 +3,7 @@ module Pandora.Pattern.Category (Category (..)) where
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 
 infixl 1 <---------
-infixl 2 <--------, #
+infixl 2 <--------
 infixl 3 <-------
 infixl 4 <------
 infixl 5 <-----
@@ -28,9 +28,6 @@ infixr 8 -->
 
 class Semigroupoid m => Category m where
 	identity :: m a a
-
-	(#) :: m (m a b) (m a b)
-	(#) = identity . identity
 
 	(<---------), (<--------), (<-------), (<------), (<-----), (<----), (<---), (<--) :: m (m a b) (m a b)
 	(<---------) = identity . identity

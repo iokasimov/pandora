@@ -692,3 +692,6 @@
 * Change precedence for `:+:`
 * Rename 'forever_' to 'loop'
 * Remove `Nullable` typeclass
+
+# 0.5.2
+* Remove `#` operator from `Category` typeclass

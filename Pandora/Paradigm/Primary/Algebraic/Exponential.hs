@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Algebraic.Exponential where
 
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (Category ((#), identity))
+import Pandora.Pattern.Category (Category ((<--), identity))
 import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
@@ -36,7 +36,7 @@ instance Distributive (->) (->) ((->) e) where
 	f -<< g = \e -> (f % e) <-|- g
 
 instance Bindable (->) ((->) e) where
-	f =<< g = \x -> f # g x # x
+	f =<< g = \x -> f <-- g x <-- x
 
 instance Semigroup r => Semigroup (e -> r) where
 	f + g = \e -> f e + g e
