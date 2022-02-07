@@ -32,7 +32,7 @@ infixl 2 #=@
 type Lens = P_Q_T (->) Store
 
 instance Invariant (Flip (Lens available) tgt) where
-	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T ! ((g :*: (f <-|-)) >-|-<-|-) lens
+	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T <-- ((g :*: (f <-|-)) >-|-<-|-) lens
 
 type family Convex lens where
 	Convex Lens = Lens Exactly
@@ -85,7 +85,7 @@ type (#=@) source target available = forall a . Lens available (source a) (targe
 
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
-represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate ! \r' -> r' == r ? target ! r' <#> source)
+represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate <-- \r' -> r' == r ? target ! r' <#> source)
 
 class Lensic previous next where
 	type Lensally previous next :: * -> *
