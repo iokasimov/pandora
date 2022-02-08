@@ -2,7 +2,7 @@ module Pandora.Pattern.Object.Setoid (Setoid (..)) where
 
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False, True))
 
-infix 4 ==, !=
+infix 6 ==, !=
 
 {- |
 > When providing a new instance, you should ensure it satisfies:
