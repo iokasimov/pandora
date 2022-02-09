@@ -695,3 +695,6 @@
 
 # 0.5.2
 * Remove `#` operator from `Category` typeclass
+* Change precedence for `==` and `!=`
+* Remove `Conditional` typeclass ant its `?` operator
+* Define `Conditional` typeclass with `iff` method

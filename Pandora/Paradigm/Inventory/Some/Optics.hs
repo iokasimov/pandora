@@ -11,14 +11,15 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Paradigm.Controlflow.Effect.Conditional (Conditional ((?)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (!)))
+import Pandora.Paradigm.Controlflow.Effect.Conditional (iff)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, point, extract, (>-|-<-|-))
+import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -85,7 +86,7 @@ type (#=@) source target available = forall a . Lens available (source a) (targe
 
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
-represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate <-- \r' -> r' == r ? target ! r' <#> source)
+represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate <-- \r' -> iff @True <----- r' == r <----- target <----- r' <#> source)
 
 class Lensic previous next where
 	type Lensally previous next :: * -> *
