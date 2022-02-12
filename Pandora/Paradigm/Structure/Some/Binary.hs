@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Conditional (iff)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
@@ -186,9 +186,9 @@ instance Morphable (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye := (:*:
 				<--- Left <-- _focused_part_to_nonempty_binary_tree focused
 				<--- run rest
 		focused :*: TT (TT (Leftward (Construct (T_U (Exactly parent :*: rest)) next))) ->
-			lift . (twosome % TT (TT next)) . twosome (Exactly parent) . TT ! resolve
+			lift . (twosome % TT (TT next)) . twosome (Exactly parent) . TT <---- resolve
 				<--- Both % _focused_part_to_nonempty_binary_tree focused
-				<--- Right (_focused_part_to_nonempty_binary_tree focused)
+				<--- Right <-- _focused_part_to_nonempty_binary_tree focused
 				<--- run rest
 		_ -> TT Nothing
 
@@ -201,10 +201,14 @@ instance Morphable (Rotate (Down Left)) ((Exactly <:.:> Wye <::> Construction Wy
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Left lst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward ! Construct <--- twosome (Exactly x) (TT Nothing) <--- next
+				. TT . TT . Leftward <---- Construct 
+					<--- twosome <-- Exactly x <-- TT Nothing 
+					<--- next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward ! Construct <--- twosome <-- Exactly x <-- lift rst <--- next
+				. TT . TT . Leftward <---- Construct
+					<--- twosome <-- Exactly x <-- lift rst 
+					<--- next
 		_ -> TT Nothing
 
 instance Morphable (Rotate (Down Right)) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
@@ -213,10 +217,10 @@ instance Morphable (Rotate (Down Right)) ((Exactly <:.:> Wye <::> Construction W
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Right rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward ! Construct (twosome <--- Exactly x <--- TT Nothing) next
+				. TT . TT . Rightward <---- Construct (twosome <--- Exactly x <--- TT Nothing) next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward ! Construct (twosome <--- Exactly x <--- lift lst) next
+				. TT . TT . Rightward <---- Construct (twosome <--- Exactly x <--- lift lst) next
 		_ -> TT Nothing
 
 leaf :: a :=> Nonempty Binary

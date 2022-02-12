@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.Stream where
 import Pandora.Core.Impliable (imply)
 import Pandora.Core.Functor (type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (-->))
+import Pandora.Pattern.Category ((<--), (<---), (<----), (-->))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|--)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
@@ -17,7 +17,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Tape)
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Primary.Algebraic (point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 type Stream = Construction Exactly
 
@@ -35,8 +35,8 @@ instance Morphable (Rotate Right) (Tape Stream) where
 		imply @(Tape Stream _) <--- extract rs <--- Construct x (point ls) <--- extract (deconstruct rs)
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
-	f <<= z = let move rtt = extract . deconstruct ! point . rtt .-+ z in
+	f <<= z = let move rtt = extract . deconstruct <---- point . rtt .-+ z in
 		f <-|-- imply @(Tape Stream _) <-- z <-- move (rotate @Left) <-- move (rotate @Right)
 
 repeat :: a :=> Stream
-repeat x = Construct x . Exactly ! repeat x
+repeat x = Construct x . Exactly <-- repeat x

@@ -4,6 +4,7 @@ module Pandora.Paradigm.Structure.Some.Rose where
 import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----))
+import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Contravariant ((>-|--))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -19,7 +20,7 @@ import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Conditional (iff)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -53,21 +54,21 @@ type instance Nonempty Rose = Construction List
 instance Substructure Root (Construction List) where
 	type Available Root (Construction List) = Exactly
 	type Substance Root (Construction List) = Exactly
-	substructure = P_Q_T ! \rose -> Store ! Exactly (Exactly <-- extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
+	substructure = P_Q_T <-- \rose -> Store <----- Exactly (Exactly <-- extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
 
 instance Substructure Tail (Construction List) where
 	type Available Tail (Construction List) = Exactly
 	type Substance Tail (Construction List) = List <:.> Construction List
-	substructure = P_Q_T ! \rose -> case extract <-- run rose of
-		Construct x xs -> Store ! Exactly (TU xs) :*: lift . Construct x . run . extract
+	substructure = P_Q_T <-- \rose -> case extract <-- run rose of
+		Construct x xs -> Store <----- Exactly (TU xs) :*: lift . Construct x . run . extract
 
 --------------------------------------- Prefixed rose tree -----------------------------------------
 
 instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 	type Morphing (Lookup Key) (Prefixed Rose k) = (->) (Nonempty List k) <:.> Maybe
 	morphing prefixed_rose_tree = case run <-- premorph prefixed_rose_tree of
-		TU Nothing -> TU ! \_ -> Nothing
-		TU (Just tree) -> TU ! find_rose_sub_tree % tree
+		TU Nothing -> TU <-- constant Nothing
+		TU (Just tree) -> TU <-- find_rose_sub_tree % tree
 
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 --instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where
