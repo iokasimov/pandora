@@ -33,7 +33,7 @@ instance Covariant (->) (->) ((->) a) where
 	(<-|-) = (.)
 
 instance Distributive (->) (->) ((->) e) where
-	f -<< g = \e -> (f % e) <-|- g
+	f -<< g = \e -> f % e <-|- g
 
 instance Bindable (->) ((->) e) where
 	f =<< g = \x -> f <-- g x <-- x
@@ -47,12 +47,12 @@ instance Ringoid r => Ringoid (e -> r) where
 type (<--) = Flip (->)
 
 instance Contravariant (->) (->) ((<--) a) where
-	f >-|- Flip g = Flip (g . f)
+	f >-|- Flip g = Flip <-- g . f
 
 type (-->) = Straight (->)
 
 instance Covariant (->) (->) ((-->) b) where
-	f <-|- Straight g = Straight (f . g)
+	f <-|- Straight g = Straight <-- f . g
 
 (.:..) :: (Covariant (->) target (v a), Semigroupoid v) => v c d -> target (v a (v b c)) (v a (v b d))
 (.:..) f = (<-|-) (f .)

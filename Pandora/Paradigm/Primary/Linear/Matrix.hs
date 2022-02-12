@@ -1,5 +1,4 @@
 {-# LANGUAGE UndecidableInstances #-}
-
 module Pandora.Paradigm.Primary.Linear.Matrix where
 
 import Pandora.Pattern.Category ((<-----))

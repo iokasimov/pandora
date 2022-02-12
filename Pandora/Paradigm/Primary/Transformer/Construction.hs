@@ -74,7 +74,7 @@ instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) 
 	zero = Construct zero zero
 
 instance Monotonic a (t :. Construction t := a) => Monotonic a (Construction t a) where
-	reduce f r ~(Construct x xs) = f x ! reduce f r xs
+	reduce f r ~(Construct x xs) = f x <-- reduce f r xs
 
 instance Monotonic a (t :. Construction t := a) => Monotonic a (t <::> Construction t := a) where
 	reduce f r = reduce f r . run
@@ -84,7 +84,7 @@ deconstruct ~(Construct _ xs) = xs
 
 -- Generate a construction from seed using effectful computation
 (.-+) :: Covariant (->) (->) t => a :=> t -> a :=> Construction t
-f .-+ x = Construct x ! (f .-+) <-|- f x
+f .-+ x = Construct x <--- (f .-+) <-|- f x
 
 section :: (Comonad (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => t ~> Construction t
 section xs = Construct <--- extract xs <--- section <<= xs

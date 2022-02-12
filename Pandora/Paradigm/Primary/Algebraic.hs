@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*-----), (<-*------), (<-*-------), (<-*--------), (.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*-----), (.-*------), (.-*-------), (.-*--------), (<-*-*-), (.-*-*-), loop, (<-+-), (.-+-), void, empty, point, pass, extract, (<-||-), (>-||-), (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*------), (<-*-------), (<-*--------), (.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*------), (.-*-------), (.-*--------), (<-*-*-), (.-*-*-), loop, (<-+-), (.-+-), void, empty, point, pass, extract, (<-||-), (>-||-), (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -11,6 +11,7 @@ import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-), (<-|-|-|-))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
@@ -51,7 +52,7 @@ void :: Covariant (->) (->) t => t a -> t ()
 void x = constant () <-|- x
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u := (:*:)) where
-	mult = Flip ! \(T_U lrxys) ->
+	mult = Flip <-- \(T_U lrxys) ->
 		-- TODO: I need matrix transposing here
 		let ((lxs :*: lys) :*: (rxs :*: rys)) = (((mult @(<--) !) :*: (mult @(<--) !)) <-|-<-|-) lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
@@ -67,44 +68,44 @@ instance Adjoint (->) (->) ((:*:) s) ((->) s) where
 
 instance Semimonoidal (-->) (:*:) (:*:) ((->) e) where
 	mult :: ((e -> a) :*: (e -> b)) --> (e -> (a :*: b))
-	mult = Straight ! \(g :*: h) -> \x -> g x :*: h x
+	mult = Straight <-- \(g :*: h) -> \x -> g x :*: h x
 
 instance Monoidal (-->) (-->) (:*:) (:*:) ((->) e) where
-	unit _ = Straight ! constant . (! One)
+	unit _ = Straight <-- constant . (! One)
 
 instance Semimonoidal (<--) (:*:) (:*:) ((->) e) where
 	mult :: ((e -> a) :*: (e -> b)) <-- (e -> a :*: b)
-	mult = Flip ! \f -> attached . f :*: extract . f
+	mult = Flip <-- \f -> attached . f :*: extract . f
 
 instance Semimonoidal (-->) (:*:) (:+:) ((:+:) e) where
 	mult :: ((e :+: a) :*: (e :+: b)) --> (e :+: a :+: b)
-	mult = Straight ! \case
+	mult = Straight <-- \case
 		Option _ :*: Option e' -> Option e'
-		Option _ :*: Adoption y -> Adoption ! Adoption y
-		Adoption x :*: _ -> Adoption ! Option x
+		Option _ :*: Adoption y -> Adoption <-- Adoption y
+		Adoption x :*: _ -> Adoption <-- Option x
 
 instance Semimonoidal (-->) (:*:) (:*:) ((:+:) e) where
-	mult = Straight ! \case
+	mult = Straight <-- \case
 		Adoption x :*: Adoption y -> Adoption ! x :*: y
 		Option e :*: _ -> Option e
 		_ :*: Option e -> Option e
 
 instance Monoidal (-->) (-->) (:*:) (:*:) ((:+:) e) where
-	unit _ = Straight ! Adoption . (! One)
+	unit _ = Straight <-- Adoption . (! One)
 
 instance Semimonoidal (<--) (:*:) (:*:) ((:*:) s) where
-	mult = Flip ! \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
+	mult = Flip <-- \(s :*: x :*: y) -> (s :*: x) :*: (s :*: y)
 
 instance Monoidal (<--) (-->) (:*:) (:*:) ((:*:) s) where
-	unit _ = Flip ! \(_ :*: x) -> Straight (\_ -> x)
+	unit _ = Flip <-- \(_ :*: x) -> Straight (\_ -> x)
 
 instance Comonad (->) ((:*:) s) where
 
 instance Semimonoidal (<--) (:*:) (:*:) (Flip (:*:) a) where
-	mult = Flip ! \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
+	mult = Flip <-- \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
 
 instance Monoidal (<--) (-->) (:*:) (:*:) (Flip (:*:) a) where
-	unit _ = Flip ! \(Flip (s :*: _)) -> Straight (\_ -> s)
+	unit _ = Flip <-- \(Flip (s :*: _)) -> Straight (\_ -> s)
 
 --instance Semimonoidal (-->) (:*:) (:*:) (Flip (:*:) a) where
 --mult = Straight ! \(Flip ((sx :*: sy) :*: r)) -> Flip (sx :*: r) :*: Flip (sy :*: r)
@@ -157,7 +158,7 @@ extract :: Extractable t => t a -> a
 extract j = unit @(<--) @(-->) Proxy ! j ! One
 
 point :: Pointable t => a -> t a
-point x = unit @(-->) Proxy ! (Straight ! \One -> x)
+point x = unit @(-->) Proxy ! (Straight <-- \One -> x)
 
 pass :: Pointable t => t ()
 pass = point ()

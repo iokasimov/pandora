@@ -11,7 +11,7 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ()
 
 infixr 6 :*:
 
@@ -21,7 +21,7 @@ instance Covariant (->) (->) ((:*:) s) where
 	f <-|- ~(s :*: x) = s :*: f x
 
 instance Covariant (->) (->) (Flip (:*:) a) where
-	f <-|- (Flip (x :*: y)) = Flip ! f x :*: y
+	f <-|- Flip (x :*: y) = Flip (f x :*: y)
 
 instance Extendable (->) ((:*:) s) where
 	f <<= ~(s :*: x) = s :*: f (s :*: x)

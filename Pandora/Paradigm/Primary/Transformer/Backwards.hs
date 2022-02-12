@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point, extract, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype Backwards t a = Backwards (t a)
 
@@ -33,19 +33,19 @@ instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal
 	unit _ = Straight <-- Backwards . point . (<-- One) . run
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Backwards t) where
-	mult = Flip ! (Backwards <-||-) . (Backwards <-|-) . run (mult @(<--)) . run
+	mult = Flip <-- (Backwards <-||-) . (Backwards <-|-) . run (mult @(<--)) . run
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Backwards t) where
-	unit _ = Flip ! \(Backwards x) -> Straight (\_ -> extract x)
+	unit _ = Flip <-- \(Backwards x) -> Straight (\_ -> extract x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Backwards t) where
 	f <<- Backwards x = Backwards <-|- f <<- x
 
 instance Distributive (->) (->) t => Distributive (->) (->) (Backwards t) where
-	f -<< x = Backwards ! run . f --<< x
+	f -<< x = Backwards <--- run . f --<< x
 
 instance Contravariant (->) (->) t => Contravariant (->) (->) (Backwards t) where
-	f >-|- Backwards x = Backwards ! f >-|- x
+	f >-|- Backwards x = Backwards <--- f >-|- x
 
 instance Interpreted (->) (Backwards t) where
 	type Primary (Backwards t) a = t a
@@ -59,4 +59,4 @@ instance Lowerable (->) Backwards where
 	lower = run
 
 instance Hoistable (->) Backwards where
-	f /|\ Backwards x = Backwards ! f x
+	f /|\ Backwards x = Backwards <-- f x

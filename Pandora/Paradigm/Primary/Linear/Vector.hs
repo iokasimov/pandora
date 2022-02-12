@@ -10,7 +10,6 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((!))
 
 data Vector r a where
 	Scalar :: a -> Vector a a
@@ -41,7 +40,7 @@ instance (Quasiring a, Quasiring r, Quasiring (a :*: r), Quasiring (Vector r a))
 	one = Vector one one
 
 instance Group a => Group (Vector a a) where
-	invert ~(Scalar x) = Scalar ! invert x
+	invert ~(Scalar x) = Scalar <-- invert x
 
 instance (Group a, Group r, Group (a :*: r), Group (Vector r a)) => Group (Vector (a :*: r) a) where
 	invert (Vector x xs) = Vector <-- invert x <-- invert xs
