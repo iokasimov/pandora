@@ -34,18 +34,18 @@ type Rose = Maybe <:.> Construction List
 --instance Substructure Root Rose where
 --	type Available Root Rose = Maybe
 --	type Substance Root Rose = Exactly
---	substructure = P_Q_T ! \rose -> case run # lower rose of
---		Nothing -> Store ! Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <-|-)
---		Just nonempty_rose -> Store ! Just (Exactly # extract nonempty_rose) :*: \case
---			Just (Exactly new) -> lift . TU . Just . Construct new ! deconstruct nonempty_rose
+--	substructure = P_Q_T <-- \rose -> case run # lower rose of
+--		Nothing -> Store <----- Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <-|-)
+--		Just nonempty_rose -> Store <----- Just (Exactly # extract nonempty_rose) :*: \case
+--			Just (Exactly new) -> lift . TU . Just . Construct new <-- deconstruct nonempty_rose
 --			Nothing -> lift empty
 
 --instance Substructure Just Rose where
 --	type Available Just Rose = Exactly
 --	type Substance Just Rose = List <:.> Construction List
---	substructure = P_Q_T ! \rose -> case run . extract . run # rose of
---		Nothing -> Store ! Exactly empty :*: constant (lift empty)
---		Just (Construct x xs) -> Store ! Exactly (TU xs) :*: lift . lift . Construct x . run . extract
+--	substructure = P_Q_T <-- \rose -> case run . extract . run # rose of
+--		Nothing -> Store <----- Exactly empty :*: constant (lift empty)
+--		Just (Construct x xs) -> Store <----- Exactly (TU xs) :*: lift . lift . Construct x . run . extract
 
 --------------------------------------- Non-empty rose tree ----------------------------------------
 

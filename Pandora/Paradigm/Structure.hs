@@ -1,6 +1,5 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
 module Pandora.Paradigm.Structure (module Exports) where
 
 import Pandora.Paradigm.Structure.Ability as Exports
@@ -15,7 +14,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup ((+))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=#-), (!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=#-), (<~))
 import Pandora.Paradigm.Inventory.Some.Optics ()
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), attached)
@@ -95,7 +94,7 @@ instance {-# OVERLAPS #-} Accessible b a => Accessible b (s :*: a) where
 
 -- TODO: Causes overlapping instances error when target is (a :*: b), it's better to use some wrapper instead
 -- instance {-# OVERLAPS #-} (Accessible a s, Accessible b s) => Accessible (a :*: b) s where
-	-- access = mult @(-->) @(:*:) @(:*:) ! (access @a :*: access @b)
+	-- access = mult @(-->) @(:*:) @(:*:) <~ (access @a :*: access @b)
 
 instance Accessible a (Exactly a) where
 	access = P_Q_T <-- \(Exactly x) -> Store <----- Exactly x :*: identity
@@ -114,14 +113,14 @@ instance {-# OVERLAPS #-} Possible o (o :+: a) where
 		Adoption x -> Store <----- Nothing :*: resolve @o @(Maybe o) <-- Option <-- Adoption x
 
 instance Accessible target source => Possible target (Maybe source) where
-	perhaps = let lst = access @target @source in P_Q_T ! \case
-		Just source -> let (Exactly target :*: its) = run (lst ! source) in
+	perhaps = let lst = access @target @source in P_Q_T <-- \case
+		Just source -> let (Exactly target :*: its) = run (lst <~ source) in
 			Store <----- Just target :*: (its . Exactly <-|-)
 		Nothing -> Store <----- Nothing :*: \_ -> Nothing
 
 instance Accessible (Maybe target) source => Possible target source where
 	perhaps = let lst = access @(Maybe target) @source in P_Q_T <-- \source ->
-		let target :*: imts = run (lst ! source) in
+		let target :*: imts = run (lst <~ source) in
 			Store <----- extract target :*: imts . Exactly
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where

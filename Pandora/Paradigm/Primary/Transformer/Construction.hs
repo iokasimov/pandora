@@ -24,7 +24,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (empty, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (!))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~), (<~~~), (<~~~~~))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Schemes (type (<::>))
 
@@ -36,16 +36,14 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
 	f <-|- ~(Construct x xs) = Construct <---- f x <---- f <-|-|- xs
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Construction t) where
-	mult = Straight <-- \(Construct x xs :*: Construct y ys) -> Construct <---- (x :*: y) <---- (mult @(-->) !) <-|- (mult @(-->) ! (xs :*: ys))
+	mult = Straight <-- \(Construct x xs :*: Construct y ys) -> Construct <---- (x :*: y) <---- (mult @(-->) <~) <-|- (mult @(-->) <~~~~~ xs :*: ys)
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
-	mult = Flip <-- \(Construct (x :*: y) xys) -> (Construct x <-||-) . (Construct y <-|-) . (mult @(<--) !) ! (mult @(<--) !) <-|- xys
+	mult = Flip <-- \(Construct (x :*: y) xys) -> (Construct x <-||-) . (Construct y <-|-)
+		<---- mult @(<--) <~~~ (mult @(<--) <~) <-|- xys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Construction t) where
 	unit _ = Flip <-- \(Construct x _) -> Straight (\_ -> x)
-
---instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => Semimonoidal (-->) (:*:) (:+:) (Construction t) where
-	--mult = Straight ! \(Construct x xs :*: Construct y ys) ->
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Construction t) where
 	unit _ = Straight <-- \f -> Construct <-- run f One <-- empty

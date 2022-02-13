@@ -12,6 +12,16 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 infixl 0 !
 infixr 2 =#-, -#=
 
+infixl 1 <~~~~~~~~~
+infixl 2 <~~~~~~~~
+infixl 3 <~~~~~~~
+infixl 4 <~~~~~~
+infixl 5 <~~~~~
+infixl 6 <~~~~
+infixl 7 <~~~
+infixl 8 <~~
+infixl 9 <~
+
 type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 
 class Interpreted m t where
@@ -22,6 +32,17 @@ class Interpreted m t where
 
 	(!) :: m (t a) (Primary t a)
 	(!) = run
+
+	(<~~~~~~~~~), (<~~~~~~~~), (<~~~~~~~), (<~~~~~~), (<~~~~~), (<~~~~), (<~~~), (<~~), (<~) :: m (t a) (Primary t a)
+	(<~~~~~~~~~) = run
+	(<~~~~~~~~) = run
+	(<~~~~~~~) = run
+	(<~~~~~~) = run
+	(<~~~~~) = run
+	(<~~~~) = run
+	(<~~~) = run
+	(<~~) = run
+	(<~) = run
 
 	(=#-) :: (Semigroupoid m, Interpreted m u) => m (Primary t a) (Primary u b) -> m (t a) (u b)
 	(=#-) f = unite . f . run

@@ -2,7 +2,7 @@
 module Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---))
+import Pandora.Pattern.Category ((<--), (<---), (<------))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (Extractable, point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~~~~~)))
 
 class Interpreted m t => Comonadic m t where
 	{-# MINIMAL bring #-}
@@ -31,7 +31,9 @@ instance Covariant (->) (->) (Schematic Comonad t u) => Covariant (->) (->) (t :
 	f <-|- TC x = TC <--- f <-|- x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (-->) (:*:) (:*:) (t :< u) where
-	mult = Straight <-- \(TC f :*: TC x) -> TC (mult @(-->) @(:*:) @(:*:) ! f :*: x)
+	mult = Straight <-- \(TC f :*: TC x) -> TC
+		<------ mult @(-->) @(:*:) @(:*:)
+			<~~~~~ f :*: x
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Schematic Comonad t u) => Monoidal (-->) (-->) (:*:) (:*:) (t :< u) where
 	unit _ = Straight <-- TC . point . (<-- One) . run

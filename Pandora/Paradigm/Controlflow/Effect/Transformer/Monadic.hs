@@ -3,7 +3,7 @@ module Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (..), (:
 
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---))
+import Pandora.Pattern.Category ((<--), (<---), (<------))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -19,7 +19,7 @@ import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (Pointable, point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~~~~~)))
 
 class Interpreted m t => Monadic m t where
 	{-# MINIMAL wrap #-}
@@ -32,13 +32,17 @@ instance Covariant (->) (->) (Schematic Monad t u) => Covariant (->) (->) (t :> 
 	f <-|- TM x = TM <--- f <-|- x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Schematic Monad t u) => Semimonoidal (-->) (:*:) (:*:) (t :> u) where
-	mult = Straight <-- \(TM f :*: TM x) -> TM (mult @(-->) @(:*:) @(:*:) ! f :*: x)
+	mult = Straight <-- \(TM f :*: TM x) -> TM
+		<------ mult @(-->) @(:*:) @(:*:)
+			<~~~~~ f :*: x
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Schematic Monad t u) => Monoidal (-->) (-->) (:*:) (:*:) (t :> u) where
 	unit _ = Straight <-- TM . point . (<-- One) . run
 
 instance Semimonoidal (-->) (:*:) (:+:) (Schematic Monad t u) => Semimonoidal (-->) (:*:) (:+:) (t :> u) where
-	mult = Straight <-- \(TM f :*: TM x) -> TM (mult @(-->) @(:*:) @(:+:) ! f :*: x)
+	mult = Straight <-- \(TM f :*: TM x) -> TM
+		<------ mult @(-->) @(:*:) @(:+:)
+			<~~~~~ f :*: x
 
 instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
 	f <<- TM x = TM <-|- f <<- x

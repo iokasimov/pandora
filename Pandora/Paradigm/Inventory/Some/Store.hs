@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Algebraic (extract, (<-||-), (>-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-), (!)), Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 
@@ -68,4 +68,4 @@ look s = (extract % s) . run @(->) @(Store _) . adapt
 
 -- | Change index with function
 retrofit :: (s -> s) -> Store s ~> Store s
-retrofit g (Store (s :*: f)) = Store ! g s :*: f
+retrofit g (Store (s :*: f)) = Store <----- g s :*: f
