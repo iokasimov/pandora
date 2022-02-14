@@ -700,3 +700,4 @@
 * Define `Conditional` typeclass with `iff` method
 * Define `<~` length encoding operators in `Interpreted` class
 * Define `<-|-` length encoding operators in `Covariant` class
+* Remove `!` operator from `Interpreted` class

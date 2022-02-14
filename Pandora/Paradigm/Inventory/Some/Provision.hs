@@ -17,7 +17,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~)))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
@@ -32,7 +32,7 @@ instance Contravariant (->) (->) (Flip Provision a) where
 	f >-|- Flip (Provision g) = Flip . Provision <-- g . f
 
 instance Semimonoidal (-->) (:*:) (:*:) (Provision e) where
-	mult = Straight <-- Provision . (mult @(-->) !) . (run <-||-) . (run @(->) <-|-)
+	mult = Straight <-- Provision . (mult @(-->) <~) . (run <-||-) . (run @(->) <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Provision e) where
 	unit _ = Straight <-- \f -> Provision <-- \_ -> run f One

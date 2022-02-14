@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Primary.Algebraic ()
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (!)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable)
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 
@@ -37,6 +37,6 @@ instance Interpreted (->) (Imprint e) where
 type instance Schematic Comonad (Imprint e) = (<.:>) ((->) e)
 
 instance {-# OVERLAPS #-} (Semigroup e, Extendable (->) u) => Extendable (->) ((->) e <.:> u) where
-	f <<= UT x = UT <-- (\x' e -> f . UT . (<-|-) (. (e +)) ! x') <<= x
+	f <<= UT x = UT <-- (\x' e -> f . UT . (<-|-) (. (e +)) <-- x') <<= x
 
 type Traceable e t = Adaptable t (->) (Imprint e)

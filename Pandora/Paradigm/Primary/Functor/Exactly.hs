@@ -10,6 +10,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
+import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate, index))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
@@ -58,10 +59,10 @@ instance Extendable (->) Exactly where
 
 instance Comonad (->) Exactly
 
---instance Representable Exactly where
-	--type Representation Exactly = ()
-	--() <#> Exactly x = x
-	--tabulate f = Exactly ! f ()
+instance Representable Exactly where
+	type Representation Exactly = ()
+	() <#> Exactly x = x
+	tabulate f = Exactly <-- f ()
 
 instance Adjoint (->) (->) Exactly Exactly where
 	f -| x = Exactly . f . Exactly <-- x

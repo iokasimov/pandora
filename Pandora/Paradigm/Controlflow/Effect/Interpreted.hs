@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
-infixl 0 !
+-- infixl 0 !
 infixr 2 =#-, -#=
 
 infixl 1 <~~~~~~~~~
@@ -30,8 +30,8 @@ class Interpreted m t where
 	run :: m (t a) (Primary t a)
 	unite :: m (Primary t a) (t a)
 
-	(!) :: m (t a) (Primary t a)
-	(!) = run
+--	(!) :: m (t a) (Primary t a)
+--	(!) = run
 
 	(<~~~~~~~~~), (<~~~~~~~~), (<~~~~~~~), (<~~~~~~), (<~~~~~), (<~~~~), (<~~~), (<~~), (<~) :: m (t a) (Primary t a)
 	(<~~~~~~~~~) = run
