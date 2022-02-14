@@ -4,18 +4,18 @@ module Pandora.Paradigm.Schemes.TU where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
+import Pandora.Pattern.Category (identity, (<--), (<-------))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-----), (<-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
-import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (--<<)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((--<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!), (=#-)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (!), (<~), (<~~~~~), (=#-)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
@@ -42,13 +42,16 @@ instance (Semigroupoid m, Covariant m m t, Covariant (Betwixt m m) m t, Covarian
 	(<-|-) f = (=#-) ((<-|-|-) f)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.> u) where
-	mult = Straight ! TU . (<-|-) (mult @(-->) !) . (mult @(-->) !) . (run <-||-) . (run @(->) <-|-)
+	mult = Straight <-- TU . (<-|-) (mult @(-->) <~) . (mult @(-->) <~) . (run <-||-) . (run @(->) <-|-)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) u) => Monoidal (-->) (-->) (:*:) (:*:) (t <:.> u) where
-	unit _ = Straight ! TU . point . point . (! One) . run
+	unit _ = Straight <-- TU . point . point . (<~ One)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) (t <:.> u) where
-	mult = Straight ! \(TU x :*: TU y) -> TU ! (mult @(-->) @(:*:) @(:+:)) <-|- (mult @(-->) @(:*:) @(:*:) ! (x :*: y))
+	mult = Straight <-- \(TU x :*: TU y) -> TU
+		<------- mult @(-->) @(:*:) @(:+:)
+			<-|----- mult @(-->) @(:*:) @(:*:)
+				<~~~~~ x :*: y
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:+:) u, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (t <:.> u) where
 	unit _ = Straight ! \_ -> TU empty
