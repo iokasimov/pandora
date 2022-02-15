@@ -6,7 +6,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
-infixr 5 :+:
+infixr 7 :+:
 
 data (:+:) o a = Option o | Adoption a
 

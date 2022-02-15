@@ -4,8 +4,8 @@ module Pandora.Paradigm.Schemes.TUT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (identity, (<--), (<---), (<--------))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|-----), (<-|-|-), (<-|-|-----), (<-|-|-|-)))
+import Pandora.Pattern.Category (identity, (<--), (<---), (<------))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|---), (<-|-|-), (<-|-|---), (<-|-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -22,7 +22,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point, extract, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~~~), (=#-)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (=#-)))
 
 newtype TUT ct ct' cu t t' u a = TUT (t :. u :. t' := a)
 
@@ -57,12 +57,12 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:)
 -- TODO: generalize on (->) and (:*:)
 instance {-# OVERLAPS #-} (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) ((->) s <:<.>:> (:*:) s := u) where
  mult = Straight <-- \(TUT x :*: TUT y) -> TUT
-	<-------- product_over_sum
-		<-|-|----- mult @(-->) @(:*:) @(:+:)
-			<-|----- mult @(-->) @(:*:) @(:*:) 
-				<~~~~~ x :*: y
+	<------ product_over_sum
+		<-|-|--- mult @(-->) @(:*:) @(:+:)
+			<-|--- mult @(-->) @(:*:) @(:*:) 
+				<~~~ x :*: y
 
-product_over_sum :: (s :*: a) :+: (s :*: b) -> s :*: (a :+: b)
+product_over_sum :: s :*: a :+: s :*: b -> s :*: (a :+: b)
 product_over_sum (Option (s :*: x)) = s :*: Option x
 product_over_sum (Adoption (s :*: y)) = s :*: Adoption y
 

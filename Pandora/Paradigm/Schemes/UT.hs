@@ -4,9 +4,9 @@ module Pandora.Paradigm.Schemes.UT where
 import Pandora.Core.Functor (type (:.), type (:=), type (~>))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<-----), (<-------))
+import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|---), (<-|-----), (<-|-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|---), (<-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -14,7 +14,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<--)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (<~~~~~), (=#-)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (=#-)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
@@ -44,9 +44,9 @@ instance (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal 
 
 instance (Covariant (->) (->) u, Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:+:) t) => Semimonoidal (-->) (:*:) (:+:) (t <.:> u) where
 	mult = Straight <-- \(UT x :*: UT y) -> UT
-		<------- mult @(-->) @(:*:) @(:+:)
-			<-|----- mult @(-->) @(:*:) @(:*:)
-				<~~~~~ x :*: y
+		<----- mult @(-->) @(:*:) @(:+:)
+			<-|--- mult @(-->) @(:*:) @(:*:)
+				<~~~ x :*: y
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) u) => Monoidal (-->) (-->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Straight <-- UT . point . point . (<~ One)

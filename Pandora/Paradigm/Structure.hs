@@ -9,7 +9,7 @@ import Pandora.Paradigm.Structure.Some as Exports
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
