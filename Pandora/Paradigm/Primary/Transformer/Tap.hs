@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Transformer.Tap where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<------))
+import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -13,7 +13,7 @@ import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~~~~~), (-#=))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~~~), (-#=))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%))
@@ -33,11 +33,11 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Tap t) where
 
 instance Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap t) where
 	mult = Straight <-- \(Tap x xs :*: Tap y ys) -> Tap 
-		<------ x :*: y
-		<------ mult @(-->) <~~~~~ xs :*: ys
+		<---- x :*: y
+		<---- mult @(-->) <~~~ xs :*: ys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
-	mult = Flip <-- \(Tap (x :*: y) xys) -> ((-#=) @(->) @(Flip _ _) (Tap x <-|-) . (Tap y <-|-)) (mult @(<--) <~~~~~ xys)
+	mult = Flip <-- \(Tap (x :*: y) xys) -> ((-#=) @(->) @(Flip _ _) (Tap x <-|-) . (Tap y <-|-)) (mult @(<--) <~~~ xys)
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Tap t) where
 	unit _ = Flip <-- \(Tap x _) -> Straight (\_ -> x)
@@ -56,7 +56,7 @@ instance Hoistable (->) Tap where
 
 instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap (t <:.:> t := (:*:))) where
 	mult = Straight <-- \(Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) ->
-		Tap (x :*: y) . T_U <--- (mult @(-->) <~~~~~ xls :*: yls) :*: (mult @(-->) <~~~~~ xrs :*: yrs)
+		Tap (x :*: y) . T_U <--- (mult @(-->) <~~~ xls :*: yls) :*: (mult @(-->) <~~~ xrs :*: yrs)
 
 instance (Covariant (->) (->) t) => Substructure Root (Tap (t <:.:> t := (:*:))) where
 	type Available Root (Tap (t <:.:> t := (:*:))) = Exactly
