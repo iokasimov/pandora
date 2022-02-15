@@ -25,11 +25,11 @@ instance Covariant (->) (->) (Accumulator e) where
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:*:) (Accumulator e) where
 	mult = Straight <-- \(x :*: y) -> Accumulator <--- k <-- run x <-- run y where
-		k ~(ex :*: x') ~(ey :*: y') = ex + ey :*: x' :*: y'
+		k ~(ex :*: x') ~(ey :*: y') = (ex + ey) :*: x' :*: y'
 
 instance Semigroup e => Bindable (->) (Accumulator e) where
 	f =<< Accumulator (e :*: x) = let e' :*: b = run @(->) <-- f x in
-		Accumulator <----- e + e':*: b
+		Accumulator <----- (e + e') :*: b
 
 type instance Schematic Monad (Accumulator e) = (<.:>) ((:*:) e)
 

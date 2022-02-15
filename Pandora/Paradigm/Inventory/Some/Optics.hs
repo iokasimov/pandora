@@ -43,7 +43,7 @@ instance Semigroupoid (Lens Exactly) where
 	P_Q_T to . P_Q_T from = P_Q_T <-- \source ->
 		let (Exactly between :*: bs) = run <-- from source in
 		let (Exactly target :*: tb) = run <-- to between in
-		Store <----- Exactly target :*: bs . Exactly . tb
+		Store <--- Exactly target :*: bs . Exactly . tb
 
 instance Category (Lens Exactly) where
 	identity :: Convex Lens source source
@@ -52,14 +52,14 @@ instance Category (Lens Exactly) where
 instance Semimonoidal (-->) (:*:) (:*:) (Lens Exactly source) where
 	mult = Straight <-- \(P_Q_T x :*: P_Q_T y) -> P_Q_T <-- \source ->
 		let Store (Exactly xt :*: ixts) :*: Store (Exactly yt :*: _) = x source :*: y source in
-		Store <----- Exactly (xt :*: yt) :*: \(Exactly (xt_ :*: yt_)) ->
+		Store <--- Exactly (xt :*: yt) :*: \(Exactly (xt_ :*: yt_)) ->
 			let modified = ixts <-- Exactly xt_ in
 			extract <--- run <-- y modified <--- Exactly yt_
 
 instance Impliable (P_Q_T (->) Store Exactly source target) where
 	type Arguments (P_Q_T (->) Store Exactly source target) =
 		(source -> target) -> (source -> target -> source) -> Lens Exactly source target
-	imply getter setter = P_Q_T <-- \source -> Store <----- Exactly <-- getter source :*: setter source . extract
+	imply getter setter = P_Q_T <-- \source -> Store <--- (Exactly <-- getter source) :*: setter source . extract
 
 type family Obscure lens where
 	Obscure Lens = Lens Maybe
@@ -67,15 +67,15 @@ type family Obscure lens where
 instance Impliable (P_Q_T (->) Store Maybe source target) where
 	type Arguments (P_Q_T (->) Store Maybe source target) =
 		(source -> Maybe target) -> (source -> Maybe target -> source) -> Lens Maybe source target
-	imply getter setter = P_Q_T <-- \source -> Store <----- getter source :*: setter source
+	imply getter setter = P_Q_T <-- \source -> Store <--- getter source :*: setter source
 
 instance Semigroupoid (Lens Maybe) where
 	(.) :: Obscure Lens between target -> Obscure Lens source between -> Obscure Lens source target
 	P_Q_T to . P_Q_T from = P_Q_T <-- \source -> case run <-- from source of
-		Nothing :*: _ -> Store <----- Nothing :*: \_ -> source
+		Nothing :*: _ -> Store <--- Nothing :*: \_ -> source
 		Just between :*: mbs -> case run <-- to between of
-			Nothing :*: _ -> Store <----- Nothing :*: \_ -> source
-			Just target :*: mtb -> Store <----- Just target :*: mbs . Just . mtb
+			Nothing :*: _ -> Store <--- Nothing :*: \_ -> source
+			Just target :*: mtb -> Store <--- Just target :*: mbs . Just . mtb
 
 instance Category (Lens Maybe) where
 	identity :: Obscure Lens source source
@@ -99,16 +99,16 @@ instance Semigroupoid (Lens t) => Lensic t t where
 instance Lensic Maybe Exactly where
 	type Lensally Maybe Exactly = Maybe
 	P_Q_T from >>> P_Q_T to = P_Q_T <-- \source -> case run <-- from source of
-		Nothing :*: _ -> Store <----- Nothing :*: \_ -> source
+		Nothing :*: _ -> Store <--- Nothing :*: \_ -> source
 		Just between :*: mbs -> case run <-- to between of
-			Exactly target :*: itb -> Store <----- Just target :*: \mt -> mbs <--- itb . Exactly <-|- mt
+			Exactly target :*: itb -> Store <--- Just target :*: \mt -> mbs <--- itb . Exactly <-|- mt
 
 instance Lensic Exactly Maybe where
 	type Lensally Exactly Maybe = Maybe
 	P_Q_T from >>> P_Q_T to = P_Q_T <-- \source -> case run <-- from source of
 		Exactly between :*: ibs -> case run <-- to between of
-			Just target :*: mtb -> Store <----- Just target :*: ibs . Exactly . mtb
-			Nothing :*: _ -> Store <----- Nothing :*: constant source
+			Just target :*: mtb -> Store <--- Just target :*: ibs . Exactly . mtb
+			Nothing :*: _ -> Store <--- Nothing :*: constant source
 
 instance Gettable (Lens Exactly) where
 	type instance Getting (Lens Exactly) source target = Lens Exactly source target -> source -> target

@@ -67,14 +67,14 @@ instance Substructure Left Binary where
 	type Available Left Binary = Maybe
 	type Substance Left Binary = Construction Wye
 	substructure = P_Q_T <-- \struct -> case run . lower ---> struct of
-		Nothing -> Store <----- Nothing :*: lift . TT
+		Nothing -> Store <--- Nothing :*: lift . TT
 		Just tree -> lift . lift @(->) <-|-- run <-- sub @Left <-- tree
 
 instance Substructure Right Binary where
 	type Available Right Binary = Maybe
 	type Substance Right Binary = Construction Wye
 	substructure = P_Q_T <-- \struct -> case run . extract . run ---> struct of
-		Nothing -> Store <----- Nothing :*: lift . TT
+		Nothing -> Store <--- Nothing :*: lift . TT
 		Just tree -> lift . lift @(->) <-|-- run <-- sub @Right <-- tree
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
@@ -99,25 +99,25 @@ instance Substructure Root (Construction Wye) where
 	type Available Root (Construction Wye) = Exactly
 	type Substance Root (Construction Wye) = Exactly
 	substructure = P_Q_T <-- \struct -> case lower struct of
-		Construct x xs -> Store <----- Exactly <-- Exactly x :*: lift . (Construct % xs) . extract . extract
+		Construct x xs -> Store <--- (Exactly <-- Exactly x) :*: lift . (Construct % xs) . extract . extract
 
 instance Substructure Left (Construction Wye) where
 	type Available Left (Construction Wye) = Maybe
 	type Substance Left (Construction Wye) = Construction Wye
 	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
-		Construct x End -> Store <----- Nothing :*: lift . resolve (Construct x . Left) (leaf x)
-		Construct x (Left lst) -> Store <----- Just lst :*: lift . Construct x . resolve Left End
-		Construct x (Right rst) -> Store <----- Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst)
-		Construct x (Both lst rst) -> Store <----- Just lst :*: lift . Construct x . resolve (Both % rst) (Right rst)
+		Construct x End -> Store <--- Nothing :*: lift . resolve (Construct x . Left) (leaf x)
+		Construct x (Left lst) -> Store <--- Just lst :*: lift . Construct x . resolve Left End
+		Construct x (Right rst) -> Store <--- Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst)
+		Construct x (Both lst rst) -> Store <--- Just lst :*: lift . Construct x . resolve (Both % rst) (Right rst)
 
 instance Substructure Right (Construction Wye) where
 	type Available Right (Construction Wye) = Maybe
 	type Substance Right (Construction Wye) = Construction Wye
 	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
-		Construct x End -> Store <----- Nothing :*: lift . resolve (Construct x . Right) (leaf x)
-		Construct x (Left lst) -> Store <----- Nothing :*: lift . Construct x . resolve (Both lst) (Left lst)
-		Construct x (Right rst) -> Store <----- Just rst :*: lift . Construct x . resolve Right End
-		Construct x (Both lst rst) -> Store <----- Just rst :*: lift . Construct x . resolve (Both lst) (Left lst)
+		Construct x End -> Store <--- Nothing :*: lift . resolve (Construct x . Right) (leaf x)
+		Construct x (Left lst) -> Store <--- Nothing :*: lift . Construct x . resolve (Both lst) (Left lst)
+		Construct x (Right rst) -> Store <--- Just rst :*: lift . Construct x . resolve Right End
+		Construct x (Both lst rst) -> Store <--- Just rst :*: lift . Construct x . resolve (Both lst) (Left lst)
 
 -------------------------------------- Prefixed binary tree ----------------------------------------
 

@@ -103,8 +103,8 @@ instance Stack List where
 	type Popping List = List
 	type Pushing List = List
 	top = P_Q_T <-- \list -> case list of
-		TT Nothing -> Store <----- Nothing :*: constant empty
-		TT (Just xs) -> Store <----- Just (extract xs) :*: \new -> case new of
+		TT Nothing -> Store <--- Nothing :*: constant empty
+		TT (Just xs) -> Store <--- Just (extract xs) :*: \new -> case new of
 			Nothing -> TT <-- deconstruct xs
 			Just x -> TT <--- Construct x . Just <-|- deconstruct xs
 	pop = resolve @(Nonempty List _) (\(Construct x xs) -> constant (Just x) <-|- set @State (TT xs)) (point Nothing) . run ==<< get @State
@@ -114,15 +114,15 @@ instance Substructure Root List where
 	type Available Root List = Maybe
 	type Substance Root List = Exactly
 	substructure = P_Q_T <-- \zipper -> case run --> lower zipper of
-		Just (Construct x xs) -> Store <----- Just <-- Exactly x :*: lift . resolve (lift . (Construct % xs) . extract @Exactly) zero
-		Nothing -> Store <----- Nothing :*: lift . resolve (lift . point . extract @Exactly) zero
+		Just (Construct x xs) -> Store <--- (Just <-- Exactly x) :*: lift . resolve (lift . (Construct % xs) . extract @Exactly) zero
+		Nothing -> Store <--- Nothing :*: lift . resolve (lift . point . extract @Exactly) zero
 
 instance Substructure Tail List where
 	type Available Tail List = Exactly
 	type Substance Tail List = List
 	substructure = P_Q_T <-- \x -> case run . extract . run <-- x of
 		Just ns -> lift . lift @(->) <-|- run (sub @Tail) ns
-		Nothing -> Store <----- Exactly zero :*: lift . identity . extract
+		Nothing -> Store <--- Exactly zero :*: lift . identity . extract
 
 -- | Transform any traversable structure into a list
 linearize :: forall t a . Traversable (->) (->) t => t a -> List a
@@ -175,7 +175,7 @@ instance Stack (Construction Maybe) where
 	type Topping (Construction Maybe) = Exactly
 	type Popping (Construction Maybe) = Construction Maybe
 	type Pushing (Construction Maybe) = Construction Maybe
-	top = P_Q_T <-- \xs -> Store <----- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
+	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
 	pop = (\(Construct x xs) -> constant x <-|-|- set @State <<- xs) =<< get @State
 	push x = point x .-*- (modify @State <-- Construct x . Just)

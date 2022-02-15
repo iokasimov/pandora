@@ -23,7 +23,7 @@ import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 
 instance Adjoint (->) (->) (Store s) (State s) where
 	(-|) :: (Store s a -> b) -> a -> State s b
-	f -| x = State <-- \s -> (:*:) s . f . Store <----- s :*: constant x
+	f -| x = State <-- \s -> (:*:) s . f . Store <--- s :*: constant x
 	(|-) :: (a -> State s b) -> Store s a -> b
 	g |- Store (s :*: f) = extract . (run % s) . g <-- f s
 

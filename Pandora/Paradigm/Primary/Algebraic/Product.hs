@@ -13,7 +13,7 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ()
 
-infixr 6 :*:
+infixr 8 :*:
 
 data (:*:) s a = s :*: a
 
@@ -30,13 +30,13 @@ instance (Setoid s, Setoid a) => Setoid (s :*: a) where
 	~(sx :*: x) == ~(sy :*: y) = (sx == sy) * (x == y)
 
 instance (Semigroup s, Semigroup a) => Semigroup (s :*: a) where
-	~(sx :*: x) + ~(sy :*: y) = sx + sy :*: x + y
+	~(sx :*: x) + ~(sy :*: y) = (sx + sy) :*: (x + y)
 
 instance (Monoid s, Monoid a) => Monoid (s :*: a) where
 	zero = zero :*: zero
 
 instance (Ringoid s, Ringoid a) => Ringoid (s :*: a) where
-	~(sx :*: x) * ~(sy :*: y) = sx * sy :*: x * y
+	~(sx :*: x) * ~(sy :*: y) = (sx * sy) :*: (x * y)
 
 instance (Quasiring s, Quasiring a) => Quasiring (s :*: a) where
 	one = one :*: one

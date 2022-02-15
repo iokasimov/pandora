@@ -701,3 +701,4 @@
 * Define `<~` length encoding operators in `Interpreted` class
 * Define `<-|-` length encoding operators in `Covariant` class
 * Remove `!` operator from `Interpreted` class
+* Change precedence fro `:*:` operator - from 6 to 8

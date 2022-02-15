@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Ability.Substructure where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (identity, (<--), (<-----))
+import Pandora.Pattern.Category (identity, (<--), (<---), (<-----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -39,4 +39,4 @@ only :: forall segment structure element . (Covariant (->) (->) structure, Subst
 only = inner . ((sub @segment) :: Convex Lens (structure element) (Exactly element)) where
 
 	inner :: Convex Lens (Exactly element) element
-	inner = P_Q_T <-- \x -> Store <----- x :*: identity
+	inner = P_Q_T <-- \x -> Store <--- x :*: identity

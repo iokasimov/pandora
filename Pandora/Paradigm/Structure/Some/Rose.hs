@@ -35,8 +35,8 @@ type Rose = Maybe <:.> Construction List
 --	type Available Root Rose = Maybe
 --	type Substance Root Rose = Exactly
 --	substructure = P_Q_T <-- \rose -> case run # lower rose of
---		Nothing -> Store <----- Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <-|-)
---		Just nonempty_rose -> Store <----- Just (Exactly # extract nonempty_rose) :*: \case
+--		Nothing -> Store <--- Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <-|-)
+--		Just nonempty_rose -> Store <--- Just (Exactly # extract nonempty_rose) :*: \case
 --			Just (Exactly new) -> lift . TU . Just . Construct new <-- deconstruct nonempty_rose
 --			Nothing -> lift empty
 
@@ -44,8 +44,8 @@ type Rose = Maybe <:.> Construction List
 --	type Available Just Rose = Exactly
 --	type Substance Just Rose = List <:.> Construction List
 --	substructure = P_Q_T <-- \rose -> case run . extract . run # rose of
---		Nothing -> Store <----- Exactly empty :*: constant (lift empty)
---		Just (Construct x xs) -> Store <----- Exactly (TU xs) :*: lift . lift . Construct x . run . extract
+--		Nothing -> Store <--- Exactly empty :*: constant (lift empty)
+--		Just (Construct x xs) -> Store <--- Exactly (TU xs) :*: lift . lift . Construct x . run . extract
 
 --------------------------------------- Non-empty rose tree ----------------------------------------
 
@@ -54,13 +54,13 @@ type instance Nonempty Rose = Construction List
 instance Substructure Root (Construction List) where
 	type Available Root (Construction List) = Exactly
 	type Substance Root (Construction List) = Exactly
-	substructure = P_Q_T <-- \rose -> Store <----- Exactly (Exactly <-- extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
+	substructure = P_Q_T <-- \rose -> Store <--- Exactly (Exactly <-- extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
 
 instance Substructure Tail (Construction List) where
 	type Available Tail (Construction List) = Exactly
 	type Substance Tail (Construction List) = List <:.> Construction List
 	substructure = P_Q_T <-- \rose -> case extract <-- run rose of
-		Construct x xs -> Store <----- Exactly (TU xs) :*: lift . Construct x . run . extract
+		Construct x xs -> Store <--- Exactly (TU xs) :*: lift . Construct x . run . extract
 
 --------------------------------------- Prefixed rose tree -----------------------------------------
 

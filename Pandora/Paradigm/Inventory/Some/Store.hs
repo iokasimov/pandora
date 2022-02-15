@@ -3,7 +3,7 @@ module Pandora.Paradigm.Inventory.Some.Store where
 
 import Pandora.Core (type (:.), type (:=), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<----), (<-----), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-|-))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -54,7 +54,7 @@ instance Interpreted (->) (Store s) where
 type instance Schematic Comonad (Store s) = (:*:) s <:<.>:> (->) s
 
 instance Comonadic (->) (Store s) where
-	bring (TC (TUT (s :*: f))) = Store <----- s :*: extract f
+	bring (TC (TUT (s :*: f))) = Store <--- s :*: extract f
 
 type Storable s t = Adaptable (Store s) (->) t
 
@@ -68,4 +68,4 @@ look s = (extract % s) . run @(->) @(Store _) . adapt
 
 -- | Change index with function
 retrofit :: (s -> s) -> Store s ~> Store s
-retrofit g (Store (s :*: f)) = Store <----- g s :*: f
+retrofit g (Store (s :*: f)) = Store <--- g s :*: f
