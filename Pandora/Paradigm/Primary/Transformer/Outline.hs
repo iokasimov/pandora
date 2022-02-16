@@ -1,5 +1,4 @@
 {-# LANGUAGE UndecidableInstances #-}
-
 module Pandora.Paradigm.Primary.Transformer.Outline where
 
 import Pandora.Pattern.Semigroupoid ((.))

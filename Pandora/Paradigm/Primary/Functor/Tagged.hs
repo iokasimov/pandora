@@ -27,7 +27,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (extract, (<-||-))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~))
 
 newtype Tagged tag a = Tag a
 
@@ -44,7 +44,7 @@ instance Semimonoidal (-->) (:*:) (:*:) (Tagged tag) where
 	mult = Straight <-- Tag . (extract <-||-) . (extract <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Tagged tag) where
-	unit _ = Straight <-- Tag . (<-- One) . run
+	unit _ = Straight <-- Tag . (<~ One)
 
 instance Semimonoidal (<--) (:*:) (:*:) (Tagged tag) where
 	mult = Flip <-- \(Tag (x :*: y)) -> Tag x :*: Tag y

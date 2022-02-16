@@ -26,7 +26,7 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Continuation r t) where
 	f <-|- Continuation continuation = Continuation <-- continuation . (. f)
 
 instance Covariant (->) (->) t => Bindable (->) (Continuation r t) where
-	f =<< x = Continuation <-- \g -> run x <-- \y -> run <-- f y <-- g
+	f =<< x = Continuation <-- \g -> x <~ \y -> f y <~ g
 
 -- TODO: Define Monoidal (-->) (-->) (:*:) (:*:) (Continuation r t)
 

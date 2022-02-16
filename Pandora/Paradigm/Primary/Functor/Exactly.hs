@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
-import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate, index))
+import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
@@ -27,7 +27,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (extract, (<-||-))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~))
 
 newtype Exactly a = Exactly a
 
@@ -38,7 +38,7 @@ instance Semimonoidal (-->) (:*:) (:*:) Exactly where
 	mult = Straight <-- Exactly . (extract <-||-) .  (extract <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) Exactly where
-	unit _ = Straight <-- Exactly . (<-- One) . run
+	unit _ = Straight <-- Exactly . (<~ One)
 
 instance Semimonoidal (<--) (:*:) (:*:) Exactly where
 	mult = Flip <-- \(Exactly (x :*: y)) -> Exactly x :*: Exactly y
@@ -66,7 +66,7 @@ instance Representable Exactly where
 
 instance Adjoint (->) (->) Exactly Exactly where
 	f -| x = Exactly . f . Exactly <-- x
-	g |- x = extract . extract . (g <-|-) <-- x
+	g |- x = extract . extract <--- g <-|- x
 
 instance Setoid a => Setoid (Exactly a) where
 	Exactly x == Exactly y = x == y

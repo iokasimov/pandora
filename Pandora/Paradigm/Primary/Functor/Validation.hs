@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Validation where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<----), (<-----))
+import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -18,7 +18,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~))
 
 data Validation e a = Flaws e | Validated a
 
@@ -32,13 +32,13 @@ instance Covariant (->) (->) (Flip Validation a) where
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:*:) (Validation e) where
 	mult = Straight <-- \case
-		Validated x :*: Validated y -> Validated <----- x :*: y
+		Validated x :*: Validated y -> Validated <--- x :*: y
 		Flaws x :*: Flaws y -> Flaws <---- x + y
 		Validated _ :*: Flaws y -> Flaws y
 		Flaws x :*: Validated _ -> Flaws x
 
 instance Semigroup e => Monoidal (-->) (-->) (:*:) (:*:) (Validation e) where
-	unit _ = Straight <-- Validated . (<-- One) . run
+	unit _ = Straight <-- Validated . (<~ One)
 
 instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Validation e) where
 	mult = Straight <-- \case

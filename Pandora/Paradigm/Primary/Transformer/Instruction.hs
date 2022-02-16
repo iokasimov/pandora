@@ -5,7 +5,7 @@ import Pandora.Core.Functor (type (:.), type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---), (<-|-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
@@ -18,7 +18,7 @@ import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~), (<~~~))
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
 
@@ -28,14 +28,13 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Instruction t) where
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoidal (-->) (:*:) (:*:) (Instruction t) where
 	mult = Straight <-- \case
-		Enter x :*: Enter y -> Enter <----- x :*: y
+		Enter x :*: Enter y -> Enter <--- x :*: y
 		Enter x :*: Instruct y -> (x :*:) <-|- Instruct y
 		Instruct x :*: Enter y -> (:*: y) <-|- Instruct x
-		Instruct x :*: Instruct y -> Instruct <--- (run <-- mult @(-->))
-			<-|- (run <----- mult @(-->) <----- x :*: y)
+		Instruct x :*: Instruct y -> Instruct <----- (mult @(-->) <~) <-|--- mult @(-->) <~~~ x :*: y
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Instruction t) where
-	unit _ = Straight <-- Enter . (<-- One) . run
+	unit _ = Straight <-- Enter . (<~ One)
 
 instance Covariant (->) (->) t => Bindable (->) (Instruction t) where
 	f =<< Enter x = f x
