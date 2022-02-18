@@ -96,7 +96,3 @@ instance Lattice a => Lattice (Exactly a) where
 
 instance Group a => Group (Exactly a) where
 	invert (Exactly x) = Exactly <-- invert x
-
-type family Simplification (t :: * -> *) (a :: *) where
-	Simplification Exactly a = a
-	Simplification t a = t a

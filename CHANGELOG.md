@@ -702,3 +702,4 @@
 * Define `<-|-` length encoding operators in `Covariant` class
 * Remove `!` operator from `Interpreted` class
 * Change precedence fro `:*:` operator - from 6 to 8
+* Move `Simplification` type family to `Primary` module
