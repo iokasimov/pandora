@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Modification.Comprehension where
 
 import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<----))
+import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -17,7 +17,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
@@ -34,7 +34,7 @@ instance Interpreted (->) (Comprehension t) where
 	unite = Comprehension
 
 instance Covariant (->) (->) (t <::> Construction t) => Covariant (->) (->) (Comprehension t) where
-	f <-|- Comprehension x = Comprehension <~~~ f <-|- x
+	f <-|- Comprehension x = Comprehension <--- f <-|- x
 
 instance Traversable (->) (->) (t <::> Construction t) => Traversable (->) (->) (Comprehension t) where
 	f <<- Comprehension x = Comprehension <-|- f <<- x

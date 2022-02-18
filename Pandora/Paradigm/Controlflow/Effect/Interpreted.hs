@@ -87,8 +87,3 @@ instance Interpreted (->) (Straight v e) where
 	type Primary (Straight v e) a = v e a
 	run ~(Straight x) = x
 	unite = Straight
-
-instance Interpreted (->) ((->) e) where
-	type Primary ((->) e) a = e -> a
-	run = identity
-	unite = identity
