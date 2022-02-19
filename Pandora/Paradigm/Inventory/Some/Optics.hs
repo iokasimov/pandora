@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Paradigm.Controlflow.Effect.Conditional (iff)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (<~)))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
@@ -125,3 +125,12 @@ instance Pointable t => Settable (Lens t) where
 instance (Gettable (Lens t), Covariant (->) (->) t, Pointable t) => Modifiable (Lens t) where
 	type instance Modification (Lens t) source target = (target -> target) -> Lens t source target -> source -> source
 	modify f lens = extract . retrofit (f <-|-) . run lens
+
+view :: Lens i source target -> source -> i target
+view lens source = position @_ @(Store _) <-- lens <~ source
+
+replace :: forall i source target . i target -> Lens i source target -> source -> source
+replace new lens source = look @(i _) <-- new <-- lens <~ source
+
+mutate :: (i target -> i target) -> Lens i source target -> source -> source
+mutate mut lens source = extract . retrofit mut <-- lens <~ source
