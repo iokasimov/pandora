@@ -6,7 +6,7 @@ import Pandora.Pattern.Transformer.Hoistable ((/|\))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic ((>-|-<-|-))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-)))
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure))
 
 newtype Turnover t a = Turnover (t a)
 
@@ -19,6 +19,5 @@ instance Interpreted (->) (Turnover t) where
 	unite = Turnover
 
 instance (Covariant (->) (->) structure, Substructure segment structure) => Substructure segment (Turnover structure) where
-	type Available segment (Turnover structure) = Available segment structure
 	type Substance segment (Turnover structure) = Substance segment structure
 	substructure = (((run /|\) :*: ((unite /|\) <-|-)) >-|-<-|-) =#- substructure @segment @structure

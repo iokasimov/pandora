@@ -24,7 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root, Tail))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Tail))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
 
@@ -52,15 +52,13 @@ type Rose = Maybe <:.> Construction List
 type instance Nonempty Rose = Construction List
 
 instance Substructure Root (Construction List) where
-	type Available Root (Construction List) = Exactly
 	type Substance Root (Construction List) = Exactly
-	substructure = P_Q_T <-- \rose -> Store <--- Exactly (Exactly <-- extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
+	--substructure = P_Q_T <-- \rose -> Store <--- Exactly (Exactly <-- extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
 
 instance Substructure Tail (Construction List) where
-	type Available Tail (Construction List) = Exactly
 	type Substance Tail (Construction List) = List <:.> Construction List
-	substructure = P_Q_T <-- \rose -> case extract <-- run rose of
-		Construct x xs -> Store <--- Exactly (TU xs) :*: lift . Construct x . run . extract
+	--substructure = P_Q_T <-- \rose -> case extract <-- run rose of
+	--	Construct x xs -> Store <--- Exactly (TU xs) :*: lift . Construct x . run . extract
 
 --------------------------------------- Prefixed rose tree -----------------------------------------
 

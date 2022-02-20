@@ -4,6 +4,7 @@ module Pandora.Paradigm.Structure.Some.Binary where
 import Pandora.Core.Functor (type (~>), type (:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
+import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((===<<)))
@@ -11,8 +12,8 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached)
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&))
-import Pandora.Paradigm.Primary.Algebraic ((<-*-), (<-*--), (<-*-*-), extract, point)
+import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&), (.:..))
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), (<-*--), (<-*-*-), extract, point, empty)
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
@@ -23,17 +24,17 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Conditional (iff)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~))
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure)
+import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mutate)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
 	, Morph (Rotate, Into, Insert, Lookup, Key), Vertical (Up, Down), lookup)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
@@ -51,31 +52,29 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
 --	# Construct (extract y) (Both # x # rebalance (deconstruct y))
 --	# Construct (extract x) (Both # rebalance (deconstruct x) # y)
 
-instance Morphable Insert Binary where
-	type Morphing Insert Binary = (Exactly <:.:> Comparison := (:*:)) <:.:> Binary := (->)
-	morphing struct = case run ---> premorph struct of
-		Nothing -> T_U <-- \(T_U (Exactly x :*: _)) -> lift <-- leaf x
-		Just binary -> T_U <-- \(T_U (Exactly x :*: Convergence f)) ->
-			let continue xs = run <-- morph @Insert @(Nonempty Binary) xs <--- twosome <-- Exactly x <-- Convergence f in
-			let step = iff @Just <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) <-- leaf x in
-			lift <---- order binary
-				<--- step <-- sub @Left <-- binary
-				<--- step <-- sub @Right <-- binary
-				<--- f x <-- extract binary
+-- instance Morphable Insert Binary where
+	-- type Morphing Insert Binary = (Exactly <:.:> Comparison := (:*:)) <:.:> Binary := (->)
+	-- morphing struct = case run ---> premorph struct of
+		-- Nothing -> T_U <-- \(T_U (Exactly x :*: _)) -> lift <-- leaf x
+		-- Just binary -> T_U <-- \(T_U (Exactly x :*: Convergence f)) ->
+			-- let continue xs = run <-- morph @Insert @(Nonempty Binary) xs <--- twosome <-- Exactly x <-- Convergence f in
+			-- let step = iff @Just <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) <-- leaf x in
+			-- lift <---- order binary
+				-- <--- step <-- sub @Left <-- binary
+				-- <--- step <-- sub @Right <-- binary
+				-- <--- f x <-- extract binary
 
 instance Substructure Left Binary where
-	type Available Left Binary = Maybe
-	type Substance Left Binary = Construction Wye
-	substructure = P_Q_T <-- \struct -> case run . lower ---> struct of
-		Nothing -> Store <--- Nothing :*: lift . TT
-		Just tree -> lift . lift @(->) <-|-- run <-- sub @Left <-- tree
+	type Substance Left Binary = Binary
+	substructure = P_Q_T <-- \struct -> case run <-- lower struct of
+		Nothing -> Store <--- empty :*: lift . constant empty
+		Just tree -> lift . lift @(->) <-|- sub @Left <~ tree
 
 instance Substructure Right Binary where
-	type Available Right Binary = Maybe
-	type Substance Right Binary = Construction Wye
+	type Substance Right Binary = Binary
 	substructure = P_Q_T <-- \struct -> case run . extract . run ---> struct of
-		Nothing -> Store <--- Nothing :*: lift . TT
-		Just tree -> lift . lift @(->) <-|-- run <-- sub @Right <-- tree
+		Nothing -> Store <--- empty :*: lift . constant empty
+		Just tree -> lift . lift @(->) <-|- sub @Right <~ tree
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
@@ -85,39 +84,36 @@ instance Morphable (Into Binary) (Construction Wye) where
 	type Morphing (Into Binary) (Construction Wye) = Binary
 	morphing = lift . premorph
 
-instance Morphable Insert (Construction Wye) where
-	type Morphing Insert (Construction Wye) = (Exactly <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
-	morphing (premorph -> struct) = T_U <-- \(T_U (Exactly x :*: Convergence f)) ->
-		let continue xs = run <--- morph @Insert @(Nonempty Binary) xs <---- twosome <--- Exactly x <--- Convergence f in
-		let step = iff @Just <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) (leaf x) in
-		order struct 
-			<---- step <--- sub @Left <--- struct
-			<---- step <--- sub @Right <--- struct
-			<---- f x <--- extract struct
+-- instance Morphable Insert (Construction Wye) where
+	-- type Morphing Insert (Construction Wye) = (Exactly <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
+	-- morphing (premorph -> struct) = T_U <-- \(T_U (Exactly x :*: Convergence f)) ->
+		-- let continue xs = run <--- morph @Insert @(Nonempty Binary) xs <---- twosome <--- Exactly x <--- Convergence f in
+		-- let step = iff @Just <-|-|- (run .:.. view) <-*-*- mutate continue <-*-*- replace (leaf x) in
+		-- order struct
+			-- <---- step <--- sub @Left <--- struct
+			-- <---- step <--- sub @Right <--- struct
+			-- <---- f x <--- extract struct
 
 instance Substructure Root (Construction Wye) where
-	type Available Root (Construction Wye) = Exactly
 	type Substance Root (Construction Wye) = Exactly
 	substructure = P_Q_T <-- \struct -> case lower struct of
-		Construct x xs -> Store <--- (Exactly <-- Exactly x) :*: lift . (Construct % xs) . extract . extract
+		Construct x xs -> Store <--- Exactly x :*: lift . (Construct % xs) . extract
 
 instance Substructure Left (Construction Wye) where
-	type Available Left (Construction Wye) = Maybe
-	type Substance Left (Construction Wye) = Construction Wye
+	type Substance Left (Construction Wye) = Binary
 	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
-		Construct x End -> Store <--- Nothing :*: lift . resolve (Construct x . Left) (leaf x)
-		Construct x (Left lst) -> Store <--- Just lst :*: lift . Construct x . resolve Left End
-		Construct x (Right rst) -> Store <--- Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst)
-		Construct x (Both lst rst) -> Store <--- Just lst :*: lift . Construct x . resolve (Both % rst) (Right rst)
+		Construct x End -> Store <--- TT Nothing :*: lift . resolve (Construct x . Left) (leaf x) . run
+		Construct x (Left lst) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve Left End . run
+		Construct x (Right rst) -> Store <--- TT Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
+		Construct x (Both lst rst) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
 
 instance Substructure Right (Construction Wye) where
-	type Available Right (Construction Wye) = Maybe
-	type Substance Right (Construction Wye) = Construction Wye
-	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
-		Construct x End -> Store <--- Nothing :*: lift . resolve (Construct x . Right) (leaf x)
-		Construct x (Left lst) -> Store <--- Nothing :*: lift . Construct x . resolve (Both lst) (Left lst)
-		Construct x (Right rst) -> Store <--- Just rst :*: lift . Construct x . resolve Right End
-		Construct x (Both lst rst) -> Store <--- Just rst :*: lift . Construct x . resolve (Both lst) (Left lst)
+	type Substance Right (Construction Wye) = Binary
+	substructure = P_Q_T <-- \struct -> case extract <-- run struct of
+		Construct x End -> Store <--- TT Nothing :*: lift . resolve (Construct x . Right) (leaf x) . run
+		Construct x (Left lst) -> Store <--- TT Nothing :*: lift . Construct x . resolve (Both lst) (Left lst) . run
+		Construct x (Right rst) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve Right End . run
+		Construct x (Both lst rst) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve (Both lst) (Left lst) . run
 
 -------------------------------------- Prefixed binary tree ----------------------------------------
 
@@ -128,8 +124,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		Just tree -> TT <-- \key ->
 			key <=> attached <-- extract tree & order
 				<---- Just --> extract --> extract tree
-				<---- lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Left <-- tree
-				<---- lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Right <-- tree
+				<---- lookup @Key key . Prefixed ===<< run (view <-- sub @Left <-- tree)
+				<---- lookup @Key key . Prefixed ===<< run (view <-- sub @Right <-- tree)
 
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Exactly) <:.:> Prefixed Binary k := (->)
@@ -149,8 +145,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 	morphing (run . premorph -> Construct x xs) = TT <-- \key ->
 		key <=> attached x & order
 			<---- Just <-- extract x
-			<---- lookup @Key key . Prefixed . extract ===<< get @(Obscure Lens) <-- sub @Left <-- xs
-			<---- lookup @Key key . Prefixed . extract ===<< get @(Obscure Lens) <-- sub @Left <-- xs
+			<---- lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Left <-- xs
+			<---- lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Left <-- xs
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 

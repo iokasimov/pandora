@@ -38,10 +38,9 @@ instance Monotonic s a => Monotonic s (s :*: a) where
 	reduce f r x = reduce f <-- f (attached x) r <-- extract x
 
 instance (Covariant (->) (->) t) => Substructure Tail (Tap t) where
-	type Available Tail (Tap t) = Exactly
 	type Substance Tail (Tap t) = t
 	substructure = P_Q_T <-- \tap -> case extract <-- run tap of
-		Tap x xs -> Store <--- Exactly xs :*: lift . Tap x . extract
+		Tap x xs -> Store <--- xs :*: lift . Tap x
 
 instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
@@ -72,16 +71,14 @@ instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) B
 	morphing (premorph -> xs) = (into @(o ds) <-|-) =#- xs
 
 instance Substructure Left (Flip (:*:) a) where
-	type Available Left (Flip (:*:) a) = Exactly
 	type Substance Left (Flip (:*:) a) = Exactly
 	substructure = P_Q_T <-- \product -> case run <-- lower product of
-		s :*: x -> Store <--- (Exactly <-- Exactly s) :*: lift . Flip . (:*: x) . extract . extract
+		s :*: x -> Store <--- Exactly s :*: lift . Flip . (:*: x) . extract
 
 instance Substructure Right ((:*:) s) where
-	type Available Right ((:*:) s) = Exactly
 	type Substance Right ((:*:) s) = Exactly
 	substructure = P_Q_T <-- \product -> case lower product of
-		s :*: x -> Store <--- (Exactly <-- Exactly x) :*: lift . (s :*:) . extract . extract
+		s :*: x -> Store <--- Exactly x :*: lift . (s :*:) . extract
 
 instance Accessible s (s :*: a) where
 	access = P_Q_T <-- \(s :*: x) -> Store <--- Exactly s :*: (:*: x) . extract
@@ -124,16 +121,14 @@ instance Accessible (Maybe target) source => Possible target source where
 			Store <--- extract target :*: imts . Exactly
 
 instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
-	type Available Left (t <:.:> t := (:*:)) = Exactly
 	type Substance Left (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
-		ls :*: rs -> Store <--- Exactly ls :*: lift . (twosome % rs) . extract
+		ls :*: rs -> Store <--- ls :*: lift . (twosome % rs)
 
 instance (Covariant (->) (->) t) => Substructure Right (t <:.:> t := (:*:)) where
-	type Available Right (t <:.:> t := (:*:)) = Exactly
 	type Substance Right (t <:.:> t := (:*:)) = t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
-		ls :*: rs -> Store <--- Exactly rs :*: lift . (twosome ls) . extract
+		ls :*: rs -> Store <--- rs :*: lift . (twosome ls)
 
 instance Morphable (Into List) (Vector r) where
 	type Morphing (Into List) (Vector r) = List

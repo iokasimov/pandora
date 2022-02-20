@@ -24,6 +24,7 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
+import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
@@ -37,6 +38,7 @@ import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens)
 import Pandora.Paradigm.Controlflow.Effect.Conditional (iff)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=#-))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
+import Pandora.Paradigm.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
@@ -45,7 +47,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure, sub), Segment (Root, Tail))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Tail))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Pushing, Topping, push, pop, top))
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
@@ -111,18 +113,16 @@ instance Stack List where
 	push x = point x .-*- modify @State (item @Push x)
 
 instance Substructure Root List where
-	type Available Root List = Maybe
-	type Substance Root List = Exactly
+	type Substance Root List = Maybe
 	substructure = P_Q_T <-- \zipper -> case run --> lower zipper of
-		Just (Construct x xs) -> Store <--- (Just <-- Exactly x) :*: lift . resolve (lift . (Construct % xs) . extract @Exactly) zero
-		Nothing -> Store <--- Nothing :*: lift . resolve (lift . point . extract @Exactly) zero
+		Just (Construct x xs) -> Store <--- Just x :*: lift . resolve (lift . (Construct % xs)) zero
+		Nothing -> Store <--- Nothing :*: lift . resolve (lift . point) zero
 
 instance Substructure Tail List where
-	type Available Tail List = Exactly
 	type Substance Tail List = List
-	substructure = P_Q_T <-- \x -> case run . extract . run <-- x of
+	substructure = P_Q_T <-- \source -> case run . lower <-- source of
 		Just ns -> lift . lift @(->) <-|- run (sub @Tail) ns
-		Nothing -> Store <--- Exactly zero :*: lift . identity . extract
+		Nothing -> Store <--- zero :*: lift . identity
 
 -- | Transform any traversable structure into a list
 linearize :: forall t a . Traversable (->) (->) t => t a -> List a
@@ -159,17 +159,14 @@ instance Morphable Push (Construction Maybe) where
 	morphing (premorph -> xs) = T_U <-- \(Exactly x) -> Construct x <-- Just xs
 
 instance Substructure Root (Construction Maybe) where
-	type Available Root (Construction Maybe) = Exactly
 	type Substance Root (Construction Maybe) = Exactly
-	substructure = imply @(Convex Lens _ _) (Exactly . extract . lower)
-		(\source target -> lift ----> Construct <--- extract target <--- deconstruct --> lower source)
+	substructure = P_Q_T <-- \source -> case lower source of
+		Construct x xs -> Store <--- Exactly x :*: lift . (Construct % xs) . extract
 
 instance Substructure Tail (Construction Maybe) where
-	type Available Tail (Construction Maybe) = Exactly
 	type Substance Tail (Construction Maybe) = List
-	substructure = imply @(Convex Lens _ _)
-		<----- TT . deconstruct . lower
-		<----- (\source target -> lift ----> Construct <--- extract (lower source) <--- run target)
+	substructure = P_Q_T <-- \source -> case lower source of
+		Construct x xs -> Store <--- TT xs :*: lift . Construct x . run
 
 instance Stack (Construction Maybe) where
 	type Topping (Construction Maybe) = Exactly
@@ -193,25 +190,25 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 	f <<- T_U (Exactly x :*: T_U (left :*: right)) = (\past' x' left' -> twosome <-- Exactly x' <--- twosome <-- left' <-- run past')
 		<-|- f <<- Reverse right <-*- f x <-*- f <<- left
 
-instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
-	f <<= z = let move rtt = TT . deconstruct <----- run . rtt .-+ z in
-		imply @(Tape List _)
-			<---- f z
-			<---- f <-|-- move <-- rotate @Left
-			<---- f <-|-- move <-- rotate @Right
+-- instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
+	-- f <<= z = let move rtt = TT . deconstruct <----- run . rtt .-+ z in
+		-- imply @(Tape List _)
+			-- <---- f z
+			-- <---- f <-|-- move <-- rotate @Left
+			-- <---- f <-|-- move <-- rotate @Right
 
-instance Morphable (Rotate Left) (Tape List) where
-	type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
-	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
-		let subtree = twosome <--- Reverse (get @(Convex Lens) <--- sub @Tail <--- left) <--- item @Push x right in
-		TT <----- twosome % subtree <-|-- get @(Obscure Lens) <-- sub @Root <-- left
+-- instance Morphable (Rotate Left) (Tape List) where
+	-- type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
+	-- morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
+		-- let subtree = twosome <--- Reverse (get @(Convex Lens) <--- sub @Tail <--- left) <--- item @Push x right in
+		-- TT <----- twosome % subtree <-|-- get @(Obscure Lens) <-- sub @Root <-- left
 
 -- TODO: refactor it so that we dissect right list once
-instance Morphable (Rotate Right) (Tape List) where
-	type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
-	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
-		let subtree = twosome <--- Reverse <-- item @Push x left <--- attached (run <-- pop @List <-- right) in
-		TT <----- twosome % subtree <-|-- get @(Obscure Lens) <-- sub @Root <-- right
+-- instance Morphable (Rotate Right) (Tape List) where
+	-- type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
+	-- morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
+		-- let subtree = twosome <--- Reverse <-- item @Push x left <--- attached (run <-- pop @List <-- right) in
+		-- TT <----- twosome % subtree <-|-- get @(Obscure Lens) <-- sub @Root <-- right
 
 instance Morphable (Rotate Left) (Turnover (Tape List)) where
 	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)

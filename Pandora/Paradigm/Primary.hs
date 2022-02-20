@@ -23,7 +23,7 @@ import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), UT, TUT, P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure))
 
 instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
 	f -| x = \s -> f . Flip <--- x :*: s
@@ -89,22 +89,20 @@ instance Morphable (Into Wye) (Maybe <:.:> Maybe := (:*:)) where
 	morphing (run . premorph -> Nothing :*: Nothing) = End
 
 instance Substructure Left Wye where
-	type Available Left Wye = Maybe
-	type Substance Left Wye = Exactly
+	type Substance Left Wye = Maybe
 	substructure = P_Q_T <-- \new -> case lower new of
-		End -> Store <--- Nothing :*: lift . resolve Left End . (extract <-|-)
-		Left x -> Store <--- Just (Exactly x) :*: lift . resolve Left End . (extract <-|-)
-		Right y -> Store <--- Nothing :*: lift . constant (Right y) . (extract <-|-)
-		Both x y -> Store <--- Just (Exactly x) :*: lift . resolve (Both % y) (Right y) . (extract <-|-)
+		End -> Store <--- Nothing :*: lift . resolve Left End
+		Left x -> Store <--- Just x :*: lift . resolve Left End
+		Right y -> Store <--- Nothing :*: lift . constant (Right y)
+		Both x y -> Store <--- Just x :*: lift . resolve (Both % y) (Right y)
 
 instance Substructure Right Wye where
-	type Available Right Wye = Maybe
-	type Substance Right Wye = Exactly
+	type Substance Right Wye = Maybe
 	substructure = P_Q_T <-- \new -> case lower new of
-		End -> Store <--- Nothing :*: lift . resolve Right End . (extract <-|-)
-		Left x -> Store <--- Nothing :*: lift . constant (Left x) . (extract <-|-)
-		Right y -> Store <--- Just (Exactly y) :*: lift . resolve Right End . (extract <-|-)
-		Both x y -> Store <--- Just (Exactly y) :*: lift . resolve (Both x) (Left x) . (extract <-|-)
+		End -> Store <--- Nothing :*: lift . resolve Right End
+		Left x -> Store <--- Nothing :*: lift . constant (Left x)
+		Right y -> Store <--- Just y :*: lift . resolve Right End
+		Both x y -> Store <--- Just y :*: lift . resolve (Both x) (Left x)
 
 instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.:> u := (:*:)) where
 	mult = Straight <-- \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U <--- (mult @(-->) <~) (xls :*: yls) :*: (mult @(-->) <~) (xrs :*: yrs)

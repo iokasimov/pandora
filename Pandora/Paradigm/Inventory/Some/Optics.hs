@@ -84,6 +84,8 @@ instance Category (Lens Maybe) where
 -- Lens as natural transformation
 type (#=@) source target available = forall a . Lens available (source a) (target a)
 
+type (@>>>) source target = forall a . Lens target (source a) a
+
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
 represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate <-- \r' -> iff @True <----- r' == r <----- target <----- r' <#> source)

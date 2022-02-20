@@ -703,3 +703,4 @@
 * Remove `!` operator from `Interpreted` class
 * Change precedence fro `:*:` operator - from 6 to 8
 * Move `Simplification` type family to `Primary` module
+* Refactor `Substructure` class: remove `Available` type family

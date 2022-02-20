@@ -3,13 +3,13 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Pandora.Paradigm.Structure.Ability.Zipper where
 
-import Pandora.Core.Functor (type (:=), type (:::))
+import Pandora.Core.Functor (type (:=), type (:.), type (:::))
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Transformer.Liftable (lift)
@@ -17,7 +17,7 @@ import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Primary.Algebraic (extract)
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->), (%))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic ((<-*-))
+import Pandora.Paradigm.Primary.Algebraic ((<-*-), (<-*--), point)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
@@ -26,12 +26,12 @@ import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate), Vertical (Up, Down))
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Available, Substance, substructure), Segment (Root), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root), sub)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~), (=#-))
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex)
+import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, view, replace, mutate)
 
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *
@@ -58,52 +58,45 @@ instance Impliable (Tape t a) where
 	type Arguments (Tape t a) = a -> t a -> t a -> Tape t a
 	imply focused left right = twosome <-- Exactly focused <--- twosome <-- Reverse left <-- right
 
--- TODO: It's too fragile to define such an instance without any hints about zippers?
+-- TODO: Isn't too fragile to define such an instance without any hints about zippers?
 -- Should we wrap Zipper in Tagged Zippable?
 instance Covariant (->) (->) t => Substructure Root (Tape t) where
-	type Available Root (Tape t) = Exactly
 	type Substance Root (Tape t) = Exactly
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
-		 Exactly x :*: xs -> Store <--- Exactly (Exactly x) :*: lift . T_U . (:*: xs) . extract
+		 Exactly x :*: xs -> Store <--- Exactly x :*: lift . T_U . (:*: xs)
 
 instance Covariant (->) (->) t => Substructure Left (Tape t) where
-	type Available Left (Tape t) = Exactly
 	type Substance Left (Tape t) = Reverse t
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
-		Exactly x :*: T_U (ls :*: rs) -> Store <--- Exactly ls :*: lift . (imply @(Tape t _) x % rs) . run . extract
+		Exactly x :*: T_U (ls :*: rs) -> Store <--- ls :*: lift . (imply @(Tape t _) x % rs) . run
 
 instance Covariant (->) (->) t => Substructure Right (Tape t) where
-	type Available Right (Tape t) = Exactly
 	type Substance Right (Tape t) = t
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
-		Exactly x :*: T_U (Reverse ls :*: rs) -> Store <--- Exactly rs :*: lift . imply @(Tape t _) x ls . extract
+		Exactly x :*: T_U (Reverse ls :*: rs) -> Store <--- rs :*: lift . imply @(Tape t _) x ls
 
 instance Covariant (->) (->) t => Substructure Up (Tape t <::> Tape t) where
-	type Available Up (Tape t <::> Tape t) = Exactly
 	type Substance Up (Tape t <::> Tape t) = t <::> Tape t
-	substructure = P_Q_T <-- \x -> case run . run . extract . run <-- x of
+	substructure = P_Q_T <-- \x -> case run . run <-- lower x of
 		Exactly focused :*: T_U (Reverse d :*: u) ->
-			Store <--- Exactly (TT u) :*: lift . TT . imply @(Tape t _) focused d . run . extract
+			Store <--- TT u :*: lift . TT . imply @(Tape t _) focused d . run
 
 instance Covariant (->) (->) t => Substructure Down (Tape t <::> Tape t) where
-	type Available Down (Tape t <::> Tape t) = Exactly
 	type Substance Down (Tape t <::> Tape t) = Reverse t <::> Tape t
-	substructure = P_Q_T <-- \ii -> case run . run . extract . run <-- ii of
+	substructure = P_Q_T <-- \ii -> case run . run <-- lower ii of
 		Exactly focused :*: T_U (d :*: u) ->
-			Store <--- Exactly (TT d) :*: lift . TT . (imply @(Tape t _) focused % u) . run . run . extract
+			Store <--- TT d :*: lift . TT . (imply @(Tape t _) focused % u) . run . run
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure Left (Tape t <::> Tape t) where
-	type Available Left (Tape t <::> Tape t) = Exactly
 	type Substance Left (Tape t <::> Tape t) = Tape t <::> Reverse t
-	substructure = P_Q_T <-- \ii ->
-		let target = (get @(Convex Lens) (sub @Left) <-|-) =#- (lower ii) in
-		let updated new = (set @(Convex Lens) % sub @Left) <-|- new <-*- run (lower ii) in
-		Store <--- Exactly target :*: lift . (updated =#-) . extract
+	substructure = P_Q_T <-- \source ->
+		let target = (view (sub @Left) <-|-) =#- lower source in
+		let updated new = replace % sub @Left <-|-- new <-*-- run <-- lower source in
+		Store <--- target :*: lift . (updated =#-)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure Right (Tape t <::> Tape t) where
-	type Available Right (Tape t <::> Tape t) = Exactly
 	type Substance Right (Tape t <::> Tape t) = Tape t <::> t
-	substructure = P_Q_T <-- \ii ->
-		let target = (get @(Convex Lens) (sub @Right) <-|-) =#- lower ii in
-		let updated new = (set @(Convex Lens) % sub @Right) <-|- new <-*- run (lower ii) in
-		Store <--- Exactly target :*: lift . (updated =#-) . extract
+	substructure = P_Q_T <-- \source ->
+		let target = (view (sub @Right) <-|-) =#- lower source in
+		let updated new = replace % sub @Right <-|-- new <-*-- run <-- lower source in
+		Store <--- target :*: lift . (updated =#-)
