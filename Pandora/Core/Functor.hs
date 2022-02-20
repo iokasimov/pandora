@@ -1,13 +1,13 @@
 module Pandora.Core.Functor where
 
-infixl 2 #
+infixl 0 <
 infixr 0 :=, <:=, :=>, :=:=>, ~>
 infixr 1 .:, :.
 infixr 2 ::|:., ::|.:, ::|::
 infixr 9 :::
 
 -- | Arguments consuming
-type (#) t a = t a
+type (<) t a = t a
 
 -- | Parameter application
 type (:=) t a = t a

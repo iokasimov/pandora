@@ -704,3 +704,4 @@
 * Change precedence fro `:*:` operator - from 6 to 8
 * Move `Simplification` type family to `Primary` module
 * Refactor `Substructure` class: remove `Available` type family
+* Rename `#` type operator to `<` and lower its precedence
