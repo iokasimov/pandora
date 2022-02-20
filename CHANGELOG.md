@@ -705,3 +705,4 @@
 * Move `Simplification` type family to `Primary` module
 * Refactor `Substructure` class: remove `Available` type family
 * Rename `#` type operator to `<` and lower its precedence
+* Define `>` operator for type application 
