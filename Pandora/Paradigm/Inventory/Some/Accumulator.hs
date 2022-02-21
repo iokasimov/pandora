@@ -3,7 +3,7 @@ module Pandora.Paradigm.Inventory.Some.Accumulator (Accumulator (..), Accumulate
 
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<-----))
+import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -29,7 +29,7 @@ instance Semigroup e => Semimonoidal (-->) (:*:) (:*:) (Accumulator e) where
 
 instance Semigroup e => Bindable (->) (Accumulator e) where
 	f =<< Accumulator (e :*: x) = let e' :*: b = run @(->) <-- f x in
-		Accumulator <----- (e + e') :*: b
+		Accumulator <--- (e + e') :*: b
 
 type instance Schematic Monad (Accumulator e) = (<.:>) ((:*:) e)
 
@@ -44,4 +44,4 @@ instance Monoid e => Monadic (->) (Accumulator e) where
 type Accumulated e t = Adaptable t (->) (Accumulator e)
 
 gather :: Accumulated e t => e -> t ()
-gather x = adapt . Accumulator <----- x :*: ()
+gather x = adapt . Accumulator <--- x :*: ()

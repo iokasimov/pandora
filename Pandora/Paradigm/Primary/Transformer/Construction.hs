@@ -67,7 +67,7 @@ instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant (->) (->) t, 
 	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)
 
 instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semigroup (Construction t a) where
-	x + y = Construct <---- extract x + extract y <---- deconstruct x + deconstruct y
+	x + y = Construct <-- extract x + extract y <-- deconstruct x + deconstruct y
 
 instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoid (Construction t a) where
 	zero = Construct zero zero

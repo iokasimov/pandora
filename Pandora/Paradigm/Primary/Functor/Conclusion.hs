@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Category (identity, (<--), (<---), (<-----))
+import Pandora.Pattern.Category (identity, (<--), (<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -74,8 +74,8 @@ instance (Chain e, Chain a) => Chain (Conclusion e a) where
 	Success _ <=> Failure _ = Greater
 
 instance (Semigroup e, Semigroup a) => Semigroup (Conclusion e a) where
-	Success x + Success y = Success <----- x + y
-	Failure x + Failure y = Failure <----- x + y
+	Success x + Success y = Success <-- x + y
+	Failure x + Failure y = Failure <-- x + y
 	Failure _ + Success y = Success y
 	Success x + Failure _ = Success x
 

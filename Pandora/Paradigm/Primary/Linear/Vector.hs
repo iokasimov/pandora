@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Primary.Linear.Vector where
 
-import Pandora.Pattern.Category ((<--), (<----), (<-----))
+import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -16,16 +16,16 @@ data Vector r a where
 	Vector :: a -> Vector r a -> Vector (a :*: r) a
 
 instance Semigroup a => Semigroup (Vector a a) where
-	~(Scalar x) + ~(Scalar y) = Scalar <----- x + y
+	~(Scalar x) + ~(Scalar y) = Scalar <-- x + y
 
 instance (Semigroup a, Semigroup r, Semigroup (a :*: r), Semigroup (Vector r a)) => Semigroup (Vector (a :*: r) a) where
-	Vector x xs + Vector y ys = Vector <----- x + y <----- xs + ys
+	Vector x xs + Vector y ys = Vector <-- x + y <-- xs + ys
 
 instance Ringoid a => Ringoid (Vector a a) where
-	~(Scalar x) * ~(Scalar y) = Scalar <---- x * y
+	~(Scalar x) * ~(Scalar y) = Scalar <-- x * y
 
 instance (Ringoid a, Ringoid r, Ringoid (a :*: r), Ringoid (Vector r a)) => Ringoid (Vector (a :*: r) a) where
-	Vector x xs * Vector y ys = Vector <---- x * y <---- xs * ys
+	Vector x xs * Vector y ys = Vector <-- x * y <-- xs * ys
 
 instance Monoid a => Monoid (Vector a a) where
 	zero = Scalar zero

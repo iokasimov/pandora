@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Maybe where
 
 import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (identity, (<--), (<---), (<----))
+import Pandora.Pattern.Category (identity, (<--), (<---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -82,7 +82,7 @@ instance Chain a => Chain (Maybe a) where
 	Just _ <=> Nothing = Greater
 
 instance Semigroup a => Semigroup (Maybe a) where
-	Just x + Just y = Just <---- x + y
+	Just x + Just y = Just <-- x + y
 	Nothing + x = x
 	x + Nothing = x
 

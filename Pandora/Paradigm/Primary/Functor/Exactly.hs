@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Exactly where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----))
+import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -75,7 +75,7 @@ instance Chain a => Chain (Exactly a) where
 	Exactly x <=> Exactly y = x <=> y
 
 instance Semigroup a => Semigroup (Exactly a) where
-	Exactly x + Exactly y = Exactly <---- x + y
+	Exactly x + Exactly y = Exactly <-- x + y
 
 instance Monoid a => Monoid (Exactly a) where
 	 zero = Exactly zero

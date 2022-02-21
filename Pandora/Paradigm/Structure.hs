@@ -9,7 +9,7 @@ import Pandora.Paradigm.Structure.Some as Exports
 
 import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
+import Pandora.Pattern.Category ((<--), (<---), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -46,9 +46,9 @@ instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) whe
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
 	morphing nonempty_binary = case premorph nonempty_binary of
 		Construct x End -> Construct x Nothing
-		Construct x (Left lst) -> Construct x . Just <---- into @(Preorder (Nonempty List)) lst
-		Construct x (Right rst) -> Construct x . Just <---- into @(Preorder (Nonempty List)) rst
-		Construct x (Both lst rst) -> Construct x . Just <---- into @(Preorder (Nonempty List)) lst + into @(Preorder (Nonempty List)) rst
+		Construct x (Left lst) -> Construct x . Just <-- into @(Preorder (Nonempty List)) lst
+		Construct x (Right rst) -> Construct x . Just <-- into @(Preorder (Nonempty List)) rst
+		Construct x (Both lst rst) -> Construct x . Just <-- into @(Preorder (Nonempty List)) lst + into @(Preorder (Nonempty List)) rst
 
 instance Morphable (Into (Inorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Inorder (Construction Maybe))) (Construction Wye) = Construction Maybe

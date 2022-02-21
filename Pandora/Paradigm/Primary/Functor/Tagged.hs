@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Tagged where
 
 import Pandora.Core.Functor (type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----))
+import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -75,7 +75,7 @@ instance Chain a => Chain (Tagged tag a) where
 	Tag x <=> Tag y = x <=> y
 
 instance Semigroup a => Semigroup (Tagged tag a) where
-	Tag x + Tag y = Tag <---- x + y
+	Tag x + Tag y = Tag <-- x + y
 
 instance Monoid a => Monoid (Tagged tag a) where
 	 zero = Tag zero

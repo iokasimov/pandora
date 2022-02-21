@@ -708,3 +708,4 @@
 * Define `>` operator for type application
 * Define `<` operator for type parameters passing
 * Remove `:=` type operator
+* Change precedence fro `+`, `-`, `*` operators - to 9
