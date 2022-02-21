@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.List where
 
-import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (<), type (>), type (:=))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->), (---->), identity)
@@ -242,8 +242,8 @@ instance Morphable (Rotate Right) (Turnover (Tape List)) where
 		put_over :: a -> State (Nonempty List a) ()
 		put_over = void . modify @State . item @Push
 
-instance Morphable (Into (Tape List)) List where
-	type Morphing (Into (Tape List)) List = Maybe <::> Tape List
+instance Morphable (Into > Tape List) List where
+	type Morphing (Into > Tape List) List = Maybe <::> Tape List
 	morphing (premorph -> list) = (into @(Zipper List) <-|-) =#- list
 
 instance Morphable (Into List) (Tape List) where
@@ -252,8 +252,8 @@ instance Morphable (Into List) (Tape List) where
 		<--- modify @State . item @Push @List <<-- right
 		<--- item @Push x left
 
-instance Morphable (Into (Comprehension Maybe)) (Tape List) where
-	type Morphing (Into (Comprehension Maybe)) (Tape List) = Comprehension Maybe
+instance Morphable (Into > Comprehension Maybe) (Tape List) where
+	type Morphing (Into > Comprehension Maybe) (Tape List) = Comprehension Maybe
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
 		<--- modify @State . item @Push @(Comprehension Maybe) <<-- right
 		<--- item @Push x <-- Comprehension left
@@ -261,46 +261,46 @@ instance Morphable (Into (Comprehension Maybe)) (Tape List) where
 ------------------------------------- Zipper of non-empty list -------------------------------------
 
 instance Zippable (Construction Maybe) where
-	type Breadcrumbs (Construction Maybe) = Reverse (Construction Maybe) <:.:> Construction Maybe := (:*:)
+	type Breadcrumbs (Construction Maybe) = Reverse > Construction Maybe <:.:> Construction Maybe := (:*:)
 
-instance Morphable (Rotate Left) (Tape (Construction Maybe)) where
-	type Morphing (Rotate Left) (Tape (Construction Maybe)) = Maybe <::> (Tape (Construction Maybe))
+instance Morphable (Rotate Left) (Tape > Construction Maybe) where
+	type Morphing (Rotate Left) (Tape > Construction Maybe) = Maybe <::> (Tape > Construction Maybe)
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
 		TT <----- imply @(Tape (Nonempty List) _)
 			<-|-- point <-- extract left
 			<-*-- deconstruct left
 			<-*-- point <-- item @Push x right
 
-instance Morphable (Rotate Right) (Tape (Construction Maybe)) where
-	type Morphing (Rotate Right) (Tape (Construction Maybe)) = Maybe <::> Tape (Construction Maybe)
+instance Morphable (Rotate Right) (Tape > Construction Maybe) where
+	type Morphing (Rotate Right) (Tape > Construction Maybe) = Maybe <::> Tape (Construction Maybe)
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
 		TT <----- imply @(Tape (Nonempty List) _)
 			<-|-- point <-- extract right
 			<-*-- point <-- item @Push x left
 			<-*-- deconstruct right
 
-instance Morphable (Into (Tape List)) (Construction Maybe) where
-	type Morphing (Into (Tape List)) (Construction Maybe) = Tape List
+instance Morphable (Into > Tape List) (Construction Maybe) where
+	type Morphing (Into > Tape List) (Construction Maybe) = Tape List
 	morphing (premorph -> ne) = imply @(Tape List _) <--- extract ne <--- empty <--- TT <-- deconstruct ne
 
-instance Morphable (Into (Tape List)) (Tape (Construction Maybe)) where
-	type Morphing (Into (Tape List)) (Tape (Construction Maybe)) = Tape List
+instance Morphable (Into > Tape List) (Tape > Construction Maybe) where
+	type Morphing (Into > Tape List) (Tape > Construction Maybe) = Tape List
 	morphing (premorph -> zipper) = (((((lift =#-) :*: lift) <-|-<-|-) =#-) <-|-) =#- zipper
 
-instance Morphable (Into (Tape (Construction Maybe))) (Tape List) where
-	type Morphing (Into (Tape (Construction Maybe))) (Tape List) =
+instance Morphable (Into > Tape > Construction Maybe) (Tape List) where
+	type Morphing (Into > Tape > Construction Maybe) (Tape List) =
 		Maybe <::> Tape (Construction Maybe)
 	morphing (premorph -> zipper) = let spread x y = (\x' y' -> Reverse x' :*: y') <-|- x <-*- y in
 		TT <--- T_U . (Exactly <-- extract zipper :*:) . T_U <-|- ((spread |-) . ((run . run :*: run) <-|-<-|-) . run . extract <-- run zipper)
 
-instance Morphable (Into (Construction Maybe)) (Tape (Construction Maybe)) where
-	type Morphing (Into (Construction Maybe)) (Tape (Construction Maybe)) = Construction Maybe
+instance Morphable (Into > Construction Maybe) (Tape > Construction Maybe) where
+	type Morphing (Into > Construction Maybe) (Tape > Construction Maybe) = Construction Maybe
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
 		<--- modify @State . item @Push @(Nonempty List) <<-- right
 		<--- item @Push x left
 
-instance Morphable (Into List) (Tape (Construction Maybe)) where
-	type Morphing (Into List) (Tape (Construction Maybe)) = List
+instance Morphable (Into List) (Tape > Construction Maybe) where
+	type Morphing (Into List) (Tape > Construction Maybe) = List
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
 		<--- modify @State . item @Push @List <<-- right
 		<--- item @Push x <-- lift left

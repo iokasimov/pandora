@@ -9,6 +9,8 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
+import Pandora.Core.Functor (type (>), type (<))
+
 -- infixl 0 !
 infixr 2 =#-, -#=
 
@@ -27,13 +29,10 @@ type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :
 class Interpreted m t where
 	{-# MINIMAL run, unite #-}
 	type Primary t a :: *
-	run :: m (t a) (Primary t a)
-	unite :: m (Primary t a) (t a)
+	run :: m < t a < Primary t a
+	unite :: m < Primary t a < t a
 
---	(!) :: m (t a) (Primary t a)
---	(!) = run
-
-	(<~~~~~~~~~), (<~~~~~~~~), (<~~~~~~~), (<~~~~~~), (<~~~~~), (<~~~~), (<~~~), (<~~), (<~) :: m (t a) (Primary t a)
+	(<~~~~~~~~~), (<~~~~~~~~), (<~~~~~~~), (<~~~~~~), (<~~~~~), (<~~~~), (<~~~), (<~~), (<~) :: m < t a < Primary t a
 	(<~~~~~~~~~) = run
 	(<~~~~~~~~) = run
 	(<~~~~~~~) = run
@@ -44,14 +43,14 @@ class Interpreted m t where
 	(<~~) = run
 	(<~) = run
 
-	(=#-) :: (Semigroupoid m, Interpreted m u) => m (Primary t a) (Primary u b) -> m (t a) (u b)
+	(=#-) :: (Semigroupoid m, Interpreted m u) => m < Primary t a < Primary u b -> m < t a < u b
 	(=#-) f = unite . f . run
 
-	(-#=) :: (Semigroupoid m, Interpreted m u) => m (t a) (u b) -> m (Primary t a) (Primary u b)
+	(-#=) :: (Semigroupoid m, Interpreted m u) => m < t a < u b -> m < Primary t a < Primary u b
 	(-#=) f = run . f . unite
 
 	(<$=#-) :: (Semigroupoid m, Covariant m m j, Interpreted m u)
-                => m (Primary t a) (Primary u b) -> m (j := t a) (j := u b)
+                => m < Primary t a < Primary u b -> m (j := t a) (j := u b)
 	(<$=#-) f = (<-|-) ((=#-) f)
 
 	--(<$$=#-) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Interpreted m u)
@@ -63,7 +62,7 @@ class Interpreted m t where
 	--(-<$$$=#-) f = (<$$$>) @m @m @m ((=#-) f)
 
 	(-#=$>) :: (Covariant m m j, Interpreted m u)
-		=> m (t a) (u b) -> m (j := Primary t a) (j := Primary u b)
+		=> m < t a < u b -> m (j := Primary t a) (j := Primary u b)
 	(-#=$>) f = (<-|-) ((-#=) f)
 
 	--(-#=$$>) :: (Covariant m m j, Covariant m m k, Interpreted m u)

@@ -2,7 +2,7 @@
 module Pandora.Paradigm.Structure.Some.Stream where
 
 import Pandora.Core.Impliable (imply)
-import Pandora.Core.Functor (type (:=), type (:=>))
+import Pandora.Core.Functor (type (>), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (-->))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|--)))
@@ -22,7 +22,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 type Stream = Construction Exactly
 
 instance Zippable (Construction Exactly) where
-	type Breadcrumbs (Construction Exactly) = Reverse Stream <:.:> Stream := (:*:)
+	type Breadcrumbs (Construction Exactly) = Reverse Stream <:.:> Stream > (:*:)
 
 instance Morphable (Rotate Left) (Tape Stream) where
 	type Morphing (Rotate Left) (Tape Stream) = Tape Stream

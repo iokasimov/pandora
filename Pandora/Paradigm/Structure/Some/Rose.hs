@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Rose where
 
-import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Kernel (constant)
@@ -70,7 +70,7 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 --instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where
---	type Morphing (Vary Element) (Prefixed Rose k) = ((:*:) (Nonempty List k) <:.> Exactly) <:.:> Prefixed Rose k := (->)
+--	type Morphing (Vary Element) (Prefixed Rose k) = ((:*:) (Nonempty List k) <:.> Exactly) <:.:> Prefixed Rose k > (->)
 --	morphing (run . run . premorph -> Nothing) = T_U ! \(TU (Construct key _ :*: Exactly value)) -> Prefixed . lift ! Construct (key :*: value) empty
 --	morphing (run . run . premorph -> Just (Construct focused subtree)) = T_U ! \(TU (breadcrumbs :*: Exactly value)) -> case breadcrumbs of
 --		Construct key Nothing -> Prefixed . lift ! attached focused == key ? Construct (key :*: value) subtree ! Construct focused subtree
@@ -82,7 +82,7 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 --instance Setoid k => Morphable (Vary Element) (Prefixed (Construction List) k) where
 --	type Morphing (Vary Element) (Prefixed (Construction List) k) =
---		((:*:) (Nonempty List k) <:.> Exactly) <:.:> Prefixed (Construction List) k := (->)
+--		((:*:) (Nonempty List k) <:.> Exactly) <:.:> Prefixed (Construction List) k > (->)
 --	morphing (run . premorph -> Construct x (TU Nothing)) = T_U ! \(TU (breadcrumbs :*: Exactly value)) -> case breadcrumbs of
 --		Construct key Nothing -> Prefixed ! attached x == key ? Construct (key :*: value) empty ! Construct x empty
 --		Construct _ (Just _) -> Prefixed ! Construct x (TU Nothing)
@@ -92,9 +92,9 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 --		Construct key (Just keys) -> Prefixed ! attached x != key ? Construct x # lift subtree
 --			! Construct (key :*: value) . lift ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value -#=!> subtree
 
-find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose := k :*: a -> Maybe a
+find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose > k :*: a -> Maybe a
 find_rose_sub_tree (Construct k Nothing) tree = iff @True <----- k == attached <-- extract tree <----- Just <--- extract <-- extract tree <----- Nothing
 find_rose_sub_tree (Construct k (Just ks)) tree = iff @True <----- k != attached <-- extract tree <----- Nothing <----- find_rose_sub_tree ks =<< subtree where
 
-	subtree :: Maybe :. Nonempty Rose := k :*: a
+	subtree :: Maybe :. Nonempty Rose > k :*: a
 	subtree = find @Element <---- attached . extract >-|-- equate <-- extract ks <---- deconstruct tree

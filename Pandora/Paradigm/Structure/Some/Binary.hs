@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (~>), type (:=), type (:=>))
+import Pandora.Core.Functor (type (~>), type (:=), type (>), type (<), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
 import Pandora.Pattern.Kernel (constant)
@@ -141,7 +141,7 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 ---------------------------------- Prefixed non-empty binary tree ----------------------------------
 
 instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) where
-	type Morphing (Lookup Key) (Prefixed (Construction Wye) key) = (->) key <::> Maybe
+	type Morphing (Lookup Key) (Prefixed < Construction Wye < key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT <-- \key ->
 		key <=> attached x & order
 			<---- Just <-- extract x
@@ -167,14 +167,14 @@ type Bifurcation = Biforked <::> Construction Biforked
 type Bicursor = Exactly <:.:> Binary := (:*:)
 
 instance Zippable (Construction Wye) where
-	type Breadcrumbs (Construction Wye) = (Wye <::> Construction Wye) <:.:> (Bifurcation <::> Bicursor) := (:*:)
+	type Breadcrumbs (Construction Wye) = (Wye <::> Construction Wye) <:.:> (Bifurcation <::> Bicursor) > (:*:)
 
-_focused_part_to_nonempty_binary_tree :: (Exactly <:.:> Wye <::> Construction Wye := (:*:)) ~> Construction Wye
+_focused_part_to_nonempty_binary_tree :: (Exactly <:.:> Wye <::> Construction Wye > (:*:)) ~> Construction Wye
 _focused_part_to_nonempty_binary_tree (T_U (Exactly x :*: xs)) = Construct x <-- run xs
 
-instance Morphable (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
-	type Morphing (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:))
-		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> Bifurcation <::> Bicursor := (:*:))
+instance Morphable (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:)) where
+	type Morphing (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
+		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> Bifurcation <::> Bicursor > (:*:))
 	morphing struct = case run ---> premorph struct of
 		focused :*: TT (TT (Rightward (Construct (T_U (Exactly parent :*: rest)) next))) ->
 			lift . (twosome % TT (TT next)) . twosome (Exactly parent) . TT <---- resolve
@@ -188,12 +188,12 @@ instance Morphable (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye := (:*:
 				<--- run rest
 		_ -> TT Nothing
 
-_nonempty_binary_tree_to_focused_part :: Construction Wye ~> Exactly <:.:> Wye <::> Construction Wye := (:*:)
+_nonempty_binary_tree_to_focused_part :: Construction Wye ~> Exactly <:.:> Wye <::> Construction Wye > (:*:)
 _nonempty_binary_tree_to_focused_part (Construct x xs) = twosome <--- Exactly x <--- TT xs
 
-instance Morphable (Rotate (Down Left)) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
-	type Morphing (Rotate (Down Left)) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:))
-		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> Bifurcation <::> Bicursor := (:*:))
+instance Morphable (Rotate > Down Left) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:)) where
+	type Morphing (Rotate > Down Left) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
+		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> Bifurcation <::> Bicursor > (:*:))
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Left lst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
@@ -207,9 +207,9 @@ instance Morphable (Rotate (Down Left)) ((Exactly <:.:> Wye <::> Construction Wy
 					<--- next
 		_ -> TT Nothing
 
-instance Morphable (Rotate (Down Right)) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:)) where
-	type Morphing (Rotate (Down Right)) ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> (Bifurcation <::> Bicursor) := (:*:))
-		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye := (:*:)) <:.:> Bifurcation <::> Bicursor := (:*:))
+instance Morphable (Rotate > Down Right) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:)) where
+	type Morphing (Rotate > Down Right) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
+		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> Bifurcation <::> Bicursor > (:*:))
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Right rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
