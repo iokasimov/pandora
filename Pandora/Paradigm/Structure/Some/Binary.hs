@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (~>), type (:=), type (>), type (<), type (:=>))
+import Pandora.Core.Functor (type (~>), type (>), type (>), type (<), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
 import Pandora.Pattern.Kernel (constant)
@@ -46,14 +46,14 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
 	f <<- Construct x (Both l r) = Construct <-|-- f x <-*-- Both <-|- f <<- l <-*- f <<- r
 	f <<- Construct x End = Construct % End <-|- f x
 
---rebalance :: Chain a => (Wye :. Construction Wye := a) -> Nonempty Binary a
+--rebalance :: Chain a => (Wye :. Construction Wye > a) -> Nonempty Binary a
 --rebalance (Both x y) = extract x <=> extract y & order
 --	# Construct (extract x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
 --	# Construct (extract y) (Both # x # rebalance (deconstruct y))
 --	# Construct (extract x) (Both # rebalance (deconstruct x) # y)
 
 -- instance Morphable Insert Binary where
-	-- type Morphing Insert Binary = (Exactly <:.:> Comparison := (:*:)) <:.:> Binary := (->)
+	-- type Morphing Insert Binary = (Exactly <:.:> Comparison > (:*:)) <:.:> Binary > (->)
 	-- morphing struct = case run ---> premorph struct of
 		-- Nothing -> T_U <-- \(T_U (Exactly x :*: _)) -> lift <-- leaf x
 		-- Just binary -> T_U <-- \(T_U (Exactly x :*: Convergence f)) ->
@@ -85,7 +85,7 @@ instance Morphable (Into Binary) (Construction Wye) where
 	morphing = lift . premorph
 
 -- instance Morphable Insert (Construction Wye) where
-	-- type Morphing Insert (Construction Wye) = (Exactly <:.:> Comparison := (:*:)) <:.:> Construction Wye := (->)
+	-- type Morphing Insert (Construction Wye) = (Exactly <:.:> Comparison > (:*:)) <:.:> Construction Wye > (->)
 	-- morphing (premorph -> struct) = T_U <-- \(T_U (Exactly x :*: Convergence f)) ->
 		-- let continue xs = run <--- morph @Insert @(Nonempty Binary) xs <---- twosome <--- Exactly x <--- Convergence f in
 		-- let step = iff @Just <-|-|- (run .:.. view) <-*-*- mutate continue <-*-*- replace (leaf x) in
@@ -128,7 +128,7 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 				<---- lookup @Key key . Prefixed ===<< run (view <-- sub @Right <-- tree)
 
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
-	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Exactly) <:.:> Prefixed Binary k := (->)
+	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Exactly) <:.:> Prefixed Binary k > (->)
 	-- morphing struct = case run . run . premorph ! struct of
 		-- Nothing -> T_U ! \(TT (key :*: Exactly value)) -> Prefixed . lift . leaf ! key :*: value
 		-- Just tree -> T_U ! \(TT (key :*: Exactly value)) ->
@@ -164,7 +164,7 @@ instance Traversable (->) (->) Biforked where
 
 type Bifurcation = Biforked <::> Construction Biforked
 
-type Bicursor = Exactly <:.:> Binary := (:*:)
+type Bicursor = Exactly <:.:> Binary > (:*:)
 
 instance Zippable (Construction Wye) where
 	type Breadcrumbs (Construction Wye) = (Wye <::> Construction Wye) <:.:> (Bifurcation <::> Bicursor) > (:*:)

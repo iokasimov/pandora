@@ -9,7 +9,7 @@ import Pandora.Paradigm.Primary.Algebraic as Exports
 
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Kernel (Kernel (constant))
@@ -81,8 +81,8 @@ instance Morphable (Into (There Maybe)) (Wedge e) where
 	morphing (premorph -> Here _) = Nothing
 	morphing (premorph -> There x) = Just x
 
-instance Morphable (Into Wye) (Maybe <:.:> Maybe := (:*:)) where
-	type Morphing (Into Wye) (Maybe <:.:> Maybe := (:*:)) = Wye
+instance Morphable (Into Wye) (Maybe <:.:> Maybe > (:*:)) where
+	type Morphing (Into Wye) (Maybe <:.:> Maybe > (:*:)) = Wye
 	morphing (run . premorph -> Just x :*: Just y) = Both x y
 	morphing (run . premorph -> Nothing :*: Just y) = Right y
 	morphing (run . premorph -> Just x :*: Nothing) = Left x
@@ -104,7 +104,7 @@ instance Substructure Right Wye where
 		Right y -> Store <--- Just y :*: lift . resolve Right End
 		Both x y -> Store <--- Just y :*: lift . resolve (Both x) (Left x)
 
-instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.:> u := (:*:)) where
+instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:.:> u > (:*:)) where
 	mult = Straight <-- \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U <--- (mult @(-->) <~) (xls :*: yls) :*: (mult @(-->) <~) (xrs :*: yrs)
 
 twosome :: t a -> u a -> (<:.:>) t u (:*:) a
@@ -112,8 +112,8 @@ twosome x y = T_U <--- x :*: y
 
 type family Simplification (t :: * -> *) (a :: *) where
 	Simplification Exactly a = a
-	Simplification (TU _ _ t u) a = t :. u := a
-	Simplification (UT _ _ t u) a = u :. t := a
-	Simplification (TUT _ _ _ t t' u) a = t :. u :. t' := a
+	Simplification (TU _ _ t u) a = t :. u > a
+	Simplification (UT _ _ t u) a = u :. t > a
+	Simplification (TUT _ _ _ t t' u) a = t :. u :. t' > a
 	Simplification (T_U _ _ p t u) a = p (t a) (u a)
 	Simplification t a = t a

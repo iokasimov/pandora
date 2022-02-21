@@ -1,7 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Primary.Transformer.Instruction where
 
-import Pandora.Core.Functor (type (:.), type (:=))
+import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -20,7 +20,7 @@ import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Algebraic (point)
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~), (<~~~))
 
-data Instruction t a = Enter a | Instruct (t :. Instruction t := a)
+data Instruction t a = Enter a | Instruct (t :. Instruction t > a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Instruction t) where
 	f <-|- Enter x = Enter <-- f x

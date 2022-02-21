@@ -2,7 +2,7 @@ module Pandora.Core.Functor where
 
 infixl 0 <
 infixr 0 >
-infixr 0 :=, <:=, :=>, :=:=>, ~>
+infixr 0 <:=, :=>, :=:=>, ~>
 infixr 1 .:, :.
 infixr 2 ::|:., ::|.:, ::|::
 infixr 9 :::
@@ -12,9 +12,6 @@ type (<) t a = t a
 
 -- | Type application
 type (>) t a = t a
-
--- | Parameter application
-type (:=) t a = t a
 
 -- | Functors composition
 type (:.) t u a = t (u a)

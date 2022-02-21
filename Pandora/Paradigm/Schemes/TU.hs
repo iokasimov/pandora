@@ -1,7 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Schemes.TU where
 
-import Pandora.Core.Functor (type (:.), type (:=), type (~>))
+import Pandora.Core.Functor (type (:.), type (>), type (~>))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<-----))
@@ -24,7 +24,7 @@ import Pandora.Paradigm.Primary.Algebraic (empty, point, extract, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
-newtype TU ct cu t u a = TU (t :. u := a)
+newtype TU ct cu t u a = TU (t :. u > a)
 
 infixr 3 <:.>, >:.>, <:.<, >:.<
 
@@ -34,7 +34,7 @@ type (<:.<) = TU Covariant Contravariant
 type (>:.<) = TU Contravariant Contravariant
 
 instance Interpreted (->) (TU ct cu t u) where
-	type Primary (TU ct cu t u) a = t :. u := a
+	type Primary (TU ct cu t u) a = t :. u > a
 	run ~(TU x) = x
 	unite = TU
 

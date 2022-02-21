@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Pandora.Paradigm.Structure.Ability.Zipper where
 
-import Pandora.Core.Functor (type (:=), type (:.), type (:::))
+import Pandora.Core.Functor (type (>), type (:.), type (:::))
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -36,23 +36,23 @@ import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, view, replace, muta
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *
 
-type Zipper (structure :: * -> *) = Exactly <:.:> Breadcrumbs structure := (:*:)
+type Zipper (structure :: * -> *) = Exactly <:.:> Breadcrumbs structure > (:*:)
 
 type Breadcrumbed structure t = (Zippable structure, Breadcrumbs structure ~ t)
 
-instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Exactly <:.:> t := (:*:)) where
+instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Exactly <:.:> t > (:*:)) where
 	mult = Flip <-- \(T_U (Exactly (x :*: y) :*: xys)) ->
 		let xs :*: ys = mult @(<--) <~ xys in
 			T_U (Exactly x :*: xs) :*: T_U (Exactly y :*: ys)
 
-instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Exactly <:.:> t := (:*:)) where
+instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Exactly <:.:> t > (:*:)) where
 	unit _ = Flip <-- \(T_U (Exactly x :*: _)) -> Straight (\_ -> x)
 
 type family Fastenable structure rs where
 	Fastenable structure (r ::: rs) = (Morphable (Rotate r) structure, Fastenable structure rs)
 	Fastenable structure r = Morphable (Rotate r) structure
 
-type Tape t = Exactly <:.:> (Reverse t <:.:> t := (:*:)) := (:*:)
+type Tape t = Exactly <:.:> (Reverse t <:.:> t > (:*:)) > (:*:)
 
 instance Impliable (Tape t a) where
 	type Arguments (Tape t a) = a -> t a -> t a -> Tape t a

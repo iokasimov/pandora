@@ -2,7 +2,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Structure.Ability.Substructure where
 
-import Pandora.Core.Functor (type (:=))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<-----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))

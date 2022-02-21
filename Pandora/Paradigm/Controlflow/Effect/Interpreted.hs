@@ -2,16 +2,12 @@ module Pandora.Paradigm.Controlflow.Effect.Interpreted where
 
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Core.Functor (type (:=))
+import Pandora.Core.Functor (type (<), type (>))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 
-import Pandora.Core.Functor (type (>), type (<))
-
--- infixl 0 !
 infixr 2 =#-, -#=
 
 infixl 1 <~~~~~~~~~
@@ -50,27 +46,27 @@ class Interpreted m t where
 	(-#=) f = run . f . unite
 
 	(<$=#-) :: (Semigroupoid m, Covariant m m j, Interpreted m u)
-                => m < Primary t a < Primary u b -> m (j := t a) (j := u b)
+                => m < Primary t a < Primary u b -> m (j > t a) (j > u b)
 	(<$=#-) f = (<-|-) ((=#-) f)
 
 	--(<$$=#-) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Interpreted m u)
-	--	=> m (Primary t a) (Primary u b) -> m (j :. k := t a) (j :. k := u b)
+	--	=> m (Primary t a) (Primary u b) -> m (j :. k > t a) (j :. k > u b)
 	--(<$$=#-) f = (<$$>) @m @m ((=#-) f)
 
 	--(<$$$=#-) :: (Semigroupoid m, Covariant m m j, Covariant m m k, Covariant m m l, Interpreted m u)
-	--	=> m (Primary t a) (Primary u b) -> m (j :. k :. l := t a) (j :. k :. l := u b)
+	--	=> m (Primary t a) (Primary u b) -> m (j :. k :. l > t a) (j :. k :. l > u b)
 	--(-<$$$=#-) f = (<$$$>) @m @m @m ((=#-) f)
 
 	(-#=$>) :: (Covariant m m j, Interpreted m u)
-		=> m < t a < u b -> m (j := Primary t a) (j := Primary u b)
+		=> m < t a < u b -> m (j > Primary t a) (j > Primary u b)
 	(-#=$>) f = (<-|-) ((-#=) f)
 
 	--(-#=$$>) :: (Covariant m m j, Covariant m m k, Interpreted m u)
-	--	=> m (t a) (u b) -> m (j :. k := Primary t a) (j :. k := Primary u b)
+	--	=> m (t a) (u b) -> m (j :. k > Primary t a) (j :. k > Primary u b)
 	--(-#=$$>) f = (<$$>) @m @m ((-#=) f)
 
 	--(-#=$$$>) :: (Covariant m m j, Covariant m m k, Covariant m m l, Interpreted m u)
-	--	=> m (t a) (u b) -> m (j :. k :. l := Primary t a) (j :. k :. l := Primary u b)
+	--	=> m (t a) (u b) -> m (j :. k :. l > Primary t a) (j :. k :. l > Primary u b)
 	--(-#=$$$>) f = (<$$$>) @m @m @m ((-#=) f)
 
 (-=:) :: (Liftable m t, Interpreted m (t u), Interpreted m (t v), Covariant m m u)

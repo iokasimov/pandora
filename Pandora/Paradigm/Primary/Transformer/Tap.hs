@@ -1,7 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Primary.Transformer.Tap where
 
-import Pandora.Core.Functor (type (:=))
+import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -54,21 +54,21 @@ instance Lowerable (->) Tap where
 instance Hoistable (->) Tap where
 	f /|\ Tap x xs = Tap x <-- f xs
 
-instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap (t <:.:> t := (:*:))) where
+instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap (t <:.:> t > (:*:))) where
 	mult = Straight <-- \(Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) ->
 		Tap (x :*: y) . T_U <--- (mult @(-->) <~~~ xls :*: yls) :*: (mult @(-->) <~~~ xrs :*: yrs)
 
-instance (Covariant (->) (->) t) => Substructure Root (Tap (t <:.:> t := (:*:))) where
-	type Substance Root (Tap (t <:.:> t := (:*:))) = Exactly
+instance (Covariant (->) (->) t) => Substructure Root (Tap (t <:.:> t > (:*:))) where
+	type Substance Root (Tap (t <:.:> t > (:*:))) = Exactly
 	substructure = P_Q_T <-- \zipper -> case lower zipper of
 		Tap x xs -> Store <--- Exactly x :*: lift . (Tap % xs) . extract
 
-instance (Covariant (->) (->) t) => Substructure Left (Tap (t <:.:> t := (:*:))) where
-	type Substance Left (Tap (t <:.:> t := (:*:))) = t
+instance (Covariant (->) (->) t) => Substructure Left (Tap (t <:.:> t > (:*:))) where
+	type Substance Left (Tap (t <:.:> t > (:*:))) = t
 	substructure = P_Q_T <-- \zipper -> case lower zipper of
 		Tap x (T_U (future :*: past)) -> Store <--- future :*: lift . Tap x . T_U . (:*: past)
 
-instance (Covariant (->) (->) t) => Substructure Right (Tap (t <:.:> t := (:*:))) where
-	type Substance Right (Tap (t <:.:> t := (:*:))) = t
+instance (Covariant (->) (->) t) => Substructure Right (Tap (t <:.:> t > (:*:))) where
+	type Substance Right (Tap (t <:.:> t > (:*:))) = t
 	substructure = P_Q_T <-- \zipper -> case lower zipper of
 		Tap x (T_U (future :*: past)) -> Store <--- past :*: lift . Tap x . T_U . (future :*:)

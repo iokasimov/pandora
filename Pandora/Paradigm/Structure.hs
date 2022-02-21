@@ -7,7 +7,7 @@ import Pandora.Paradigm.Structure.Interface as Exports
 import Pandora.Paradigm.Structure.Modification as Exports
 import Pandora.Paradigm.Structure.Some as Exports
 
-import Pandora.Core.Functor (type (:=))
+import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -120,13 +120,13 @@ instance Accessible (Maybe target) source => Possible target source where
 		let target :*: imts = run (lst <~ source) in
 			Store <--- extract target :*: imts . Exactly
 
-instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t := (:*:)) where
-	type Substance Left (t <:.:> t := (:*:)) = t
+instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t > (:*:)) where
+	type Substance Left (t <:.:> t > (:*:)) = t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- ls :*: lift . (twosome % rs)
 
-instance (Covariant (->) (->) t) => Substructure Right (t <:.:> t := (:*:)) where
-	type Substance Right (t <:.:> t := (:*:)) = t
+instance (Covariant (->) (->) t) => Substructure Right (t <:.:> t > (:*:)) where
+	type Substance Right (t <:.:> t > (:*:)) = t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- rs :*: lift . (twosome ls)
 
