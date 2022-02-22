@@ -709,3 +709,5 @@
 * Define `<` operator for type parameters passing
 * Remove `:=` type operator
 * Change precedence fro `+`, `-`, `*` operators - to 9
+* Define `<-||-` length encoding operators in `Algebraic` module
+* Define `>-||-` length encoding operators in `Algebraic` module

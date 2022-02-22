@@ -1,5 +1,12 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Primary.Algebraic (module Exports, Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-), (<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*------), (<-*-------), (<-*--------), (.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*------), (.-*-------), (.-*--------), (<-*-*-), (.-*-*-), loop, (<-+-), (.-+-), void, empty, point, pass, extract, (<-||-), (>-||-), (<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
+module Pandora.Paradigm.Primary.Algebraic (module Exports,
+	Applicative, Alternative, Divisible, Decidable, Extractable, Pointable, (!>-), (!!>-), (!!!>-),
+	(<-*-), (<-*--), (<-*---), (<-*----), (<-*-----), (<-*------), (<-*-------), (<-*--------),
+	(.-*-), (.-*--), (.-*---), (.-*----), (.-*-----), (.-*------), (.-*-------), (.-*--------),
+	(<-||-), (<-||--), (<-||---), (<-||----), (<-||-----), (<-||------), (<-||-------), (<-||--------),
+	(>-||-), (>-||--), (>-||---), (>-||----), (>-||-----), (>-||------), (>-||-------), (>-||--------),
+	(<-*-*-), (.-*-*-), loop, (<-+-), (.-+-), void, empty, point, pass, extract, 
+	(<-|-<-|-), (<-|->-|-), (>-|-<-|-), (>-|->-|-)) where
 
 import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Primary.Algebraic.Product as Exports
@@ -11,7 +18,7 @@ import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<-----))
+import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|---), (<-|-|-), (<-|-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
@@ -36,6 +43,7 @@ infixl 6 <-*---, .-*---
 infixl 7 <-*--, .-*--, <-*-*-, .-*-*-
 infixl 8 <-*-, .-*-
 infixl 8 <-+-, .-+-
+infixl 7 <-||--, >-||--
 infixl 8 <-||-, >-||-
 infixl 6 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
@@ -54,7 +62,7 @@ void x = constant () <-|- x
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u > (:*:)) where
 	mult = Flip <-- \(T_U lrxys) ->
 		-- TODO: I need matrix transposing here
-		let ((lxs :*: lys) :*: (rxs :*: rys)) = (((mult @(<--) <~) :*: (mult @(<--) <~)) <-|-<-|-) lrxys in
+		let ((lxs :*: lys) :*: (rxs :*: rys)) = (mult @(<--) <~) <-||-- (mult @(<--) <~) <-|- lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
 instance Traversable (->) (->) ((:*:) s) where
@@ -86,7 +94,7 @@ instance Semimonoidal (-->) (:*:) (:+:) ((:+:) e) where
 
 instance Semimonoidal (-->) (:*:) (:*:) ((:+:) e) where
 	mult = Straight <-- \case
-		Adoption x :*: Adoption y -> Adoption <----- x :*: y
+		Adoption x :*: Adoption y -> Adoption <--- x :*: y
 		Option e :*: _ -> Option e
 		_ :*: Option e -> Option e
 
@@ -163,12 +171,28 @@ pass = point ()
 empty :: Emptiable t => t a
 empty = unit @(-->) Proxy <~ Straight absurd
 
-(<-||-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .
+(<-||-), (<-||--), (<-||---), (<-||----), (<-||-----), (<-||------), (<-||-------), (<-||--------)
+	:: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .
 	(Covariant m m (Flip p c), Interpreted m (Flip p c)) => m a b -> m (p a c) (p b c)
+(<-||--------) f = (-#=) @m @(Flip p c) ((<-|-) f)
+(<-||-------) f = (-#=) @m @(Flip p c) ((<-|-) f)
+(<-||------) f = (-#=) @m @(Flip p c) ((<-|-) f)
+(<-||-----) f = (-#=) @m @(Flip p c) ((<-|-) f)
+(<-||----) f = (-#=) @m @(Flip p c) ((<-|-) f)
+(<-||---) f = (-#=) @m @(Flip p c) ((<-|-) f)
+(<-||--) f = (-#=) @m @(Flip p c) ((<-|-) f)
 (<-||-) f = (-#=) @m @(Flip p c) ((<-|-) f)
 
-(>-||-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .
+(>-||-), (>-||--), (>-||---), (>-||----), (>-||-----), (>-||------), (>-||-------), (>-||--------)
+	:: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .
 	(Contravariant m m (Flip p c), Interpreted m (Flip p c)) => m a b -> m (p b c) (p a c)
+(>-||--------) f = (-#=) @m @(Flip p c) ((>-|-) f)
+(>-||-------) f = (-#=) @m @(Flip p c) ((>-|-) f)
+(>-||------) f = (-#=) @m @(Flip p c) ((>-|-) f)
+(>-||-----) f = (-#=) @m @(Flip p c) ((>-|-) f)
+(>-||----) f = (-#=) @m @(Flip p c) ((>-|-) f)
+(>-||---) f = (-#=) @m @(Flip p c) ((>-|-) f)
+(>-||--) f = (-#=) @m @(Flip p c) ((>-|-) f)
 (>-||-) f = (-#=) @m @(Flip p c) ((>-|-) f)
 
 (<-|-<-|-) :: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c d .
