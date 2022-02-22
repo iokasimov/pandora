@@ -1,8 +1,8 @@
 module Pandora.Paradigm.Controlflow.Effect.Interpreted where
 
+import Pandora.Core.Functor (type (<), type (>))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Core.Functor (type (<), type (>))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -69,8 +69,8 @@ class Interpreted m t where
 	--	=> m (t a) (u b) -> m (j :. k :. l > Primary t a) (j :. k :. l > Primary u b)
 	--(-#=$$$>) f = (<$$$>) @m @m @m ((-#=) f)
 
-(-=:) :: (Liftable m t, Interpreted m (t u), Interpreted m (t v), Covariant m m u)
-	=> m (t u a) (t v b) -> m (u a) (Primary (t v) b)
+(-=:) :: (Liftable m t, Interpreted m > t u, Interpreted m > t v, Covariant m m u)
+	=> m < t u a < t v b -> m < u a < Primary (t v) b
 (-=:) f = run . f . lift
 
 instance Interpreted (->) (Flip v a) where

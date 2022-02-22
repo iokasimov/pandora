@@ -1,6 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
+import Pandora.Core.Functor (type (<))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -22,7 +23,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 
 class Interpreted m t => Comonadic m t where
 	{-# MINIMAL bring #-}
-	bring :: Extractable u => m ((t :< u) a) (t a)
+	bring :: Extractable u => m < (t :< u) a < t a
 
 infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }

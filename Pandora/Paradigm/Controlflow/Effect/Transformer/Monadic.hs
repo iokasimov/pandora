@@ -1,6 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (..), (:>) (..)) where
 
+import Pandora.Core.Functor (type (<))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
@@ -23,7 +24,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (
 
 class Interpreted m t => Monadic m t where
 	{-# MINIMAL wrap #-}
-	wrap :: Pointable u => m (t a) ((t :> u) a)
+	wrap :: Pointable u => m < t a < (t :> u) a
 
 infixr 3 :>
 newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
