@@ -711,3 +711,4 @@
 * Change precedence fro `+`, `-`, `*` operators - to 9
 * Define `<-||-` length encoding operators in `Algebraic` module
 * Define `>-||-` length encoding operators in `Algebraic` module
+* Define `Horizontal` type and use it in binary tree zipper

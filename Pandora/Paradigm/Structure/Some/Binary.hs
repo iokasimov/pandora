@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (~>), type (>), type (>), type (<), type (:=>))
+import Pandora.Core.Functor (type (~>), type (>), type (<), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
 import Pandora.Pattern.Kernel (constant)
@@ -33,7 +33,7 @@ import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mut
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
-	, Morph (Rotate, Into, Insert, Lookup, Key), Vertical (Up, Down), lookup)
+	, Morph (Rotate, Into, Insert, Lookup, Key), Vertical (Up, Down), Horizontal (Leftward, Rightward), lookup)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
@@ -150,17 +150,17 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 
-data Biforked a = Top | Leftward a | Rightward a
+data Biforked a = Top | Horizontal < Horizontal a
 
 instance Covariant (->) (->) Biforked where
 	_ <-|- Top = Top
-	f <-|- Leftward l = Leftward <-- f l
-	f <-|- Rightward r = Rightward <-- f r
+	f <-|- Horizontal (Leftward l) = Horizontal . Leftward <-- f l
+	f <-|- Horizontal (Rightward r) = Horizontal . Rightward <-- f r
 
 instance Traversable (->) (->) Biforked where
 	_ <<- Top = point Top
-	f <<- Leftward l = Leftward <-|- f l
-	f <<- Rightward r = Rightward <-|- f r
+	f <<- Horizontal (Leftward l) = Horizontal . Leftward <-|- f l
+	f <<- Horizontal (Rightward r) = Horizontal . Rightward <-|- f r
 
 type Bifurcation = Biforked <::> Construction Biforked
 
@@ -176,12 +176,12 @@ instance Morphable (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)
 	type Morphing (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
 		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> Bifurcation <::> Bicursor > (:*:))
 	morphing struct = case run ---> premorph struct of
-		focused :*: TT (TT (Rightward (Construct (T_U (Exactly parent :*: rest)) next))) ->
+		focused :*: TT (TT (Horizontal (Rightward (Construct (T_U (Exactly parent :*: rest)) next)))) ->
 			lift . (twosome % TT (TT next)) . twosome (Exactly parent) . TT <---- resolve
 				<--- Both <-- _focused_part_to_nonempty_binary_tree focused
 				<--- Left <-- _focused_part_to_nonempty_binary_tree focused
 				<--- run rest
-		focused :*: TT (TT (Leftward (Construct (T_U (Exactly parent :*: rest)) next))) ->
+		focused :*: TT (TT (Horizontal (Leftward (Construct (T_U (Exactly parent :*: rest)) next)))) ->
 			lift . (twosome % TT (TT next)) . twosome (Exactly parent) . TT <---- resolve
 				<--- Both % _focused_part_to_nonempty_binary_tree focused
 				<--- Right <-- _focused_part_to_nonempty_binary_tree focused
@@ -197,12 +197,12 @@ instance Morphable (Rotate > Down Left) ((Exactly <:.:> Wye <::> Construction Wy
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Left lst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward <---- Construct 
+				. TT . TT . Horizontal . Leftward <---- Construct 
 					<--- twosome <-- Exactly x <-- TT Nothing 
 					<--- next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Leftward <---- Construct
+				. TT . TT . Horizontal . Leftward <---- Construct
 					<--- twosome <-- Exactly x <-- lift rst 
 					<--- next
 		_ -> TT Nothing
@@ -213,10 +213,10 @@ instance Morphable (Rotate > Down Right) ((Exactly <:.:> Wye <::> Construction W
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Right rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward <---- Construct (twosome <--- Exactly x <--- TT Nothing) next
+				. TT . TT . Horizontal . Rightward <---- Construct (twosome <--- Exactly x <--- TT Nothing) next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Rightward <---- Construct (twosome <--- Exactly x <--- lift lst) next
+				. TT . TT . Horizontal . Rightward <---- Construct (twosome <--- Exactly x <--- lift lst) next
 		_ -> TT Nothing
 
 leaf :: a :=> Nonempty Binary
