@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.List where
 
-import Pandora.Core.Functor (type (:.), type (<), type (>), type (>))
+import Pandora.Core.Functor (type (:.), type (<), type (>))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->), (---->), identity)
@@ -63,7 +63,7 @@ instance Setoid a => Setoid (List a) where
 instance Semigroup (List a) where
 	TT Nothing + TT ys = TT ys
 	TT (Just (Construct x xs)) + TT ys = lift . Construct x . run
-		<---- TT @Covariant @Covariant xs + TT @Covariant @Covariant ys
+		<-- TT @Covariant @Covariant xs + TT @Covariant @Covariant ys
 
 instance Monoid (List a) where
 	zero = empty
@@ -197,21 +197,8 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 			-- <---- f <-|-- move <-- rotate @Left
 			-- <---- f <-|-- move <-- rotate @Right
 
--- instance Morphable (Rotate Left) (Tape List) where
-	-- type Morphing (Rotate Left) (Tape List) = Maybe <::> Tape List
-	-- morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
-		-- let subtree = twosome <--- Reverse (get @(Convex Lens) <--- sub @Tail <--- left) <--- item @Push x right in
-		-- TT <----- twosome % subtree <-|-- get @(Obscure Lens) <-- sub @Root <-- left
-
--- TODO: refactor it so that we dissect right list once
--- instance Morphable (Rotate Right) (Tape List) where
-	-- type Morphing (Rotate Right) (Tape List) = Maybe <::> Tape List
-	-- morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
-		-- let subtree = twosome <--- Reverse <-- item @Push x left <--- attached (run <-- pop @List <-- right) in
-		-- TT <----- twosome % subtree <-|-- get @(Obscure Lens) <-- sub @Root <-- right
-
-instance Morphable (Rotate Left) (Turnover (Tape List)) where
-	type Morphing (Rotate Left) (Turnover (Tape List)) = Turnover (Tape List)
+instance Morphable (Rotate Left) (Turnover < Tape List) where
+	type Morphing (Rotate Left) (Turnover < Tape List) = Turnover < Tape List
 	morphing s@(premorph -> Turnover (T_U (Exactly x :*: T_U (Reverse left :*: right)))) =
 		resolve @(Tape List _) <--- Turnover <--- premorph s <----
 			(rotate_over x <-|- run right) .-+- (rotate_left x right <-|- run left) where
@@ -226,8 +213,8 @@ instance Morphable (Rotate Left) (Turnover (Tape List)) where
 		put_over :: a -> State (Nonempty List a) ()
 		put_over = void . modify @State . item @Push
 
-instance Morphable (Rotate Right) (Turnover (Tape List)) where
-	type Morphing (Rotate Right) (Turnover (Tape List)) = Turnover (Tape List)
+instance Morphable (Rotate Right) (Turnover < Tape List) where
+	type Morphing (Rotate Right) (Turnover < Tape List) = Turnover < Tape List
 	morphing s@(premorph -> Turnover (T_U (Exactly x :*: T_U (Reverse left :*: right)))) =
 		resolve @(Tape List _) <--- Turnover <--- premorph s
 			<---- (rotate_over x <-|- run left) .-+- (rotate_right x left <-|- run right) where
@@ -318,7 +305,7 @@ instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 
 ------------------------------------ Prefixed non-empty list ---------------------------------------
 
-instance Setoid key => Morphable (Lookup Key) (Prefixed (Construction Maybe) key) where
-	type Morphing (Lookup Key) (Prefixed (Construction Maybe) key) = (->) key <::> Maybe
+instance Setoid key => Morphable (Lookup Key) (Prefixed < Construction Maybe < key) where
+	type Morphing (Lookup Key) (Prefixed < Construction Maybe < key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT <-- \key -> extract <-|- search key where
 		search key = iff @True <----- key == attached x <----- Just x <----- find @Element <--- Predicate <-- (key ==) . attached ====<< xs

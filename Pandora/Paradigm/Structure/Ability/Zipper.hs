@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module Pandora.Paradigm.Structure.Ability.Zipper where
 
-import Pandora.Core.Functor (type (>), type (:.), type (:::))
+import Pandora.Core.Functor (type (>), type (<), type (:.), type (:::))
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -49,8 +49,8 @@ instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (--
 	unit _ = Flip <-- \(T_U (Exactly x :*: _)) -> Straight (\_ -> x)
 
 type family Fastenable structure rs where
-	Fastenable structure (r ::: rs) = (Morphable (Rotate r) structure, Fastenable structure rs)
-	Fastenable structure r = Morphable (Rotate r) structure
+	Fastenable structure (r ::: rs) = (Morphable < Rotate r < structure, Fastenable structure rs)
+	Fastenable structure r = Morphable < Rotate r < structure
 
 type Tape t = Exactly <:.:> (Reverse t <:.:> t > (:*:)) > (:*:)
 

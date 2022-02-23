@@ -140,7 +140,7 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 
 ---------------------------------- Prefixed non-empty binary tree ----------------------------------
 
-instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) where
+instance Chain key => Morphable (Lookup Key) (Prefixed < Construction Wye < key) where
 	type Morphing (Lookup Key) (Prefixed < Construction Wye < key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT <-- \key ->
 		key <=> attached x & order
@@ -150,7 +150,7 @@ instance Chain key => Morphable (Lookup Key) (Prefixed (Construction Wye) key) w
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 
-data Biforked a = Top | Horizontal < Horizontal a
+data Biforked a = Top | Horizontal (Horizontal a)
 
 instance Covariant (->) (->) Biforked where
 	_ <-|- Top = Top
