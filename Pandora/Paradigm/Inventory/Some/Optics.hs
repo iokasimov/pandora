@@ -4,22 +4,20 @@ module Pandora.Paradigm.Inventory.Some.Optics where
 
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (Category (identity, (<--), (<---), (<-----)))
+import Pandora.Pattern.Category (Category (identity, (<--), (<---), (<-----), (<-------)))
 import Pandora.Pattern.Kernel (Kernel (constant))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
-import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Paradigm.Controlflow.Effect.Conditional (iff)
+import Pandora.Pattern.Object.Setoid (Setoid ((?==)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (<~)))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), (%))
-import Pandora.Paradigm.Primary.Algebraic (Pointable, point, extract, (>-|-<-|-))
-import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
+import Pandora.Paradigm.Primary.Algebraic (Pointable, point, extract, (>-||-----), (>-|-<-|-))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -33,7 +31,7 @@ infixl 2 #=@
 type Lens = P_Q_T (->) Store
 
 instance Invariant (Flip (Lens available) tgt) where
-	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T <-- ((g :*: (f <-|-)) >-|-<-|-) lens
+	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T <------- g >-||----- f <-|-|- lens
 
 type family Convex lens where
 	Convex Lens = Lens Exactly
@@ -88,7 +86,7 @@ type (@>>>) source target = forall a . Lens target (source a) a
 
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
-represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate <-- \r' -> iff @True <----- r' == r <----- target <----- r' <#> source)
+represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate <-- \r' -> r' ?== r <----- target <----- r' <#> source)
 
 class Lensic previous next where
 	type Lensally previous next :: * -> *
@@ -114,19 +112,19 @@ instance Lensic Exactly Maybe where
 
 instance Gettable (Lens Exactly) where
 	type instance Getting (Lens Exactly) source target = Lens Exactly source target -> source -> target
-	get lens = extract @Exactly . position @_ @(Store _) . run lens
+	get lens source = extract @Exactly . position @_ @(Store _) <-- lens <~ source
 
 instance Gettable (Lens Maybe) where
 	type instance Getting (Lens Maybe) source target = Lens Maybe source target -> source -> Maybe target
-	get lens = position @_ @(Store _) . run lens
+	get lens source = position @_ @(Store _) <-- lens <~ source
 
 instance Pointable t => Settable (Lens t) where
 	type instance Setting (Lens t) source target = target -> Lens t source target -> source -> source
-	set new lens source = look @(t _) <-- point new <-- run lens source
+	set new lens source = look @(t _) <-- point new <-- lens <~ source
 
 instance (Gettable (Lens t), Covariant (->) (->) t, Pointable t) => Modifiable (Lens t) where
 	type instance Modification (Lens t) source target = (target -> target) -> Lens t source target -> source -> source
-	modify f lens = extract . retrofit (f <-|-) . run lens
+	modify f lens source = extract . retrofit (f <-|-) <-- lens <~ source
 
 view :: Lens i source target -> source -> i target
 view lens source = position @_ @(Store _) <-- lens <~ source

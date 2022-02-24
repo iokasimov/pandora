@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (===<<), (====
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Pattern.Object.Setoid (Setoid ((==)))
+import Pandora.Pattern.Object.Setoid (Setoid ((==), (?==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), (<-*--), (.-*-), (.-+-), (.:..), extract, point, empty, void)
@@ -35,8 +35,7 @@ import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.State (State, fold)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens)
-import Pandora.Paradigm.Controlflow.Effect.Conditional (iff)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=#-))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~), (=#-))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
@@ -81,24 +80,24 @@ instance Morphable (Find Element) List where
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- \_ -> Nothing
 		Just (Construct x xs) -> T_U <-- \p ->
-			iff @True <--- run p x <--- Just x
-				<--- find @Element @List @Maybe <-- p <-- TT xs
+			p <~ x ?== True <----- Just x
+				<----- find @Element @List @Maybe <-- p <-- TT xs
 
 instance Morphable (Delete First) List where
 	type Morphing (Delete First) List = Predicate <:.:> List > (->)
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- constant empty
-		Just (Construct x xs) -> T_U <-- \p -> iff @True <--- run p x <--- TT xs 
-				<--- lift . Construct x . run . filter @First @List p <-- TT xs
+		Just (Construct x xs) -> T_U <-- \p -> 
+			p <~ x ?== True <----- TT xs
+				<----- lift . Construct x . run . filter @First @List p <-- TT xs
 
 instance Morphable (Delete All) List where
 	type Morphing (Delete All) List = Predicate <:.:> List > (->)
 	morphing list = case run <--- premorph list of
 		Nothing -> T_U <-- constant empty
-		Just (Construct x xs) -> T_U <-- \p ->
-			iff @True <--- run p x 
-				<--- filter @All @List p <-- TT xs
-				<--- lift . Construct x . run . filter @All @List p <-- TT xs
+		Just (Construct x xs) -> T_U <-- \p -> p <~ x ?== True
+				<----- filter @All @List p <-- TT xs
+				<----- lift . Construct x . run . filter @All @List p <-- TT xs
 
 instance Stack List where
 	type Topping List = Maybe
@@ -134,13 +133,12 @@ type instance Nonempty List = Construction Maybe
 
 instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 	Construct x Nothing + ys = Construct x <-- Just ys
-	Construct x (Just xs) + ys = Construct x . Just <---- xs + ys
+	Construct x (Just xs) + ys = Construct x . Just <-- xs + ys
 
 instance Morphable (Find Element) (Construction Maybe) where
 	type Morphing (Find Element) (Construction Maybe) = Predicate <:.:> Maybe > (->)
-	morphing (premorph -> Construct x xs) = T_U <-- \p ->
-		iff @True <---- run p x <---- Just x
-			<---- find @Element @(Nonempty List) @Maybe <-- p ===<< xs
+	morphing (premorph -> Construct x xs) = T_U <-- \p -> p <~ x ?== True <----- Just x
+		<----- find @Element @(Nonempty List) @Maybe <-- p ===<< xs
 
 instance Morphable (Into List) (Construction Maybe) where
 	type Morphing (Into List) (Construction Maybe) = List
@@ -308,4 +306,5 @@ instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 instance Setoid key => Morphable (Lookup Key) (Prefixed < Construction Maybe < key) where
 	type Morphing (Lookup Key) (Prefixed < Construction Maybe < key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT <-- \key -> extract <-|- search key where
-		search key = iff @True <----- key == attached x <----- Just x <----- find @Element <--- Predicate <-- (key ==) . attached ====<< xs
+		search key = key ?== attached x <----- Just x 
+			<----- find @Element <--- Predicate <-- (key ==) . attached ====<< xs
