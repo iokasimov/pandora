@@ -1,10 +1,12 @@
 module Pandora.Paradigm.Primary.Algebraic.Sum where
 
+import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Paradigm.Primary.Algebraic.Exponential ()
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Paradigm.Schemes.T_U (type (<:.:>), type (>:.:>), type (<:.:<), type (>:.:<))
 
 infixr 7 :+:
 
@@ -26,3 +28,8 @@ sum _ s (Adoption x) = s x
 bitraverse_sum :: Covariant (->) (->) t => (e -> t e') -> (a -> t a') -> (e :+: a) -> t (e' :+: a')
 bitraverse_sum f _ (Option x) = Option <-|- f x
 bitraverse_sum _ g (Adoption x) = Adoption <-|- g x
+
+type (<:+:>) t u p = t <:.:> u > (:+:)
+type (>:+:>) t u p = t >:.:> u > (:+:)
+type (<:+:<) t u p = t <:.:< u > (:+:)
+type (>:+:<) t u p = t >:.:< u > (:+:)
