@@ -63,7 +63,7 @@ swap ~(x :*: y) = y :*: x
 attached :: a :*: b -> a
 attached ~(x :*: _) = x
 
-type (<:*:>) t u p = t <:.:> u > (:*:)
-type (>:*:>) t u p = t >:.:> u > (:*:)
-type (<:*:<) t u p = t <:.:< u > (:*:)
-type (>:*:<) t u p = t >:.:< u > (:*:)
+type (<:*:>) t u = t <:.:> u > (:*:)
+type (>:*:>) t u = t >:.:> u > (:*:)
+type (<:*:<) t u = t <:.:< u > (:*:)
+type (>:*:<) t u = t >:.:< u > (:*:)

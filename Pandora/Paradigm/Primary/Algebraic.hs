@@ -22,7 +22,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((<~)))
 
-instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.:> u > (:*:)) where
+instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:*:> u) where
 	mult = Flip <-- \(T_U lrxys) ->
 		-- TODO: I need matrix transposing here
 		let ((lxs :*: lys) :*: (rxs :*: rys)) = (mult @(<--) <~) <-||-- (mult @(<--) <~) <-|- lrxys in

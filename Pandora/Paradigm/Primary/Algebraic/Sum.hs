@@ -29,7 +29,7 @@ bitraverse_sum :: Covariant (->) (->) t => (e -> t e') -> (a -> t a') -> (e :+: 
 bitraverse_sum f _ (Option x) = Option <-|- f x
 bitraverse_sum _ g (Adoption x) = Adoption <-|- g x
 
-type (<:+:>) t u p = t <:.:> u > (:+:)
-type (>:+:>) t u p = t >:.:> u > (:+:)
-type (<:+:<) t u p = t <:.:< u > (:+:)
-type (>:+:<) t u p = t >:.:< u > (:+:)
+type (<:+:>) t u = t <:.:> u > (:+:)
+type (>:+:>) t u = t >:.:> u > (:+:)
+type (<:+:<) t u = t <:.:< u > (:+:)
+type (>:+:<) t u = t >:.:< u > (:+:)
