@@ -29,6 +29,7 @@ library
     Pandora.Paradigm.Primary
     Pandora.Paradigm.Primary.Object
     Pandora.Paradigm.Primary.Algebraic
+    Pandora.Paradigm.Primary.Algebraic.Functor
     Pandora.Paradigm.Primary.Algebraic.Exponential
     Pandora.Paradigm.Primary.Algebraic.Product
     Pandora.Paradigm.Primary.Algebraic.Sum

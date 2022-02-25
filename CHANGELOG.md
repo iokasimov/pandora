@@ -715,3 +715,4 @@
 * Define `?==` operator as replacemet for if statement
 * Define `<:*:>`, `>:*:>`, `<:*:<`, `>:*:<` type synonyms
 * Define `<:+:>`, `>:+:>`, `<:+:<`, `>:+:<` type synonyms
+* Define `Functor` module in `Algebraic`
