@@ -1,5 +1,6 @@
 module Pandora.Paradigm.Primary.Algebraic.Product where
 
+import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -12,6 +13,7 @@ import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ()
+import Pandora.Paradigm.Schemes.T_U (type (<:.:>), type (>:.:>), type (<:.:<), type (>:.:<))
 
 infixr 8 :*:
 
@@ -60,3 +62,8 @@ swap ~(x :*: y) = y :*: x
 
 attached :: a :*: b -> a
 attached ~(x :*: _) = x
+
+type (<:*:>) t u p = t <:.:> u > (:*:)
+type (>:*:>) t u p = t >:.:> u > (:*:)
+type (<:*:<) t u p = t <:.:< u > (:*:)
+type (>:*:<) t u p = t >:.:< u > (:*:)

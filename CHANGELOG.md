@@ -713,3 +713,4 @@
 * Define `>-||-` length encoding operators in `Algebraic` module
 * Define `Horizontal` type and use it in binary tree zipper
 * Define `?==` operator as replacemet for if statement
+* Define `<:*:>`, `>:*:>`, `<:*:<`, `>:*:<` type synonyms
