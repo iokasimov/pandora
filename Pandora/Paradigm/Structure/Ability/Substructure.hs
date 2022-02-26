@@ -2,19 +2,22 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Structure.Ability.Substructure where
 
+import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<-----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((=#-))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=#-))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, type (#=@), type (@>>>))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (<:*:>))
 import Pandora.Paradigm.Primary.Algebraic ((>-|-<-|-))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 
 data Segment a = Root a | Tail a
@@ -37,3 +40,13 @@ class Substructure segment (structure :: * -> *) where
 
 --	inner :: Convex Lens (Exactly element) element
 --	inner = P_Q_T <-- \x -> Store <--- x :*: identity
+
+instance (Covariant (->) (->) t) => Substructure Left (t <:*:> t) where
+	type Substance Left (t <:*:> t) = t
+	substructure = P_Q_T <-- \x -> case run <-- lower x of
+		ls :*: rs -> Store <--- ls :*: lift . (T_U . (:*: rs))
+
+instance (Covariant (->) (->) t) => Substructure Right (t <:*:> t) where
+	type Substance Right (t <:*:> t) = t
+	substructure = P_Q_T <-- \x -> case run <-- lower x of
+		ls :*: rs -> Store <--- rs :*: lift . (T_U . (ls :*:))

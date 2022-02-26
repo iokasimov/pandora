@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((===<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), attached)
+import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)), type (:*:), type (<:*:>), attached)
 import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), (&), (.:..))
 import Pandora.Paradigm.Primary.Algebraic ((<-*-), (<-*--), (<-*-*-), extract, point, empty)
 import Pandora.Paradigm.Primary.Object.Ordering (order)
@@ -19,7 +19,7 @@ import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (End, Left, Right, Both))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
@@ -37,13 +37,21 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance,
 import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
-type Binary = Maybe <::> Construction Wye
+type Binary = Maybe <::> Construction (Maybe <:*:> Maybe)
 
-instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
-	f <<- Construct x (Left l) = Construct <-|-- f x <-*-- Left <-|- f <<- l
-	f <<- Construct x (Right r) = Construct <-|-- f x <-*-- Right <-|- f <<- r
-	f <<- Construct x (Both l r) = Construct <-|-- f x <-*-- Both <-|- f <<- l <-*- f <<- r
-	f <<- Construct x End = Construct % End <-|- f x
+-- instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
+	-- f <<- Construct x (Left l) = Construct <-|-- f x <-*-- Left <-|- f <<- l
+	-- f <<- Construct x (Right r) = Construct <-|-- f x <-*-- Right <-|- f <<- r
+	-- f <<- Construct x (Both l r) = Construct <-|-- f x <-*-- Both <-|- f <<- l <-*- f <<- r
+	-- f <<- Construct x End = Construct % End <-|- f x
+
+-- instance {-# OVERLAPS #-} Traversable (->) (->) (Construction (Maybe <:*:> Maybe)) where
+	-- f <<- Construct x branches = Construct <-|- f x <-*- (f <<- branches :: _)
+
+	-- f <<- Construct x (Left l) = Construct <-|-- f x <-*-- Left <-|- f <<- l
+	-- f <<- Construct x (Right r) = Construct <-|-- f x <-*-- Right <-|- f <<- r
+	-- f <<- Construct x (Both l r) = Construct <-|-- f x <-*-- Both <-|- f <<- l <-*- f <<- r
+	-- f <<- Construct x (Nothing <:*:> Nothing) = Construct % (Nothing <:*:> Nothing) <-|- f x
 
 --rebalance :: Chain a => (Wye :. Construction Wye > a) -> Nonempty Binary a
 --rebalance (Both x y) = extract x <=> extract y & order
@@ -77,10 +85,10 @@ instance Substructure Right Binary where
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
-type instance Nonempty Binary = Construction Wye
+type instance Nonempty Binary = Construction (Maybe <:*:> Maybe)
 
-instance Morphable (Into Binary) (Construction Wye) where
-	type Morphing (Into Binary) (Construction Wye) = Binary
+instance Morphable (Into Binary) (Construction (Maybe <:*:> Maybe)) where
+	type Morphing (Into Binary) (Construction (Maybe <:*:> Maybe)) = Binary
 	morphing = lift . premorph
 
 -- instance Morphable Insert (Construction Wye) where
@@ -93,26 +101,26 @@ instance Morphable (Into Binary) (Construction Wye) where
 			-- <---- step <--- sub @Right <--- struct
 			-- <---- f x <--- extract struct
 
-instance Substructure Root (Construction Wye) where
-	type Substance Root (Construction Wye) = Exactly
+instance Substructure Root (Construction (Maybe <:*:> Maybe)) where
+	type Substance Root (Construction (Maybe <:*:> Maybe)) = Exactly
 	substructure = P_Q_T <-- \struct -> case lower struct of
 		Construct x xs -> Store <--- Exactly x :*: lift . (Construct % xs) . extract
 
-instance Substructure Left (Construction Wye) where
-	type Substance Left (Construction Wye) = Binary
+instance Substructure Left (Construction (Maybe <:*:> Maybe)) where
+	type Substance Left (Construction (Maybe <:*:> Maybe)) = Binary
 	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
-		Construct x End -> Store <--- TT Nothing :*: lift . resolve (Construct x . Left) (leaf x) . run
-		Construct x (Left lst) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve Left End . run
-		Construct x (Right rst) -> Store <--- TT Nothing :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
-		Construct x (Both lst rst) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve (Both % rst) (Right rst) . run
+		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . left) (leaf x) . run
+		Construct x (T_U (Just lst :*: Nothing)) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve left end . run
+		Construct x (T_U (Nothing :*: Just rst)) -> Store <--- TT Nothing :*: lift . Construct x . resolve (both % rst) (right rst) . run
+		Construct x (T_U (Just lst :*: Just rst)) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve (both % rst) (right rst) . run
 
-instance Substructure Right (Construction Wye) where
-	type Substance Right (Construction Wye) = Binary
+instance Substructure Right (Construction (Maybe <:*:> Maybe)) where
+	type Substance Right (Construction (Maybe <:*:> Maybe)) = Binary
 	substructure = P_Q_T <-- \struct -> case extract <-- run struct of
-		Construct x End -> Store <--- TT Nothing :*: lift . resolve (Construct x . Right) (leaf x) . run
-		Construct x (Left lst) -> Store <--- TT Nothing :*: lift . Construct x . resolve (Both lst) (Left lst) . run
-		Construct x (Right rst) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve Right End . run
-		Construct x (Both lst rst) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve (Both lst) (Left lst) . run
+		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . right) (leaf x) . run
+		Construct x (T_U (Just lst :*: Nothing)) -> Store <--- TT Nothing :*: lift . Construct x . resolve (both lst) (left lst) . run
+		Construct x (T_U (Nothing :*: Just rst)) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve right end . run
+		Construct x (T_U (Just lst :*: Just rst)) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve (both lst) (left lst) . run
 
 -------------------------------------- Prefixed binary tree ----------------------------------------
 
@@ -139,8 +147,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 
 ---------------------------------- Prefixed non-empty binary tree ----------------------------------
 
-instance Chain key => Morphable (Lookup Key) (Prefixed < Construction Wye < key) where
-	type Morphing (Lookup Key) (Prefixed < Construction Wye < key) = (->) key <::> Maybe
+instance Chain key => Morphable (Lookup Key) (Prefixed < Construction (Maybe <:*:> Maybe) < key) where
+	type Morphing (Lookup Key) (Prefixed < Construction (Maybe <:*:> Maybe) < key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT <-- \key ->
 		key <=> attached x & order
 			<---- Just <-- extract x
@@ -148,7 +156,7 @@ instance Chain key => Morphable (Lookup Key) (Prefixed < Construction Wye < key)
 			<---- lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Left <-- xs
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
-
+	{-
 data Biforked a = Top | Horizontal (Horizontal a)
 
 instance Covariant (->) (->) Biforked where
@@ -217,6 +225,12 @@ instance Morphable (Rotate > Down Right) ((Exactly <:.:> Wye <::> Construction W
 			lift . twosome (_nonempty_binary_tree_to_focused_part rst)
 				. TT . TT . Horizontal . Rightward <---- Construct (twosome <--- Exactly x <--- lift lst) next
 		_ -> TT Nothing
+-}
 
 leaf :: a :=> Nonempty Binary
-leaf x = Construct x End
+leaf x = Construct x end
+
+left x = T_U <--- Just x :*: Nothing
+right x = T_U <--- Nothing :*: Just x
+both x y = T_U <--- Just x :*: Just y
+end = T_U <--- Nothing :*: Nothing

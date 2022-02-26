@@ -66,9 +66,9 @@ instance Morphable (Into (Postorder (Construction Maybe))) (Construction Wye) wh
 		Construct x (Right rst) -> into @(Postorder (Nonempty List)) rst + Construct x Nothing
 		Construct x (Both lst rst) -> into @(Postorder (Nonempty List)) lst + into @(Postorder (Nonempty List)) rst + Construct x Nothing
 
-instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
-	type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
-	morphing (premorph -> xs) = (into @(o ds) <-|-) =#- xs
+-- instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
+	-- type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
+	-- morphing (premorph -> xs) = (into @(o ds) <-|-) =#- xs
 
 instance Substructure Left (Flip (:*:) a) where
 	type Substance Left (Flip (:*:) a) = Exactly
@@ -119,16 +119,6 @@ instance Accessible (Maybe target) source => Possible target source where
 	perhaps = let lst = access @(Maybe target) @source in P_Q_T <-- \source ->
 		let target :*: imts = run (lst <~ source) in
 			Store <--- extract target :*: imts . Exactly
-
-instance (Covariant (->) (->) t) => Substructure Left (t <:.:> t > (:*:)) where
-	type Substance Left (t <:.:> t > (:*:)) = t
-	substructure = P_Q_T <-- \x -> case run <-- lower x of
-		ls :*: rs -> Store <--- ls :*: lift . (twosome % rs)
-
-instance (Covariant (->) (->) t) => Substructure Right (t <:.:> t > (:*:)) where
-	type Substance Right (t <:.:> t > (:*:)) = t
-	substructure = P_Q_T <-- \x -> case run <-- lower x of
-		ls :*: rs -> Store <--- rs :*: lift . (twosome ls)
 
 instance Morphable (Into List) (Vector r) where
 	type Morphing (Into List) (Vector r) = List

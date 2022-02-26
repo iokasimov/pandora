@@ -716,3 +716,4 @@
 * Define `<:*:>`, `>:*:>`, `<:*:<`, `>:*:<` type synonyms
 * Define `<:+:>`, `>:+:>`, `<:+:<`, `>:+:<` type synonyms
 * Define `Functor` module in `Algebraic`
+* Change definition of binary tree

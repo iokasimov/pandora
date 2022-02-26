@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
+-- import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
@@ -19,13 +19,13 @@ instance Covariant (->) (->) Wye where
 	f <-|- Right y = Right <-- f y
 	f <-|- Both x y = Both <-- f x <-- f y
 
-instance Semimonoidal (<--) (:*:) (:*:) Wye where
-	mult = Flip <-- \case
-		End -> End :*: End
-		Left (x :*: y) -> Left x :*: Left y
-		Right (x :*: y) -> Right x :*: Right y
-		Both (x :*: y) (x' :*: y') -> Both x x' :*: Both y y'
-	
+-- instance Semimonoidal (<--) (:*:) (:*:) Wye where
+-- 	mult = Flip <-- \case
+-- 		End -> End :*: End
+-- 		Left (x :*: y) -> Left x :*: Left y
+-- 		Right (x :*: y) -> Right x :*: Right y
+-- 		Both (x :*: y) (x' :*: y') -> Both x x' :*: Both y y'
+
 instance Monotonic a (Wye a) where
 	reduce f r (Left x) = f x r
 	reduce f r (Right x) = f x r
