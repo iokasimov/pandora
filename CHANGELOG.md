@@ -720,3 +720,4 @@
 * Change `Zipper` definition - tag it
 
 # 0.5.3
+* Move `Algebraic` module from `Primary` to `Paradigm`

@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Primary.Algebraic.Product where
+module Pandora.Paradigm.Algebraic.Product where
 
 import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))

@@ -5,7 +5,6 @@ import Pandora.Paradigm.Primary.Linear as Exports
 import Pandora.Paradigm.Primary.Transformer as Exports
 import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
-import Pandora.Paradigm.Primary.Algebraic as Exports
 
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -18,6 +17,9 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
+import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (<--), (&), (%))
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), UT, TUT, P_Q_T (P_Q_T), type (<:.>), type (<:.:>))

@@ -4,7 +4,7 @@ import Pandora.Pattern.Morphism.Straight (Straight)
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Bindable (Bindable)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
+import Pandora.Paradigm.Algebraic.Product ((:*:))
 
 {- |
 > Let f :: (Monoidal t (->) (->) (:*:) (:*:), Bindable t) => a -> t a

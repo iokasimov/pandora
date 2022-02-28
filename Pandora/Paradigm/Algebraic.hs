@@ -1,12 +1,12 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Primary.Algebraic (module Exports) where
+module Pandora.Paradigm.Algebraic (module Exports) where
 
-import Pandora.Paradigm.Primary.Algebraic.Functor as Exports
-import Pandora.Paradigm.Primary.Algebraic.Exponential as Exports
-import Pandora.Paradigm.Primary.Algebraic.Product as Exports
-import Pandora.Paradigm.Primary.Algebraic.Sum as Exports
-import Pandora.Paradigm.Primary.Algebraic.Zero as Exports
-import Pandora.Paradigm.Primary.Algebraic.One as Exports
+import Pandora.Paradigm.Algebraic.Functor as Exports
+import Pandora.Paradigm.Algebraic.Exponential as Exports
+import Pandora.Paradigm.Algebraic.Product as Exports
+import Pandora.Paradigm.Algebraic.Sum as Exports
+import Pandora.Paradigm.Algebraic.Zero as Exports
+import Pandora.Paradigm.Algebraic.One as Exports
 
 import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))

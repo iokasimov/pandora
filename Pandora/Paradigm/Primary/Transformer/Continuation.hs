@@ -11,9 +11,9 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((%), type (-->))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:))
-import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Algebraic.Exponential ((%), type (-->))
+import Pandora.Paradigm.Algebraic.Product ((:*:))
+import Pandora.Paradigm.Algebraic (point)
 
 newtype Continuation r t a = Continuation ((->) ::|:. a :. t > r)
 

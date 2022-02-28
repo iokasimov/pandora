@@ -6,7 +6,7 @@ import Pandora.Pattern.Category (identity, (<--), (<---), (<------))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Algebraic.Exponential ()
 
 data Outline t a where
 	Line :: a -> Outline t a

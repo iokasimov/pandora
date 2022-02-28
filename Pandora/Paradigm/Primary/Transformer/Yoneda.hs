@@ -6,7 +6,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Algebraic.Exponential ()
 
 newtype Yoneda t a = Yoneda
 	{ yoneda :: forall b . (a -> b) -> t b }

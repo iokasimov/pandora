@@ -7,7 +7,7 @@ import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ((.:..))
+import Pandora.Paradigm.Algebraic.Exponential ((.:..))
 
 data Day t u a = forall b c . Day (t b) (u c) (b -> c -> a)
 

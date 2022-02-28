@@ -1,10 +1,10 @@
-module Pandora.Paradigm.Primary.Algebraic.Sum where
+module Pandora.Paradigm.Algebraic.Sum where
 
 import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Algebraic.Exponential ()
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Schemes.T_U (type (<:.:>), type (>:.:>), type (<:.:<), type (>:.:<))
 

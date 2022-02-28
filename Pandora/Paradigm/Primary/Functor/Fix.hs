@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Fix where
 import Pandora.Core.Functor (type (<:=), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
+import Pandora.Paradigm.Algebraic.Exponential ()
 
 newtype Fix t = Fix { unfix :: t (Fix t) }
 

@@ -24,11 +24,11 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (<--), type (-->))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
-import Pandora.Paradigm.Primary.Algebraic.One (One (One))
-import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
+import Pandora.Paradigm.Algebraic.One (One (One))
+import Pandora.Paradigm.Algebraic (point)
 
 data Maybe a = Nothing | Just a
 

@@ -4,7 +4,7 @@ module Pandora.Paradigm.Controlflow.Observable (Observable, observe,
 import Pandora.Core.Functor (type (<))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---))
-import Pandora.Paradigm.Primary.Algebraic (Applicative, loop)
+import Pandora.Paradigm.Algebraic (Applicative, loop)
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~~))
 

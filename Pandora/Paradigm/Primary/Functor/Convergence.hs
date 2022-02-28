@@ -7,9 +7,9 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), type (<--))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:)((:*:)))
-import Pandora.Paradigm.Primary.Algebraic ()
+import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (<--))
+import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Paradigm.Algebraic ()
 
 data Convergence r a = Convergence (a -> a -> r)
 

@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Primary.Algebraic.Functor where
+module Pandora.Paradigm.Algebraic.Functor where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
@@ -11,12 +11,12 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (<--), (&))
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
+import Pandora.Paradigm.Algebraic.Zero (Zero, absurd)
+import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->), type (<--), (&))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:) (Option, Adoption))
-import Pandora.Paradigm.Primary.Algebraic.Zero (Zero, absurd)
-import Pandora.Paradigm.Primary.Algebraic.One (One (One))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((<~), (<~~~), (-#=)))
 
 infixl 1 <-*--------, .-*--------, <-||--------, >-||--------

@@ -21,10 +21,10 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
-import Pandora.Paradigm.Primary.Algebraic.Exponential (type (-->))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic.Sum ((:+:))
-import Pandora.Paradigm.Primary.Algebraic (empty, (<-|-<-|-))
+import Pandora.Paradigm.Algebraic.Exponential (type (-->))
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Algebraic.Sum ((:+:))
+import Pandora.Paradigm.Algebraic (empty, (<-|-<-|-))
 
 newtype Comprehension t a = Comprehension (t <::> Construction t > a)
 

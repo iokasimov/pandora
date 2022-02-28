@@ -3,8 +3,8 @@ module Pandora.Paradigm.Primary.Functor.Wedge where
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Paradigm.Primary.Algebraic.Exponential ()
-import Pandora.Paradigm.Primary.Algebraic (point)
+import Pandora.Paradigm.Algebraic.Exponential ()
+import Pandora.Paradigm.Algebraic (point)
 
 data Wedge e a = Nowhere | Here e | There a
 

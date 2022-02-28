@@ -3,8 +3,8 @@ module Pandora.Paradigm.Structure.Modification.Turnover where
 
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Hoistable ((/|\))
-import Pandora.Paradigm.Primary.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Primary.Algebraic ((>-|-<-|-))
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Algebraic ((>-|-<-|-))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-)))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure))
 
