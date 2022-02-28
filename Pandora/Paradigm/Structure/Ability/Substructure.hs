@@ -41,12 +41,12 @@ class Substructure segment (structure :: * -> *) where
 --	inner :: Convex Lens (Exactly element) element
 --	inner = P_Q_T <-- \x -> Store <--- x :*: identity
 
-instance (Covariant (->) (->) t) => Substructure Left (t <:*:> t) where
-	type Substance Left (t <:*:> t) = t
+instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Left (t <:*:> u) where
+	type Substance Left (t <:*:> u) = t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- ls :*: lift . (T_U . (:*: rs))
 
-instance (Covariant (->) (->) t) => Substructure Right (t <:*:> t) where
-	type Substance Right (t <:*:> t) = t
+instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Right (t <:*:> u) where
+	type Substance Right (t <:*:> u) = u
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- rs :*: lift . (T_U . (ls :*:))

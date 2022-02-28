@@ -717,3 +717,4 @@
 * Define `<:+:>`, `>:+:>`, `<:+:<`, `>:+:<` type synonyms
 * Define `Functor` module in `Algebraic`
 * Change definition of binary tree
+* Change `Zipper` definition - tag it
