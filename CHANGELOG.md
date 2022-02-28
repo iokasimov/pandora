@@ -718,3 +718,5 @@
 * Define `Functor` module in `Algebraic`
 * Change definition of binary tree
 * Change `Zipper` definition - tag it
+
+# 0.5.3
