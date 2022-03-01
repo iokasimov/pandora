@@ -8,7 +8,7 @@ import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----))
+import Pandora.Pattern.Category ((<--), (<---), (<----), (<------))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -17,13 +17,14 @@ import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Algebraic (extract)
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->), (%))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>))
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), point)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
-import Pandora.Paradigm.Primary (twosome)
+-- TODO: remove this line by moveing Semimonoidal instande to Product module
+import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
@@ -60,9 +61,7 @@ type Tape t = Tagged Zippable <:.> (Exactly <:*:> (Reverse t <:*:> t))
 
 instance Covariant (->) (->) t => Impliable (Tape t a) where
 	type Arguments (Tape t a) = a -> t a -> t a -> Tape t a
-	imply focused left right = lift
-		<---- twosome <-- Exactly focused 
-			<--- twosome <-- Reverse left <-- right
+	imply focused left right = lift <------ Exactly focused <:*:> Reverse left <:*:> right
 
 -- TODO: Isn't too fragile to define such an instance without any hints about zippers?
 instance Covariant (->) (->) t => Substructure Root (Tape t) where

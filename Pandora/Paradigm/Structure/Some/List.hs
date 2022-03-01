@@ -4,7 +4,7 @@ module Pandora.Paradigm.Structure.Some.List where
 import Pandora.Core.Functor (type (:.), type (<), type (>))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->), (---->), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), (-->), (--->), (---->), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|--), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-), (<<--)))
@@ -17,7 +17,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==), (?==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (.-*-), (.-+-), (.:..), extract, point, empty, void)
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic ((<-|-<-|-))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
@@ -28,7 +28,6 @@ import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
-import Pandora.Paradigm.Primary (twosome)
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
@@ -186,7 +185,7 @@ instance Zippable List where
 
 instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 	f <<- TU (Tag (T_U (Exactly x :*: T_U (left :*: right)))) = 
-		(\past' x' left' -> lift <---- twosome <-- Exactly x' <--- twosome <-- left' <-- run past')
+		(\past' x' left' -> lift <------ Exactly x' <:*:> left' <:*:> run past')
 			<-|- f <<- Reverse right <-*- f x <-*- f <<- left
 
 -- instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
