@@ -20,7 +20,7 @@ import Pandora.Paradigm.Schemes.TU (type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 
-data Segment a = Root a | Tail a
+data Segment a = Root a | Rest a
 
 type Substructured segment source target = (Substructure segment source, Substance segment source ~ target)
 

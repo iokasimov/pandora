@@ -64,6 +64,7 @@ instance Morphable (Rotate > Left Zig) (Construction (Maybe <:*:> Maybe)) where
 			<------ view <-- sub @Left <-- xs
 			<------ Just . Construct x
 				<----- twosome
+					-- TODO: to refactor this we can define Substructure t => Substructure (Construction t) instance
 					<---- view (sub @Left) ===<< deconstruct <-|- view (sub @Right) xs
 					<---- view (sub @Right) ===<< deconstruct <-|- view (sub @Right) xs
 

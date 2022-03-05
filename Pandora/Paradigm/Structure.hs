@@ -32,8 +32,8 @@ import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 instance Monotonic s a => Monotonic s (s :*: a) where
 	reduce f r x = reduce f <-- f (attached x) r <-- extract x
 
-instance (Covariant (->) (->) t) => Substructure Tail (Tap t) where
-	type Substance Tail (Tap t) = t
+instance (Covariant (->) (->) t) => Substructure Rest (Tap t) where
+	type Substance Rest (Tap t) = t
 	substructure = P_Q_T <-- \tap -> case extract <-- run tap of
 		Tap x xs -> Store <--- xs :*: lift . Tap x
 

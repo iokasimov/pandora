@@ -722,3 +722,4 @@
 # 0.5.3
 * Move `Algebraic` module from `Primary` to `Paradigm`
 * Define `<:*:>` infix operator
+* Rename `Tail` constructor of `Segment` to `Rest`

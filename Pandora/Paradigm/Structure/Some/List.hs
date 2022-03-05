@@ -45,7 +45,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Tail))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Rest))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Pushing, Topping, push, pop, top))
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
@@ -116,10 +116,10 @@ instance Substructure Root List where
 		Just (Construct x xs) -> Store <--- Just x :*: lift . resolve (lift . (Construct % xs)) zero
 		Nothing -> Store <--- Nothing :*: lift . resolve (lift . point) zero
 
-instance Substructure Tail List where
-	type Substance Tail List = List
+instance Substructure Rest List where
+	type Substance Rest List = List
 	substructure = P_Q_T <-- \source -> case run . lower <-- source of
-		Just ns -> lift . lift @(->) <-|- run (sub @Tail) ns
+		Just ns -> lift . lift @(->) <-|- run (sub @Rest) ns
 		Nothing -> Store <--- zero :*: lift . identity
 
 -- | Transform any traversable structure into a list
@@ -160,8 +160,8 @@ instance Substructure Root (Construction Maybe) where
 	substructure = P_Q_T <-- \source -> case lower source of
 		Construct x xs -> Store <--- Exactly x :*: lift . (Construct % xs) . extract
 
-instance Substructure Tail (Construction Maybe) where
-	type Substance Tail (Construction Maybe) = List
+instance Substructure Rest (Construction Maybe) where
+	type Substance Rest (Construction Maybe) = List
 	substructure = P_Q_T <-- \source -> case lower source of
 		Construct x xs -> Store <--- TT xs :*: lift . Construct x . run
 
