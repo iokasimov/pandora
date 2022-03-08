@@ -58,8 +58,6 @@ library
     Pandora.Paradigm.Primary.Transformer
     Pandora.Paradigm.Primary.Transformer.Backwards
     Pandora.Paradigm.Primary.Transformer.Reverse
-    Pandora.Pattern.Morphism.Flip
-    Pandora.Pattern.Morphism.Straight
     Pandora.Paradigm.Primary.Transformer.Continuation
     Pandora.Paradigm.Primary.Transformer.Construction
     Pandora.Paradigm.Primary.Transformer.Instruction
@@ -142,6 +140,9 @@ library
 
     Pandora.Pattern
     Pandora.Pattern.Betwixt
+    -- Different morphisms
+    Pandora.Pattern.Morphism.Flip
+    Pandora.Pattern.Morphism.Straight
     -- Algebra typeclasses
     Pandora.Pattern.Semigroupoid
     Pandora.Pattern.Category
@@ -183,7 +184,7 @@ library
     Pandora.Pattern.Transformer.Liftable
     Pandora.Pattern.Transformer.Lowerable
   default-extensions:
-    DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints, InstanceSigs
+    DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints, InstanceSigs, StandaloneKindSignatures
     FlexibleContexts, FlexibleInstances, KindSignatures, StandaloneKindSignatures, LiberalTypeSynonyms, LambdaCase, FunctionalDependencies
     MultiParamTypeClasses, NoImplicitPrelude, PackageImports, PolyKinds, RankNTypes, ViewPatterns
     ScopedTypeVariables, TypeApplications, TypeFamilies, TypeFamilyDependencies, TypeOperators

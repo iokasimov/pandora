@@ -8,7 +8,6 @@ import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), id
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((==<<), (===<<)))
 import Pandora.Pattern.Transformer.Hoistable ((/|\))
-import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Algebraic.Product (type (<:*:>))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))

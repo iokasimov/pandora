@@ -18,7 +18,8 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 
-class Morphable mod struct | mod struct -> struct where
+-- type Morphable :: k -> (* -> *) -> Constraint
+class Morphable (mod :: k) struct | mod struct -> struct where
 	type Morphing (mod :: k) (struct :: * -> *) :: * -> *
 	morphing :: Tagged mod <::> struct ~> Morphing mod struct
 

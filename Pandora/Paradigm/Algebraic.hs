@@ -28,6 +28,9 @@ instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) =>
 		let ((lxs :*: lys) :*: (rxs :*: rys)) = (mult @(<--) <~) <-||-- (mult @(<--) <~) <-|- lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
+instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:*:> u) where
+	mult = Straight <-- \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U <--- (mult @(-->) <~) (xls :*: yls) :*: (mult @(-->) <~) (xrs :*: yrs)
+
 instance Traversable (->) (->) ((:*:) s) where
 	f <<- x = (attached x :*:) <-|- f (extract x)
 

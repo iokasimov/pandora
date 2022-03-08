@@ -23,8 +23,8 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
-import Pandora.Paradigm.Structure.Ability.Substructure
-	(Substructure (Substance, substructure), Segment (Root))
+-- import Pandora.Paradigm.Structure.Ability.Substructure
+-- 	(Substructure (Substance, substructure), Segment (Root))
 
 data Tap t a = Tap a (t a)
 
@@ -32,7 +32,7 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Tap t) where
 	f <-|- Tap x xs = Tap <--- f x <--- f <-|- xs
 
 instance Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap t) where
-	mult = Straight <-- \(Tap x xs :*: Tap y ys) -> Tap 
+	mult = Straight <-- \(Tap x xs :*: Tap y ys) -> Tap
 		<---- x :*: y
 		<---- mult @(-->) <~~~ xs :*: ys
 
@@ -58,17 +58,17 @@ instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->)
 	mult = Straight <-- \(Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) ->
 		Tap (x :*: y) . T_U <--- (mult @(-->) <~~~ xls :*: yls) :*: (mult @(-->) <~~~ xrs :*: yrs)
 
-instance (Covariant (->) (->) t) => Substructure Root (Tap (t <:.:> t > (:*:))) where
-	type Substance Root (Tap (t <:.:> t > (:*:))) = Exactly
-	substructure = P_Q_T <-- \zipper -> case lower zipper of
-		Tap x xs -> Store <--- Exactly x :*: lift . (Tap % xs) . extract
-
-instance (Covariant (->) (->) t) => Substructure Left (Tap (t <:.:> t > (:*:))) where
-	type Substance Left (Tap (t <:.:> t > (:*:))) = t
-	substructure = P_Q_T <-- \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store <--- future :*: lift . Tap x . T_U . (:*: past)
-
-instance (Covariant (->) (->) t) => Substructure Right (Tap (t <:.:> t > (:*:))) where
-	type Substance Right (Tap (t <:.:> t > (:*:))) = t
-	substructure = P_Q_T <-- \zipper -> case lower zipper of
-		Tap x (T_U (future :*: past)) -> Store <--- past :*: lift . Tap x . T_U . (future :*:)
+-- instance (Covariant (->) (->) t) => Substructure Root (Tap (t <:.:> t > (:*:))) where
+-- 	type Substance Root (Tap (t <:.:> t > (:*:))) = Exactly
+-- 	substructure = P_Q_T <-- \zipper -> case lower zipper of
+-- 		Tap x xs -> Store <--- Exactly x :*: lift . (Tap % xs) . extract
+--
+-- instance (Covariant (->) (->) t) => Substructure Left (Tap (t <:.:> t > (:*:))) where
+-- 	type Substance Left (Tap (t <:.:> t > (:*:))) = t
+-- 	substructure = P_Q_T <-- \zipper -> case lower zipper of
+-- 		Tap x (T_U (future :*: past)) -> Store <--- future :*: lift . Tap x . T_U . (:*: past)
+--
+-- instance (Covariant (->) (->) t) => Substructure Right (Tap (t <:.:> t > (:*:))) where
+-- 	type Substance Right (Tap (t <:.:> t > (:*:))) = t
+-- 	substructure = P_Q_T <-- \zipper -> case lower zipper of
+-- 		Tap x (T_U (future :*: past)) -> Store <--- past :*: lift . Tap x . T_U . (future :*:)

@@ -28,6 +28,7 @@ import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
+import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
@@ -86,7 +87,7 @@ instance Morphable (Delete First) List where
 	type Morphing (Delete First) List = Predicate <:.:> List > (->)
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- constant empty
-		Just (Construct x xs) -> T_U <-- \p -> 
+		Just (Construct x xs) -> T_U <-- \p ->
 			p <~ x ?== True <----- TT xs
 				<----- lift . Construct x . run . filter @First @List p <-- TT xs
 
@@ -184,7 +185,7 @@ instance Zippable List where
 	type Breadcrumbs List = Reverse List <:.:> List > (:*:)
 
 instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
-	f <<- TU (Tag (T_U (Exactly x :*: T_U (left :*: right)))) = 
+	f <<- TU (Tag (T_U (Exactly x :*: T_U (left :*: right)))) =
 		(\past' x' left' -> lift <------ Exactly x' <:*:> left' <:*:> run past')
 			<-|- f <<- Reverse right <-*- f x <-*- f <<- left
 
@@ -306,5 +307,5 @@ instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 instance Setoid key => Morphable (Lookup Key) (Prefixed < Construction Maybe < key) where
 	type Morphing (Lookup Key) (Prefixed < Construction Maybe < key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT <-- \key -> extract <-|- search key where
-		search key = key ?== attached x <----- Just x 
+		search key = key ?== attached x <----- Just x
 			<----- find @Element <--- Predicate <-- (key ==) . attached ====<< xs
