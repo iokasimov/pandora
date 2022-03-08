@@ -23,9 +23,6 @@ import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), UT, TUT, P_Q_T (P_Q_T), type (<:.>), type (<:.:>))
--- import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
--- import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
--- import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure))
 
 instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
 	f -| x = \s -> f . Flip <--- x :*: s

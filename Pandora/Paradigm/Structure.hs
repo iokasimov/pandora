@@ -31,7 +31,7 @@ import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construc
 import Pandora.Paradigm.Primary.Linear.Vector (Vector (Scalar, Vector))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Primary.Transformer.Tap (Tap (Tap))
-import Pandora.Paradigm.Schemes.TT (TT (TT))
+import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 

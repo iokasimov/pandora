@@ -156,16 +156,6 @@ instance Morphable Push (Construction Maybe) where
 	type Morphing Push (Construction Maybe) = Exactly <:.:> Construction Maybe > (->)
 	morphing (premorph -> xs) = T_U <-- \(Exactly x) -> Construct x <-- Just xs
 
-instance Substructure Root (Construction Maybe) where
-	type Substance Root (Construction Maybe) = Exactly
-	substructure = P_Q_T <-- \source -> case lower source of
-		Construct x xs -> Store <--- Exactly x :*: lift . (Construct % xs) . extract
-
-instance Substructure Rest (Construction Maybe) where
-	type Substance Rest (Construction Maybe) = List
-	substructure = P_Q_T <-- \source -> case lower source of
-		Construct x xs -> Store <--- TT xs :*: lift . Construct x . run
-
 instance Stack (Construction Maybe) where
 	type Topping (Construction Maybe) = Exactly
 	type Popping (Construction Maybe) = Construction Maybe

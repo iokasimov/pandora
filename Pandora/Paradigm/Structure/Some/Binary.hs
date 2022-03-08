@@ -100,11 +100,6 @@ instance Morphable (Into Binary) (Construction (Maybe <:*:> Maybe)) where
 			-- <---- step <--- sub @Right <--- struct
 			-- <---- f x <--- extract struct
 
-instance Substructure Root (Construction (Maybe <:*:> Maybe)) where
-	type Substance Root (Construction (Maybe <:*:> Maybe)) = Exactly
-	substructure = P_Q_T <-- \struct -> case lower struct of
-		Construct x xs -> Store <--- Exactly x :*: lift . (Construct % xs) . extract
-
 instance Substructure Left (Construction (Maybe <:*:> Maybe)) where
 	type Substance Left (Construction (Maybe <:*:> Maybe)) = Binary
 	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
@@ -203,13 +198,13 @@ instance Morphable (Rotate > Down Left) ((Exactly <:.:> Wye <::> Construction Wy
 	morphing struct = case run ---> premorph struct of
 		T_U (Exactly x :*: TT (Left lst)) :*: TT (TT next) ->
 			lift . (<:*:>) (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Horizontal . Leftward <------- Construct 
-					<------ Exactly x <:*:> TT Nothing 
+				. TT . TT . Horizontal . Leftward <------- Construct
+					<------ Exactly x <:*:> TT Nothing
 					<------ next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . (<:*:>) (_nonempty_binary_tree_to_focused_part lst)
 				. TT . TT . Horizontal . Leftward <------- Construct
-					<------ Exactly x <:*:> lift rst 
+					<------ Exactly x <:*:> lift rst
 					<------ next
 		_ -> TT Nothing
 

@@ -54,15 +54,6 @@ type Rose = Maybe <:.> Construction List
 
 type instance Nonempty Rose = Construction List
 
-instance Substructure Root (Construction List) where
-	type Substance Root (Construction List) = Exactly
-	--substructure = P_Q_T <-- \rose -> Store <--- Exactly (Exactly <-- extract (lower rose)) :*: lift . (Construct % deconstruct (lower rose)) . extract . extract
-
-instance Substructure Rest (Construction List) where
-	type Substance Rest (Construction List) = List <:.> Construction List
-	--substructure = P_Q_T <-- \rose -> case extract <-- run rose of
-	--	Construct x xs -> Store <--- Exactly (TU xs) :*: lift . Construct x . run . extract
-
 --------------------------------------- Prefixed rose tree -----------------------------------------
 
 instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
@@ -97,7 +88,7 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 
 find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose > k :*: a -> Maybe a
 find_rose_sub_tree (Construct k Nothing) tree = k ?== attached <-- extract tree <----- Just <--- extract <-- extract tree <----- Nothing
-find_rose_sub_tree (Construct k (Just ks)) tree = k ?== attached <-- extract tree <----- find_rose_sub_tree ks =<< subtree <----- Nothing where 
+find_rose_sub_tree (Construct k (Just ks)) tree = k ?== attached <-- extract tree <----- find_rose_sub_tree ks =<< subtree <----- Nothing where
 
 	subtree :: Maybe :. Nonempty Rose > k :*: a
 	subtree = find @Element <---- attached . extract >-|-- equate <-- extract ks <---- deconstruct tree

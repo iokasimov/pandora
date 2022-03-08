@@ -8,19 +8,20 @@ import Pandora.Pattern.Category (identity, (<--), (<---), (<-----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=#-))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (=#-))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, type (#=@), type (@>>>))
+import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>))
-import Pandora.Paradigm.Algebraic ((>-|-<-|-))
-import Pandora.Paradigm.Primary.Functor.Exactly (Exactly)
+import Pandora.Paradigm.Algebraic ((>-|-<-|-), extract)
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
+import Pandora.Paradigm.Schemes.TT (type (<::>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
-
-data Segment a = Root a | Rest a
 
 type Substructured segment source target = (Substructure segment source, Substance segment source ~ target)
 
@@ -50,3 +51,15 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Right (t
 	type Substance Right (t <:*:> u) = u
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- rs :*: lift . (T_U . (ls :*:))
+
+data Segment a = Root a | Rest a
+
+instance Covariant (->) (->) t => Substructure Root (Construction t) where
+	type Substance Root (Construction t) = Exactly
+	substructure =  P_Q_T <-- \source -> case lower source of
+		Construct x xs -> Store <--- Exactly x :*: lift . (Construct % xs) . extract
+
+instance Covariant (->) (->) t => Substructure Rest (Construction t) where
+	type Substance Rest (Construction t) = t <::> Construction t
+	substructure =  P_Q_T <-- \source -> case lower source of
+		Construct x xs -> Store <--- unite xs :*: lift . Construct x . run
