@@ -44,12 +44,12 @@ type Zipper (structure :: * -> *) = Tagged Zippable <:.> (Exactly <:*:> Breadcru
 type Breadcrumbed structure t = (Zippable structure, Breadcrumbs structure ~ t)
 
 instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t
-	=> Semimonoidal (<--) (:*:) (:*:) (Exactly <:.:> t > (:*:)) where
+	=> Semimonoidal (<--) (:*:) (:*:) (Exactly <:*:> t) where
 	mult = Flip <-- \(T_U (Exactly (x :*: y) :*: xys)) ->
 		let xs :*: ys = mult @(<--) <~ xys in
 			T_U (Exactly x :*: xs) :*: T_U (Exactly y :*: ys)
 
-instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Exactly <:.:> t > (:*:)) where
+instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Exactly <:*:> t) where
 	unit _ = Flip <-- \(T_U (Exactly x :*: _)) -> Straight (\_ -> x)
 
 type family Fastenable structure rs where

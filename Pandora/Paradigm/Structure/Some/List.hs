@@ -17,7 +17,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==), (?==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (.-*-), (.-+-), (.:..), extract, point, empty, void)
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), (<:*:>), attached)
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic ((<-|-<-|-))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
@@ -172,7 +172,7 @@ type instance Combinative List = Comprehension Maybe
 ----------------------------------------- Zipper of list -------------------------------------------
 
 instance Zippable List where
-	type Breadcrumbs List = Reverse List <:.:> List > (:*:)
+	type Breadcrumbs List = Reverse List <:*:> List
 
 instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 	f <<- TU (Tag (T_U (Exactly x :*: T_U (left :*: right)))) =
@@ -237,7 +237,7 @@ instance Morphable (Into > Comprehension Maybe) (Tape List) where
 ------------------------------------- Zipper of non-empty list -------------------------------------
 
 instance Zippable (Construction Maybe) where
-	type Breadcrumbs (Construction Maybe) = Reverse > Construction Maybe <:.:> Construction Maybe > (:*:)
+	type Breadcrumbs (Construction Maybe) = Reverse > Construction Maybe <:*:> Construction Maybe
 
 instance Morphable (Rotate Left) (Tape > Construction Maybe) where
 	type Morphing (Rotate Left) (Tape > Construction Maybe) = Maybe <::> (Tape > Construction Maybe)
@@ -284,7 +284,7 @@ instance Morphable (Into List) (Tape > Construction Maybe) where
 ------------------------------------ Zipper of combinative list ------------------------------------
 
 instance Zippable (Comprehension Maybe) where
-	type Breadcrumbs (Comprehension Maybe) = Comprehension Maybe <:.:> Comprehension Maybe > (:*:)
+	type Breadcrumbs (Comprehension Maybe) = Comprehension Maybe <:*:> Comprehension Maybe
 
 ----------------------------------------- Prefixed list --------------------------------------------
 
