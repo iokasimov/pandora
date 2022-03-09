@@ -20,7 +20,7 @@ import Pandora.Paradigm.Inventory.Some.Optics (view, mutate)
 import Pandora.Paradigm.Schemes (TT (TT), type (<::>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morphed, Morph (Rotate), premorph, rotate)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Substructure (sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Segment (Branch), sub)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Some.Binary (Binary)
 
@@ -99,12 +99,12 @@ instance Morphable (Rotate > Right > Zig Zig) (Construction (Maybe <:*:> Maybe))
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate > Left > Zig Zag) (Construction (Maybe <:*:> Maybe)) where
 	type Morphing (Rotate > Left > Zig Zag) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
-	morphing (premorph -> struct) = rotate @(Left Zig) <--- mutate <-- (try_to_rotate @(Right Zig) /|\) <-- sub @Left <-- struct
+	morphing (premorph -> struct) = rotate @(Left Zig) <--- mutate <-- (try_to_rotate @(Right Zig) /|\) <-- sub @(Left Branch) <-- struct
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate > Right > Zig Zag) (Construction (Maybe <:*:> Maybe)) where
 	type Morphing (Rotate > Right > Zig Zag) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
-	morphing (premorph -> struct) = rotate @(Right Zig) <--- mutate <-- (try_to_rotate @(Left Zig) /|\) <-- sub @Right <-- struct
+	morphing (premorph -> struct) = rotate @(Right Zig) <--- mutate <-- (try_to_rotate @(Left Zig) /|\) <-- sub @(Right Branch) <-- struct
 
 -- TODO: Include error instead of returning empty tree
 try_to_rotate :: forall direction . Morphed (Rotate direction) (Nonempty Binary) Binary => Nonempty Binary ~> Nonempty Binary
