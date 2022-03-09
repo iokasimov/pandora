@@ -65,7 +65,6 @@ instance Covariant (->) (->) t => Substructure Rest (Construction t) where
 	substructure = P_Q_T <-- \source -> case lower source of
 		Construct x xs -> Store <--- unite xs :*: lift . Construct x . run
 
--- TODO: how to implement part with Lens' content modification?
 instance (Covariant (->) (->) t, Substructure i t) => Substructure (i Branch) (Construction t) where
 	type Substance (i Branch) (Construction t) = Substance i t <::> Construction t
 	substructure = P_Q_T <-- \source -> case lower source of
