@@ -2,25 +2,23 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module Pandora.Paradigm.Structure.Some.Splay where
 
-import Pandora.Core.Functor (type (~>), type (:.), type (>))
+import Pandora.Core.Functor (type (~>), type (>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), (<-------), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---)))
+import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|---)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((==<<), (===<<), (====<<)))
 import Pandora.Pattern.Transformer.Hoistable ((/|\))
 import Pandora.Paradigm.Algebraic ((<-*-), extract)
 import Pandora.Paradigm.Algebraic.Product (type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
-import Pandora.Paradigm.Primary.Functor.Tagged (type (:#))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Primary (twosome)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Inventory.Some.Optics (view, mutate)
 import Pandora.Paradigm.Schemes (TT (TT), type (<::>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morphed, Morph (Rotate), premorph, rotate)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructured, Segment (Root, Branch), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Segment (Root, Branch), sub)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Some.Binary (Binary)
 
@@ -59,7 +57,7 @@ instance Morphable (Rotate > Left Zig) (Construction (Maybe <:*:> Maybe)) where
 		<-*- Just (
 			(<:*:>)
 				(run <--- view <-- sub @(Left Branch) <-- tree)
-				(Just . Construct (extract <--- view <-- sub @Root <-- tree) <------ (<:*:>)
+				(Just . Construct (extract <--- view <-- sub @Root <-- tree) <-- (<:*:>)
 					(run . view (sub @(Left Branch)) ====<< run <--- view <-- sub @(Right Branch) <-- tree)
 					(run . view (sub @(Right Branch)) ====<< run <--- view <-- sub @(Right Branch) <-- tree)
 				)
@@ -72,7 +70,7 @@ instance Morphable (Rotate > Right Zig) (Construction (Maybe <:*:> Maybe)) where
 		<-*- Just (
 			(<:*:>)
 				(run . view (sub @(Left Branch)) ====<< run <--- view <-- sub @(Left Branch) <-- tree)
-				(Just . Construct (extract <--- view <-- sub @Root <-- tree) <------ (<:*:>)
+				(Just . Construct (extract <--- view <-- sub @Root <-- tree) <-- (<:*:>)
 					(run . view (sub @(Left Branch)) ====<< run <--- view <-- sub @(Left Branch) <-- tree)
 					(run <--- view <-- sub @(Right Branch) <-- tree)
 				)

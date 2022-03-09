@@ -12,7 +12,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (=#-))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, type (#=@), type (@>>>), view, replace)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>))
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic ((>-|-<-|-), extract)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -30,6 +30,7 @@ class Substructure segment (structure :: * -> *) where
 	type Substance segment structure :: * -> *
 	substructure :: (Tagged segment <:.> structure) @>>> Substance segment structure
 
+	-- TODO: replace >-|-<-|- with new combinators
 	sub :: (Covariant (->) (->) structure) => structure @>>> Substance segment structure
 	sub = ((lift :*: (lower @(->) <-|-)) >-|-<-|-) =#- substructure @segment @structure
 
@@ -46,12 +47,12 @@ class Substructure segment (structure :: * -> *) where
 instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Left (t <:*:> u) where
 	type Substance Left (t <:*:> u) = t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
-		ls :*: rs -> Store <--- ls :*: lift . (T_U . (:*: rs))
+		ls :*: rs -> Store <--- ls :*: lift . (<:*:> rs)
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Right (t <:*:> u) where
 	type Substance Right (t <:*:> u) = u
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
-		ls :*: rs -> Store <--- rs :*: lift . (T_U . (ls :*:))
+		ls :*: rs -> Store <--- rs :*: lift . (ls <:*:>)
 
 data Segment a = Root a | Rest a | Branch a
 
