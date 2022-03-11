@@ -7,22 +7,12 @@ import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
 
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category ((<--), (<---))
-import Pandora.Pattern.Kernel (Kernel (constant))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
+import Pandora.Pattern.Category ((<---))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
-import Pandora.Pattern.Transformer.Liftable (lift)
-import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (<--), (&), (%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~))
-import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Schemes (TU (TU), T_U (T_U), UT, TUT, P_Q_T (P_Q_T), type (<:.>))
+import Pandora.Paradigm.Schemes (TU, T_U, UT, TUT)
 
 instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
 	f -| x = \s -> f . Flip <--- x :*: s
