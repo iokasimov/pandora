@@ -725,3 +725,4 @@
 * Rename `Tail` constructor of `Segment` to `Rest`
 * Remove 'twosome' in favor `<:*:>`
 * Rename `?==` operator to `?=`
+* Remove `Conditional` module

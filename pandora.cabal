@@ -87,7 +87,6 @@ library
     -- Typeclassess about functor junctions
     Pandora.Paradigm.Controlflow.Effect
     Pandora.Paradigm.Controlflow.Effect.Interpreted
-    Pandora.Paradigm.Controlflow.Effect.Conditional
     Pandora.Paradigm.Controlflow.Effect.Transformer
     Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic
     Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic
