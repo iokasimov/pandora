@@ -9,7 +9,7 @@ import Pandora.Pattern.Functor.Contravariant ((>-|--))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=), (?==)))
+import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=), (?=)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic (extract)
@@ -87,8 +87,8 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 --			! Construct (key :*: value) . lift ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value -#=!> subtree
 
 find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose > k :*: a -> Maybe a
-find_rose_sub_tree (Construct k Nothing) tree = k ?== attached <-- extract tree <----- Just <--- extract <-- extract tree <----- Nothing
-find_rose_sub_tree (Construct k (Just ks)) tree = k ?== attached <-- extract tree <----- find_rose_sub_tree ks =<< subtree <----- Nothing where
+find_rose_sub_tree (Construct k Nothing) tree = k ?= attached <-- extract tree <----- Just <--- extract <-- extract tree <----- Nothing
+find_rose_sub_tree (Construct k (Just ks)) tree = k ?= attached <-- extract tree <----- find_rose_sub_tree ks =<< subtree <----- Nothing where
 
 	subtree :: Maybe :. Nonempty Rose > k :*: a
 	subtree = find @Element <---- attached . extract >-|-- equate <-- extract ks <---- deconstruct tree

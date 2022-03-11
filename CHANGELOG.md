@@ -712,7 +712,7 @@
 * Define `<-||-` length encoding operators in `Algebraic` module
 * Define `>-||-` length encoding operators in `Algebraic` module
 * Define `Horizontal` type and use it in binary tree zipper
-* Define `?==` operator as replacemet for if statement
+* Define `?=` operator as replacemet for if statement
 * Define `<:*:>`, `>:*:>`, `<:*:<`, `>:*:<` type synonyms
 * Define `<:+:>`, `>:+:>`, `<:+:<`, `>:+:<` type synonyms
 * Define `Functor` module in `Algebraic`
@@ -724,3 +724,4 @@
 * Define `<:*:>` infix operator
 * Rename `Tail` constructor of `Segment` to `Rest`
 * Remove 'twosome' in favor `<:*:>`
+* Rename `?==` operator to `?=`

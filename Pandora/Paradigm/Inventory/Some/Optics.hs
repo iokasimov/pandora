@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
-import Pandora.Pattern.Object.Setoid (Setoid ((?==)))
+import Pandora.Pattern.Object.Setoid (Setoid ((?=)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (<~)))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
@@ -86,7 +86,7 @@ type (@>>>) source target = forall a . Lens target (source a) a
 
 -- | Representable based lens
 represent :: forall t a . (Representable t, Setoid (Representation t)) => Representation t -> Convex Lens (t a) a
-represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate <-- \r' -> r' ?== r <----- target <----- r' <#> source)
+represent r = imply @(Convex Lens (t a) a) (r <#>) (\source target -> tabulate <-- \r' -> r' ?= r <----- target <----- r' <#> source)
 
 class Lensic previous next where
 	type Lensally previous next :: * -> *

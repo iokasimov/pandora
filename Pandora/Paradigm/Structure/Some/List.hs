@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (===<<), (====
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Pattern.Object.Setoid (Setoid ((==), (?==)))
+import Pandora.Pattern.Object.Setoid (Setoid ((==), (?=)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (.-*-), (.-+-), (.:..), extract, point, empty, void)
@@ -80,7 +80,7 @@ instance Morphable (Find Element) List where
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- \_ -> Nothing
 		Just (Construct x xs) -> T_U <-- \p ->
-			p <~ x ?== True <----- Just x
+			p <~ x ?= True <----- Just x
 				<----- find @Element @List @Maybe <-- p <-- TT xs
 
 instance Morphable (Delete First) List where
@@ -88,14 +88,14 @@ instance Morphable (Delete First) List where
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- constant empty
 		Just (Construct x xs) -> T_U <-- \p ->
-			p <~ x ?== True <----- TT xs
+			p <~ x ?= True <----- TT xs
 				<----- lift . Construct x . run . filter @First @List p <-- TT xs
 
 instance Morphable (Delete All) List where
 	type Morphing (Delete All) List = Predicate <:.:> List > (->)
 	morphing list = case run <--- premorph list of
 		Nothing -> T_U <-- constant empty
-		Just (Construct x xs) -> T_U <-- \p -> p <~ x ?== True
+		Just (Construct x xs) -> T_U <-- \p -> p <~ x ?= True
 				<----- filter @All @List p <-- TT xs
 				<----- lift . Construct x . run . filter @All @List p <-- TT xs
 
@@ -137,7 +137,7 @@ instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 
 instance Morphable (Find Element) (Construction Maybe) where
 	type Morphing (Find Element) (Construction Maybe) = Predicate <:.:> Maybe > (->)
-	morphing (premorph -> Construct x xs) = T_U <-- \p -> p <~ x ?== True <----- Just x
+	morphing (premorph -> Construct x xs) = T_U <-- \p -> p <~ x ?= True <----- Just x
 		<----- find @Element @(Nonempty List) @Maybe <-- p ===<< xs
 
 instance Morphable (Into List) (Construction Maybe) where
@@ -297,5 +297,5 @@ instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 instance Setoid key => Morphable (Lookup Key) (Prefixed < Construction Maybe < key) where
 	type Morphing (Lookup Key) (Prefixed < Construction Maybe < key) = (->) key <::> Maybe
 	morphing (run . premorph -> Construct x xs) = TT <-- \key -> extract <-|- search key where
-		search key = key ?== attached x <----- Just x
+		search key = key ?= attached x <----- Just x
 			<----- find @Element <--- Predicate <-- (key ==) . attached ====<< xs
