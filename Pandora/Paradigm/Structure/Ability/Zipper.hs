@@ -10,14 +10,15 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<------))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<<-), (<<---)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->), (%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
-import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), extract, point)
+import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (<-*---), (.-*-), extract, point)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
@@ -28,7 +29,7 @@ import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate), Vertical (Up, Down), Occurrence (All))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root), sub)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~), (=#-))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (=#-))
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
@@ -55,6 +56,12 @@ type family Fastenable structure rs where
 	Fastenable structure r = Morphable < Rotate r < structure
 
 type Tape t = Tagged Zippable <:.> (Exactly <:*:> Reverse t <:*:> t)
+
+instance {-# OVERLAPS #-} Traversable (->) (->) t => Traversable (->) (->) (Tape t) where
+	f <<- z = (\ls x rs -> lift <------ x <:*:> ls <:*:> rs)
+		<-|--- f <<--- view <-- sub @Left <-- z
+		<-*--- f <<--- view <-- sub @Root <-- z
+		<-*--- f <<--- view <-- sub @Right <-- z
 
 instance Covariant (->) (->) t => Impliable (Tape t a) where
 	type Arguments (Tape t a) = a -> t a -> t a -> Tape t a
