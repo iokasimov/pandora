@@ -38,20 +38,6 @@ import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 type Binary = Maybe <::> Construction (Maybe <:*:> Maybe)
 
--- instance {-# OVERLAPS #-} Traversable (->) (->) (Construction Wye) where
-	-- f <<- Construct x (Left l) = Construct <-|-- f x <-*-- Left <-|- f <<- l
-	-- f <<- Construct x (Right r) = Construct <-|-- f x <-*-- Right <-|- f <<- r
-	-- f <<- Construct x (Both l r) = Construct <-|-- f x <-*-- Both <-|- f <<- l <-*- f <<- r
-	-- f <<- Construct x End = Construct % End <-|- f x
-
--- instance {-# OVERLAPS #-} Traversable (->) (->) (Construction (Maybe <:*:> Maybe)) where
-	-- f <<- Construct x branches = Construct <-|- f x <-*- (f <<- branches :: _)
-
-	-- f <<- Construct x (Left l) = Construct <-|-- f x <-*-- Left <-|- f <<- l
-	-- f <<- Construct x (Right r) = Construct <-|-- f x <-*-- Right <-|- f <<- r
-	-- f <<- Construct x (Both l r) = Construct <-|-- f x <-*-- Both <-|- f <<- l <-*- f <<- r
-	-- f <<- Construct x (Nothing <:*:> Nothing) = Construct % (Nothing <:*:> Nothing) <-|- f x
-
 --rebalance :: Chain a => (Wye :. Construction Wye > a) -> Nonempty Binary a
 --rebalance (Both x y) = extract x <=> extract y & order
 --	# Construct (extract x) (Both # rebalance (deconstruct x) # rebalance (deconstruct y))
@@ -84,10 +70,10 @@ instance Substructure (Right Branch) Binary where
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
-type instance Nonempty Binary = Construction (Maybe <:*:> Maybe)
+type instance Nonempty Binary = Construction > Maybe <:*:> Maybe
 
-instance Morphable (Into Binary) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Into Binary) (Construction (Maybe <:*:> Maybe)) = Binary
+instance Morphable (Into Binary) (Construction > Maybe <:*:> Maybe) where
+	type Morphing (Into Binary) (Construction > Maybe <:*:> Maybe) = Binary
 	morphing = lift . premorph
 
 -- instance Morphable Insert (Construction Wye) where

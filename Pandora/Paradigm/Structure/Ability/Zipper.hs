@@ -22,8 +22,6 @@ import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
--- TODO: remove this line by moving Semimonoidal instande to Product module
--- import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
@@ -47,7 +45,7 @@ instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t
 	=> Semimonoidal (<--) (:*:) (:*:) (Exactly <:*:> t) where
 	mult = Flip <-- \(T_U (Exactly (x :*: y) :*: xys)) ->
 		let xs :*: ys = mult @(<--) <~ xys in
-			T_U (Exactly x :*: xs) :*: T_U (Exactly y :*: ys)
+			(Exactly x <:*:> xs) :*: (Exactly y <:*:> ys)
 
 instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Exactly <:*:> t) where
 	unit _ = Flip <-- \(T_U (Exactly x :*: _)) -> Straight (\_ -> x)
@@ -56,7 +54,7 @@ type family Fastenable structure rs where
 	Fastenable structure (r ::: rs) = (Morphable < Rotate r < structure, Fastenable structure rs)
 	Fastenable structure r = Morphable < Rotate r < structure
 
-type Tape t = Tagged Zippable <:.> (Exactly <:*:> (Reverse t <:*:> t))
+type Tape t = Tagged Zippable <:.> (Exactly <:*:> Reverse t <:*:> t)
 
 instance Covariant (->) (->) t => Impliable (Tape t a) where
 	type Arguments (Tape t a) = a -> t a -> t a -> Tape t a
