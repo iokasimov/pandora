@@ -7,7 +7,7 @@ import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((===<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((==<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -111,8 +111,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		Just tree -> TT <-- \key ->
 			key <=> attached <-- extract tree & order
 				<---- Just --> extract --> extract tree
-				<---- lookup @Key key . Prefixed ===<< run (view <-- sub @(Left Branch) <-- tree)
-				<---- lookup @Key key . Prefixed ===<< run (view <-- sub @(Right Branch) <-- tree)
+				<---- lookup @Key key . Prefixed ==<< run (view <-- sub @(Left Branch) <-- tree)
+				<---- lookup @Key key . Prefixed ==<< run (view <-- sub @(Right Branch) <-- tree)
 
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Exactly) <:.:> Prefixed Binary k > (->)
@@ -132,8 +132,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed < Construction (Maybe <:*
 	morphing (run . premorph -> Construct x xs) = TT <-- \key ->
 		key <=> attached x & order
 			<---- Just <-- extract x
-			<---- lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Left <-- xs
-			<---- lookup @Key key . Prefixed ===<< get @(Obscure Lens) <-- sub @Left <-- xs
+			<---- lookup @Key key . Prefixed ==<< get @(Obscure Lens) <-- sub @Left <-- xs
+			<---- lookup @Key key . Prefixed ==<< get @(Obscure Lens) <-- sub @Left <-- xs
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 	{-

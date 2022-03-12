@@ -4,23 +4,23 @@ module Pandora.Paradigm.Schemes.TU where
 import Pandora.Core.Functor (type (:.), type (>), type (~>))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (identity, (<--), (<---), (<-----))
+import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---), (<-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
-import Pandora.Pattern.Functor.Distributive (Distributive ((--<<)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (=#-)))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (<~~~~), (=#-)))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (empty, point, extract, (<-||-))
+import Pandora.Paradigm.Algebraic (empty, point, extract, (<-||-), (<-||---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
@@ -50,23 +50,23 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:)
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) (t <:.> u) where
 	mult = Straight <-- \(TU x :*: TU y) -> TU
 		<----- mult @(-->) @(:*:) @(:+:)
-			<-|--- mult @(-->) @(:*:) @(:*:)
+			<-|-- mult @(-->) @(:*:) @(:*:)
 				<~~~ x :*: y
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:+:) u, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (t <:.> u) where
 	unit _ = Straight <-- \_ -> TU empty
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:.> u) where
-	mult = Flip <-- \(TU xys) -> (TU <-||-) <----- TU <-|--- mult @(<--) <~~~ (mult @(<--) <~) <-|- xys
+	mult = Flip <-- \(TU xys) -> TU <-||--- TU <-|--- mult @(<--) <~~~~ (mult @(<--) <~) <-|- xys
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<--) (-->) (:*:) (:*:) u) => Monoidal (<--) (-->) (:*:) (:*:) (t <:.> u) where
 	unit _ = Flip <-- \(TU x) -> Straight (\_ -> extract <-- extract x)
 
 instance (Traversable (->) (->) t, Traversable (->) (->) u) => Traversable (->) (->) (t <:.> u) where
-	f <<- x = TU <-|-- f <<-<<- run x
+	f <<- x = TU <-|-- (f <<-<<- run x)
 
 instance (Bindable (->) t, Distributive (->) (->) t, Covariant (->) (->) u, Bindable (->) u) => Bindable (->) (t <:.> u) where
-	f =<< TU x = TU <-- (\i -> (identity =<<) <-|-- run . f --<< i) =<< x
+	f =<< TU x = TU <--- (\i -> (identity =<<) <-|- run . f -<< i) =<< x
 
 instance Monoidal (-->) (-->) (:*:) (:*:) t => Liftable (->) (TU Covariant Covariant t) where
 	lift :: Covariant (->) (->) u => u ~> t <:.> u
@@ -78,4 +78,4 @@ instance Monoidal (<--) (-->) (:*:) (:*:) t => Lowerable (->) (TU Covariant Cova
 
 instance Covariant (->) (->) t => Hoistable (->) (TU Covariant Covariant t) where
 	(/|\) :: u ~> v -> (t <:.> u ~> t <:.> v)
-	f /|\ TU x = TU <--- f <-|- x
+	f /|\ TU x = TU <---- f <-|- x

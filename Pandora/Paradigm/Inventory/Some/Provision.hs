@@ -2,12 +2,12 @@
 module Pandora.Paradigm.Inventory.Some.Provision where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category (identity, (<--), (<---))
+import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
+import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (---<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Paradigm.Algebraic.Exponential (type (-->), (%))
@@ -38,7 +38,7 @@ instance Monoidal (-->) (-->) (:*:) (:*:) (Provision e) where
 	unit _ = Straight <-- \f -> Provision <-- \_ -> run f One
 
 instance Distributive (->) (->) (Provision e) where
-	f -<< g = Provision <-- (run @(->) <-|- f) -<< g
+	f -<< g = Provision <--- (run @(->) <-|- f) -<< g
 
 instance Bindable (->) (Provision e) where
 	f =<< Provision x = Provision <-- \e -> (run % e) . f . x <-- e
@@ -53,7 +53,7 @@ instance Interpreted (->) (Provision e) where
 type instance Schematic Monad (Provision e) = (<:.>) ((->) e)
 
 instance Monadic (->) (Provision e) where
-	wrap x = TM . TU <--- point <-|- run x
+	wrap x = TM . TU <---- point <-|- run x
 
 type Provided e t = Adaptable t (->) (Provision e)
 

@@ -3,14 +3,12 @@ module Pandora.Pattern.Functor.Contravariant where
 import Pandora.Pattern.Category (Category)
 import Pandora.Pattern.Betwixt (Betwixt)
 
-infixl 1 >-|--------
-infixl 2 >-|-------
-infixl 3 >-|------, >-|-|-, >$$<
-infixl 4 >-|-----
-infixl 5 >-|----
-infixl 6 >-|---
-infixl 7 >-|--
-infixl 8 >-|-
+infixl 1 >-|------
+infixl 2 >-|-----
+infixl 3 >-|----
+infixl 4 >-|---, >-|-|-
+infixl 5 >-|--
+infixl 6 >-|-
 
 {- |
 > When providing a new instance, you should ensure it satisfies:

@@ -29,7 +29,7 @@ infixr 3 :<
 newtype (:<) t u a = TC { tc :: Schematic Comonad t u a }
 
 instance Covariant (->) (->) (Schematic Comonad t u) => Covariant (->) (->) (t :< u) where
-	f <-|- TC x = TC <--- f <-|- x
+	f <-|- TC x = TC <---- f <-|- x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Schematic Comonad t u) => Semimonoidal (-->) (:*:) (:*:) (t :< u) where
 	mult = Straight <-- \(TC f :*: TC x) -> TC
@@ -43,13 +43,13 @@ instance Traversable (->) (->) (Schematic Comonad t u) => Traversable (->) (->) 
 	f <<- TC x = TC <-|- f <<- x
 
 instance Distributive (->) (->) (Schematic Comonad t u) => Distributive (->) (->) (t :< u) where
-	f -<< x = TC <--- tc . f --<< x
+	f -<< x = TC <--- tc . f -<< x
 
 instance Bindable (->) (Schematic Comonad t u) => Bindable (->) (t :< u) where
-	f =<< TC x = TC <--- tc . f ==<< x
+	f =<< TC x = TC <--- tc . f =<< x
 
 instance Extendable (->) (Schematic Comonad t u) => Extendable (->) (t :< u) where
-	f <<= TC x = TC <--- f . TC <<== x
+	f <<= TC x = TC <--- f . TC <<= x
 
 instance (Extractable (t :< u), Extendable (->) (t :< u)) => Comonad (->) (t :< u) where
 

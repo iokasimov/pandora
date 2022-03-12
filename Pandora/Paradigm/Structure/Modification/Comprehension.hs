@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (===<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
@@ -34,7 +34,7 @@ instance Interpreted (->) (Comprehension t) where
 	unite = Comprehension
 
 instance Covariant (->) (->) (t <::> Construction t) => Covariant (->) (->) (Comprehension t) where
-	f <-|- Comprehension x = Comprehension <--- f <-|- x
+	f <-|- Comprehension x = Comprehension <---- f <-|- x
 
 instance Traversable (->) (->) (t <::> Construction t) => Traversable (->) (->) (Comprehension t) where
 	f <<- Comprehension x = Comprehension <-|- f <<- x
@@ -46,7 +46,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal 
 	unit _ = Straight <-- \_ -> Comprehension empty
 
 instance (forall a . Semigroup (t <::> Construction t > a), Bindable (->) t) => Bindable (->) (Comprehension t) where
-	f =<< Comprehension (TT t) = Comprehension . TT <-- (\(Construct x xs) -> run . run @(->) <---- f x + (f ===<< Comprehension <-- TT xs)) =<< t
+	f =<< Comprehension (TT t) = Comprehension . TT <--- (\(Construct x xs) -> run . run @(->) <-- f x + (f ==<< Comprehension <-- TT xs)) =<< t
 
 instance Setoid (t <::> Construction t > a) => Setoid (Comprehension t a) where
 	Comprehension ls == Comprehension rs = ls == rs

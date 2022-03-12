@@ -10,15 +10,14 @@ import Pandora.Paradigm.Algebraic.Exponential ()
 
 infixr 2 =#-, -#=
 
-infixl 1 <~~~~~~~~~
-infixl 2 <~~~~~~~~
-infixl 3 <~~~~~~~
-infixl 4 <~~~~~~
-infixl 5 <~~~~~
-infixl 6 <~~~~
-infixl 7 <~~~
-infixl 8 <~~
-infixl 9 <~
+infixl 1 <~~~~~~~~
+infixl 2 <~~~~~~~
+infixl 3 <~~~~~~
+infixl 4 <~~~~~
+infixl 5 <~~~~
+infixl 6 <~~~
+infixl 7 <~~
+infixl 8 <~
 
 type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 
@@ -28,8 +27,7 @@ class Interpreted m t where
 	run :: m < t a < Primary t a
 	unite :: m < Primary t a < t a
 
-	(<~~~~~~~~~), (<~~~~~~~~), (<~~~~~~~), (<~~~~~~), (<~~~~~), (<~~~~), (<~~~), (<~~), (<~) :: m < t a < Primary t a
-	(<~~~~~~~~~) = run
+	(<~~~~~~~~), (<~~~~~~~), (<~~~~~~), (<~~~~~), (<~~~~), (<~~~), (<~~), (<~) :: m < t a < Primary t a
 	(<~~~~~~~~) = run
 	(<~~~~~~~) = run
 	(<~~~~~~) = run

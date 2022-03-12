@@ -5,7 +5,7 @@ import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Contravariant ((>-|--))
+import Pandora.Pattern.Functor.Contravariant ((>-|-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -96,5 +96,5 @@ find_rose_sub_tree (Construct k ks) tree = k ?= attached <-- extract tree
 	subtree :: Nonempty List k -> Maybe :. Nonempty Rose > k :*: a
 	subtree keys = find @Element
 		<---- attached . extract
-			>-|-- equate <-- extract keys
+			>-|- equate <-- extract keys
 		<---- deconstruct tree

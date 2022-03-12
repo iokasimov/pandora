@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Functor.Tagged where
 
 import Pandora.Core.Functor (type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---))
+import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -56,7 +56,7 @@ instance Traversable (->) (->) (Tagged tag) where
 	f <<- Tag x = Tag <-|- f x
 
 instance Distributive (->) (->) (Tagged tag) where
-	f -<< x = Tag <--- extract . f <-|- x
+	f -<< x = Tag <---- extract . f <-|- x
 
 instance Bindable (->) (Tagged tag) where
 	f =<< Tag x = f x

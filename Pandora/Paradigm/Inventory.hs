@@ -7,7 +7,7 @@ import Pandora.Paradigm.Inventory.Some as Exports
 
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---))
+import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
@@ -44,7 +44,7 @@ instance Zoomable State Exactly where
 	zoom lens less = adapt . State <-- \source -> restruct |- run (lens <~ source) where
 
 		restruct :: (Exactly ls -> bg) -> Exactly ls -> bg :*: result
-		restruct to (Exactly target) = run <--- to . Exactly <-|- Flip (less <~ target)
+		restruct to (Exactly target) = run <---- to . Exactly <-|- Flip (less <~ target)
 
 instance Zoomable State Maybe where
 	zoom :: forall bg ls t result . Stateful bg t => Obscure Lens bg ls -> State (Maybe ls) result -> t result

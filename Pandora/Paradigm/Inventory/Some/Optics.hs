@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Some.Optics where
 
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (Category (identity, (<--), (<---), (<-----), (<-------)))
+import Pandora.Pattern.Category (Category (identity, (<--), (<---), (<----), (<-----), (<-------)))
 import Pandora.Pattern.Kernel (Kernel (constant))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
@@ -17,7 +17,7 @@ import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->), (%))
-import Pandora.Paradigm.Algebraic (Pointable, point, extract, (>-||-----), (>-|-<-|-))
+import Pandora.Paradigm.Algebraic (Pointable, point, extract, (>-||---))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -31,7 +31,7 @@ infixl 2 #=@
 type Lens = P_Q_T (->) Store
 
 instance Invariant (Flip (Lens available) tgt) where
-	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T <------- g >-||----- f <-|-|- lens
+	f <!< g = \(Flip (P_Q_T lens)) -> Flip . P_Q_T <------- g >-||--- f <-|-|- lens
 
 type family Convex lens where
 	Convex Lens = Lens Exactly
@@ -101,7 +101,7 @@ instance Lensic Maybe Exactly where
 	P_Q_T from >>> P_Q_T to = P_Q_T <-- \source -> case run <-- from source of
 		Nothing :*: _ -> Store <--- Nothing :*: \_ -> source
 		Just between :*: mbs -> case run <-- to between of
-			Exactly target :*: itb -> Store <--- Just target :*: \mt -> mbs <--- itb . Exactly <-|- mt
+			Exactly target :*: itb -> Store <--- Just target :*: \mt -> mbs <---- itb . Exactly <-|- mt
 
 instance Lensic Exactly Maybe where
 	type Lensally Exactly Maybe = Maybe

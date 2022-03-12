@@ -6,7 +6,7 @@ module Pandora.Pattern.Functor.Invariant where
 > Interpreted of morphisms: invmap g j . invmap f h = invmap (g . f) (h . j)
 -}
 
-infixl 4 <!<
+infixl 7 <!<
 
 class Invariant (t :: * -> *) where
 	{-# MINIMAL (<!<) #-}

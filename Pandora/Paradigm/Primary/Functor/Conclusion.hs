@@ -111,4 +111,4 @@ instance Catchable e (Conclusion e) where
 
 instance (Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = let conclude = conclusion <-- run . handle <-- point . Success
-		in UT <-- conclude =<< x
+		in UT <--- conclude =<< x

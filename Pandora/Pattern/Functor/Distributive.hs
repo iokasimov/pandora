@@ -10,25 +10,21 @@ import Pandora.Pattern.Functor.Covariant (Covariant)
 > * Interchange collection: (f -<<) ≡ (identity -<<) . (f <-|-)
 -}
 
-infixl 1 ---------<<
-infixl 2 --------<<
-infixl 3 -------<<
-infixl 4 ------<<
-infixl 5 -----<<
-infixl 6 ----<<
-infixl 7 ---<<
-infixl 8 --<<
-infixl 9 -<<
+infixl 1 -------<<
+infixl 2 ------<<
+infixl 3 -----<<
+infixl 4 ----<<
+infixl 5 ---<<
+infixl 6 --<<
+infixl 7 -<<
 
 class Covariant source target t => Distributive source target t where
 	(-<<) :: Covariant source target u => source a (t b) -> target (u a) (t (u b))
-	
-	(--<<), (---<<), (----<<), (-----<<), (------<<), (-------<<), (--------<<), (---------<<) :: Covariant source target u => source a (t b) -> target (u a) (t (u b))
+
+	(--<<), (---<<), (----<<), (-----<<), (------<<), (-------<<) :: Covariant source target u => source a (t b) -> target (u a) (t (u b))
 	(--<<) = (-<<)
 	(---<<) = (-<<)
 	(----<<) = (-<<)
 	(-----<<) = (-<<)
 	(------<<) = (-<<)
 	(-------<<) = (-<<)
-	(--------<<) = (-<<)
-	(---------<<) = (-<<)

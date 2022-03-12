@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Exactly where
 
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---))
+import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -66,7 +66,7 @@ instance Representable Exactly where
 
 instance Adjoint (->) (->) Exactly Exactly where
 	f -| x = Exactly . f . Exactly <-- x
-	g |- x = extract . extract <--- g <-|- x
+	g |- x = extract . extract <---- g <-|- x
 
 instance Setoid a => Setoid (Exactly a) where
 	Exactly x == Exactly y = x == y

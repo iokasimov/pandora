@@ -726,3 +726,4 @@
 * Remove 'twosome' in favor `<:*:>`
 * Rename `?==` operator to `?=`
 * Remove `Conditional` module
+* Change operators' precedence, length of operators define precedence

@@ -4,8 +4,8 @@ module Pandora.Paradigm.Schemes.TUT where
 import Pandora.Core.Functor (type (:.), type (>), type (~>))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
-import Pandora.Pattern.Category (identity, (<--), (<---), (<------))
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|---), (<-|-|-), (<-|-|---), (<-|-|-|-)))
+import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<------))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|--), (<-|---), (<-|-|-), (<-|-|---), (<-|-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -58,8 +58,8 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:)
 instance {-# OVERLAPS #-} (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) ((->) s <:<.>:> (:*:) s > u) where
  mult = Straight <-- \(TUT x :*: TUT y) -> TUT
 	<------ product_over_sum
-		<-|-|--- mult @(-->) @(:*:) @(:+:)
-			<-|--- mult @(-->) @(:*:) @(:*:) 
+		<-|-|- mult @(-->) @(:*:) @(:+:)
+			<-|-- mult @(-->) @(:*:) @(:*:)
 				<~~~ x :*: y
 
 product_over_sum :: s :*: a :+: s :*: b -> s :*: (a :+: b)
@@ -67,13 +67,13 @@ product_over_sum (Option (s :*: x)) = s :*: Option x
 product_over_sum (Adoption (s :*: y)) = s :*: Adoption y
 
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Adjoint (->) (->) t' t, Bindable (->) u) => Bindable (->) (t <:<.>:> t' > u) where
-	f =<< x = TUT <--- ((run . f |--) =<<) <-|- run x
+	f =<< x = TUT <---- ((run . f |--) =<<) <-|- run x
 
 instance (Bindable (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Adjoint (->) (->) t' t) => Monoidal (-->) (-->) (:*:) (:*:) (t <:<.>:> t' > u) where
 	unit _ = Straight <-- unite . (point -|) . (<~ One)
 
 instance (Adjoint (->) (->) t' t, Extendable (->) u) => Extendable (->) (t' <:<.>:> t > u) where
-	f <<= x = TUT <--- ((f . unite --|) <<=) <-|- run x
+	f <<= x = TUT <---- ((f . unite --|) <<=) <-|- run x
 
 instance (Adjoint (->) (->) t' t, Distributive (->) (->) t) => Liftable (->) (t <:<.>:> t') where
 	lift :: Covariant (->) (->) u => u ~> t <:<.>:> t' > u
