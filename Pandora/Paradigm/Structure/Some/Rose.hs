@@ -87,7 +87,7 @@ instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 --			! Construct (key :*: value) . lift ! vary @Element @_ @_ @(Nonempty (Prefixed Rose k)) keys value -#=!> subtree
 
 find_rose_sub_tree :: forall k a . Setoid k => Nonempty List k -> Nonempty Rose > k :*: a -> Maybe a
-find_rose_sub_tree (Construct k ks) tree = k ?= attached <-- extract tree
+find_rose_sub_tree (Construct k ks) tree = k ?= attached (extract tree)
 	<----- case ks of
 		Just keys -> find_rose_sub_tree keys =<< subtree keys
 		Nothing -> Just <--- extract <-- extract tree

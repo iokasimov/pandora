@@ -26,7 +26,7 @@ import Pandora.Paradigm.Controlflow.Effect ((<~~))
 type Set t f a = (Traversable (->) (->) t, Setoid a, Setoid (t a), Morphable (Find f) t)
 
 subset :: forall t f a . (Set t f a, Morphing (Find f) t ~ (Predicate <:.:> Maybe > (->))) => Convergence Boolean > t a
-subset = Convergence <-- \s ss -> Nothing != (find @f @t @Maybe % s) . equate <<- ss
+subset = Convergence <-- \s ss -> Nothing != ((find @f @t @Maybe % s) . equate <<- ss)
 
 cardinality :: Traversable (->) (->) t => t a -> Numerator
 cardinality s = attached <--- constant (modify @State (+ one)) <<- s <~~ Zero

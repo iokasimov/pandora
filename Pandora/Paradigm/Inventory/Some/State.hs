@@ -10,12 +10,12 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
-import Pandora.Pattern.Functor.Adjoint ((-|), (|--))
+import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-)), Schematic)
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, (<~), unite, (=#-)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
@@ -39,10 +39,10 @@ instance Semimonoidal (-->) (:*:) (:*:) (State s) where
 		new :*: x :*: y
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (State s) where
-	unit _ = Straight <--- State . (identity @(->) -|) . (<-- One) . run
+	unit _ = Straight <-- State . (identity @(->) -|) . (<~ One)
 
 instance Bindable (->) (State s) where
-	f =<< x = State <---- (run . f |--) <-|- run x
+	f =<< x = State <---- (run . f |-) <-|- run x
 
 instance Monad (->) (State s) where
 
@@ -67,7 +67,7 @@ reconcile f = adapt . set @State ==<< adapt . f ==<< adapt <-- get @State
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 
 fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = adapt <-- get @State .-*- (adapt . modify @State . op <<-- struct)
+fold op struct = adapt <-- get @State .-*- (adapt . modify @State . op <<- struct)
 
 instance Gettable State where
 	type Getting State state ouput = State state state
@@ -79,4 +79,4 @@ instance Settable State where
 
 instance Modifiable State where
 	type Modification State state output = (state -> state) -> State state state
-	modify f = State <--- \s -> let r = f s in r :*: r
+	modify f = State <--- \s -> f s :*: f s

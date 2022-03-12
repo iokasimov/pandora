@@ -80,24 +80,24 @@ instance Morphable (Find Element) List where
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- \_ -> Nothing
 		Just (Construct x xs) -> T_U <-- \p ->
-			p <~ x ?= True <----- Just x
-				<----- find @Element @List @Maybe <-- p <-- TT xs
+			(p <~ x) ?= True <---- Just x
+				<---- find @Element @List @Maybe <-- p <-- TT xs
 
 instance Morphable (Delete First) List where
 	type Morphing (Delete First) List = Predicate <:.:> List > (->)
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- constant empty
 		Just (Construct x xs) -> T_U <-- \p ->
-			p <~ x ?= True <----- TT xs
-				<----- lift . Construct x . run . filter @First @List p <-- TT xs
+			(p <~ x) ?= True <--- TT xs
+				<--- lift . Construct x . run . filter @First @List p <-- TT xs
 
 instance Morphable (Delete All) List where
 	type Morphing (Delete All) List = Predicate <:.:> List > (->)
 	morphing list = case run <--- premorph list of
 		Nothing -> T_U <-- constant empty
-		Just (Construct x xs) -> T_U <-- \p -> p <~ x ?= True
-				<----- filter @All @List p <-- TT xs
-				<----- lift . Construct x . run . filter @All @List p <-- TT xs
+		Just (Construct x xs) -> T_U <-- \p -> (p <~ x) ?= True
+				<--- filter @All @List p <-- TT xs
+				<--- lift . Construct x . run . filter @All @List p <-- TT xs
 
 instance Stack List where
 	type Topping List = Maybe
@@ -137,7 +137,7 @@ instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 
 instance Morphable (Find Element) (Construction Maybe) where
 	type Morphing (Find Element) (Construction Maybe) = Predicate <:.:> Maybe > (->)
-	morphing (premorph -> Construct x xs) = T_U <-- \p -> p <~ x ?= True <----- Just x
+	morphing (premorph -> Construct x xs) = T_U <-- \p -> (p <~ x) ?= True <----- Just x
 		<----- find @Element @(Nonempty List) @Maybe <-- p ===<< xs
 
 instance Morphable (Into List) (Construction Maybe) where
