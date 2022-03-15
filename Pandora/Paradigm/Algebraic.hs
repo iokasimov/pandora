@@ -12,7 +12,7 @@ import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---))
+import Pandora.Pattern.Category ((<--), (<---), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -30,6 +30,14 @@ instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) =>
 
 instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:*:> u) where
 	mult = Straight <-- \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) -> T_U <--- (mult @(-->) <~) (xls :*: yls) :*: (mult @(-->) <~) (xrs :*: yrs)
+
+instance (Semimonoidal (-->) (:*:) (:+:) t, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) (t <:*:> u) where
+	mult = Straight <-- \(T_U (xls :*: xrs) :*: T_U (yls :*: yrs)) ->
+		(mult @(-->) @(:*:) @(:+:) <~ (xls :*: yls)) <:*:> (mult @(-->) @(:*:) @(:+:) <~ (xrs :*: yrs))
+
+instance (Monoidal (-->) (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:+:) u)
+	=> Monoidal (-->) (-->) (:*:) (:+:) (t <:*:> u) where
+		unit _ = Straight <-- \_ -> empty <:*:> empty
 
 instance Traversable (->) (->) ((:*:) s) where
 	f <<- x = (attached x :*:) <-|- f (extract x)
