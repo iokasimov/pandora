@@ -47,10 +47,10 @@ type Binary = Maybe <::> Construction (Maybe <:*:> Maybe)
 -- instance Morphable Insert Binary where
 	-- type Morphing Insert Binary = (Exactly <:.:> Comparison > (:*:)) <:.:> Binary > (->)
 	-- morphing struct = case run ---> premorph struct of
-		-- Nothing -> T_U <-- \(T_U (Exactly x :*: _)) -> lift <-- leaf x
+		-- Nothing -> T_U <-- \(T_U (Exactly x :*: _)) -> lift <-- point x
 		-- Just binary -> T_U <-- \(T_U (Exactly x :*: Convergence f)) ->
 			-- let continue xs = run <-- morph @Insert @(Nonempty Binary) xs <--- twosome <-- Exactly x <-- Convergence f in
-			-- let step = iff @Just <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) <-- leaf x in
+			-- let step = iff @Just <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) <-- point x in
 			-- lift <---- order binary
 				-- <--- step <-- sub @Left <-- binary
 				-- <--- step <-- sub @Right <-- binary
@@ -80,7 +80,7 @@ instance Morphable (Into Binary) (Construction > Maybe <:*:> Maybe) where
 	-- type Morphing Insert (Construction Wye) = (Exactly <:.:> Comparison > (:*:)) <:.:> Construction Wye > (->)
 	-- morphing (premorph -> struct) = T_U <-- \(T_U (Exactly x :*: Convergence f)) ->
 		-- let continue xs = run <--- morph @Insert @(Nonempty Binary) xs <---- twosome <--- Exactly x <--- Convergence f in
-		-- let step = iff @Just <-|-|- (run .:.. view) <-*-*- mutate continue <-*-*- replace (leaf x) in
+		-- let step = iff @Just <-|-|- (run .:.. view) <-*-*- mutate continue <-*-*- replace (point x) in
 		-- order struct
 			-- <---- step <--- sub @Left <--- struct
 			-- <---- step <--- sub @Right <--- struct
@@ -89,7 +89,7 @@ instance Morphable (Into Binary) (Construction > Maybe <:*:> Maybe) where
 -- instance Substructure Left (Construction (Maybe <:*:> Maybe)) where
 -- 	type Substance Left (Construction (Maybe <:*:> Maybe)) = Binary
 -- 	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
--- 		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . left) (leaf x) . run
+-- 		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . left) (point x) . run
 -- 		Construct x (T_U (Just lst :*: Nothing)) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve left end . run
 -- 		Construct x (T_U (Nothing :*: Just rst)) -> Store <--- TT Nothing :*: lift . Construct x . resolve (both % rst) (right rst) . run
 -- 		Construct x (T_U (Just lst :*: Just rst)) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve (both % rst) (right rst) . run
@@ -97,7 +97,7 @@ instance Morphable (Into Binary) (Construction > Maybe <:*:> Maybe) where
 -- instance Substructure Right (Construction (Maybe <:*:> Maybe)) where
 -- 	type Substance Right (Construction (Maybe <:*:> Maybe)) = Binary
 -- 	substructure = P_Q_T <-- \struct -> case extract <-- run struct of
--- 		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . right) (leaf x) . run
+-- 		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . right) (point x) . run
 -- 		Construct x (T_U (Just lst :*: Nothing)) -> Store <--- TT Nothing :*: lift . Construct x . resolve (both lst) (left lst) . run
 -- 		Construct x (T_U (Nothing :*: Just rst)) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve right end . run
 -- 		Construct x (T_U (Just lst :*: Just rst)) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve (both lst) (left lst) . run
@@ -117,7 +117,7 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Exactly) <:.:> Prefixed Binary k > (->)
 	-- morphing struct = case run . run . premorph ! struct of
-		-- Nothing -> T_U ! \(TT (key :*: Exactly value)) -> Prefixed . lift . leaf ! key :*: value
+		-- Nothing -> T_U ! \(TT (key :*: Exactly value)) -> Prefixed . lift . point ! key :*: value
 		-- Just tree -> T_U ! \(TT (key :*: Exactly value)) ->
 			-- let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value -#=) -#=) in
 			-- Prefixed . lift ! key <=> attached (extract tree) & order
@@ -206,11 +206,3 @@ instance Morphable (Rotate > Down Right) ((Exactly <:.:> Wye <::> Construction W
 				. TT . TT . Horizontal . Rightward <---- Construct (Exactly x <:*:> lift lst) next
 		_ -> TT Nothing
 -}
-
-leaf :: a :=> Nonempty Binary
-leaf x = Construct x end
-
-left x = T_U <--- Just x :*: Nothing
-right x = T_U <--- Nothing :*: Just x
-both x y = T_U <--- Just x :*: Just y
-end = T_U <--- Nothing :*: Nothing
