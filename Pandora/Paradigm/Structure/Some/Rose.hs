@@ -14,7 +14,7 @@ import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic (extract)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic (extract)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
@@ -22,12 +22,14 @@ import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
-import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T), type (<:.>))
+import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
+import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~~~~))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest))
+import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
 
@@ -98,3 +100,16 @@ find_rose_sub_tree (Construct k ks) tree = k ?= attached (extract tree)
 		<---- attached . extract
 			>-|- equate <-- extract keys
 		<---- deconstruct tree
+
+------------------------------ Non-empty rose tree zipper -----------------------------
+
+type Aloft = Exactly -- parent element
+	<:*:> (Reverse List <::> Construction List) -- parent left
+	<:*:> (List <::> Construction List) -- parent right
+
+type Sideway = (List <::> Construction List) -- node child
+	<:*:> (Reverse List <::> Construction List) -- node left
+	<:*:> (List <::> Construction List) -- node right
+
+instance Zippable (Construction List) where
+	type Breadcrumbs (Construction List) = (List <::> Aloft) <:*:> Sideway

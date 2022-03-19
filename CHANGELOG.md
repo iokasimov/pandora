@@ -728,3 +728,4 @@
 * Remove `Conditional` module
 * Change operators' precedence, length of operators define precedence
 * Remove `leaf`, `left`, `right`, `both` in `Binary` module
+* Define `Zipper` instance of `Nonempty Rose` tree
