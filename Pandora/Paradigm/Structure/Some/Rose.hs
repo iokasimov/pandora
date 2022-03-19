@@ -12,9 +12,9 @@ import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=), (?=)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
-import Pandora.Paradigm.Algebraic (extract)
+import Pandora.Paradigm.Algebraic (extract, empty)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), attached)
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic (extract)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
@@ -24,9 +24,9 @@ import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
 import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~~~~))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~~~~))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Lookup, Element, Key), premorph, find)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
@@ -113,3 +113,9 @@ type Sideway = (List <::> Construction List) -- node child
 
 instance Zippable (Construction List) where
 	type Breadcrumbs (Construction List) = (List <::> Aloft) <:*:> Sideway
+
+instance Morphable (Into (Exactly <:*:> (List <::> Aloft) <:*:> Sideway)) (Construction List) where
+	type Morphing (Into (Exactly <:*:> (List <::> Aloft) <:*:> Sideway)) (Construction List) =
+		Exactly <:*:> (List <::> Aloft) <:*:> Sideway
+	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
+		Construct x xs -> Exactly x <:*:> empty <:*:> unite xs <:*:> empty <:*:> empty

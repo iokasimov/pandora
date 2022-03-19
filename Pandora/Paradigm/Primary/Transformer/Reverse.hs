@@ -15,8 +15,9 @@ import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Primary.Transformer.Backwards (Backwards (Backwards))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (point, extract, (<-||-))
+import Pandora.Paradigm.Algebraic (point, extract, empty, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~)))
@@ -37,6 +38,12 @@ instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoid
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Reverse t) where
 	unit _ = Flip <-- \(Reverse x) -> Straight (\_ -> extract x)
+
+instance (Semimonoidal (-->) (:*:) (:+:) t, Covariant (->) (->) t) => Semimonoidal (-->) (:*:) (:+:) (Reverse t) where
+	mult = Straight <-- \(Reverse x :*: Reverse y) -> Reverse <---- mult @(-->)  @(:*:) @(:+:) <~~~ x :*: y
+
+instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (Reverse t) where
+	unit _ = Straight <-- \_ -> Reverse empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Reverse t) where
 	f <<- Reverse x = Reverse <-|- run (Backwards . f <<-- x)
