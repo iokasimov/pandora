@@ -23,6 +23,7 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
+import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
@@ -114,20 +115,20 @@ type Roses = List <::> Construction List
 instance Zippable (Construction List) where
 	type Breadcrumbs (Construction List) = Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses
 
-instance Morphable (Into (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) (Construction List) where
-	type Morphing (Into (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) (Construction List) =
-		Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)
+instance Morphable (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))) (Construction List) where
+	type Morphing (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))) (Construction List) =
+		Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
-		Construct x xs -> Exactly x <:*:> unite xs <:*:> empty <:*:> empty <:*:> empty
+		Construct x xs -> lift <----- Exactly x <:*:> unite xs <:*:> empty <:*:> empty <:*:> empty
 
-instance Morphable (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
-	type Morphing (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) =
-		Maybe <::> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))
-	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
+instance Morphable (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) where
+	type Morphing (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) =
+		Maybe <::> (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))
+	morphing nonempty_rose_tree = case lower <-- premorph nonempty_rose_tree of
 		T_U (Exactly focused :*: T_U (child :*: T_U (left :*: T_U (right :*: alofts)))) ->
 			case pop @List <~ run alofts of
 				parents :*: Just parent ->
-					lift <----- view <-- sub @Root <-- parent
+					lift . lift <----- view <-- sub @Root <-- parent
 						<:*:> unite <-- run @(->) (run left) + point (Construct focused <-- run child) + run right
 						<:*:> view <-- sub @Left <-- parent
 						<:*:> view <-- sub @Right <-- parent
