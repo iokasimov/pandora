@@ -5,31 +5,35 @@ import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Kernel (constant)
+import Pandora.Pattern.Functor.Covariant ((<-|-))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=), (?=)))
+import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic (extract, empty)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
-import Pandora.Paradigm.Algebraic (extract)
+import Pandora.Paradigm.Algebraic (extract, point)
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
-import Pandora.Paradigm.Schemes (TU (TU), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~~~~))
+import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (=#-), (<~~~~))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Lookup, Element, Key), premorph, find)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
+	, Morph (Into, Rotate, Lookup, Element, Key), Vertical (Up), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest))
 import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
 
@@ -103,6 +107,7 @@ find_rose_sub_tree (Construct k ks) tree = k ?= attached (extract tree)
 
 ------------------------------ Non-empty rose tree zipper -----------------------------
 
+-- Use `Tape` instead
 type Aloft = Exactly -- parent element
 	<:*:> (Reverse List <::> Construction List) -- parent left
 	<:*:> (List <::> Construction List) -- parent right
@@ -119,3 +124,14 @@ instance Morphable (Into (Exactly <:*:> (List <::> Aloft) <:*:> Sideway)) (Const
 		Exactly <:*:> (List <::> Aloft) <:*:> Sideway
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
 		Construct x xs -> Exactly x <:*:> empty <:*:> unite xs <:*:> empty <:*:> empty
+
+instance Morphable (Rotate Up) (Exactly <:*:> (List <::> Aloft) <:*:> Sideway) where
+	type Morphing (Rotate Up) (Exactly <:*:> (List <::> Aloft) <:*:> Sideway) =
+		Maybe <::> (Exactly <:*:> (List <::> Aloft) <:*:> Sideway)
+	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
+		T_U (Exactly focused :*: T_U (alofts :*: T_U (child :*: T_U (left :*: right)))) ->
+			case pop @List <~ run alofts of
+				parents :*: Just (T_U (Exactly parent_root :*: T_U (parent_left :*: parent_right))) ->
+					let new_child = run (run left) + point (Construct focused <-- run child) + run right in
+					lift <----- Exactly parent_root <:*:> unite parents <:*:> unite new_child <:*:> parent_left <:*:> parent_right
+				_ :*: Nothing -> empty

@@ -15,5 +15,6 @@ class Stack t where
 	type Popping t :: * -> *
 	type Pushing t :: * -> *
 	top :: Lens (Topping t) (t e) e
+	-- TODO: In case of nonempty list we know that we return an element
 	pop :: State ((Popping t) e) (Maybe e)
 	push :: e -> State ((Pushing t) e) e
