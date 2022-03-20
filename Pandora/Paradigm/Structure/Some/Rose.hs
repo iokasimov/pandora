@@ -114,27 +114,22 @@ type Sideway = (List <::> Construction List) -- node child
 	<:*:> (List <::> Construction List) -- node right
 
 instance Zippable (Construction List) where
-	type Breadcrumbs (Construction List) = (List <::> Tape (List <::> Construction List)) <:*:> Sideway
+	type Breadcrumbs (Construction List) = Sideway <:*:> (List <::> Tape (List <::> Construction List))
 
-instance Morphable (Into (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway)) (Construction List) where
-	type Morphing (Into (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway)) (Construction List) =
-		Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway
+instance Morphable (Into (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List)))) (Construction List) where
+	type Morphing (Into (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List)))) (Construction List) =
+		Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List))
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
-		Construct x xs -> Exactly x <:*:> empty <:*:> unite xs <:*:> empty <:*:> empty
+		Construct x xs -> Exactly x <:*:> (unite xs <:*:> empty <:*:> empty) <:*:> empty
 
-instance Morphable (Rotate Up) (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway) where
-	type Morphing (Rotate Up) (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway) =
-		Maybe <::> (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway)
+instance Morphable (Rotate Up) (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List))) where
+	type Morphing (Rotate Up) (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List))) =
+		Maybe <::> (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List)))
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
-		T_U (Exactly focused :*: T_U (alofts :*: T_U (child :*: T_U (left :*: right)))) ->
+		T_U (Exactly focused :*: T_U (T_U (child :*: T_U (left :*: right)) :*: alofts)) ->
 			case pop @List <~ run alofts of
 				parents :*: Just parent ->
-					let new_child = run (run left) + point (Construct focused <-- run child) + run right in
-					lift <----- view <-- sub @Root <-- parent
-						<:*:> unite parents
-						<:*:> unite new_child
-						-- <:*:> parent_left
-						-- <:*:> parent_right
-						<:*:> view <-- sub @Left <-- parent
-						<:*:> view <-- sub @Right <-- parent
+					let new_child = unite <-- run @(->) (run left) + point (Construct focused <-- run child) + run right in
+					let new_sideway = new_child <:*:> view <-- sub @Left <-- parent <:*:> view <-- sub @Right <-- parent in
+					lift <----- view <-- sub @Root <-- parent <:*:> new_sideway <:*:> unite parents
 				_ :*: Nothing -> empty
