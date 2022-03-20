@@ -34,7 +34,7 @@ import Pandora.Paradigm.Inventory.Some.Optics (view)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Into, Rotate, Lookup, Element, Key), Vertical (Up), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest, Descendants), sub)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Tape)
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -113,7 +113,12 @@ find_rose_sub_tree (Construct k ks) tree = k ?= attached (extract tree)
 type Roses = List <::> Construction List
 
 instance Zippable (Construction List) where
-	type Breadcrumbs (Construction List) = Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses
+	type Breadcrumbs (Construction List) = Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)
+
+instance Substructure Descendants (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance Descendants (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
+	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
+		Exactly x :*: T_U (descendants :*: rest) -> Store <--- descendants :*: lift . lift . (Exactly x <:*:>) . (<:*:> rest)
 
 instance Morphable (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))) (Construction List) where
 	type Morphing (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))) (Construction List) =
