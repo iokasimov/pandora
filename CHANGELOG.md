@@ -730,3 +730,4 @@
 * Remove `leaf`, `left`, `right`, `both` in `Binary` module
 * Define `Zipper` instance of `Nonempty Rose` tree
 * Change `Zipper` definition - add `structure` in tag
+* Define `Roses` type synonymous

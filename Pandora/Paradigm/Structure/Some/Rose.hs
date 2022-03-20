@@ -109,22 +109,24 @@ find_rose_sub_tree (Construct k ks) tree = k ?= attached (extract tree)
 
 ------------------------------ Non-empty rose tree zipper -----------------------------
 
-type Sideway = (List <::> Construction List) -- node child
-	<:*:> Reverse (List <::> Construction List) -- node left
-	<:*:> (List <::> Construction List) -- node right
+type Roses = List <::> Construction List
+
+type Sideway = Roses -- node child
+	<:*:> Reverse Roses -- node left
+	<:*:> Roses -- node right
 
 instance Zippable (Construction List) where
-	type Breadcrumbs (Construction List) = Sideway <:*:> (List <::> Tape (List <::> Construction List))
+	type Breadcrumbs (Construction List) = Sideway <:*:> (List <::> Tape Roses)
 
-instance Morphable (Into (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List)))) (Construction List) where
-	type Morphing (Into (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List)))) (Construction List) =
-		Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List))
+instance Morphable (Into (Exactly <:*:> Sideway <:*:> (List <::> Tape Roses))) (Construction List) where
+	type Morphing (Into (Exactly <:*:> Sideway <:*:> (List <::> Tape Roses))) (Construction List) =
+		Exactly <:*:> Sideway <:*:> (List <::> Tape Roses)
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
 		Construct x xs -> Exactly x <:*:> (unite xs <:*:> empty <:*:> empty) <:*:> empty
 
-instance Morphable (Rotate Up) (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List))) where
-	type Morphing (Rotate Up) (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List))) =
-		Maybe <::> (Exactly <:*:> Sideway <:*:> (List <::> Tape (List <::> Construction List)))
+instance Morphable (Rotate Up) (Exactly <:*:> Sideway <:*:> (List <::> Tape Roses)) where
+	type Morphing (Rotate Up) (Exactly <:*:> Sideway <:*:> (List <::> Tape Roses)) =
+		Maybe <::> (Exactly <:*:> Sideway <:*:> (List <::> Tape Roses))
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
 		T_U (Exactly focused :*: T_U (T_U (child :*: T_U (left :*: right)) :*: alofts)) ->
 			case pop @List <~ run alofts of
