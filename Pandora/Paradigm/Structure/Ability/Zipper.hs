@@ -38,7 +38,7 @@ import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, view, replace, muta
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *
 
-type Zipper (structure :: * -> *) = Tagged Zippable <:.> (Exactly <:*:> Breadcrumbs structure)
+type Zipper (structure :: * -> *) = Tagged (Zippable structure) <:.> (Exactly <:*:> Breadcrumbs structure)
 
 type Breadcrumbed structure t = (Zippable structure, Breadcrumbs structure ~ t)
 
@@ -55,7 +55,8 @@ type family Fastenable structure rs where
 	Fastenable structure (r ::: rs) = (Morphable < Rotate r < structure, Fastenable structure rs)
 	Fastenable structure r = Morphable < Rotate r < structure
 
-type Tape t = Tagged Zippable <:.> (Exactly <:*:> Reverse t <:*:> t)
+type Tape structure = Tagged (Zippable structure)
+	<:.> (Exactly <:*:> Reverse structure <:*:> structure)
 
 instance {-# OVERLAPS #-} Traversable (->) (->) t => Traversable (->) (->) (Tape t) where
 	f <<- z = (\ls x rs -> lift <------ x <:*:> ls <:*:> rs)
