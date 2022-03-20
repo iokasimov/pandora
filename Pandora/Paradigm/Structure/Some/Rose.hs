@@ -23,16 +23,18 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
 import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (=#-), (<~~~~))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
+import Pandora.Paradigm.Inventory.Some.Optics (view)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Into, Rotate, Lookup, Element, Key), Vertical (Up), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest))
-import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest), sub)
+import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Tape)
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
@@ -107,31 +109,32 @@ find_rose_sub_tree (Construct k ks) tree = k ?= attached (extract tree)
 
 ------------------------------ Non-empty rose tree zipper -----------------------------
 
--- Use `Tape` instead
-type Aloft = Exactly -- parent element
-	<:*:> (Reverse List <::> Construction List) -- parent left
-	<:*:> (List <::> Construction List) -- parent right
-
 type Sideway = (List <::> Construction List) -- node child
-	<:*:> (Reverse List <::> Construction List) -- node left
+	<:*:> Reverse (List <::> Construction List) -- node left
 	<:*:> (List <::> Construction List) -- node right
 
 instance Zippable (Construction List) where
-	type Breadcrumbs (Construction List) = (List <::> Aloft) <:*:> Sideway
+	type Breadcrumbs (Construction List) = (List <::> Tape (List <::> Construction List)) <:*:> Sideway
 
-instance Morphable (Into (Exactly <:*:> (List <::> Aloft) <:*:> Sideway)) (Construction List) where
-	type Morphing (Into (Exactly <:*:> (List <::> Aloft) <:*:> Sideway)) (Construction List) =
-		Exactly <:*:> (List <::> Aloft) <:*:> Sideway
+instance Morphable (Into (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway)) (Construction List) where
+	type Morphing (Into (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway)) (Construction List) =
+		Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
 		Construct x xs -> Exactly x <:*:> empty <:*:> unite xs <:*:> empty <:*:> empty
 
-instance Morphable (Rotate Up) (Exactly <:*:> (List <::> Aloft) <:*:> Sideway) where
-	type Morphing (Rotate Up) (Exactly <:*:> (List <::> Aloft) <:*:> Sideway) =
-		Maybe <::> (Exactly <:*:> (List <::> Aloft) <:*:> Sideway)
+instance Morphable (Rotate Up) (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway) where
+	type Morphing (Rotate Up) (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway) =
+		Maybe <::> (Exactly <:*:> (List <::> Tape (List <::> Construction List)) <:*:> Sideway)
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
 		T_U (Exactly focused :*: T_U (alofts :*: T_U (child :*: T_U (left :*: right)))) ->
 			case pop @List <~ run alofts of
-				parents :*: Just (T_U (Exactly parent_root :*: T_U (parent_left :*: parent_right))) ->
+				parents :*: Just parent ->
 					let new_child = run (run left) + point (Construct focused <-- run child) + run right in
-					lift <----- Exactly parent_root <:*:> unite parents <:*:> unite new_child <:*:> parent_left <:*:> parent_right
+					lift <----- view <-- sub @Root <-- parent
+						<:*:> unite parents
+						<:*:> unite new_child
+						-- <:*:> parent_left
+						-- <:*:> parent_right
+						<:*:> view <-- sub @Left <-- parent
+						<:*:> view <-- sub @Right <-- parent
 				_ :*: Nothing -> empty
