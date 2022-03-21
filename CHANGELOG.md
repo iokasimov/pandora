@@ -731,3 +731,4 @@
 * Define `Zipper` instance of `Nonempty Rose` tree
 * Change `Zipper` definition - add `structure` in tag
 * Define `Roses` type synonymous
+* Move `Tape` to `Structure.Modification.Tape` module

@@ -35,9 +35,10 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 	, Morph (Into, Rotate, Lookup, Element, Key), Vertical (Up), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest, Descendants), sub)
-import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Tape)
+import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
+import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Structure.Some.List (List)
 
 type Rose = Maybe <:.> Construction List

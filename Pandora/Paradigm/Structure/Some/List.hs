@@ -41,7 +41,7 @@ import Pandora.Paradigm.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Zipper, Tape)
+import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs), Zipper)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
@@ -51,6 +51,7 @@ import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Pushing, Topp
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
+import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Structure.Modification.Turnover (Turnover (Turnover))
 
 -- | Linear data structure that serves as a collection of elements
