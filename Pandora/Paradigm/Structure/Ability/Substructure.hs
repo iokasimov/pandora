@@ -40,7 +40,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Right (t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- rs :*: lift . (ls <:*:>)
 
-data Segment a = Root a | Rest a | Branch a | Ancestors a
+data Segment a = Root a | Rest a | Branch a | Ancestors a | Forest a
 
 instance Covariant (->) (->) t => Substructure Root (Construction t) where
 	type Substance Root (Construction t) = Exactly
