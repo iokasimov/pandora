@@ -5,16 +5,17 @@ import Pandora.Core.Functor (type (:.), type (>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant ((<-|-))
+import Pandora.Pattern.Functor.Covariant ((<-|-), (<-|-|-))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
+import Pandora.Pattern.Transformer.Hoistable ((/|\))
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (!=), (?=)))
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
-import Pandora.Paradigm.Algebraic (extract, empty)
+import Pandora.Paradigm.Algebraic (extract, empty, (>-||-))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
@@ -32,10 +33,10 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (=#-),
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (view)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
-	, Morph (Into, Rotate, Lookup, Element, Key), Vertical (Up), premorph, find)
+	, Morph (Into, Rotate, Lookup, Element, Key), Vertical (Up, Down), premorph, find)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
-	, Segment (Root, Rest, Ancestors, Forest), sub)
+	, Segment (Root, Rest, Forest), sub, tagstruct)
 import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -118,20 +119,25 @@ instance Zippable (Construction List) where
 	type Breadcrumbs (Construction List) = Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)
 
 -- TODO: Try to use substructure @Left . substructure @Right here
-instance Substructure Ancestors (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
-	type Substance Ancestors (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
+instance Substructure (Down Forest) (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Down Forest) (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
 	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
-		Exactly x :*: T_U (descendants :*: rest) -> Store <--- descendants :*: lift . lift . (Exactly x <:*:>) . (<:*:> rest)
+		Exactly x :*: T_U (df :*: rest) ->
+			Store <--- df :*: lift . lift . (Exactly x <:*:>) . (<:*:> rest)
 
+-- TODO: Try to use substructure @Left . substructure @Right . substructure @Right here
 instance Substructure (Left Forest) (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance (Left Forest) (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Reverse Roses
 	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
-		Exactly x :*: T_U (descendants :*: T_U (left :*: rest)) -> Store <--- left :*: lift . lift . (Exactly x <:*:>) . (descendants <:*:>) . (<:*:> rest)
+		Exactly x :*: T_U (df :*: T_U (left :*: rest)) ->
+			Store <--- left :*: lift . lift . (Exactly x <:*:>) . (df <:*:>) . (<:*:> rest)
 
+-- TODO: Try to use substructure @Left . substructure @Right . substructure @Right . substructure @Right here
 instance Substructure (Right Forest) (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance (Right Forest) (Tagged (Zippable structure) <:.> Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
 	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
-		Exactly x :*: T_U (descendants :*: T_U (left :*: T_U (right :*: rest))) -> Store <--- right :*: lift . lift . (Exactly x <:*:>) . (descendants <:*:>) . (left <:*:>) . (<:*:> rest)
+		Exactly x :*: T_U (df :*: T_U (left :*: T_U (right :*: rest))) ->
+			Store <--- right :*: lift . lift . (Exactly x <:*:>) . (df <:*:>) . (left <:*:>) . (<:*:> rest)
 
 instance Morphable (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))) (Construction List) where
 	type Morphing (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))) (Construction List) =
