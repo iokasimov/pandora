@@ -155,13 +155,16 @@ instance Morphable (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses 
 instance Morphable (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) where
 	type Morphing (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) =
 		Maybe <::> (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))
-	morphing nonempty_rose_tree = case lower <-- premorph nonempty_rose_tree of
-		T_U (Exactly focused :*: T_U (child :*: T_U (left :*: T_U (right :*: alofts)))) ->
-			case pop @List <~ run alofts of
-				parents :*: Just parent ->
-					lift . lift <----- view <-- sub @Root <-- parent
-						<:*:> unite <-- run @(->) (run left) + point (Construct focused <-- run child) + run right
-						<:*:> view <-- sub @Left <-- parent
-						<:*:> view <-- sub @Right <-- parent
-						<:*:> unite parents
-				_ :*: Nothing -> empty
+	morphing (premorph -> nonempty_rose_tree) = case pop @List <~ run (view <-- sub @(Up Forest) <-- nonempty_rose_tree) of
+		-- TODO: Traversable for Maybe up over Product
+		parents :*: Just parent ->
+			let child_node = extract <--- view <-- sub @Root <-- nonempty_rose_tree in
+			let central_children = run <--- view <-- sub @(Down Forest) <-- nonempty_rose_tree in
+			let left_children = run @(->) <---- run <--- view <-- sub @(Left Forest) <-- nonempty_rose_tree in
+			let right_children = run <--- view <-- sub @(Right Forest) <-- nonempty_rose_tree in
+			lift . lift <----- view <-- sub @Root <-- parent
+				<:*:> unite <-- left_children + point (Construct child_node central_children) + right_children
+				<:*:> view <-- sub @Left <-- parent
+				<:*:> view <-- sub @Right <-- parent
+				<:*:> unite parents
+		_ :*: Nothing -> empty
