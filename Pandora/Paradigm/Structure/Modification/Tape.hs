@@ -41,12 +41,6 @@ instance Covariant (->) (->) t => Impliable (Tape t a) where
 	type Arguments (Tape t a) = a -> t a -> t a -> Tape t a
 	imply focused left right = lift <------ Exactly focused <:*:> Reverse left <:*:> right
 
--- TODO: Isn't too fragile to define such an instance without any hints about zippers?
-instance Covariant (->) (->) t => Substructure Root (Tape t) where
-	type Substance Root (Tape t) = Exactly
-	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
-		 Exactly x :*: xs -> Store <--- Exactly x :*: lift . lift . T_U . (:*: xs)
-
 instance Covariant (->) (->) t => Substructure Left (Tape t) where
 	type Substance Left (Tape t) = Reverse t
 	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
