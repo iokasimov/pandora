@@ -732,3 +732,5 @@
 * Change `Zipper` definition - add `structure` in tag
 * Define `Roses` type synonymous
 * Move `Tape` to `Structure.Modification.Tape` module
+
+# 0.5.4
