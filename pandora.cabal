@@ -115,17 +115,18 @@ library
     Pandora.Paradigm.Structure.Ability.Possible
     Pandora.Paradigm.Structure.Ability.Substructure
     Pandora.Paradigm.Structure.Ability.Nonempty
-    Pandora.Paradigm.Structure.Ability.Zipper
     Pandora.Paradigm.Structure.Ability.Monotonic
     Pandora.Paradigm.Structure.Modification
     Pandora.Paradigm.Structure.Modification.Combinative
     Pandora.Paradigm.Structure.Modification.Comprehension
     Pandora.Paradigm.Structure.Modification.Prefixed
     Pandora.Paradigm.Structure.Modification.Turnover
+    Pandora.Paradigm.Structure.Modification.Tape
     Pandora.Paradigm.Structure.Interface
     Pandora.Paradigm.Structure.Interface.Set
     Pandora.Paradigm.Structure.Interface.Dictionary
     Pandora.Paradigm.Structure.Interface.Stack
+    Pandora.Paradigm.Structure.Interface.Zipper
     Pandora.Paradigm.Structure.Some
     Pandora.Paradigm.Structure.Some.Stream
     Pandora.Paradigm.Structure.Some.List

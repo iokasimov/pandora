@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
-module Pandora.Paradigm.Structure.Ability.Zipper where
+module Pandora.Paradigm.Structure.Interface.Zipper where
 
 import Pandora.Core.Functor (type (>), type (<), type (:.), type (:::))
 import Pandora.Core.Impliable (Impliable (Arguments, imply))

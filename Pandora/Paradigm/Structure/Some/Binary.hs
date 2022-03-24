@@ -33,7 +33,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
 	, Morph (Rotate, Into, Insert, Lookup, Key), Vertical (Up, Down), Horizontal (Leftward, Rightward), lookup)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Branch), sub)
-import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
 
 type Binary = Maybe <::> Construction (Maybe <:*:> Maybe)

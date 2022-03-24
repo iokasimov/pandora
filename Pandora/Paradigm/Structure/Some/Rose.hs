@@ -37,30 +37,13 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
 	, Segment (Root, Rest, Forest), sub, tagstruct)
-import Pandora.Paradigm.Structure.Ability.Zipper (Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Structure.Some.List (List)
 
 type Rose = Maybe <:.> Construction List
-
--- FIXME: If we want to remove root node, we ruin the whole tree
---instance Substructure Root Rose where
---	type Available Root Rose = Maybe
---	type Substance Root Rose = Exactly
---	substructure = P_Q_T <-- \rose -> case run # lower rose of
---		Nothing -> Store <--- Nothing :*: TU . Tag . TU . ((Construct % empty) . extract <-|-)
---		Just nonempty_rose -> Store <--- Just (Exactly # extract nonempty_rose) :*: \case
---			Just (Exactly new) -> lift . TU . Just . Construct new <-- deconstruct nonempty_rose
---			Nothing -> lift empty
-
---instance Substructure Just Rose where
---	type Available Just Rose = Exactly
---	type Substance Just Rose = List <:.> Construction List
---	substructure = P_Q_T <-- \rose -> case run . extract . run # rose of
---		Nothing -> Store <--- Exactly empty :*: constant (lift empty)
---		Just (Construct x xs) -> Store <--- Exactly (TU xs) :*: lift . lift . Construct x . run . extract
 
 --------------------------------------- Non-empty rose tree ----------------------------------------
 
