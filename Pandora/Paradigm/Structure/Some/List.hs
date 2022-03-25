@@ -200,7 +200,7 @@ instance Morphable (Rotate Left) (Turnover < Tape List) where
 		rotate_over focused rs = let new_left = attached <--- (put_over <<- rs <~~~ point focused) in
 			imply @(Tape List _) <--- extract new_left <--- TT <-- deconstruct new_left <--- empty
 
-		put_over :: a -> State (Nonempty List a) ()
+		put_over :: a -> State < Nonempty List a < ()
 		put_over = void . modify @State . item @Push
 
 instance Morphable (Rotate Right) (Turnover < Tape List) where
@@ -251,7 +251,7 @@ instance Morphable (Rotate Left) (Tape > Construction Maybe) where
 instance Morphable (Rotate Right) (Tape > Construction Maybe) where
 	type Morphing (Rotate Right) (Tape > Construction Maybe) = Maybe <::> Tape (Construction Maybe)
 	morphing (lower . premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
-		TT <----- imply @(Tape (Nonempty List) _)
+		TT <----- imply @(Tape < Nonempty List < _)
 			<-|-- point <-- extract right
 			<-*-- point <-- item @Push x left
 			<-*-- deconstruct right

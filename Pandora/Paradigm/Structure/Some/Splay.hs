@@ -2,7 +2,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module Pandora.Paradigm.Structure.Some.Splay where
 
-import Pandora.Core.Functor (type (~>), type (>))
+import Pandora.Core.Functor (type (~>), type (>), type (<<<<<<))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|---)))
@@ -50,8 +50,8 @@ instance Morphable (Rotate > Right > Zig Zag) Binary where
 
 -------------------------------------- Non-empty Splay tree ----------------------------------------
 
-instance Morphable (Rotate > Left Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Left Zig) (Construction (Maybe <:*:> Maybe)) = Binary
+instance Morphable (Rotate > Left Zig) (Construction <<<<<< Maybe <:*:> Maybe) where
+	type Morphing (Rotate > Left Zig) (Construction <<<<<< Maybe <:*:> Maybe) = Binary
 	morphing (premorph -> tree) = TT <---- Construct
 		<-|- (extract <-|--- run <--- view <-- sub @(Right Branch) <-- tree)
 		<-*- Just (
@@ -63,8 +63,8 @@ instance Morphable (Rotate > Left Zig) (Construction (Maybe <:*:> Maybe)) where
 				)
 			)
 
-instance Morphable (Rotate > Right Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Right Zig) (Construction (Maybe <:*:> Maybe)) = Binary
+instance Morphable (Rotate > Right Zig) (Construction <<<<<< Maybe <:*:> Maybe) where
+	type Morphing (Rotate > Right Zig) (Construction <<<<<< Maybe <:*:> Maybe) = Binary
 	morphing (premorph -> tree) = TT <---- Construct
 		<-|- (extract <-|--- run <--- view <-- sub @(Left Branch) <-- tree)
 		<-*- Just (
@@ -77,23 +77,23 @@ instance Morphable (Rotate > Right Zig) (Construction (Maybe <:*:> Maybe)) where
 			)
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
-instance Morphable (Rotate > Left > Zig Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Left > Zig Zig) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+instance Morphable (Rotate > Left > Zig Zig) (Construction <<<<<< Maybe <:*:> Maybe) where
+	type Morphing (Rotate > Left > Zig Zig) (Construction <<<<<< Maybe <:*:> Maybe) = Maybe <::> Construction <<<<<< Maybe <:*:> Maybe
 	morphing (premorph -> tree) = TT <---- run . rotate @(Left Zig) ==<< run <-- rotate @(Left Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
-instance Morphable (Rotate > Right > Zig Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Right > Zig Zig) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+instance Morphable (Rotate > Right > Zig Zig) (Construction <<<<<< Maybe <:*:> Maybe) where
+	type Morphing (Rotate > Right > Zig Zig) (Construction <<<<<< Maybe <:*:> Maybe) = Maybe <::> Construction <<<<<< Maybe <:*:> Maybe
 	morphing (premorph -> tree) = TT <---- run . rotate @(Right Zig) ==<< run <-- rotate @(Right Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
-instance Morphable (Rotate > Left > Zig Zag) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Left > Zig Zag) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+instance Morphable (Rotate > Left > Zig Zag) (Construction <<<<<< Maybe <:*:> Maybe) where
+	type Morphing (Rotate > Left > Zig Zag) (Construction <<<<<< Maybe <:*:> Maybe) = Maybe <::> Construction <<<<<< Maybe <:*:> Maybe
 	morphing (premorph -> struct) = rotate @(Left Zig) <--- mutate <-- (try_to_rotate @(Right Zig) /|\) <-- sub @(Left Branch) <-- struct
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
-instance Morphable (Rotate > Right > Zig Zag) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Right > Zig Zag) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+instance Morphable (Rotate > Right > Zig Zag) (Construction <<<<<< Maybe <:*:> Maybe) where
+	type Morphing (Rotate > Right > Zig Zag) (Construction <<<<<< Maybe <:*:> Maybe) = Maybe <::> Construction <<<<<< Maybe <:*:> Maybe
 	morphing (premorph -> struct) = rotate @(Right Zig) <--- mutate <-- (try_to_rotate @(Left Zig) /|\) <-- sub @(Right Branch) <-- struct
 
 -- TODO: Include error instead of returning empty tree

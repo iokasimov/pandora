@@ -1,6 +1,15 @@
 module Pandora.Core.Functor where
 
-infixl 0 <
+infixl 9 <
+infixl 8 <<
+infixl 7 <<<
+infixl 6 <<<<
+infixl 5 <<<<<
+infixl 4 <<<<<<
+infixl 3 <<<<<<<
+infixl 2 <<<<<<<<
+infixl 1 <<<<<<<<<
+
 infixr 0 >
 infixr 0 <:=, :=>, :=:=>, ~>
 infixr 1 .:, :.
@@ -9,6 +18,14 @@ infixr 9 :::
 
 -- | Arguments consuming
 type (<) t a = t a
+type (<<) t a = t a
+type (<<<) t a = t a
+type (<<<<) t a = t a
+type (<<<<<) t a = t a
+type (<<<<<<) t a = t a
+type (<<<<<<<) t a = t a
+type (<<<<<<<<) t a = t a
+type (<<<<<<<<<) t a = t a
 
 -- | Type application
 type (>) t a = t a

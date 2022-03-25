@@ -734,3 +734,4 @@
 * Move `Tape` to `Structure.Modification.Tape` module
 
 # 0.5.4
+* Define `<` length encoding type operators in `Functor` module
