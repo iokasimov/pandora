@@ -12,9 +12,9 @@ infixl 1 <<<<<<<<<
 
 infixr 0 >
 infixr 0 <:=, :=>, :=:=>, ~>
-infixr 1 .:, :.
-infixr 2 ::|:., ::|.:, ::|::
-infixr 9 :::
+infixr 8 .:, :.
+infixr 5 ::|:., ::|.:, ::|::
+infixr 7 :::
 
 -- | Arguments consuming
 type (<) t a = t a

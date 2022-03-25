@@ -1,7 +1,6 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Primary.Transformer.Continuation where
 
-import Pandora.Core.Functor (type (:.), type (>), type (::|:.))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
@@ -15,10 +14,10 @@ import Pandora.Paradigm.Algebraic.Exponential ((%), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Algebraic (point)
 
-newtype Continuation r t a = Continuation ((->) ::|:. a :. t > r)
+newtype Continuation r t a = Continuation ((->) ((->) a (t r)) (t r))
 
 instance Interpreted (->) (Continuation r t) where
-	type Primary (Continuation r t) a = (->) ::|:. a :. t > r
+	type Primary (Continuation r t) a = ((->) ((->) a (t r)) (t r))
 	run ~(Continuation x) = x
 	unite = Continuation
 
