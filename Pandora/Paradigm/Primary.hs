@@ -7,7 +7,7 @@ import Pandora.Paradigm.Primary.Functor as Exports
 import Pandora.Paradigm.Primary.Object as Exports
 
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Core.Functor (type (:.), type (>))
+import Pandora.Core.Functor (type (:.), type (>>>))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category ((<---))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
@@ -20,8 +20,8 @@ instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
 
 type family Simplification (t :: * -> *) (a :: *) where
 	Simplification Exactly a = a
-	Simplification (TU _ _ t u) a = t :. u > a
-	Simplification (UT _ _ t u) a = u :. t > a
-	Simplification (TUT _ _ _ t t' u) a = t :. u :. t' > a
+	Simplification (TU _ _ t u) a = t :. u >>> a
+	Simplification (UT _ _ t u) a = u :. t >>> a
+	Simplification (TUT _ _ _ t t' u) a = t :. u :. t' >>> a
 	Simplification (T_U _ _ p t u) a = p (t a) (u a)
 	Simplification t a = t a

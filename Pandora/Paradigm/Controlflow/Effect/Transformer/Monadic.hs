@@ -26,7 +26,7 @@ class Interpreted m t => Monadic m t where
 	{-# MINIMAL wrap #-}
 	wrap :: Pointable u => m < t a < (t :> u) a
 
-infixr 3 :>
+infixr 8 :>
 newtype (:>) t u a = TM { tm :: Schematic Monad t u a }
 
 instance Covariant (->) (->) (Schematic Monad t u) => Covariant (->) (->) (t :> u) where

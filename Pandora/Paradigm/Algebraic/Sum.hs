@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Algebraic.Sum where
 
-import Pandora.Core.Functor (type (>))
+import Pandora.Core.Functor (type (>>>>>>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -29,7 +29,7 @@ bitraverse_sum :: Covariant (->) (->) t => (e -> t e') -> (a -> t a') -> (e :+: 
 bitraverse_sum f _ (Option x) = Option <-|- f x
 bitraverse_sum _ g (Adoption x) = Adoption <-|- g x
 
-type (<:+:>) t u = t <:.:> u > (:+:)
-type (>:+:>) t u = t >:.:> u > (:+:)
-type (<:+:<) t u = t <:.:< u > (:+:)
-type (>:+:<) t u = t >:.:< u > (:+:)
+type (<:+:>) t u = t <:.:> u >>>>>> (:+:)
+type (>:+:>) t u = t >:.:> u >>>>>> (:+:)
+type (<:+:<) t u = t <:.:< u >>>>>> (:+:)
+type (>:+:<) t u = t >:.:< u >>>>>> (:+:)

@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (~>), type (>), type (<), type (:=>))
+import Pandora.Core.Functor (type (~>), type (>), type (>>>>>>), type (<), type (:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
 import Pandora.Pattern.Kernel (constant)
@@ -70,10 +70,10 @@ instance Substructure (Right Branch) Binary where
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
-type instance Nonempty Binary = Construction > Maybe <:*:> Maybe
+type instance Nonempty Binary = Construction (Maybe <:*:> Maybe)
 
-instance Morphable (Into Binary) (Construction > Maybe <:*:> Maybe) where
-	type Morphing (Into Binary) (Construction > Maybe <:*:> Maybe) = Binary
+instance Morphable (Into Binary) (Construction (Maybe <:*:> Maybe)) where
+	type Morphing (Into Binary) (Construction (Maybe <:*:> Maybe)) = Binary
 	morphing = lift . premorph
 
 -- instance Morphable Insert (Construction Wye) where

@@ -1,7 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Controlflow.Effect.Adaptable where
 
-import Pandora.Core.Functor (type (>), type (<))
+import Pandora.Core.Functor (type (>), type (>>>), type (<))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity))
 import Pandora.Pattern.Functor.Covariant (Covariant)
@@ -24,7 +24,7 @@ instance {-# OVERLAPS #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable u (->)
 	adapt = point . extract
 
 class Effectful m v t u where
-	effect :: m (v a) (t :> u > a)
+	effect :: m (v a) (t :> u >>> a)
 
 instance (Pointable u, Monadic m t) => Effectful m t t u where
 	effect = wrap

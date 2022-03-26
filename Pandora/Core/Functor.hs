@@ -10,7 +10,16 @@ infixl 3 <<<<<<<
 infixl 2 <<<<<<<<
 infixl 1 <<<<<<<<<
 
-infixr 0 >
+infixr 9 >
+infixr 8 >>
+infixr 7 >>>
+infixr 6 >>>>
+infixr 5 >>>>>
+infixr 4 >>>>>>
+infixr 3 >>>>>>>
+infixr 2 >>>>>>>>
+infixr 1 >>>>>>>>>
+
 infixr 0 <:=, :=>, :=:=>, ~>
 infixr 8 .:, :.
 infixr 5 ::|:., ::|.:, ::|::
@@ -29,6 +38,14 @@ type (<<<<<<<<<) t a = t a
 
 -- | Type application
 type (>) t a = t a
+type (>>) t a = t a
+type (>>>) t a = t a
+type (>>>>) t a = t a
+type (>>>>>) t a = t a
+type (>>>>>>) t a = t a
+type (>>>>>>>) t a = t a
+type (>>>>>>>>) t a = t a
+type (>>>>>>>>>) t a = t a
 
 -- | Functors composition
 type (:.) t u a = t (u a)

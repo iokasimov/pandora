@@ -2,7 +2,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Structure.Modification.Prefixed where
 
-import Pandora.Core.Functor (type (:.), type (>))
+import Pandora.Core.Functor (type (:.), type (>>>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|----), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
@@ -12,10 +12,10 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, ru
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into), premorph)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 
-newtype Prefixed t k a = Prefixed (t :. (:*:) k > a)
+newtype Prefixed t k a = Prefixed (t :. (:*:) k >>> a)
 
 instance Interpreted (->) (Prefixed t k) where
-	type Primary (Prefixed t k) a = t :. (:*:) k > a
+	type Primary (Prefixed t k) a = t :. (:*:) k >>> a
 	run ~(Prefixed x) = x
 	unite = Prefixed
 

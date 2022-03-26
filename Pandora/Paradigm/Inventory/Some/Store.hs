@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory.Some.Store where
 
-import Pandora.Core (type (:.), type (>), type (<:=), type (~>))
+import Pandora.Core (type (:.), type (>), type (>>>), type (<:=), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), identity)
 import Pandora.Pattern.Kernel (constant)
@@ -23,7 +23,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bri
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 
 -- | Context based computation on value
-newtype Store s a = Store ((:*:) s :. (->) s > a)
+newtype Store s a = Store ((:*:) s :. (->) s >>> a)
 
 -- TODO: Try to generalize (->) here
 instance Covariant (->) (->) (Store s) where
@@ -47,7 +47,7 @@ instance Invariant (Flip Store r) where
 	f <!< g = (((f <-||-) . ((g >-||-) <-|-) =#-) =#-)
 
 instance Interpreted (->) (Store s) where
-	type Primary (Store s) a = (:*:) s :. (->) s > a
+	type Primary (Store s) a = (:*:) s :. (->) s >>> a
 	run ~(Store x) = x
 	unite = Store
 

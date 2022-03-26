@@ -2,7 +2,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Structure.Modification.Comprehension where
 
-import Pandora.Core.Functor (type (>))
+import Pandora.Core.Functor (type (>), type (>>>>>), type (>>>>>>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -26,10 +26,10 @@ import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic (empty, (<-|-<-|-))
 
-newtype Comprehension t a = Comprehension (t <::> Construction t > a)
+newtype Comprehension t a = Comprehension (t <::> Construction t >>>>> a)
 
 instance Interpreted (->) (Comprehension t) where
-	type Primary (Comprehension t) a = t <::> Construction t > a
+	type Primary (Comprehension t) a = t <::> Construction t >>>>> a
 	run ~(Comprehension x) = x
 	unite = Comprehension
 
@@ -45,18 +45,18 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) right t, Semimonoidal 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) (Construction t), Semimonoidal (-->) (:*:) (:+:) t, Semimonoidal (-->) (:*:) (:+:) (Construction t), Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (Comprehension t) where
 	unit _ = Straight <-- \_ -> Comprehension empty
 
-instance (forall a . Semigroup (t <::> Construction t > a), Bindable (->) t) => Bindable (->) (Comprehension t) where
+instance (forall a . Semigroup (t <::> Construction t >>>>> a), Bindable (->) t) => Bindable (->) (Comprehension t) where
 	f =<< Comprehension (TT t) = Comprehension . TT <--- (\(Construct x xs) -> run . run @(->) <-- f x + (f ==<< Comprehension <-- TT xs)) =<< t
 
-instance Setoid (t <::> Construction t > a) => Setoid (Comprehension t a) where
+instance Setoid (t <::> Construction t >>>>> a) => Setoid (Comprehension t a) where
 	Comprehension ls == Comprehension rs = ls == rs
 
-instance Semigroup (t <::> Construction t > a) => Semigroup (Comprehension t a) where
+instance Semigroup (t <::> Construction t >>>>> a) => Semigroup (Comprehension t a) where
 	Comprehension x + Comprehension y = Comprehension <---- x + y
 
-instance Monoid (t <::> Construction t > a) => Monoid (Comprehension t a) where
+instance Monoid (t <::> Construction t >>>>> a) => Monoid (Comprehension t a) where
 	zero = Comprehension zero
 
 instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Morphable Push (Comprehension t) where
-	type Morphing Push (Comprehension t) = Exactly <:.:> Comprehension t > (->)
+	type Morphing Push (Comprehension t) = Exactly <:.:> Comprehension t >>>>>> (->)
 	morphing (run . premorph -> xs) = T_U <-- \(Exactly x) -> Comprehension . lift . Construct x . run <-- xs

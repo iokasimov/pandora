@@ -3,7 +3,7 @@ module Pandora.Paradigm.Inventory.Some.State where
 
 import Pandora.Pattern.Morphism.Flip (Flip)
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Core.Functor (type (:.), type (>))
+import Pandora.Core.Functor (type (:.), type (>>>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -27,7 +27,7 @@ import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (Pointable, point, (<-||-), (>-||-))
 
 -- | Effectful computation with a variable
-newtype State s a = State ((->) s :. (:*:) s > a)
+newtype State s a = State ((->) s :. (:*:) s >>> a)
 
 instance Covariant (->) (->) (State s) where
 	f <-|- x = State <--- (<-|-) f . run x
@@ -50,7 +50,7 @@ instance Invariant (Flip State r) where
 	f <!< g = (((g >-||-) . ((f <-||-) <-|-) =#-) =#-)
 
 instance Interpreted (->) (State s) where
-	type Primary (State s) a = (->) s :. (:*:) s > a
+	type Primary (State s) a = (->) s :. (:*:) s >>> a
 	run ~(State x) = x
 	unite = State
 

@@ -1,7 +1,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
-import Pandora.Core.Functor (type (>), type (~>), type (:=:=>))
+import Pandora.Core.Functor (type (>), type (>>>), type (>>>>>>), type (>>>>>>>), type (~>), type (:=:=>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -47,26 +47,26 @@ rotate = morphing . TT . Tag @(Rotate mod)
 into :: forall mod struct . Morphable (Into mod) struct => struct ~> Morphing (Into mod) struct
 into = morphing . TT . Tag @(Into mod)
 
-insert :: forall mod struct a . Morphed (Insert mod) struct (Exactly <:.:> struct > (->)) => a :=:=> struct
+insert :: forall mod struct a . Morphed (Insert mod) struct (Exactly <:.:> struct >>>>>> (->)) => a :=:=> struct
 insert new xs = run <-- morph @(Insert mod) xs <-- Exactly new
 
-item :: forall mod struct a . Morphed mod struct (Exactly <:.:> struct > (->)) => a :=:=> struct
+item :: forall mod struct a . Morphed mod struct (Exactly <:.:> struct >>>>>> (->)) => a :=:=> struct
 item new xs = run <-- morph @mod xs <-- Exactly new
 
-collate :: forall mod struct a . (Chain a, Morphed mod struct ((Exactly <:.:> Comparison > (:*:)) <:.:> struct > (->))) => a :=:=> struct
+collate :: forall mod struct a . (Chain a, Morphed mod struct ((Exactly <:.:> Comparison >>>>>> (:*:)) <:.:> struct >>>>>> (->))) => a :=:=> struct
 collate new xs = run <-- morph @mod xs <-- T_U (Exactly new :*: Convergence (<=>))
 
-delete :: forall mod struct a . (Setoid a, Morphed (Delete mod) struct (Predicate <:.:> struct > (->))) => a :=:=> struct
+delete :: forall mod struct a . (Setoid a, Morphed (Delete mod) struct (Predicate <:.:> struct >>>>>> (->))) => a :=:=> struct
 delete x xs = run <-- morph @(Delete mod) xs <-- equate x
 
-filter :: forall mod struct a . (Morphed (Delete mod) struct (Predicate <:.:> struct > (->))) => Predicate a -> struct a -> struct a
+filter :: forall mod struct a . (Morphed (Delete mod) struct (Predicate <:.:> struct >>>>>> (->))) => Predicate a -> struct a -> struct a
 filter p xs = run <-- morph @(Delete mod) xs <-- p
 
-find :: forall mod struct result a . (Morphed (Find mod) struct (Predicate <:.:> result > (->))) => Predicate a -> struct a -> result a
+find :: forall mod struct result a . (Morphed (Find mod) struct (Predicate <:.:> result >>>>>> (->))) => Predicate a -> struct a -> result a
 find p xs = run <-- morph @(Find mod) xs <-- p
 
 lookup :: forall mod key struct a . (Morphed (Lookup mod) struct ((->) key <::> Maybe)) => key -> struct a -> Maybe a
 lookup key struct = run <-- morph @(Lookup mod) struct <-- key
 
-vary :: forall mod key value struct . (Morphed (Vary mod) struct (((:*:) key <::> Exactly) <:.:> struct > (->))) => key -> value -> struct value -> struct value
+vary :: forall mod key value struct . (Morphed (Vary mod) struct (((:*:) key <::> Exactly) <:.:> struct >>>>>>> (->))) => key -> value -> struct value -> struct value
 vary key value xs = run <-- morph @(Vary mod) @struct xs <-- TT (key :*: Exactly value)

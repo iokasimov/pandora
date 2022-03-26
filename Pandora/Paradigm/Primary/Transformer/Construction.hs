@@ -1,7 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
-import Pandora.Core.Functor (type (:.), type (>), type (:=>), type (~>))
+import Pandora.Core.Functor (type (:.), type (>>>), type (:=>), type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|----), (<-|-|-)))
@@ -28,7 +28,7 @@ import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~), (<~~~), (<~~~
 
 infixr 7 .-+
 
-data Construction t a = Construct a (t :. Construction t > a)
+data Construction t a = Construct a (t :. Construction t >>> a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
 	f <-|- ~(Construct x xs) = Construct <------ f x <------ f <-|-|- xs
@@ -76,7 +76,7 @@ instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) 
 -- instance Monotonic a (t :. Construction t > a) => Monotonic a (t <::> Construction t > a) where
 -- 	reduce f r = reduce f r . run
 
-deconstruct :: Construction t a -> t :. Construction t > a
+deconstruct :: Construction t a -> t :. Construction t >>> a
 deconstruct ~(Construct _ xs) = xs
 
 -- Generate a construction from seed using effectful computation

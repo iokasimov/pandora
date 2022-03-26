@@ -1,7 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Primary.Transformer.Tap where
 
-import Pandora.Core.Functor (type (>))
+import Pandora.Core.Functor (type (>>>>>>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<------))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-)))
@@ -45,6 +45,6 @@ instance Lowerable (->) Tap where
 instance Hoistable (->) Tap where
 	f /|\ Tap x xs = Tap x <-- f xs
 
-instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap (t <:.:> t > (:*:))) where
+instance {-# OVERLAPS #-} Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap (t <:.:> t >>>>>> (:*:))) where
 	mult = Straight <-- \(Tap x (T_U (xls :*: xrs)) :*: Tap y (T_U (yls :*: yrs))) ->
 		Tap (x :*: y) <------ (mult @(-->) <~~~ xls :*: yls) <:*:> (mult @(-->) <~~~ xrs :*: yrs)

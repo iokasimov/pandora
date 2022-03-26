@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Maybe where
 
-import Pandora.Core.Functor (type (:.), type (>))
+import Pandora.Core.Functor (type (:.), type (>), type (>>>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, (<--), (<---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -115,7 +115,7 @@ instance Monotonic a (Maybe a) where
 	reduce f r (Just x) = f x r
 	reduce _ r Nothing = r
 
-instance Monotonic a (t a) => Monotonic a (Maybe :. t > a) where
+instance Monotonic a (t a) => Monotonic a (Maybe :. t >>> a) where
 	reduce f r (Just x) = reduce f r x
 	reduce _ r Nothing = r
 

@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.List where
 
-import Pandora.Core.Functor (type (:.), type (<), type (>))
+import Pandora.Core.Functor (type (:.), type (<), type (>), type (>>>), type (>>>>>>))
 import Pandora.Core.Impliable (imply)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), (-->), (--->), (---->), identity)
@@ -69,7 +69,7 @@ instance Monoid (List a) where
 	zero = empty
 
 instance Morphable Push List where
-	type Morphing Push List = Exactly <:.:> List > (->)
+	type Morphing Push List = Exactly <:.:> List >>>>>> (->)
 	morphing (premorph -> xs) = T_U <-- lift . (Construct % run xs) . extract
 
 instance Morphable Pop List where
@@ -77,7 +77,7 @@ instance Morphable Pop List where
 	morphing (premorph -> xs) = resolve deconstruct Nothing =#- xs
 
 instance Morphable (Find Element) List where
-	type Morphing (Find Element) List = Predicate <:.:> Maybe > (->)
+	type Morphing (Find Element) List = Predicate <:.:> Maybe >>>>>> (->)
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- \_ -> Nothing
 		Just (Construct x xs) -> T_U <-- \p ->
@@ -85,7 +85,7 @@ instance Morphable (Find Element) List where
 				<---- find @Element @List @Maybe <-- p <-- TT xs
 
 instance Morphable (Delete First) List where
-	type Morphing (Delete First) List = Predicate <:.:> List > (->)
+	type Morphing (Delete First) List = Predicate <:.:> List >>>>>> (->)
 	morphing list = case run --> premorph list of
 		Nothing -> T_U <-- constant empty
 		Just (Construct x xs) -> T_U <-- \p ->
@@ -93,7 +93,7 @@ instance Morphable (Delete First) List where
 				<--- lift . Construct x . run . filter @First @List p <-- TT xs
 
 instance Morphable (Delete All) List where
-	type Morphing (Delete All) List = Predicate <:.:> List > (->)
+	type Morphing (Delete All) List = Predicate <:.:> List >>>>>> (->)
 	morphing list = case run <--- premorph list of
 		Nothing -> T_U <-- constant empty
 		Just (Construct x xs) -> T_U <-- \p -> (p <~ x) ?= True
@@ -126,7 +126,7 @@ instance Substructure Rest List where
 
 -- | Transform any traversable structure into a list
 linearize :: forall t a . Traversable (->) (->) t => t a -> List a
-linearize = TT . extract . (run @(->) @(State (Maybe :. Nonempty List > a)) % Nothing) . fold (Just .:.. Construct)
+linearize = TT . extract . (run @(->) @(State (Maybe :. Nonempty List >>> a)) % Nothing) . fold (Just .:.. Construct)
 
 ----------------------------------------- Non-empty list -------------------------------------------
 
@@ -137,7 +137,7 @@ instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 	Construct x (Just xs) + ys = Construct x . Just <-- xs + ys
 
 instance Morphable (Find Element) (Construction Maybe) where
-	type Morphing (Find Element) (Construction Maybe) = Predicate <:.:> Maybe > (->)
+	type Morphing (Find Element) (Construction Maybe) = Predicate <:.:> Maybe >>>>>> (->)
 	morphing (premorph -> Construct x xs) = T_U <-- \p -> (p <~ x) ?= True <----- Just x
 		<----- find @Element @(Nonempty List) @Maybe <-- p ===<< xs
 
@@ -154,7 +154,7 @@ instance Morphable (Into List) (Construction Maybe <::> Maybe) where
 		Construct Nothing Nothing -> empty
 
 instance Morphable Push (Construction Maybe) where
-	type Morphing Push (Construction Maybe) = Exactly <:.:> Construction Maybe > (->)
+	type Morphing Push (Construction Maybe) = Exactly <:.:> Construction Maybe >>>>>> (->)
 	morphing (premorph -> xs) = T_U <-- \(Exactly x) -> Construct x <-- Just xs
 
 instance Stack (Construction Maybe) where

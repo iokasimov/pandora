@@ -1,7 +1,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Schemes.TT where
 
-import Pandora.Core.Functor (type (:.), type (>), type (~>))
+import Pandora.Core.Functor (type (:.), type (>), type (>>>), type (~>))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<-----))
@@ -25,9 +25,9 @@ import Pandora.Paradigm.Algebraic (empty, point, extract, (<-||-), (<-||---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
-newtype TT ct ct' t t' a = TT (t :. t' > a)
+newtype TT ct ct' t t' a = TT (t :. t' >>> a)
 
-infixr 3 <::>, >::>, <::<, >::<
+infixr 6 <::>, >::>, <::<, >::<
 
 type (<::>) = TT Covariant Covariant
 type (>::>) = TT Contravariant Covariant
@@ -35,7 +35,7 @@ type (<::<) = TT Covariant Contravariant
 type (>::<) = TT Contravariant Contravariant
 
 instance Interpreted (->) (TT ct ct' t t') where
-	type Primary (TT ct ct' t t') a = t :. t' > a
+	type Primary (TT ct ct' t t') a = t :. t' >>> a
 	run ~(TT x) = x
 	unite = TT
 

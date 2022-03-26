@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Algebraic.Product where
 
-import Pandora.Core.Functor (type (>))
+import Pandora.Core.Functor (type (>>>>>>))
 import Pandora.Pattern.Category ((<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -16,6 +16,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted ()
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>), type (>:.:>), type (<:.:<), type (>:.:<))
 
+-- TODO: Change precedence to 7
 infixr 8 :*:
 infixr 5 <:*:>
 
@@ -65,10 +66,10 @@ swap ~(x :*: y) = y :*: x
 attached :: a :*: b -> a
 attached ~(x :*: _) = x
 
-type (<:*:>) t u = t <:.:> u > (:*:)
-type (>:*:>) t u = t >:.:> u > (:*:)
-type (<:*:<) t u = t <:.:< u > (:*:)
-type (>:*:<) t u = t >:.:< u > (:*:)
+type (<:*:>) t u = t <:.:> u >>>>>> (:*:)
+type (>:*:>) t u = t >:.:> u >>>>>> (:*:)
+type (<:*:<) t u = t <:.:< u >>>>>> (:*:)
+type (>:*:<) t u = t >:.:< u >>>>>> (:*:)
 
-(<:*:>) :: t a -> u a -> t <:*:> u > a
+(<:*:>) :: t a -> u a -> t <:*:> u >>>>>> a
 (<:*:>) xs ys = T_U <--- xs :*: ys
