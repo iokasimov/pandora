@@ -738,3 +738,4 @@
 * Change precedence for `::|:.`, `::|.:`, `::|::`, `.:`, `:.`, `:::`
 * Define `>` length encoding type operators in `Functor` module
 * Change precedence for `<:.>`, `>:.>`, `<:.<`, `>:.<`,  `<::>`, `>::>`, `<::<`, `>::<`
+* Rename `.-+-` `Alternative` operator to `-+-`

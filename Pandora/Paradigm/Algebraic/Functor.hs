@@ -24,7 +24,8 @@ infixl 2 <-*-----, .-*-----, <-||----, >-||----
 infixl 3 <-*----, .-*----, <-||---, >-||---
 infixl 4 <-*---, .-*---, <-*-*-, <-||--, >-||--
 infixl 5 <-*--, .-*--, .-*-*-, <-||-, >-||-
-infixl 6 <-*-, .-*-, <-+-, .-+-
+infixl 6 <-*-, .-*-, <-+-
+infixl 7 -+-
 
 infixl 6 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
@@ -71,8 +72,8 @@ y .-*-*- x = (\_ y' -> y') <-|-|- x <-*-*- y
 (<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
 y <-+- x = \f -> f <-|--- mult @(-->) <~~~ x :*: y
 
-(.-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
-y .-+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
+(-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
+y -+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
 
 loop :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
 loop x = let r = r .-*- x in r
