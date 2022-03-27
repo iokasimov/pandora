@@ -739,3 +739,4 @@
 * Define `>` length encoding type operators in `Functor` module
 * Change precedence for `<:.>`, `>:.>`, `<:.<`, `>:.<`,  `<::>`, `>::>`, `<::<`, `>::<`
 * Rename `.-+-` `Alternative` operator to `-+-`
+* Change `Prefixed` definition - from newtype to type alias

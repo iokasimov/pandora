@@ -35,7 +35,7 @@ import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.State (State, fold)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~), (<~~~), (=#-))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (<~~~), (=#-))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
@@ -50,7 +50,7 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance,
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Pushing, Topping, push, pop, top))
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
-import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
+import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Structure.Modification.Turnover (Turnover (Turnover))
 
@@ -291,7 +291,7 @@ instance Zippable (Comprehension Maybe) where
 
 instance Setoid key => Morphable (Lookup Key) (Prefixed List key) where
 	type Morphing (Lookup Key) (Prefixed List key) = (->) key <::> Maybe
-	morphing (run . premorph -> list) = TT <-- \key -> lookup @Key key ===<< Prefixed <-|- run list
+	morphing (run . premorph -> list) = TT <-- \key -> lookup @Key key ===<< TT @Covariant @Covariant <-|- run list
 
 ------------------------------------ Prefixed non-empty list ---------------------------------------
 

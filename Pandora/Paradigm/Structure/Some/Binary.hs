@@ -34,7 +34,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 	, Morph (Rotate, Into, Insert, Lookup, Key), Vertical (Up, Down), Horizontal (Leftward, Rightward), lookup)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Branch), sub)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
-import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed (Prefixed))
+import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 
 type Binary = Maybe <::> Construction (Maybe <:*:> Maybe)
 
@@ -111,8 +111,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		Just tree -> TT <-- \key ->
 			key <=> attached (extract tree) & order
 				<--- Just --> extract --> extract tree
-				<--- lookup @Key key . Prefixed =<< run (view <-- sub @(Left Branch) <-- tree)
-				<--- lookup @Key key . Prefixed =<< run (view <-- sub @(Right Branch) <-- tree)
+				<--- lookup @Key key . TT @Covariant @Covariant =<< run (view <-- sub @(Left Branch) <-- tree)
+				<--- lookup @Key key . TT @Covariant @Covariant =<< run (view <-- sub @(Right Branch) <-- tree)
 
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Exactly) <:.:> Prefixed Binary k > (->)
@@ -132,8 +132,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed < Construction (Maybe <:*
 	morphing (run . premorph -> Construct x xs) = TT <-- \key ->
 		key <=> attached x & order
 			<---- Just <-- extract x
-			<---- lookup @Key key . Prefixed ==<< get @(Obscure Lens) <-- sub @Left <-- xs
-			<---- lookup @Key key . Prefixed ==<< get @(Obscure Lens) <-- sub @Left <-- xs
+			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @Left <-- xs
+			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @Left <-- xs
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 	{-
