@@ -3,10 +3,11 @@ module Pandora.Paradigm.Structure.Some.Rose where
 
 import Pandora.Core.Functor (type (:.), type (>), type (>>>))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----))
+import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant ((<-|-), (<-|-|-))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
+import Pandora.Pattern.Functor.Traversable ((<<-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -37,7 +38,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
 	, Segment (Root, Rest, Forest), sub, tagstruct)
-import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
@@ -138,16 +139,16 @@ instance Morphable (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses 
 instance Morphable (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) where
 	type Morphing (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) =
 		Maybe <::> (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))
-	morphing (premorph -> nonempty_rose_tree) = case pop @List <~ run (view <-- sub @(Up Forest) <-- nonempty_rose_tree) of
-		-- TODO: Traversable for Maybe up over Product
-		parents :*: Just parent ->
-			let child_node = extract <--- view <-- sub @Root <-- nonempty_rose_tree in
-			let central_children = run <--- view <-- sub @(Down Forest) <-- nonempty_rose_tree in
-			let left_children = run @(->) <---- run <--- view <-- sub @(Left Forest) <-- nonempty_rose_tree in
-			let right_children = run <--- view <-- sub @(Right Forest) <-- nonempty_rose_tree in
-			lift . lift <----- view <-- sub @Root <-- parent
+	morphing (premorph -> z) = TT <---- restruct <-|- identity @(->) <<- pop @List <~ run (view <-- sub @(Up Forest) <-- z) where
+
+		-- TODO: Add type declaration
+		restruct (parents :*: parent) =
+			let child_node = extract <--- view <-- sub @Root <-- z in
+			let central_children = run <--- view <-- sub @(Down Forest) <-- z in
+			let left_children = run @(->) <---- run <--- view <-- sub @(Left Forest) <-- z in
+			let right_children = run <--- view <-- sub @(Right Forest) <-- z in
+			lift <----- view <-- sub @Root <-- parent
 				<:*:> unite <-- left_children + point (Construct child_node central_children) + right_children
 				<:*:> view <-- sub @Left <-- parent
 				<:*:> view <-- sub @Right <-- parent
 				<:*:> unite parents
-		_ :*: Nothing -> empty
