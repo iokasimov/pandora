@@ -3,7 +3,7 @@ module Pandora.Paradigm.Primary.Functor.Conclusion where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Category (identity, (<--), (<---))
+import Pandora.Pattern.Category (identity, (<--), (<---), (<----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -31,10 +31,6 @@ data Conclusion e a = Failure e | Success a
 instance Covariant (->) (->) (Conclusion e) where
 	f <-|- Success x = Success <-- f x
 	_ <-|- Failure y = Failure y
-
-instance Covariant (->) (->) (Flip Conclusion e) where
-	_ <-|- Flip (Success x) = Flip <-- Success x
-	f <-|- Flip (Failure y) = Flip . Failure <-- f y
 
 instance Semimonoidal (-->) (:*:) (:*:) (Conclusion e) where
 	mult = Straight <-- \case
@@ -112,3 +108,16 @@ instance Catchable e (Conclusion e) where
 instance (Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Catchable e (Conclusion e <.:> u) where
 	catch (UT x) handle = let conclude = conclusion <-- run . handle <-- point . Success
 		in UT <--- conclude =<< x
+
+instance Covariant (->) (->) (Flip Conclusion a) where
+	_ <-|- Flip (Success x) = Flip <-- Success x
+	f <-|- Flip (Failure y) = Flip . Failure <-- f y
+
+instance Semimonoidal (-->) (:*:) (:*:) (Flip Conclusion a) where
+	mult = Straight <-- \case
+		Flip (Failure x) :*: Flip (Failure y) -> Flip <---- Failure <--- x :*: y
+		Flip (Success x) :*: _ -> Flip <-- Success x
+		_ :*: Flip (Success x) -> Flip <-- Success x
+
+instance Monoidal (-->) (-->) (:*:) (:*:) (Flip Conclusion a) where
+	unit _ = Straight <--- Flip . Failure . (<~ One)
