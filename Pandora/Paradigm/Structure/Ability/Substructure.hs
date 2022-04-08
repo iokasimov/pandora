@@ -46,6 +46,14 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Right (t
 
 data Segment a = Root a | Rest a | Branch a | Ancestors a | Forest a
 
+instance Covariant (->) (->) t => Substructure Root (Exactly <:*:> t) where
+	type Substance Root (Exactly <:*:> t) = Exactly
+	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @Left
+
+instance Covariant (->) (->) t => Substructure Rest (Exactly <:*:> t) where
+	type Substance Rest (Exactly <:*:> t) = t
+	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @Right
+
 instance Covariant (->) (->) t => Substructure Root (Construction t) where
 	type Substance Root (Construction t) = Exactly
 	substructure = P_Q_T <-- \source -> case lower source of
