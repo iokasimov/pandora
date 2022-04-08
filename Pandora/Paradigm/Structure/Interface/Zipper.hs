@@ -34,8 +34,6 @@ class Zippable (structure :: * -> *) where
 
 type Zipper (structure :: * -> *) = Tagged (Zippable structure) <:.> (Exactly <:*:> Breadcrumbs structure)
 
-type Breadcrumbed structure t = (Zippable structure, Breadcrumbs structure ~ t)
-
 instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t
 	=> Semimonoidal (<--) (:*:) (:*:) (Exactly <:*:> t) where
 	mult = Flip <-- \(T_U (Exactly (x :*: y) :*: xys)) ->

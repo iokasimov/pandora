@@ -740,3 +740,4 @@
 * Change precedence for `<:.>`, `>:.>`, `<:.<`, `>:.<`,  `<::>`, `>::>`, `<::<`, `>::<`
 * Rename `.-+-` `Alternative` operator to `-+-`
 * Change `Prefixed` definition - from newtype to type alias
+* Remove `Breadcrumbed` type synonymous
