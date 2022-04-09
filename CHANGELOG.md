@@ -742,3 +742,4 @@
 * Change `Prefixed` definition - from newtype to type alias
 * Remove `Breadcrumbed` type synonymous
 * Change `Zipper` definition - remove tagging
+* Rename `.-+` `Construction` operator to `constitute`

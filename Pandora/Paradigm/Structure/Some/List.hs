@@ -26,7 +26,7 @@ import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary ()
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
@@ -175,17 +175,18 @@ type instance Combinative List = Comprehension Maybe
 instance Zippable List where
 	type Breadcrumbs List = Reverse List <:*:> List
 
+-- TODO: No overlapping, let's use wrappers instead
 instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 	f <<- T_U (Exactly x :*: T_U (left :*: right)) =
 		(\past' x' left' -> Exactly x' <:*:> left' <:*:> run past')
 			<-|- f <<- Reverse right <-*- f x <-*- f <<- left
 
 -- instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
-	-- f <<= z = let move rtt = TT . deconstruct <----- run . rtt .-+ z in
-		-- imply @(Tape List _)
-			-- <---- f z
-			-- <---- f <-|-- move <-- rotate @Left
-			-- <---- f <-|-- move <-- rotate @Right
+-- 	f <<= z = let move rtt = TT . deconstruct <----- run . rtt .-+ z in
+-- 		imply @(Tape List _)
+-- 			<---- f z
+-- 			<---- f <-|-- move <-- rotate @Left
+-- 			<---- f <-|-- move <-- rotate @Right
 
 instance Morphable (Rotate Left) (Turnover < Tape List) where
 	type Morphing (Rotate Left) (Turnover < Tape List) = Turnover < Tape List

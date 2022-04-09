@@ -12,7 +12,7 @@ import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>))
 import Pandora.Paradigm.Algebraic (extract)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, (.-+))
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, constitute)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Rotate), premorph, rotate)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
@@ -37,7 +37,7 @@ instance Morphable (Rotate Right) (Tape Stream) where
 		imply @(Tape Stream _) <--- extract rs <--- Construct x (point ls) <--- extract (deconstruct rs)
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
-	f <<= z = let move rtt = extract . deconstruct <---- point . rtt .-+ z in
+	f <<= z = let move rtt = extract . deconstruct <---- constitute <-- point . rtt <-- z in
 		f <-|-- imply @(Tape Stream _) <-- z <-- move (rotate @Left) <-- move (rotate @Right)
 
 repeat :: a :=> Stream

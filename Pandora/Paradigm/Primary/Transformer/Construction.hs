@@ -26,8 +26,6 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~), (<~~~), (<~~~~))
 
-infixr 7 .-+
-
 data Construction t a = Construct a (t :. Construction t >>> a)
 
 instance Covariant (->) (->) t => Covariant (->) (->) (Construction t) where
@@ -80,8 +78,8 @@ deconstruct :: Construction t a -> t :. Construction t >>> a
 deconstruct ~(Construct _ xs) = xs
 
 -- Generate a construction from seed using effectful computation
-(.-+) :: Covariant (->) (->) t => a :=> t -> a :=> Construction t
-f .-+ x = Construct x <---- (f .-+) <-|- f x
+constitute :: Covariant (->) (->) t => (a -> t a) -> a :=> Construction t
+constitute f x = Construct x <---- constitute f <-|- f x
 
 section :: (Comonad (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => t ~> Construction t
 section xs = Construct <--- extract xs <--- section <<= xs
