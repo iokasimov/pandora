@@ -743,3 +743,4 @@
 * Remove `Breadcrumbed` type synonymous
 * Change `Zipper` definition - remove tagging
 * Rename `.-+` `Construction` operator to `constitute`
+* Define `Slidable` typeclass for data structures

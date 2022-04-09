@@ -116,6 +116,7 @@ library
     Pandora.Paradigm.Structure.Ability.Substructure
     Pandora.Paradigm.Structure.Ability.Nonempty
     Pandora.Paradigm.Structure.Ability.Monotonic
+    Pandora.Paradigm.Structure.Ability.Slidable
     Pandora.Paradigm.Structure.Modification
     Pandora.Paradigm.Structure.Modification.Combinative
     Pandora.Paradigm.Structure.Modification.Comprehension
