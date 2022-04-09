@@ -741,3 +741,4 @@
 * Rename `.-+-` `Alternative` operator to `-+-`
 * Change `Prefixed` definition - from newtype to type alias
 * Remove `Breadcrumbed` type synonymous
+* Change `Zipper` definition - remove tagging

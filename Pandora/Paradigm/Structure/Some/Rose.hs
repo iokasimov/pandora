@@ -25,7 +25,6 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
@@ -103,42 +102,42 @@ instance Zippable (Construction List) where
 	type Breadcrumbs (Construction List) = Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)
 
 -- TODO: Try to use substructure @Right . substructure @Right . substructure @Right . substructure @Right here
-instance Substructure (Up Forest) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) where
-	type Substance (Up Forest) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) = List <::> Tape Roses
-	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
+instance Substructure (Up Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Up Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = List <::> Tape Roses
+	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: T_U (left :*: T_U (right :*: up))) ->
-			Store <--- up :*: lift . lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (right <:*:>)
+			Store <--- up :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (right <:*:>)
 
 -- TODO: Try to use substructure @Left . substructure @Right here
-instance Substructure (Down Forest) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) where
-	type Substance (Down Forest) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) = Roses
-	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
+instance Substructure (Down Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Down Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
+	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: rest) ->
-			Store <--- down :*: lift . lift . (Exactly x <:*:>) . (<:*:> rest)
+			Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> rest)
 
 -- TODO: Try to use substructure @Left . substructure @Right . substructure @Right here
-instance Substructure (Left Forest) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) where
-	type Substance (Left Forest) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) = Reverse Roses
-	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
+instance Substructure (Left Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Left Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Reverse Roses
+	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: T_U (left :*: rest)) ->
-			Store <--- left :*: lift . lift . (Exactly x <:*:>) . (down <:*:>) . (<:*:> rest)
+			Store <--- left :*: lift . (Exactly x <:*:>) . (down <:*:>) . (<:*:> rest)
 
 -- TODO: Try to use substructure  @Left . substructure @Right . substructure @Right . substructure @Right here
-instance Substructure (Right Forest) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) where
-	type Substance (Right Forest) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) = Roses
-	substructure = P_Q_T <-- \zipper -> case run . lower <-- lower zipper of
+instance Substructure (Right Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Right Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
+	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: T_U (left :*: T_U (right :*: rest))) ->
-			Store <--- right :*: lift . lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (<:*:> rest)
+			Store <--- right :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (<:*:> rest)
 
-instance Morphable (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))) (Construction List) where
-	type Morphing (Into (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))) (Construction List) =
-		Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))
+instance Morphable (Into (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) (Construction List) where
+	type Morphing (Into (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) (Construction List) =
+		Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)
 	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
-		Construct x xs -> lift <----- Exactly x <:*:> unite xs <:*:> empty <:*:> empty <:*:> empty
+		Construct x xs -> Exactly x <:*:> unite xs <:*:> empty <:*:> empty <:*:> empty
 
-instance Morphable (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) where
-	type Morphing (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) =
-		Maybe <::> (Tagged (Zippable structure) <:.> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)))
+instance Morphable (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Morphing (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) =
+		Maybe <::> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))
 	morphing (premorph -> z) = TT <---- restruct <-|- identity @(->) <<- pop @List <~ run (view <-- sub @(Up Forest) <-- z) where
 
 		-- TODO: Add type declaration
@@ -147,8 +146,8 @@ instance Morphable (Rotate Up) (Tagged (Zippable structure) <:.> (Exactly <:*:> 
 			let central_children = run <--- view <-- sub @(Down Forest) <-- z in
 			let left_children = run @(->) <---- run <--- view <-- sub @(Left Forest) <-- z in
 			let right_children = run <--- view <-- sub @(Right Forest) <-- z in
-			lift <----- view <-- sub @Root <-- parent
+			view <-- sub @Root <-- parent
 				<:*:> unite <-- left_children + point (Construct child_node central_children) + right_children
-				<:*:> view <-- sub @Left <-- parent
-				<:*:> view <-- sub @Right <-- parent
+				<:*:> view <--- sub @Left <--- view <-- sub @Rest <-- parent
+				<:*:> view <--- sub @Right <--- view <-- sub @Rest <-- parent
 				<:*:> unite parents

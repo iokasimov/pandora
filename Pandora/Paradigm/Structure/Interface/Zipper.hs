@@ -29,10 +29,11 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Rest))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (=#-))
 
+-- TODO: Use Slidable superclass with Slides associated type family
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *
 
-type Zipper (structure :: * -> *) = Tagged (Zippable structure) <:.> (Exactly <:*:> Breadcrumbs structure)
+type Zipper (structure :: * -> *) = Exactly <:*:> Breadcrumbs structure
 
 instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t
 	=> Semimonoidal (<--) (:*:) (:*:) (Exactly <:*:> t) where
@@ -42,11 +43,6 @@ instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t
 
 instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Exactly <:*:> t) where
 	unit _ = Flip <-- \(T_U (Exactly x :*: _)) -> Straight (\_ -> x)
-
-instance Covariant (->) (->) t => Substructure Root (Tagged (Zippable structure) <:.> (Exactly <:*:> t)) where
-	type Substance Root (Tagged (Zippable structure) <:.> (Exactly <:*:> t)) = Exactly
-	substructure = P_Q_T <-- \source -> case lower . lower <-- source of
-		T_U (Exactly x :*: xs) -> Store <--- Exactly x :*: lift . lift . (<:*:> xs)
 
 type family Fastenable structure rs where
 	Fastenable structure (r ::: rs) = (Morphable < Rotate r < structure, Fastenable structure rs)

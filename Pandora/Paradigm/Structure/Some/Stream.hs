@@ -28,12 +28,12 @@ instance Zippable (Construction Exactly) where
 
 instance Morphable (Rotate Left) (Tape Stream) where
 	type Morphing (Rotate Left) (Tape Stream) = Tape Stream
-	morphing (run . lower . premorph -> Exactly x :*: T_U (Reverse ls :*: rs)) =
+	morphing (run . premorph -> Exactly x :*: T_U (Reverse ls :*: rs)) =
 		imply @(Tape Stream _) <--- extract ls <--- extract (deconstruct ls) <--- Construct x --> point rs
 
 instance Morphable (Rotate Right) (Tape Stream) where
 	type Morphing (Rotate Right) (Tape Stream) = Tape Stream
-	morphing (run . lower . premorph -> Exactly x :*: T_U (Reverse ls :*: rs)) =
+	morphing (run . premorph -> Exactly x :*: T_U (Reverse ls :*: rs)) =
 		imply @(Tape Stream _) <--- extract rs <--- Construct x (point ls) <--- extract (deconstruct rs)
 
 instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
