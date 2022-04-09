@@ -61,6 +61,12 @@ instance Monadic (->) (State s) where
 
 type Stateful s t = Adaptable t (->) (State s)
 
+current :: Stateful s t => t s
+current = adapt <-- State delta
+
+change :: Stateful s t => (s -> s) -> t s
+change f = adapt . State <-- \s -> let r = f s in r :*: r
+
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable t (->) u) => (s -> u s) -> t s
 reconcile f = adapt . set @State ==<< adapt . f ==<< adapt <-- get @State
 

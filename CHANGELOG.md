@@ -744,3 +744,4 @@
 * Change `Zipper` definition - remove tagging
 * Rename `.-+` `Construction` operator to `constitute`
 * Define `Slidable` typeclass for data structures
+* Define `current` and `change` methods in `State`
