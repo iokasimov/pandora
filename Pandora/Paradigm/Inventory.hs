@@ -1,6 +1,6 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory (module Exports, Zoomable (zoom), overlook, (=<>), (~<>)) where
+module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, (=<>), (~<>)) where
 
 import Pandora.Paradigm.Inventory.Ability as Exports
 import Pandora.Paradigm.Inventory.Some as Exports
@@ -36,22 +36,11 @@ instance Adjoint (->) (->) (Equipment e) (Provision e) where
 	f -| x = Provision <--- f . Equipment --| x
 	g |- x = run . g |-- run x
 
-class Zoomable (tool :: * -> * -> *) (available :: * -> *) where
-	zoom :: forall bg ls t . Adaptable t (->) (tool bg) => Lens available bg ls -> tool (Simplification available ls) ~> t
+zoom :: forall bg ls t u result . Stateful bg t => Lens u bg ls -> State (u ls) result -> t result
+zoom lens less = adapt . State <-- \source -> restruct |- run (lens <~ source) where
 
-instance Zoomable State Exactly where
-	zoom :: forall bg ls t result . Stateful bg t => Convex Lens bg ls -> State ls result -> t result
-	zoom lens less = adapt . State <-- \source -> restruct |- run (lens <~ source) where
-
-		restruct :: (Exactly ls -> bg) -> Exactly ls -> bg :*: result
-		restruct to (Exactly target) = run <---- to . Exactly <-|- Flip (less <~ target)
-
-instance Zoomable State Maybe where
-	zoom :: forall bg ls t result . Stateful bg t => Obscure Lens bg ls -> State (Maybe ls) result -> t result
-	zoom lens less = adapt . State <-- \source -> restruct |- run (lens <~ source) where
-
-		restruct :: (Maybe ls -> bg) -> Maybe ls -> bg :*: result
-		restruct to target = run (to <-|-- Flip <-- run less target)
+ 	restruct :: (u ls -> bg) -> u ls -> bg :*: result
+ 	restruct to target = run @(->) <---- to <-|- Flip (less <~ target)
 
 overlook :: (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => State s result -> State (t s) (t result)
 overlook (State state) = State <-- \ts -> mult @(<--) @(:*:) @(:*:) <~ (state <-|- ts)

@@ -745,3 +745,4 @@
 * Rename `.-+` `Construction` operator to `constitute`
 * Define `Slidable` typeclass for data structures
 * Define `current` and `change` methods in `State`
+* Remove `Zoomable` typeclass, leave `zoom` method
