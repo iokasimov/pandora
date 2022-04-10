@@ -1,4 +1,4 @@
-Pandora/Paradigm/Inventory.hs{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, (=<>), (~<>)) where
 
