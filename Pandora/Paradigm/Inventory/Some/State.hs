@@ -64,8 +64,9 @@ type Stateful s t = Adaptable t (->) (State s)
 current :: Stateful s t => t s
 current = adapt <-- State delta
 
+-- Modify the state, state is new value, return old value
 change :: Stateful s t => (s -> s) -> t s
-change f = adapt . State <-- \s -> let r = f s in r :*: r
+change f = adapt . State <-- \s -> f s :*: s
 
 reconcile :: (Bindable (->) t, Stateful s t, Adaptable t (->) u) => (s -> u s) -> t s
 reconcile f = adapt . set @State ==<< adapt . f ==<< adapt <-- get @State
