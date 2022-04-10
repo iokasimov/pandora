@@ -1,4 +1,4 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
+Pandora/Paradigm/Inventory.hs{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, (=<>), (~<>)) where
 
@@ -36,11 +36,11 @@ instance Adjoint (->) (->) (Equipment e) (Provision e) where
 	f -| x = Provision <--- f . Equipment --| x
 	g |- x = run . g |-- run x
 
-zoom :: forall bg ls t u result . Stateful bg t => Lens u bg ls -> State (u ls) result -> t result
-zoom lens less = adapt . State <-- \source -> restruct |- run (lens <~ source) where
+zoom :: forall bg ls u result . Lens u bg ls -> State (u ls) result -> State bg result
+zoom lens less = State <-- \source -> restruct |- run (lens <~ source) where
 
- 	restruct :: (u ls -> bg) -> u ls -> bg :*: result
- 	restruct to target = run @(->) <---- to <-|- Flip (less <~ target)
+	restruct :: (u ls -> bg) -> u ls -> bg :*: result
+	restruct to target = run @(->) <---- to <-|- Flip (less <~ target)
 
 overlook :: (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => State s result -> State (t s) (t result)
 overlook (State state) = State <-- \ts -> mult @(<--) @(:*:) @(:*:) <~ (state <-|- ts)
