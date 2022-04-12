@@ -748,3 +748,4 @@
 * Remove `Zoomable` typeclass, leave `zoom` method
 * Change `zoom` definition - not an adaptable effect
 * Change `change` method of `State` - return an old value
+* Define `transwrap` lens for underlying effect in transformer

@@ -2,6 +2,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Inventory.Some.Optics where
 
+import Pandora.Core.Functor (type (<))
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity, (<--), (<---), (<----), (<-----), (<-------)))
@@ -10,6 +11,8 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#>), tabulate))
+import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
+import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Object.Setoid (Setoid ((?=)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (<~)))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
@@ -134,3 +137,6 @@ replace new lens source = look @(i _) <-- new <-- lens <~ source
 
 mutate :: (i target -> i target) -> Lens i source target -> source -> source
 mutate mut lens source = extract . retrofit mut <-- lens <~ source
+
+transwrap :: (Covariant (->) (->) u, Liftable (->) t, Lowerable (->) t) => Lens u < t u e < e
+transwrap = P_Q_T <-- \origin -> Store <--- lower origin :*: lift
