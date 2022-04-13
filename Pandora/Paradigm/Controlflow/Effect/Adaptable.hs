@@ -20,9 +20,6 @@ class Adaptable u m t where
 instance Category m => Adaptable t m t where
 	adapt = identity @m
 
-instance {-# OVERLAPS #-} Monoidal (-->) (-->) (:*:) (:*:) u => Adaptable u (->) Exactly where
-	adapt = point . extract
-
 class Effectful m v t u where
 	effect :: m (v a) (t :> u >>> a)
 

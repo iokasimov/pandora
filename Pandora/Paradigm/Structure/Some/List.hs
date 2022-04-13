@@ -192,7 +192,7 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 -- 			<---- f <-|-- move <-- rotate @Left
 -- 			<---- f <-|-- move <-- rotate @Right
 
--- TODO: Generalize to Slidable Right (Tape structure)
+-- TODO: Generalize to Slidable Left (Tape structure)
 instance Slidable Left (Tape List) where
 	type Sliding Left (Tape List) = Maybe
 	slide :: forall e . State > Tape List e :> Maybe >>> ()
