@@ -53,16 +53,16 @@ instance Covariant (->) (->) t => Substructure Down (Tape t <::> Tape t) where
 		Exactly focused :*: T_U (d :*: u) ->
 			Store <--- TT d :*: lift . TT . (imply @(Tape t _) focused % u) . run . run
 
--- instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure (All Left) (Tape t <::> Tape t) where
--- 	type Substance (All Left) (Tape t <::> Tape t) = Tape t <::> Reverse t
--- 	substructure = P_Q_T <-- \source ->
--- 		let target = (view (sub @Left) <-|-) =#- lower source in
--- 		let updated new = replace % sub @Left <-|-- new <-*-- run <-- lower source in
--- 		Store <--- target :*: lift . (updated =#-)
---
--- instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure (All Right) (Tape t <::> Tape t) where
--- 	type Substance (All Right) (Tape t <::> Tape t) = Tape t <::> t
--- 	substructure = P_Q_T <-- \source ->
--- 		let target = (view (sub @Right) <-|-) =#- lower source in
--- 		let updated new = replace % sub @Right <-|-- new <-*-- run <-- lower source in
--- 			Store <--- target :*: lift . (updated =#-)
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure (All Left) (Tape t <::> Tape t) where
+	type Substance (All Left) (Tape t <::> Tape t) = Tape t <::> Reverse t
+	substructure = P_Q_T <-- \source ->
+		let target = (view (sub @Left) . view (sub @Rest) <-|-) =#- lower source in
+		let updated new = (\trg src -> mutate (replace <-- trg <-- sub @Left) <-- sub @Rest <-- src) <-|-- new <-*-- run <-- lower source in
+		Store <--- target :*: lift . (updated =#-)
+
+instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructure (All Right) (Tape t <::> Tape t) where
+	type Substance (All Right) (Tape t <::> Tape t) = Tape t <::> t
+	substructure = P_Q_T <-- \source ->
+		let target = (view (sub @Right) . view (sub @Rest) <-|-) =#- lower source in
+		let updated new = (\trg src -> mutate (replace <-- trg <-- sub @Right) <-- sub @Rest <-- src) <-|-- new <-*-- run <-- lower source in
+		Store <--- target :*: lift . (updated =#-)
