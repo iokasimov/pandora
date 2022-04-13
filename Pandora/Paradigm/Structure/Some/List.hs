@@ -167,7 +167,7 @@ instance Stack (Construction Maybe) where
 	type Pushing (Construction Maybe) = Construction Maybe
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
-	pop = (\(Construct x xs) -> constant x <-|-|- set @State <<- xs) =<< get @State
+	pop = (\(Construct x xs) -> constant <-- Exactly x <-|- change @(Nonempty List _) . constant <<- xs) =<< current @(Nonempty List _)
 	push x = point x .-*- (modify @State <-- Construct x . Just)
 
 ---------------------------------------- Combinative list ------------------------------------------

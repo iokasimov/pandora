@@ -78,7 +78,7 @@ deconstruct :: Construction t a -> t :. Construction t >>> a
 deconstruct ~(Construct _ xs) = xs
 
 -- Generate a construction from seed using effectful computation
-constitute :: Covariant (->) (->) t => (a -> t a) -> a :=> Construction t
+constitute :: Covariant (->) (->) t => (a -> t a) -> a -> Construction t a
 constitute f x = Construct x <---- constitute f <-|- f x
 
 section :: (Comonad (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => t ~> Construction t
