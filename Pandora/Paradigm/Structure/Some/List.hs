@@ -29,25 +29,29 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary ()
-import Pandora.Paradigm.Inventory.Ability.Gettable (get)
-import Pandora.Paradigm.Inventory.Ability.Settable (set)
-import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
-import Pandora.Paradigm.Inventory.Some.State (State, fold)
-import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens)
+import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
+import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (<~~~), (=#-))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
+import Pandora.Paradigm.Inventory.Ability.Gettable (get)
+import Pandora.Paradigm.Inventory.Ability.Settable (set)
+import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
+import Pandora.Paradigm.Inventory.Some.State (State, fold, current, change)
+import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
+import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens, transwrap)
+import Pandora.Paradigm.Inventory (zoom, overlook)
 import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs), Zipper)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
+import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Rest))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Pushing, Topping, push, pop, top))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs), Zipper)
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -187,6 +191,24 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 -- 			<---- f z
 -- 			<---- f <-|-- move <-- rotate @Left
 -- 			<---- f <-|-- move <-- rotate @Right
+
+instance Slidable Left (Tape List) where
+	type Sliding Left (Tape List) = Maybe
+	slide :: forall e . State > Tape List e :> Maybe >>> ()
+	slide = void . adapt . zoom @(Tape List e) (sub @Rest)
+		. zoom (sub @Left) . zoom transwrap . push @List . extract
+			====<< adapt . zoom @(Tape List e) (sub @Root) . overlook . change . constant
+				====<< adapt ====<< adapt <---- zoom @(Tape List e) <--- sub @Rest
+					<--- zoom <-- sub @Right <-- pop @List
+
+instance Slidable Right (Tape List) where
+	type Sliding Right (Tape List) = Maybe
+	slide :: forall e . State > Tape List e :> Maybe >>> ()
+	slide = void . adapt . zoom @(Tape List e) (sub @Rest)
+		. zoom (sub @Right) . push @List . extract
+			====<< adapt . zoom @(Tape List e) (sub @Root) . overlook . change . constant
+				====<< adapt ====<< adapt <---- zoom @(Tape List e) <--- sub @Rest
+					<--- zoom <-- sub @Left <-- zoom transwrap (pop @List)
 
 instance Morphable (Rotate Left) (Turnover < Tape List) where
 	type Morphing (Rotate Left) (Turnover < Tape List) = Turnover < Tape List
