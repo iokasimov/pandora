@@ -39,6 +39,7 @@ type Stream = Construction Exactly
 instance Zippable (Construction Exactly) where
 	type Breadcrumbs (Construction Exactly) = Reverse Stream <:*:> Stream
 
+-- TODO: Try to generalize to Extendable (Tape structure)
 instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
 	f <<= z = let move rtt = extract . deconstruct <---- constitute <-- point . rtt <-- z in
 		f <-|- imply @(Tape Stream _) <-- z <-- move (rotate @Left) <-- move (rotate @Right)
@@ -48,26 +49,6 @@ instance Stack (Construction Exactly) where
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	pop = (\(Construct x xs) -> constant <-- Exactly x <-|- change @(Stream _) . constant <<- xs) =<< current
 	push x = point x .-*- (change <-- Construct x . Exactly)
-
--- TODO: Generalize to Slidable Left (Tape structure)
-instance Slidable Left (Tape Stream) where
-	type Sliding Left (Tape Stream) = Exactly
-	slide :: forall e . State > Tape Stream e :> Exactly >>> ()
-	slide = void . adapt . zoom @(Tape Stream e) (sub @Rest)
-		. zoom (sub @Left) . zoom transwrap . push @Stream . extract
-			====<< adapt . zoom @(Tape Stream e) (sub @Root) . overlook . change . constant
-				====<< adapt ====<< adapt <---- zoom @(Tape Stream e) <--- sub @Rest
-					<--- zoom <-- sub @Right <-- pop @Stream
-
--- TODO: Generalize to Slidable Right (Tape structure)
-instance Slidable Right (Tape Stream) where
-	type Sliding Right (Tape Stream) = Exactly
-	slide :: forall e . State > Tape Stream e :> Exactly >>> ()
-	slide = void . adapt . zoom @(Tape Stream e) (sub @Rest)
-		. zoom (sub @Right) . push @Stream . extract
-			====<< adapt . zoom @(Tape Stream e) (sub @Root) . overlook . change . constant
-				====<< adapt ====<< adapt <---- zoom @(Tape Stream e) <--- sub @Rest
-					<--- zoom <-- sub @Left <-- zoom transwrap (pop @Stream)
 
 instance Morphable (Rotate Left) (Tape Stream) where
 	type Morphing (Rotate Left) (Tape Stream) = Tape Stream

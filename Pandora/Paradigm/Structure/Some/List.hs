@@ -181,32 +181,13 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 		(\past' x' left' -> Exactly x' <:*:> left' <:*:> run past')
 			<-|- f <<- Reverse right <-*- f x <-*- f <<- left
 
+-- TODO: Try to generalize to Extendable (Tape structure)
 -- instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
 -- 	f <<= z = let move rtt = TT . deconstruct <----- run . rtt .-+ z in
 -- 		imply @(Tape List _)
 -- 			<---- f z
 -- 			<---- f <-|-- move <-- rotate @Left
 -- 			<---- f <-|-- move <-- rotate @Right
-
--- TODO: Generalize to Slidable Left (Tape structure)
-instance Slidable Left (Tape List) where
-	type Sliding Left (Tape List) = Maybe
-	slide :: forall e . State > Tape List e :> Maybe >>> ()
-	slide = void . adapt . zoom @(Tape List e) (sub @Rest)
-		. zoom (sub @Left) . zoom transwrap . push @List . extract
-			====<< adapt . zoom @(Tape List e) (sub @Root) . overlook . change . constant
-				====<< adapt ====<< adapt <---- zoom @(Tape List e) <--- sub @Rest
-					<--- zoom <-- sub @Right <-- pop @List
-
--- TODO: Generalize to Slidable Right (Tape structure)
-instance Slidable Right (Tape List) where
-	type Sliding Right (Tape List) = Maybe
-	slide :: forall e . State > Tape List e :> Maybe >>> ()
-	slide = void . adapt . zoom @(Tape List e) (sub @Rest)
-		. zoom (sub @Right) . push @List . extract
-			====<< adapt . zoom @(Tape List e) (sub @Root) . overlook . change . constant
-				====<< adapt ====<< adapt <---- zoom @(Tape List e) <--- sub @Rest
-					<--- zoom <-- sub @Left <-- zoom transwrap (pop @List)
 
 instance Morphable (Rotate Left) (Turnover < Tape List) where
 	type Morphing (Rotate Left) (Turnover < Tape List) = Turnover < Tape List
