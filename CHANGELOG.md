@@ -749,4 +749,5 @@
 * Change `zoom` definition - not an adaptable effect
 * Change `change` method of `State` - return an old value
 * Define `transwrap` lens for underlying effect in transformer
-* Change `pop` method in `Stack`: returns not `Maybe` but `Topping t`
+* Change `pop` method in `Stack` typeclass: returns not `Maybe` but `Topping t`
+* Remove `Pushing` and `Popping` type familes from `Stack` typeclass

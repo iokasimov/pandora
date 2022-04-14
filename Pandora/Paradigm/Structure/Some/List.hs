@@ -50,7 +50,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Rest))
-import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Pushing, Topping, push, pop, top))
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (Topping, push, pop, top))
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs), Zipper)
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
@@ -106,8 +106,6 @@ instance Morphable (Delete All) List where
 
 instance Stack List where
 	type Topping List = Maybe
-	type Popping List = List
-	type Pushing List = List
 	top = P_Q_T <-- \list -> case list of
 		TT Nothing -> Store <--- Nothing :*: constant empty
 		TT (Just xs) -> Store <--- Just (extract xs) :*: \new -> case new of
@@ -163,8 +161,6 @@ instance Morphable Push (Construction Maybe) where
 
 instance Stack (Construction Maybe) where
 	type Topping (Construction Maybe) = Exactly
-	type Popping (Construction Maybe) = Construction Maybe
-	type Pushing (Construction Maybe) = Construction Maybe
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
 	pop = (\(Construct x xs) -> constant <-- Exactly x <-|- change @(Nonempty List _) . constant <<- xs) =<< current @(Nonempty List _)

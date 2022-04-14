@@ -23,7 +23,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 import Pandora.Paradigm.Structure.Ability.Substructure (sub, Segment (Root, Rest))
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
-import Pandora.Paradigm.Structure.Interface.Stack (Stack (Popping, Pushing, Topping, push, pop, top))
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (Topping, push, pop, top))
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Inventory.Some.State (State, change, current)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
@@ -45,8 +45,6 @@ instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
 
 instance Stack (Construction Exactly) where
 	type Topping (Construction Exactly) = Exactly
-	type Popping (Construction Exactly) = Construction Exactly
-	type Pushing (Construction Exactly) = Construction Exactly
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	pop = (\(Construct x xs) -> constant <-- Exactly x <-|- change @(Stream _) . constant <<- xs) =<< current
 	push x = point x .-*- (change <-- Construct x . Exactly)

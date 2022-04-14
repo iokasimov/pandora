@@ -11,10 +11,8 @@ import Pandora.Paradigm.Inventory.Some.Optics (Lens)
 > * Idempotency: item @Push x . morph @Pop ≡ identity
 -}
 
-class Stack t where
-	type Topping t :: * -> *
-	type Popping t :: * -> *
-	type Pushing t :: * -> *
-	top :: Lens < Topping t < t e < e
-	pop :: State < Popping t e < Topping t e
-	push :: e -> State < Pushing t e < e
+class Stack structure where
+	type Topping structure :: * -> *
+	top :: Lens < Topping structure < structure e < e
+	pop :: State < structure e < Topping structure e
+	push :: e -> State < structure e < e
