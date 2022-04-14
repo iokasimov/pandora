@@ -7,35 +7,32 @@ import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<------))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-), (<<---)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((====<<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
-import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
+import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->), (%))
+import Pandora.Paradigm.Algebraic.Exponential (type (-->), (%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
-import Pandora.Paradigm.Algebraic.Functor ((<-*-), (<-*--), (<-*---), (.-*-), extract, point, void)
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Algebraic.Functor ((<-*--), extract, point, void)
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
-import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (=#-))
+import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (=#-))
 import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate), Vertical (Up, Down), Occurrence (All))
+import Pandora.Paradigm.Structure.Ability.Morphable (Vertical (Up, Down), Occurrence (All))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest), sub)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
-import Pandora.Paradigm.Structure.Interface.Stack (Stack (Topping, push, pop, top))
-import Pandora.Paradigm.Structure.Interface.Zipper (Zippable)
-import Pandora.Paradigm.Inventory.Some.State (State, change, current)
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (Topping, push, pop))
+import Pandora.Paradigm.Inventory.Some.State (State, change)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Lens, Convex, view, replace, mutate, transwrap)
+import Pandora.Paradigm.Inventory.Some.Optics (view, replace, mutate, transwrap)
 import Pandora.Paradigm.Inventory (zoom, overlook)
 
 type Tape structure = Exactly <:*:> Reverse structure <:*:> structure
@@ -86,11 +83,11 @@ instance (Covariant (->) (->) structure, Bindable (->) (Topping structure), Mono
 				====<< lift ====<< wrap <---- zoom @(Tape structure e) <--- sub @Rest
 					<--- zoom <-- sub @Right <-- pop @structure
 
-instance (Covariant (->) (->) structure, Bindable (->) (Topping structure), Monoidal (-->) (-->) (:*:) (:*:) (Topping structure), Stack structure) => Slidable Right (Tape structure) where
+instance (Covariant (->) (->) structure, Stack structure, Bindable (->) (Topping structure), Monoidal (-->) (-->) (:*:) (:*:) (Topping structure)) => Slidable Right (Tape structure) where
 	type Sliding Right (Tape structure) = Topping structure
 	slide :: forall e . State > Tape structure e :> Topping structure >>> ()
 	slide = void . wrap . zoom @(Tape structure e) (sub @Rest)
-		. zoom (sub @Right) . push @structure . extract
+		. zoom (sub @Right) . push . extract
 			====<< wrap . zoom @(Tape structure e) (sub @Root) . overlook . change . constant
 				====<< lift ====<< wrap <---- zoom @(Tape structure e) <--- sub @Rest
-					<--- zoom <-- sub @Left <-- zoom transwrap (pop @structure)
+					<--- zoom <-- sub @Left <-- zoom transwrap pop
