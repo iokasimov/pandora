@@ -12,9 +12,9 @@ import Pandora.Core.Functor (type (>))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Comonad (Comonad)
@@ -38,6 +38,9 @@ instance (Semimonoidal (-->) (:*:) (:+:) t, Semimonoidal (-->) (:*:) (:+:) u) =>
 instance (Monoidal (-->) (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:+:) u)
 	=> Monoidal (-->) (-->) (:*:) (:+:) (t <:*:> u) where
 		unit _ = Straight <-- \_ -> empty <:*:> empty
+
+instance (Traversable (->) (->) t, Traversable (->) (->) u) => Traversable (->) (->) (t <:*:> u) where
+	f <<- T_U (xs :*: ys) = T_U <-|-- (:*:) <-|- f <<- xs <-*- f <<- ys
 
 instance Traversable (->) (->) ((:*:) s) where
 	f <<- x = (attached x :*:) <-|- f (extract x)
