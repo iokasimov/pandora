@@ -6,6 +6,7 @@ import Pandora.Paradigm.Inventory.Ability as Exports
 import Pandora.Paradigm.Inventory.Some as Exports
 
 import Pandora.Core.Functor (type (~>))
+import Pandora.Core.Interpreted (run, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Kernel (constant)
@@ -19,7 +20,6 @@ import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Exponential ((%), type (<--))
 import Pandora.Paradigm.Algebraic (Pointable, extract)
 import Pandora.Paradigm.Primary (Simplification)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 
 instance Adjoint (->) (->) (Store s) (State s) where

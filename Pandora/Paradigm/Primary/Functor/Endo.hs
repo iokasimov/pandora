@@ -1,11 +1,11 @@
 module Pandora.Paradigm.Primary.Functor.Endo where
 
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (=#-)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, (<--))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-)))
 import Pandora.Paradigm.Algebraic.Exponential ()
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic ((>-|-<-|-))

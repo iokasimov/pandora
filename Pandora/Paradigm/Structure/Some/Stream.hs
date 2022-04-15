@@ -3,6 +3,7 @@ module Pandora.Paradigm.Structure.Some.Stream where
 
 import Pandora.Core.Impliable (imply)
 import Pandora.Core.Functor (type (>), type (>>>), type (:=>))
+import Pandora.Core.Interpreted (run)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (-->))
 import Pandora.Pattern.Kernel (constant)
@@ -32,7 +33,6 @@ import Pandora.Paradigm.Inventory (zoom, overlook)
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
 import Pandora.Paradigm.Algebraic (point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 
 type Stream = Construction Exactly
 

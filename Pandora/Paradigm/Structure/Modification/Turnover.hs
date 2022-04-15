@@ -1,11 +1,11 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Structure.Modification.Turnover where
 
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (=#-)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Hoistable ((/|\))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic ((>-|-<-|-))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-)))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure))
 
 newtype Turnover t a = Turnover (t a)

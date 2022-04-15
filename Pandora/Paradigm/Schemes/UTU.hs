@@ -1,9 +1,9 @@
 module Pandora.Paradigm.Schemes.UTU where
 
 import Pandora.Core.Functor (type (:.), type (>>>))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 
 newtype UTU ct cu t u u' a = UTU (u :. t :. u' >>> a)
 

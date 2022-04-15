@@ -23,6 +23,7 @@ library
     Pandora.Core
     Pandora.Core.Functor
     Pandora.Core.Impliable
+    Pandora.Core.Interpreted
 
     Pandora.Paradigm
     -- Basic constructions
@@ -86,7 +87,6 @@ library
     Pandora.Paradigm.Controlflow
     -- Typeclassess about functor junctions
     Pandora.Paradigm.Controlflow.Effect
-    Pandora.Paradigm.Controlflow.Effect.Interpreted
     Pandora.Paradigm.Controlflow.Effect.Transformer
     Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic
     Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic

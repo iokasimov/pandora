@@ -2,6 +2,7 @@
 module Pandora.Paradigm.Schemes.UT where
 
 import Pandora.Core.Functor (type (:.), type (>>>), type (~>))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (<~~~~), (=#-)))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<-----))
@@ -14,7 +15,6 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<--)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (<~~~~), (=#-)))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))

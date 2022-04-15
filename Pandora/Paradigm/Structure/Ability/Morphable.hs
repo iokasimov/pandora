@@ -2,6 +2,7 @@
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
 import Pandora.Core.Functor (type (>), type (>>>), type (>>>>>>), type (>>>>>>>), type (~>), type (:=:=>))
+import Pandora.Core.Interpreted (run)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -14,7 +15,6 @@ import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate, equate)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 

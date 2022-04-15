@@ -18,7 +18,7 @@ import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~), (<~~~))
+import Pandora.Core.Interpreted ((<~), (<~~~))
 
 data Instruction t a = Enter a | Instruct (t :. Instruction t >>> a)
 

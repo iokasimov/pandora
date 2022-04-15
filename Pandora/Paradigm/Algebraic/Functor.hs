@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Algebraic.Functor where
 
+import Pandora.Core.Interpreted (Interpreted ((<~), (<~~~), (-#=)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
@@ -17,7 +18,6 @@ import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Algebraic.Zero (Zero, absurd)
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted ((<~), (<~~~), (-#=)))
 
 infixl 1 <-*------, .-*------, <-||-----, >-||-----
 infixl 2 <-*-----, .-*-----, <-||----, >-||----

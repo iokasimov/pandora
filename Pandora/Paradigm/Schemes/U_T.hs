@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Schemes.U_T where
 
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite))
 
 newtype U_T ct cu t p u a = U_T (p (u a) (t a))
 

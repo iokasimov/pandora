@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Schemes.PTU where
 
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite))
 
 newtype PTU p t u a b = PTU (p (t a) (u b))
 

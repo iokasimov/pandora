@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Schemes.P_Q_T where
 
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite))
 
 newtype P_Q_T (p :: * -> * -> *) (q :: * -> * -> *) (t :: * -> *) (a :: *) (b :: *) = P_Q_T (p a (q (t b) a))
 

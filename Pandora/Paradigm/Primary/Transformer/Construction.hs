@@ -24,7 +24,7 @@ import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (empty, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~), (<~~~), (<~~~~))
+import Pandora.Core.Interpreted (run, (<~), (<~~~), (<~~~~))
 
 data Construction t a = Construct a (t :. Construction t >>> a)
 

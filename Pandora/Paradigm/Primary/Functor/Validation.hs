@@ -1,5 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Validation where
 
+import Pandora.Core.Interpreted ((<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -18,7 +19,6 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Greater))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~))
 
 data Validation e a = Flaws e | Validated a
 

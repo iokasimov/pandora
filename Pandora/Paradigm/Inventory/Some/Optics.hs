@@ -4,6 +4,7 @@ module Pandora.Paradigm.Inventory.Some.Optics where
 
 import Pandora.Core.Functor (type (<))
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
+import Pandora.Core.Interpreted (Interpreted (run, (<~)))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity, (<--), (<---), (<----), (<-----), (<-------)))
 import Pandora.Pattern.Kernel (Kernel (constant))
@@ -14,7 +15,6 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Object.Setoid (Setoid ((?=)))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (run, (<~)))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))

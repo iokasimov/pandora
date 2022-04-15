@@ -3,6 +3,7 @@
 module Pandora.Paradigm.Structure.Some.Splay where
 
 import Pandora.Core.Functor (type (~>), type (>), type (>>>), type (>>>>>>))
+import Pandora.Core.Interpreted (run)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
@@ -16,7 +17,6 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run)
 import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
 import Pandora.Paradigm.Inventory.Some.Optics (view, mutate)
 import Pandora.Paradigm.Inventory.Some.State (State, change, current)

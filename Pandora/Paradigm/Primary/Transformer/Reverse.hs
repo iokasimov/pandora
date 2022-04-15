@@ -20,7 +20,7 @@ import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point, extract, empty, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~)))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~)))
 
 newtype Reverse t a = Reverse (t a)
 

@@ -751,3 +751,4 @@
 * Define `transwrap` lens for underlying effect in transformer
 * Change `pop` method in `Stack` typeclass: returns not `Maybe` but `Topping t`
 * Remove `Pushing` and `Popping` type familes from `Stack` typeclass
+* Move `Interpreted` module to `Core`

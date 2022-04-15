@@ -2,6 +2,7 @@
 module Pandora.Paradigm.Inventory.Some.Store where
 
 import Pandora.Core (type (:.), type (>), type (>>>), type (<:=), type (~>))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (=#-)), Schematic)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), identity)
 import Pandora.Pattern.Kernel (constant)
@@ -18,7 +19,6 @@ import Pandora.Paradigm.Algebraic (extract, (<-||-), (>-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-)), Schematic)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (bring), (:<) (TC))
 import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 

@@ -2,6 +2,7 @@
 module Pandora.Paradigm.Structure.Some.Rose where
 
 import Pandora.Core.Functor (type (:.), type (>), type (>>>))
+import Pandora.Core.Interpreted (run, unite, (<~), (=#-), (<~~~~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
 import Pandora.Pattern.Kernel (constant)
@@ -29,7 +30,6 @@ import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
 import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (=#-), (<~~~~))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (view)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)

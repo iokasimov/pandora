@@ -2,6 +2,7 @@
 module Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (..), (:>) (..)) where
 
 import Pandora.Core.Functor (type (<))
+import Pandora.Core.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~~~)))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
@@ -20,7 +21,6 @@ import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (Pointable, point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~~~)))
 
 class Interpreted m t => Monadic m t where
 	{-# MINIMAL wrap #-}

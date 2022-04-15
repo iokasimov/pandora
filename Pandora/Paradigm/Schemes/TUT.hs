@@ -2,6 +2,7 @@
 module Pandora.Paradigm.Schemes.TUT where
 
 import Pandora.Core.Functor (type (:.), type (>), type (>>>), type (>>>>>>>>), type (~>))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (=#-)))
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<------))
@@ -22,7 +23,6 @@ import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point, extract, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (=#-)))
 
 newtype TUT ct ct' cu t t' u a = TUT (t :. u :. t' >>> a)
 

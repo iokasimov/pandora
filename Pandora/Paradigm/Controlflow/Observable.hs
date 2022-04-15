@@ -2,11 +2,11 @@ module Pandora.Paradigm.Controlflow.Observable (Observable, observe,
 	notify, follow, subscribe, watch, (.:~.), (.:~*), (*:~.), (*:~*)) where
 
 import Pandora.Core.Functor (type (<))
+import Pandora.Core.Interpreted ((<~~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Paradigm.Algebraic (Applicative, loop)
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted ((<~~))
 
 newtype Capture r t a = Capture { captured :: t r }
 

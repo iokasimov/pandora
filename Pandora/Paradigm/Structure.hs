@@ -7,6 +7,7 @@ import Pandora.Paradigm.Structure.Interface as Exports
 import Pandora.Paradigm.Structure.Modification as Exports
 import Pandora.Paradigm.Structure.Some as Exports
 
+import Pandora.Core.Interpreted (run, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), identity)
 import Pandora.Pattern.Kernel (constant)
@@ -14,7 +15,6 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Semigroup ((+))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, (<~))
 import Pandora.Paradigm.Inventory.Some.Optics ()
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Algebraic.Exponential ((%))

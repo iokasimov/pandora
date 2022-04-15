@@ -4,6 +4,7 @@
 module Pandora.Paradigm.Structure.Interface.Zipper where
 
 import Pandora.Core.Functor (type (>), type (<), type (:.), type (:::))
+import Pandora.Core.Interpreted (run, unite, (<~), (=#-))
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -27,7 +28,6 @@ import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Rest))
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (run, unite, (<~), (=#-))
 
 -- TODO: Use Slidable superclass with Slides associated type family
 class Zippable (structure :: * -> *) where

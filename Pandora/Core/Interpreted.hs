@@ -1,4 +1,4 @@
-module Pandora.Paradigm.Controlflow.Effect.Interpreted where
+module Pandora.Core.Interpreted where
 
 import Pandora.Core.Functor (type (<), type (>))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))

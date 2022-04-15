@@ -1,5 +1,6 @@
 module Pandora.Paradigm.Controlflow.Pipeline (Pipeline, await, yield, finish, impact, (=*=), pipeline) where
 
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
@@ -8,7 +9,6 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Algebraic (point)
-import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 
 newtype Producer i t r = Producer { produce :: Consumer i t r -> t r }
