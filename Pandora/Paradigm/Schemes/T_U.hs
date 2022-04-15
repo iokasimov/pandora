@@ -7,6 +7,7 @@ import Pandora.Pattern.Morphism.Flip (Flip)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-|-)))
 import Pandora.Paradigm.Controlflow.Effect.Interpreted (Interpreted (Primary, run, unite, (=#-), (-#=)))
+import Pandora.Paradigm.Algebraic.Exponential ()
 
 newtype T_U ct cu p t u a = T_U (p (t a) (u a))
 
