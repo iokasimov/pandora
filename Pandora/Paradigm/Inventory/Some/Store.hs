@@ -1,10 +1,10 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory.Some.Store where
 
-import Pandora.Core (type (:.), type (>), type (>>>), type (<:=), type (~>))
+import Pandora.Core (type (:.), type (>>>), type (<:=), type (~>))
 import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (=#-)))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<------), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))

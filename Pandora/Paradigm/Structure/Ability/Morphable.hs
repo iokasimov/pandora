@@ -1,7 +1,7 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module Pandora.Paradigm.Structure.Ability.Morphable where
 
-import Pandora.Core.Functor (type (>), type (>>>), type (>>>>>>), type (>>>>>>>), type (~>), type (:=:=>))
+import Pandora.Core.Functor (type (>>>>>>), type (>>>>>>>), type (~>), type (:=:=>))
 import Pandora.Core.Interpreted (run)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))

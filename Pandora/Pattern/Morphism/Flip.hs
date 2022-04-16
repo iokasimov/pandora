@@ -8,7 +8,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 newtype Flip (v :: * -> * -> *) a e = Flip (v e a)
 
 instance Semigroupoid m => Semigroupoid (Flip m) where
-  Flip g . Flip f = Flip (f . g)
+	Flip g . Flip f = Flip (f . g)
 
 instance Category m => Category (Flip m) where
 	identity = Flip identity

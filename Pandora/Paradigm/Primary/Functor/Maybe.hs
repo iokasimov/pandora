@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Primary.Functor.Maybe where
 
-import Pandora.Core.Functor (type (:.), type (>), type (>>>))
+import Pandora.Core.Functor (type (:.), type (>>>))
 import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, (<--), (<---))
