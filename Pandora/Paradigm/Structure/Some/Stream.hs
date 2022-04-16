@@ -15,7 +15,7 @@ import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>))
 import Pandora.Paradigm.Algebraic.Functor (extract, void, (.-*-))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left_, Right_))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, constitute)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
@@ -42,7 +42,7 @@ instance Zippable (Construction Exactly) where
 -- TODO: Try to generalize to Extendable (Tape structure)
 instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
 	f <<= z = let move rtt = extract . deconstruct <---- constitute <-- point . rtt <-- z in
-		f <-|- imply @(Tape Stream _) <-- z <-- move (rotate @Left) <-- move (rotate @Right)
+		f <-|- imply @(Tape Stream _) <-- z <-- move (rotate @Left_) <-- move (rotate @Right_)
 
 instance Stack (Construction Exactly) where
 	type Topping (Construction Exactly) = Exactly
@@ -50,13 +50,13 @@ instance Stack (Construction Exactly) where
 	pop = (\(Construct x xs) -> constant <-- Exactly x <-|- change @(Stream _) . constant <<- xs) =<< current
 	push x = point x .-*- (change <-- Construct x . Exactly)
 
-instance Morphable (Rotate Left) (Tape Stream) where
-	type Morphing (Rotate Left) (Tape Stream) = Tape Stream
+instance Morphable (Rotate Left_) (Tape Stream) where
+	type Morphing (Rotate Left_) (Tape Stream) = Tape Stream
 	morphing (run . premorph -> Exactly x :*: T_U (Reverse ls :*: rs)) =
 		imply @(Tape Stream _) <--- extract ls <--- extract (deconstruct ls) <--- Construct x --> point rs
 
-instance Morphable (Rotate Right) (Tape Stream) where
-	type Morphing (Rotate Right) (Tape Stream) = Tape Stream
+instance Morphable (Rotate Right_) (Tape Stream) where
+	type Morphing (Rotate Right_) (Tape Stream) = Tape Stream
 	morphing (run . premorph -> Exactly x :*: T_U (Reverse ls :*: rs)) =
 		imply @(Tape Stream _) <--- extract rs <--- Construct x (point ls) <--- extract (deconstruct rs)
 

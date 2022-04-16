@@ -24,7 +24,7 @@ import Pandora.Paradigm.Algebraic (extract)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Conclusion (Conclusion (Failure, Success), conclusion)
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left, Right, End))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Both, Left_, Right_, End))
 import Pandora.Paradigm.Primary.Functor.Wedge (Wedge (Nowhere, Here, There))
 import Pandora.Paradigm.Primary.Functor.These (These (This, That, These))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
@@ -52,18 +52,18 @@ instance Morphable (Into (Flip Conclusion e)) Maybe where
 	morphing (run . premorph -> Just x) = TU <-- \_ -> Flip <-- Failure x
 	morphing (run . premorph -> Nothing) = TU <-- Flip . Success
 
-instance Morphable (Into (Left Maybe)) Wye where
-	type Morphing (Into (Left Maybe)) Wye = Maybe
+instance Morphable (Into (Left_ Maybe)) Wye where
+	type Morphing (Into (Left_ Maybe)) Wye = Maybe
 	morphing (premorph -> Both ls _) = Just ls
-	morphing (premorph -> Left ls) = Just ls
-	morphing (premorph -> Right _) = Nothing
+	morphing (premorph -> Left_ ls) = Just ls
+	morphing (premorph -> Right_ _) = Nothing
 	morphing (premorph -> End) = Nothing
 
-instance Morphable (Into (Right Maybe)) Wye where
-	type Morphing (Into (Right Maybe)) Wye = Maybe
+instance Morphable (Into (Right_ Maybe)) Wye where
+	type Morphing (Into (Right_ Maybe)) Wye = Maybe
 	morphing (premorph -> Both _ rs) = Just rs
-	morphing (premorph -> Left _) = Nothing
-	morphing (premorph -> Right rs) = Just rs
+	morphing (premorph -> Left_ _) = Nothing
+	morphing (premorph -> Right_ rs) = Just rs
 	morphing (premorph -> End) = Nothing
 
 instance Morphable (Into (This Maybe)) (These e) where
@@ -93,25 +93,25 @@ instance Morphable (Into (There Maybe)) (Wedge e) where
 instance Morphable (Into Wye) (Maybe <:*:> Maybe) where
 	type Morphing (Into Wye) (Maybe <:*:> Maybe) = Wye
 	morphing (run . premorph -> Just x :*: Just y) = Both x y
-	morphing (run . premorph -> Nothing :*: Just y) = Right y
-	morphing (run . premorph -> Just x :*: Nothing) = Left x
+	morphing (run . premorph -> Nothing :*: Just y) = Right_ y
+	morphing (run . premorph -> Just x :*: Nothing) = Left_ x
 	morphing (run . premorph -> Nothing :*: Nothing) = End
 
-instance Substructure Left Wye where
-	type Substance Left Wye = Maybe
+instance Substructure Left_ Wye where
+	type Substance Left_ Wye = Maybe
 	substructure = P_Q_T <-- \new -> case lower new of
-		End -> Store <--- Nothing :*: lift . resolve Left End
-		Left x -> Store <--- Just x :*: lift . resolve Left End
-		Right y -> Store <--- Nothing :*: lift . constant (Right y)
-		Both x y -> Store <--- Just x :*: lift . resolve (Both % y) (Right y)
+		End -> Store <--- Nothing :*: lift . resolve Left_ End
+		Left_ x -> Store <--- Just x :*: lift . resolve Left_ End
+		Right_ y -> Store <--- Nothing :*: lift . constant (Right_ y)
+		Both x y -> Store <--- Just x :*: lift . resolve (Both % y) (Right_ y)
 
-instance Substructure Right Wye where
-	type Substance Right Wye = Maybe
+instance Substructure Right_ Wye where
+	type Substance Right_ Wye = Maybe
 	substructure = P_Q_T <-- \new -> case lower new of
-		End -> Store <--- Nothing :*: lift . resolve Right End
-		Left x -> Store <--- Nothing :*: lift . constant (Left x)
-		Right y -> Store <--- Just y :*: lift . resolve Right End
-		Both x y -> Store <--- Just y :*: lift . resolve (Both x) (Left x)
+		End -> Store <--- Nothing :*: lift . resolve Right_ End
+		Left_ x -> Store <--- Nothing :*: lift . constant (Left_ x)
+		Right_ y -> Store <--- Just y :*: lift . resolve Right_ End
+		Both x y -> Store <--- Just y :*: lift . resolve (Both x) (Left_ x)
 
 instance (Covariant (->) (->) t) => Substructure Rest (Tap t) where
 	type Substance Rest (Tap t) = t
@@ -122,37 +122,37 @@ instance Morphable (Into (Preorder (Construction Maybe))) (Construction Wye) whe
 	type Morphing (Into (Preorder (Construction Maybe))) (Construction Wye) = Construction Maybe
 	morphing nonempty_binary = case premorph nonempty_binary of
 		Construct x End -> Construct x Nothing
-		Construct x (Left lst) -> Construct x . Just <-- into @(Preorder (Nonempty List)) lst
-		Construct x (Right rst) -> Construct x . Just <-- into @(Preorder (Nonempty List)) rst
+		Construct x (Left_ lst) -> Construct x . Just <-- into @(Preorder (Nonempty List)) lst
+		Construct x (Right_ rst) -> Construct x . Just <-- into @(Preorder (Nonempty List)) rst
 		Construct x (Both lst rst) -> Construct x . Just <-- into @(Preorder (Nonempty List)) lst + into @(Preorder (Nonempty List)) rst
 
 instance Morphable (Into (Inorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Inorder (Construction Maybe))) (Construction Wye) = Construction Maybe
 	morphing nonempty_binary = case premorph nonempty_binary of
 		Construct x End -> Construct x Nothing
-		Construct x (Left lst) -> into @(Inorder (Nonempty List)) lst + Construct x Nothing
-		Construct x (Right rst) -> Construct x Nothing + into @(Inorder (Nonempty List)) rst
+		Construct x (Left_ lst) -> into @(Inorder (Nonempty List)) lst + Construct x Nothing
+		Construct x (Right_ rst) -> Construct x Nothing + into @(Inorder (Nonempty List)) rst
 		Construct x (Both lst rst) -> into @(Inorder (Nonempty List)) lst + Construct x Nothing + into @(Inorder (Nonempty List)) rst
 
 instance Morphable (Into (Postorder (Construction Maybe))) (Construction Wye) where
 	type Morphing (Into (Postorder (Construction Maybe))) (Construction Wye) = Construction Maybe
 	morphing nonempty_binary = case premorph nonempty_binary of
 		Construct x End -> Construct x Nothing
-		Construct x (Left lst) -> into @(Postorder (Nonempty List)) lst + Construct x Nothing
-		Construct x (Right rst) -> into @(Postorder (Nonempty List)) rst + Construct x Nothing
+		Construct x (Left_ lst) -> into @(Postorder (Nonempty List)) lst + Construct x Nothing
+		Construct x (Right_ rst) -> into @(Postorder (Nonempty List)) rst + Construct x Nothing
 		Construct x (Both lst rst) -> into @(Postorder (Nonempty List)) lst + into @(Postorder (Nonempty List)) rst + Construct x Nothing
 
 -- instance Morphable (Into (o ds)) (Construction Wye) => Morphable (Into (o ds)) Binary where
 	-- type Morphing (Into (o ds)) Binary = Maybe <:.> Morphing (Into (o ds)) (Construction Wye)
 	-- morphing (premorph -> xs) = (into @(o ds) <-|-) =#- xs
 
-instance Substructure Left (Flip (:*:) a) where
-	type Substance Left (Flip (:*:) a) = Exactly
+instance Substructure Left_ (Flip (:*:) a) where
+	type Substance Left_ (Flip (:*:) a) = Exactly
 	substructure = P_Q_T <-- \product -> case run <-- lower product of
 		s :*: x -> Store <--- Exactly s :*: lift . Flip . (:*: x) . extract
 
-instance Substructure Right ((:*:) s) where
-	type Substance Right ((:*:) s) = Exactly
+instance Substructure Right_ ((:*:) s) where
+	type Substance Right_ ((:*:) s) = Exactly
 	substructure = P_Q_T <-- \product -> case lower product of
 		s :*: x -> Store <--- Exactly x :*: lift . (s :*:) . extract
 

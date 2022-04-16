@@ -26,7 +26,7 @@ import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left_, Right_))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary ()
@@ -186,11 +186,11 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 -- 	f <<= z = let move rtt = TT . deconstruct <----- run . rtt .-+ z in
 -- 		imply @(Tape List _)
 -- 			<---- f z
--- 			<---- f <-|-- move <-- rotate @Left
--- 			<---- f <-|-- move <-- rotate @Right
+-- 			<---- f <-|-- move <-- rotate @Left_
+-- 			<---- f <-|-- move <-- rotate @Right_
 
-instance Morphable (Rotate Left) (Turnover < Tape List) where
-	type Morphing (Rotate Left) (Turnover < Tape List) = Turnover < Tape List
+instance Morphable (Rotate Left_) (Turnover < Tape List) where
+	type Morphing (Rotate Left_) (Turnover < Tape List) = Turnover < Tape List
 	morphing s@(run . premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
 		resolve @(Tape List _) <--- Turnover <--- premorph s <----
 			(rotate_over x <-|- run right) -+- (rotate_left x right <-|- run left) where
@@ -205,8 +205,8 @@ instance Morphable (Rotate Left) (Turnover < Tape List) where
 		put_over :: a -> State < Nonempty List a < ()
 		put_over = void . modify @State . item @Push
 
-instance Morphable (Rotate Right) (Turnover < Tape List) where
-	type Morphing (Rotate Right) (Turnover < Tape List) = Turnover < Tape List
+instance Morphable (Rotate Right_) (Turnover < Tape List) where
+	type Morphing (Rotate Right_) (Turnover < Tape List) = Turnover < Tape List
 	morphing s@(run . premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
 		resolve @(Tape List _) <--- Turnover <--- premorph s
 			<---- (rotate_over x <-|- run left) -+- (rotate_right x left <-|- run right) where
@@ -242,16 +242,16 @@ instance Morphable (Into > Comprehension Maybe) (Tape List) where
 instance Zippable (Construction Maybe) where
 	type Breadcrumbs (Construction Maybe) = Reverse > Construction Maybe <:*:> Construction Maybe
 
-instance Morphable (Rotate Left) (Tape > Construction Maybe) where
-	type Morphing (Rotate Left) (Tape > Construction Maybe) = Maybe <::> (Tape > Construction Maybe)
+instance Morphable (Rotate Left_) (Tape > Construction Maybe) where
+	type Morphing (Rotate Left_) (Tape > Construction Maybe) = Maybe <::> (Tape > Construction Maybe)
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
 		TT <----- imply @(Tape (Nonempty List) _)
 			<-|-- point <-- extract left
 			<-*-- deconstruct left
 			<-*-- point <-- item @Push x right
 
-instance Morphable (Rotate Right) (Tape > Construction Maybe) where
-	type Morphing (Rotate Right) (Tape > Construction Maybe) = Maybe <::> Tape (Construction Maybe)
+instance Morphable (Rotate Right_) (Tape > Construction Maybe) where
+	type Morphing (Rotate Right_) (Tape > Construction Maybe) = Maybe <::> Tape (Construction Maybe)
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
 		TT <----- imply @(Tape < Nonempty List < _)
 			<-|-- point <-- extract right

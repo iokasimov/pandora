@@ -15,7 +15,7 @@ import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic ((>-||-), extract)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left_, Right_))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
 import Pandora.Paradigm.Schemes.TT (type (<::>))
@@ -34,13 +34,13 @@ tagstruct :: Covariant (->) (->) structure => (Tagged segment <:.> structure) @>
 tagstruct = P_Q_T <-- \ts -> case lower ts of
 	struct -> Store <--- struct :*: lift
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Left (t <:*:> u) where
-	type Substance Left (t <:*:> u) = t
+instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Left_ (t <:*:> u) where
+	type Substance Left_ (t <:*:> u) = t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- ls :*: lift . (<:*:> rs)
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Right (t <:*:> u) where
-	type Substance Right (t <:*:> u) = u
+instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Right_ (t <:*:> u) where
+	type Substance Right_ (t <:*:> u) = u
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- rs :*: lift . (ls <:*:>)
 
@@ -48,11 +48,11 @@ data Segment a = Root a | Rest a | Branch a | Ancestors a | Forest a
 
 instance Covariant (->) (->) t => Substructure Root (Exactly <:*:> t) where
 	type Substance Root (Exactly <:*:> t) = Exactly
-	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @Left
+	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @Left_
 
 instance Covariant (->) (->) t => Substructure Rest (Exactly <:*:> t) where
 	type Substance Rest (Exactly <:*:> t) = t
-	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @Right
+	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @Right_
 
 instance Covariant (->) (->) t => Substructure Root (Construction t) where
 	type Substance Root (Construction t) = Exactly

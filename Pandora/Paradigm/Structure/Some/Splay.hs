@@ -14,7 +14,7 @@ import Pandora.Pattern.Transformer.Hoistable ((/|\))
 import Pandora.Paradigm.Algebraic.Functor ((<-*-), extract, point, void)
 import Pandora.Paradigm.Algebraic.Product (type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left, Right))
+import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left_, Right_))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
 import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
@@ -31,102 +31,102 @@ import Pandora.Paradigm.Structure.Some.Binary (Binary)
 
 data Splay a = Zig a | Zag a
 
-instance Morphable (Rotate > Left Zig) Binary where
-	type Morphing (Rotate > Left Zig) Binary = Binary
-	morphing (premorph -> binary) = TT <--- run . rotate @(Left Zig) =<< run binary
+instance Morphable (Rotate > Left_ Zig) Binary where
+	type Morphing (Rotate > Left_ Zig) Binary = Binary
+	morphing (premorph -> binary) = TT <--- run . rotate @(Left_ Zig) =<< run binary
 
-instance Morphable (Rotate > Right Zig) Binary where
-	type Morphing (Rotate > Right Zig) Binary = Binary
-	morphing (premorph -> binary) = TT <--- run . rotate @(Right Zig) =<< run binary
+instance Morphable (Rotate > Right_ Zig) Binary where
+	type Morphing (Rotate > Right_ Zig) Binary = Binary
+	morphing (premorph -> binary) = TT <--- run . rotate @(Right_ Zig) =<< run binary
 
-instance Morphable (Rotate > Left > Zig Zig) Binary where
-	type Morphing (Rotate > Left > Zig Zig) Binary = Binary
-	morphing (premorph -> binary) = TT <--- run . rotate @(Left > Zig Zig) =<< run binary
+instance Morphable (Rotate > Left_ > Zig Zig) Binary where
+	type Morphing (Rotate > Left_ > Zig Zig) Binary = Binary
+	morphing (premorph -> binary) = TT <--- run . rotate @(Left_ > Zig Zig) =<< run binary
 
-instance Morphable (Rotate > Right > Zig Zig) Binary where
-	type Morphing (Rotate > Right > Zig Zig) Binary = Binary
-	morphing (premorph -> binary) = TT <--- run . rotate @(Right > Zig Zig) =<< run binary
+instance Morphable (Rotate > Right_ > Zig Zig) Binary where
+	type Morphing (Rotate > Right_ > Zig Zig) Binary = Binary
+	morphing (premorph -> binary) = TT <--- run . rotate @(Right_ > Zig Zig) =<< run binary
 
-instance Morphable (Rotate > Left > Zig Zag) Binary where
-	type Morphing (Rotate > Left > Zig Zag) Binary = Binary
-	morphing (premorph -> binary) = TT <--- run . rotate @(Left > Zig Zag) =<< run binary
+instance Morphable (Rotate > Left_ > Zig Zag) Binary where
+	type Morphing (Rotate > Left_ > Zig Zag) Binary = Binary
+	morphing (premorph -> binary) = TT <--- run . rotate @(Left_ > Zig Zag) =<< run binary
 
-instance Morphable (Rotate > Right > Zig Zag) Binary where
-	type Morphing (Rotate > Right > Zig Zag) Binary = Binary
-	morphing (premorph -> binary) = TT <--- run . rotate @(Right > Zig Zag) =<< run binary
+instance Morphable (Rotate > Right_ > Zig Zag) Binary where
+	type Morphing (Rotate > Right_ > Zig Zag) Binary = Binary
+	morphing (premorph -> binary) = TT <--- run . rotate @(Right_ > Zig Zag) =<< run binary
 
 -------------------------------------- Non-empty Splay tree ----------------------------------------
 
-instance Morphable (Rotate > Left Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Left Zig) (Construction (Maybe <:*:> Maybe)) = Binary
+instance Morphable (Rotate > Left_ Zig) (Construction (Maybe <:*:> Maybe)) where
+	type Morphing (Rotate > Left_ Zig) (Construction (Maybe <:*:> Maybe)) = Binary
 	morphing (premorph -> tree) = TT <---- Construct
-		<-|- (extract <-|--- run <--- view <-- sub @(Right Branch) <-- tree)
+		<-|- (extract <-|--- run <--- view <-- sub @(Right_ Branch) <-- tree)
 		<-*- Just (
 			(<:*:>)
-				(run <--- view <-- sub @(Left Branch) <-- tree)
+				(run <--- view <-- sub @(Left_ Branch) <-- tree)
 				(Just . Construct (extract <--- view <-- sub @Root <-- tree) <-- (<:*:>)
-					(run . view (sub @(Left Branch)) ===<< run <--- view <-- sub @(Right Branch) <-- tree)
-					(run . view (sub @(Right Branch)) ===<< run <--- view <-- sub @(Right Branch) <-- tree)
+					(run . view (sub @(Left_ Branch)) ===<< run <--- view <-- sub @(Right_ Branch) <-- tree)
+					(run . view (sub @(Right_ Branch)) ===<< run <--- view <-- sub @(Right_ Branch) <-- tree)
 				)
 			)
 
-instance Morphable (Rotate > Right Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Right Zig) (Construction (Maybe <:*:> Maybe)) = Binary
+instance Morphable (Rotate > Right_ Zig) (Construction (Maybe <:*:> Maybe)) where
+	type Morphing (Rotate > Right_ Zig) (Construction (Maybe <:*:> Maybe)) = Binary
 	morphing (premorph -> tree) = TT <---- Construct
-		<-|- (extract <-|--- run <--- view <-- sub @(Left Branch) <-- tree)
+		<-|- (extract <-|--- run <--- view <-- sub @(Left_ Branch) <-- tree)
 		<-*- Just (
 			(<:*:>)
-				(run . view (sub @(Left Branch)) ===<< run <--- view <-- sub @(Left Branch) <-- tree)
+				(run . view (sub @(Left_ Branch)) ===<< run <--- view <-- sub @(Left_ Branch) <-- tree)
 				(Just . Construct (extract <--- view <-- sub @Root <-- tree) <-- (<:*:>)
-					(run . view (sub @(Left Branch)) ===<< run <--- view <-- sub @(Left Branch) <-- tree)
-					(run <--- view <-- sub @(Right Branch) <-- tree)
+					(run . view (sub @(Left_ Branch)) ===<< run <--- view <-- sub @(Left_ Branch) <-- tree)
+					(run <--- view <-- sub @(Right_ Branch) <-- tree)
 				)
 			)
 
--- TODO: Slidable (Left Zig) (Construction (Maybe <:*:> Maybe))
--- TODO: Slidable (Left > Zig Zig) (Construction (Maybe <:*:> Maybe))
--- TODO: Slidable (Right > Zig Zig) (Construction (Maybe <:*:> Maybe))
--- TODO: Slidable (Left > Zig Zag) (Construction (Maybe <:*:> Maybe))
--- TODO: Slidable (Right > Zig Zag) (Construction (Maybe <:*:> Maybe))
--- TODO: Slidable (Left Zig) Binary
--- TODO: Slidable (Right Zig) Binary
--- TODO: Slidable (Left > Zig Zig) Binary
--- TODO: Slidable (Right > Zig Zig) Binary
--- TODO: Slidable (Left > Zig Zag) Binary
--- TODO: Slidable (Right > Zig Zag) Binary
+-- TODO: Slidable (Left_ Zig) (Construction (Maybe <:*:> Maybe))
+-- TODO: Slidable (Left_ > Zig Zig) (Construction (Maybe <:*:> Maybe))
+-- TODO: Slidable (Right_ > Zig Zig) (Construction (Maybe <:*:> Maybe))
+-- TODO: Slidable (Left_ > Zig Zag) (Construction (Maybe <:*:> Maybe))
+-- TODO: Slidable (Right_ > Zig Zag) (Construction (Maybe <:*:> Maybe))
+-- TODO: Slidable (Left_ Zig) Binary
+-- TODO: Slidable (Right_ Zig) Binary
+-- TODO: Slidable (Left_ > Zig Zig) Binary
+-- TODO: Slidable (Right_ > Zig Zig) Binary
+-- TODO: Slidable (Left_ > Zig Zag) Binary
+-- TODO: Slidable (Right_ > Zig Zag) Binary
 
-instance Slidable (Right Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Sliding (Right Zig) (Construction (Maybe <:*:> Maybe)) = Maybe
+instance Slidable (Right_ Zig) (Construction (Maybe <:*:> Maybe)) where
+	type Sliding (Right_ Zig) (Construction (Maybe <:*:> Maybe)) = Maybe
 	slide :: forall element . State > Nonempty Binary element :> Maybe >>> ()
 	slide = void . point
-		===<< adapt . zoom @(Nonempty Binary element) (sub @(Right Branch)) .
-			zoom (sub @(Left Branch)) . change . constant
-		===<< adapt . zoom @(Nonempty Binary element) (sub @(Right Branch))
+		===<< adapt . zoom @(Nonempty Binary element) (sub @(Right_ Branch)) .
+			zoom (sub @(Left_ Branch)) . change . constant
+		===<< adapt . zoom @(Nonempty Binary element) (sub @(Right_ Branch))
 			. change @(Binary element) . constant . lift
 		===<< change . constant ===<< adapt . run
 		===<< adapt <--- zoom @(Nonempty Binary element)
-			<-- sub @(Left Branch)
+			<-- sub @(Left_ Branch)
 			<-- current @(Binary element)
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
-instance Morphable (Rotate > Left > Zig Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Left > Zig Zig) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
-	morphing (premorph -> tree) = TT <---- run . rotate @(Left Zig) ==<< run <-- rotate @(Left Zig) tree
+instance Morphable (Rotate > Left_ > Zig Zig) (Construction (Maybe <:*:> Maybe)) where
+	type Morphing (Rotate > Left_ > Zig Zig) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+	morphing (premorph -> tree) = TT <---- run . rotate @(Left_ Zig) ==<< run <-- rotate @(Left_ Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
-instance Morphable (Rotate > Right > Zig Zig) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Right > Zig Zig) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
-	morphing (premorph -> tree) = TT <---- run . rotate @(Right Zig) ==<< run <-- rotate @(Right Zig) tree
+instance Morphable (Rotate > Right_ > Zig Zig) (Construction (Maybe <:*:> Maybe)) where
+	type Morphing (Rotate > Right_ > Zig Zig) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+	morphing (premorph -> tree) = TT <---- run . rotate @(Right_ Zig) ==<< run <-- rotate @(Right_ Zig) tree
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
-instance Morphable (Rotate > Left > Zig Zag) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Left > Zig Zag) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
-	morphing (premorph -> struct) = rotate @(Left Zig) <--- mutate <-- (try_to_rotate @(Right Zig) /|\) <-- sub @(Left Branch) <-- struct
+instance Morphable (Rotate > Left_ > Zig Zag) (Construction (Maybe <:*:> Maybe)) where
+	type Morphing (Rotate > Left_ > Zig Zag) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+	morphing (premorph -> struct) = rotate @(Left_ Zig) <--- mutate <-- (try_to_rotate @(Right_ Zig) /|\) <-- sub @(Left_ Branch) <-- struct
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
-instance Morphable (Rotate > Right > Zig Zag) (Construction (Maybe <:*:> Maybe)) where
-	type Morphing (Rotate > Right > Zig Zag) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
-	morphing (premorph -> struct) = rotate @(Right Zig) <--- mutate <-- (try_to_rotate @(Left Zig) /|\) <-- sub @(Right Branch) <-- struct
+instance Morphable (Rotate > Right_ > Zig Zag) (Construction (Maybe <:*:> Maybe)) where
+	type Morphing (Rotate > Right_ > Zig Zag) (Construction (Maybe <:*:> Maybe)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+	morphing (premorph -> struct) = rotate @(Right_ Zig) <--- mutate <-- (try_to_rotate @(Left_ Zig) /|\) <-- sub @(Right_ Branch) <-- struct
 
 -- TODO: Include error instead of returning empty tree
 try_to_rotate :: forall direction . Morphed (Rotate direction) (Nonempty Binary) Binary => Nonempty Binary ~> Nonempty Binary
