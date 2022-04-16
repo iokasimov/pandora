@@ -17,11 +17,10 @@ import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Functor (extract, point, empty)
-import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down))
+import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left_, Right_))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
 import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
@@ -94,30 +93,30 @@ type Roses = List <::> Construction List
 instance Zippable (Construction List) where
 	type Breadcrumbs (Construction List) = Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)
 
--- TODO: Try to use substructure @Right_ . substructure @Right_ . substructure @Right_ . substructure @Right_ here
+-- TODO: Try to use substructure @Right . substructure @Right . substructure @Right . substructure @Right here
 instance Substructure (Up Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance (Up Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = List <::> Tape Roses
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: T_U (left :*: T_U (right :*: up))) ->
 			Store <--- up :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (right <:*:>)
 
--- TODO: Try to use substructure @Left_ . substructure @Right_ here
+-- TODO: Try to use substructure @Left . substructure @Right here
 instance Substructure (Down Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance (Down Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: rest) ->
 			Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> rest)
 
--- TODO: Try to use substructure @Left_ . substructure @Right_ . substructure @Right_ here
-instance Substructure (Left_ Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
-	type Substance (Left_ Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Reverse Roses
+-- TODO: Try to use substructure @Left . substructure @Right . substructure @Right here
+instance Substructure (Left Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Left Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Reverse Roses
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: T_U (left :*: rest)) ->
 			Store <--- left :*: lift . (Exactly x <:*:>) . (down <:*:>) . (<:*:> rest)
 
--- TODO: Try to use substructure  @Left_ . substructure @Right_ . substructure @Right_ . substructure @Right_ here
-instance Substructure (Right_ Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
-	type Substance (Right_ Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
+-- TODO: Try to use substructure  @Left . substructure @Right . substructure @Right . substructure @Right here
+instance Substructure (Right Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Right Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: T_U (left :*: T_U (right :*: rest))) ->
 			Store <--- right :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (<:*:> rest)
@@ -137,10 +136,10 @@ instance Morphable (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Ro
 		restruct (parents :*: parent) =
 			let child_node = extract <--- view <-- sub @Root <-- z in
 			let central_children = run <--- view <-- sub @(Down Forest) <-- z in
-			let left_children = run @(->) <---- run <--- view <-- sub @(Left_ Forest) <-- z in
-			let right_children = run <--- view <-- sub @(Right_ Forest) <-- z in
+			let left_children = run @(->) <---- run <--- view <-- sub @(Left Forest) <-- z in
+			let right_children = run <--- view <-- sub @(Right Forest) <-- z in
 			view <-- sub @Root <-- parent
 				<:*:> unite <-- left_children + point (Construct child_node central_children) + right_children
-				<:*:> view <--- sub @Left_ <--- view <-- sub @Rest <-- parent
-				<:*:> view <--- sub @Right_ <--- view <-- sub @Rest <-- parent
+				<:*:> view <--- sub @Left <--- view <-- sub @Rest <-- parent
+				<:*:> view <--- sub @Right <--- view <-- sub @Rest <-- parent
 				<:*:> unite parents

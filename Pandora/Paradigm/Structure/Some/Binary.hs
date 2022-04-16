@@ -15,13 +15,13 @@ import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%), (&), (.:..))
 import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (<-*-*-), extract, point, empty)
-import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left_ward, Right_ward))
+import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
+import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Functor.Wye (Wye (Left_, Right_))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
@@ -53,21 +53,21 @@ type Binary = Maybe <::> Construction (Maybe <:*:> Maybe)
 			-- let continue xs = run <-- morph @Insert @(Nonempty Binary) xs <--- twosome <-- Exactly x <-- Convergence f in
 			-- let step = iff @Just <-|-|- get @(Obscure Lens) <-*-*- modify @(Obscure Lens) continue <-*-*- set @(Obscure Lens) <-- point x in
 			-- lift <---- order binary
-				-- <--- step <-- sub @Left_ <-- binary
-				-- <--- step <-- sub @Right_ <-- binary
+				-- <--- step <-- sub @Left <-- binary
+				-- <--- step <-- sub @Right <-- binary
 				-- <--- f x <-- extract binary
 
-instance Substructure (Left_ Branch) Binary where
-	type Substance (Left_ Branch) Binary = Binary
+instance Substructure (Left Branch) Binary where
+	type Substance (Left Branch) Binary = Binary
 	substructure = P_Q_T <-- \struct -> case run <-- lower struct of
 		Nothing -> Store <--- empty :*: lift . constant empty
-		Just tree -> lift . lift @(->) <-|- sub @(Left_ Branch) <~ tree
+		Just tree -> lift . lift @(->) <-|- sub @(Left Branch) <~ tree
 
-instance Substructure (Right_ Branch) Binary where
-	type Substance (Right_ Branch) Binary = Binary
+instance Substructure (Right Branch) Binary where
+	type Substance (Right Branch) Binary = Binary
 	substructure = P_Q_T <-- \struct -> case run . extract . run ---> struct of
 		Nothing -> Store <--- empty :*: lift . constant empty
-		Just tree -> lift . lift @(->) <-|- sub @(Right_ Branch) <~ tree
+		Just tree -> lift . lift @(->) <-|- sub @(Right Branch) <~ tree
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
@@ -83,20 +83,20 @@ instance Morphable (Into Binary) (Construction (Maybe <:*:> Maybe)) where
 		-- let continue xs = run <--- morph @Insert @(Nonempty Binary) xs <---- twosome <--- Exactly x <--- Convergence f in
 		-- let step = iff @Just <-|-|- (run .:.. view) <-*-*- mutate continue <-*-*- replace (point x) in
 		-- order struct
-			-- <---- step <--- sub @Left_ <--- struct
-			-- <---- step <--- sub @Right_ <--- struct
+			-- <---- step <--- sub @Left <--- struct
+			-- <---- step <--- sub @Right <--- struct
 			-- <---- f x <--- extract struct
 
--- instance Substructure Left_ (Construction (Maybe <:*:> Maybe)) where
--- 	type Substance Left_ (Construction (Maybe <:*:> Maybe)) = Binary
+-- instance Substructure Left (Construction (Maybe <:*:> Maybe)) where
+-- 	type Substance Left (Construction (Maybe <:*:> Maybe)) = Binary
 -- 	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
 -- 		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . left) (point x) . run
 -- 		Construct x (T_U (Just lst :*: Nothing)) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve left end . run
 -- 		Construct x (T_U (Nothing :*: Just rst)) -> Store <--- TT Nothing :*: lift . Construct x . resolve (both % rst) (right rst) . run
 -- 		Construct x (T_U (Just lst :*: Just rst)) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve (both % rst) (right rst) . run
 --
--- instance Substructure Right_ (Construction (Maybe <:*:> Maybe)) where
--- 	type Substance Right_ (Construction (Maybe <:*:> Maybe)) = Binary
+-- instance Substructure Right (Construction (Maybe <:*:> Maybe)) where
+-- 	type Substance Right (Construction (Maybe <:*:> Maybe)) = Binary
 -- 	substructure = P_Q_T <-- \struct -> case extract <-- run struct of
 -- 		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . right) (point x) . run
 -- 		Construct x (T_U (Just lst :*: Nothing)) -> Store <--- TT Nothing :*: lift . Construct x . resolve (both lst) (left lst) . run
@@ -112,8 +112,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 		Just tree -> TT <-- \key ->
 			key <=> attached (extract tree) & order
 				<--- Just --> extract --> extract tree
-				<--- lookup @Key key . TT @Covariant @Covariant =<< run (view <-- sub @(Left_ Branch) <-- tree)
-				<--- lookup @Key key . TT @Covariant @Covariant =<< run (view <-- sub @(Right_ Branch) <-- tree)
+				<--- lookup @Key key . TT @Covariant @Covariant =<< run (view <-- sub @(Left Branch) <-- tree)
+				<--- lookup @Key key . TT @Covariant @Covariant =<< run (view <-- sub @(Right Branch) <-- tree)
 
 -- instance Chain k => Morphable (Vary Element) (Prefixed Binary k) where
 	-- type Morphing (Vary Element) (Prefixed Binary k) = ((:*:) k <::> Exactly) <:.:> Prefixed Binary k > (->)
@@ -123,8 +123,8 @@ instance Chain k => Morphable (Lookup Key) (Prefixed Binary k) where
 			-- let continue = ((vary @Element @k @_ @(Prefixed Binary _) key value -#=) -#=) in
 			-- Prefixed . lift ! key <=> attached (extract tree) & order
 				-- # over (sub @Root) (!!!>- value) tree
-				-- # over (sub @Left_) continue tree
-				-- # over (sub @Right_) continue tree
+				-- # over (sub @Left) continue tree
+				-- # over (sub @Right) continue tree
 
 ---------------------------------- Prefixed non-empty binary tree ----------------------------------
 
@@ -133,8 +133,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed < Construction (Maybe <:*
 	morphing (run . premorph -> Construct x xs) = TT <-- \key ->
 		key <=> attached x & order
 			<---- Just <-- extract x
-			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @Left_ <-- xs
-			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @Left_ <-- xs
+			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @Left <-- xs
+			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @Left <-- xs
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 	{-
@@ -142,13 +142,13 @@ data Biforked a = Top | Horizontal (Horizontal a)
 
 instance Covariant (->) (->) Biforked where
 	_ <-|- Top = Top
-	f <-|- Horizontal (Left_ward l) = Horizontal . Left_ward <-- f l
-	f <-|- Horizontal (Right_ward r) = Horizontal . Right_ward <-- f r
+	f <-|- Horizontal (Left l) = Horizontal . Left <-- f l
+	f <-|- Horizontal (Right r) = Horizontal . Right <-- f r
 
 instance Traversable (->) (->) Biforked where
 	_ <<- Top = point Top
-	f <<- Horizontal (Left_ward l) = Horizontal . Left_ward <-|- f l
-	f <<- Horizontal (Right_ward r) = Horizontal . Right_ward <-|- f r
+	f <<- Horizontal (Left l) = Horizontal . Left <-|- f l
+	f <<- Horizontal (Right r) = Horizontal . Right <-|- f r
 
 type Bifurcation = Biforked <::> Construction Biforked
 
@@ -164,46 +164,46 @@ instance Morphable (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)
 	type Morphing (Rotate Up) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
 		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> Bifurcation <::> Bicursor > (:*:))
 	morphing struct = case run ---> premorph struct of
-		focused :*: TT (TT (Horizontal (Right_ward (Construct (T_U (Exactly parent :*: rest)) next)))) ->
+		focused :*: TT (TT (Horizontal (Right (Construct (T_U (Exactly parent :*: rest)) next)))) ->
 			lift . ((<:*:>) % TT (TT next)) . (<:*:>) (Exactly parent) . TT <---- resolve
 				<--- Both <-- _focused_part_to_nonempty_binary_tree focused
-				<--- Left_ <-- _focused_part_to_nonempty_binary_tree focused
+				<--- Left <-- _focused_part_to_nonempty_binary_tree focused
 				<--- run rest
-		focused :*: TT (TT (Horizontal (Left_ward (Construct (T_U (Exactly parent :*: rest)) next)))) ->
+		focused :*: TT (TT (Horizontal (Left (Construct (T_U (Exactly parent :*: rest)) next)))) ->
 			lift . ((<:*:>) % TT (TT next)) . (<:*:>) (Exactly parent) . TT <---- resolve
 				<--- Both % _focused_part_to_nonempty_binary_tree focused
-				<--- Right_ <-- _focused_part_to_nonempty_binary_tree focused
+				<--- Right <-- _focused_part_to_nonempty_binary_tree focused
 				<--- run rest
 		_ -> TT Nothing
 
 _nonempty_binary_tree_to_focused_part :: Construction Wye ~> Exactly <:.:> Wye <::> Construction Wye > (:*:)
 _nonempty_binary_tree_to_focused_part (Construct x xs) = Exactly x <:*:> TT xs
 
-instance Morphable (Rotate > Down Left_) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:)) where
-	type Morphing (Rotate > Down Left_) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
+instance Morphable (Rotate > Down Left) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:)) where
+	type Morphing (Rotate > Down Left) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
 		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> Bifurcation <::> Bicursor > (:*:))
 	morphing struct = case run ---> premorph struct of
-		T_U (Exactly x :*: TT (Left_ lst)) :*: TT (TT next) ->
+		T_U (Exactly x :*: TT (Left lst)) :*: TT (TT next) ->
 			lift . (<:*:>) (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Horizontal . Left_ward <------- Construct
+				. TT . TT . Horizontal . Left <------- Construct
 					<------ Exactly x <:*:> TT Nothing
 					<------ next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . (<:*:>) (_nonempty_binary_tree_to_focused_part lst)
-				. TT . TT . Horizontal . Left_ward <------- Construct
+				. TT . TT . Horizontal . Left <------- Construct
 					<------ Exactly x <:*:> lift rst
 					<------ next
 		_ -> TT Nothing
 
-instance Morphable (Rotate > Down Right_) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:)) where
-	type Morphing (Rotate > Down Right_) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
+instance Morphable (Rotate > Down Right) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:)) where
+	type Morphing (Rotate > Down Right) ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> (Bifurcation <::> Bicursor) > (:*:))
 		= Maybe <::> ((Exactly <:.:> Wye <::> Construction Wye > (:*:)) <:.:> Bifurcation <::> Bicursor > (:*:))
 	morphing struct = case run ---> premorph struct of
-		T_U (Exactly x :*: TT (Right_ rst)) :*: TT (TT next) ->
+		T_U (Exactly x :*: TT (Right rst)) :*: TT (TT next) ->
 			lift . (<:*:>) (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Horizontal . Right_ward <---- Construct (Exactly x <:*:> TT Nothing) next
+				. TT . TT . Horizontal . Right <---- Construct (Exactly x <:*:> TT Nothing) next
 		T_U (Exactly x :*: TT (Both lst rst)) :*: TT (TT next) ->
 			lift . (<:*:>) (_nonempty_binary_tree_to_focused_part rst)
-				. TT . TT . Horizontal . Right_ward <---- Construct (Exactly x <:*:> lift lst) next
+				. TT . TT . Horizontal . Right <---- Construct (Exactly x <:*:> lift lst) next
 		_ -> TT Nothing
 -}
