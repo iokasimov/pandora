@@ -115,12 +115,12 @@ library
     Pandora.Paradigm.Structure.Ability.Accessible
     Pandora.Paradigm.Structure.Ability.Possible
     Pandora.Paradigm.Structure.Ability.Substructure
-    Pandora.Paradigm.Structure.Ability.Nonempty
     Pandora.Paradigm.Structure.Ability.Monotonic
     Pandora.Paradigm.Structure.Ability.Slidable
     Pandora.Paradigm.Structure.Modification
     Pandora.Paradigm.Structure.Modification.Combinative
     Pandora.Paradigm.Structure.Modification.Comprehension
+    Pandora.Paradigm.Structure.Modification.Nonempty
     Pandora.Paradigm.Structure.Modification.Prefixed
     Pandora.Paradigm.Structure.Modification.Turnover
     Pandora.Paradigm.Structure.Modification.Tape

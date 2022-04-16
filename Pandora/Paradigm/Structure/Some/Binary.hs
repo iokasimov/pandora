@@ -29,7 +29,7 @@ import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mutate)
-import Pandora.Paradigm.Structure.Ability.Nonempty (Nonempty)
+import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
 	, Morph (Rotate, Into, Insert, Lookup, Key), lookup)

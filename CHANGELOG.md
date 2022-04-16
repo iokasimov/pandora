@@ -755,3 +755,4 @@
 * Move `Schematic` type family to `Schemes` module
 * Move `Vertical` and `Horizontal` datatypes to `Auxiliary` module
 * Rename `Horizontal` constructors to `Left` and `Right`
+* Move `Nonempty` from `Ability` to `Modification` module
