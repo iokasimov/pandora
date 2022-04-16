@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory.Some.Provision where
 
-import Pandora.Core.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~)))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<-----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -21,7 +21,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes (Schematic, TU (TU), type (<:.>))
 
 newtype Provision e a = Provision (e -> a)
 

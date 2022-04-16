@@ -2,7 +2,7 @@
 module Pandora.Paradigm.Controlflow.Effect.Transformer.Comonadic (Comonadic (..), (:<) (..)) where
 
 import Pandora.Core.Functor (type (<))
-import Pandora.Core.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~~~)))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~~~)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -20,6 +20,7 @@ import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (Extractable, point)
+import Pandora.Paradigm.Schemes (Schematic)
 
 class Interpreted m t => Comonadic m t where
 	{-# MINIMAL bring #-}

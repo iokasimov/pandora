@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory.Some.Equipment (Equipment (..), retrieve) where
 
-import Pandora.Core.Interpreted (Schematic, Interpreted (Primary, run, unite))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<---), (<----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
@@ -12,7 +12,7 @@ import Pandora.Paradigm.Algebraic ()
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
-import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
+import Pandora.Paradigm.Schemes (Schematic, TU (TU), type (<:.>))
 
 newtype Equipment e a = Equipment (e :*: a)
 

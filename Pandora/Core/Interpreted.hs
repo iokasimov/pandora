@@ -18,9 +18,6 @@ infixl 6 <~~~
 infixl 7 <~~
 infixl 8 <~
 
-type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
-
--- TODO: Move this typeclass to Core module
 class Interpreted m t where
 	{-# MINIMAL run, unite #-}
 	type Primary t a :: *

@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory.Some.Imprint (Imprint (..), Traceable) where
 
-import Pandora.Core.Interpreted (Schematic, Interpreted (Primary, run, unite))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
@@ -13,7 +13,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Paradigm.Algebraic ()
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable)
-import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
+import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 
 newtype Imprint e a = Imprint (e -> a)
 

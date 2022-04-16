@@ -2,7 +2,7 @@
 module Pandora.Paradigm.Inventory.Some.State where
 
 import Pandora.Core.Functor (type (:.), type (>>>))
-import Pandora.Core.Interpreted (Interpreted (Primary, run, (<~), unite, (=#-)), Schematic)
+import Pandora.Core.Interpreted (Interpreted (Primary, run, (<~), unite, (=#-)))
 import Pandora.Pattern.Morphism.Flip (Flip)
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
@@ -20,11 +20,11 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
-import Pandora.Paradigm.Schemes.TUT (TUT (TUT), type (<:<.>:>))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic ((:*:) ((:*:)), (.-*-), delta)
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (Pointable, point, (<-||-), (>-||-))
+import Pandora.Paradigm.Schemes (Schematic, TUT (TUT), type (<:<.>:>))
 
 -- | Effectful computation with a variable
 newtype State s a = State ((->) s :. (:*:) s >>> a)

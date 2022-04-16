@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Inventory.Some.Accumulator (Accumulator (..), Accumulated, gather) where
 
-import Pandora.Core.Interpreted (Schematic, Interpreted (Primary, run, unite))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
@@ -16,7 +16,7 @@ import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic (point)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
+import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 
 newtype Accumulator e a = Accumulator (e :*: a)
 

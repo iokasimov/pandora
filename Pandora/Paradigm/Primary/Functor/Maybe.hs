@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Maybe where
 
 import Pandora.Core.Functor (type (:.), type (>), type (>>>))
-import Pandora.Core.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~)))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, (<--), (<---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -22,13 +22,13 @@ import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False))
 import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Equal, Greater))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
+import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 
 data Maybe a = Nothing | Just a
 

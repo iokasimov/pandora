@@ -1,7 +1,7 @@
 module Pandora.Paradigm.Primary.Functor.Conclusion where
 
 import Pandora.Core.Functor (type (~>))
-import Pandora.Core.Interpreted (Schematic, Interpreted (Primary, run, unite, (<~)))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<----))
@@ -21,10 +21,10 @@ import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
-import Pandora.Paradigm.Schemes.UT (UT (UT), type (<.:>))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
+import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 
 data Conclusion e a = Failure e | Success a
 

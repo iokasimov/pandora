@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Schemes (module Exports) where
+module Pandora.Paradigm.Schemes (module Exports, Schematic) where
 
 import Pandora.Paradigm.Schemes.PQ_ as Exports
 import Pandora.Paradigm.Schemes.P_Q_T as Exports
@@ -19,6 +19,8 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+
+type family Schematic (c :: (* -> * -> *) -> (* -> *) -> k) (t :: * -> *) = (r :: (* -> *) -> * -> *) | r -> t
 
 instance (Covariant (->) (->) (v <:.> t), Covariant (->) (->) (u <:.> w), Adjoint (->) (->) t u, Adjoint (->) (->) v w)
 	=> Adjoint (->) (->) (v <:.> t) (u <:.> w) where

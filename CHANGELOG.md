@@ -752,3 +752,4 @@
 * Change `pop` method in `Stack` typeclass: returns not `Maybe` but `Topping t`
 * Remove `Pushing` and `Popping` type familes from `Stack` typeclass
 * Move `Interpreted` module to `Core`
+* Move `Schematic` type family to `Schemes` module
