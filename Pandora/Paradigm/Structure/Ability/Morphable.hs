@@ -37,10 +37,6 @@ data Morph a = Rotate a | Into a | Insert a | Push a | Pop a | Delete a | Find a
 
 data Occurrence a = All a | First a
 
-data Vertical a = Up a | Down a
-
-data Horizontal a = Leftward a | Rightward a
-
 rotate :: forall mod struct . Morphable (Rotate mod) struct => struct ~> Morphing (Rotate mod) struct
 rotate = morphing . TT . Tag @(Rotate mod)
 

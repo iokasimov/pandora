@@ -35,6 +35,7 @@ library
     Pandora.Paradigm.Algebraic.Zero
     Pandora.Paradigm.Algebraic.One
     Pandora.Paradigm.Primary
+    Pandora.Paradigm.Primary.Auxiliary
     Pandora.Paradigm.Primary.Object
     Pandora.Paradigm.Primary.Object.Boolean
     Pandora.Paradigm.Primary.Object.Ordering

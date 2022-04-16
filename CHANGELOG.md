@@ -753,3 +753,4 @@
 * Remove `Pushing` and `Popping` type familes from `Stack` typeclass
 * Move `Interpreted` module to `Core`
 * Move `Schematic` type family to `Schemes` module
+* Move `Vertical` and `Horizontal` datatypes to `Auxiliary` module

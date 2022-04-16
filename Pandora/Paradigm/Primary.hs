@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Primary (module Exports, Simplification) where
 
+import Pandora.Paradigm.Primary.Auxiliary as Exports
 import Pandora.Paradigm.Primary.Linear as Exports
 import Pandora.Paradigm.Primary.Transformer as Exports
 import Pandora.Paradigm.Primary.Functor as Exports
