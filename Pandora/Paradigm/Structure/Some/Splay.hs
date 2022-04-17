@@ -111,8 +111,8 @@ instance Slidable (Right > Zig) Binary where
 	type Sliding (Right Zig) Binary = Maybe
 	slide :: forall element . State > Binary element :> Maybe >>> ()
 	slide = void . change @(Binary element) . constant . lift . attached
-		==<< adapt . (slide @(Right > Zig) @(Nonempty Binary) <~)
-		==<< adapt . run ==<< current @(Binary element)
+		=<< adapt . (slide @(Right > Zig) @(Nonempty Binary) <~)
+		=<< adapt . run =<< current @(Binary element)
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate > Left > Zig Zig) (Construction (Maybe <:*:> Maybe)) where
