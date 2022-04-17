@@ -71,8 +71,6 @@ instance Substructure (Right Branch) Binary where
 
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
-type instance Nonempty Binary = Construction (Maybe <:*:> Maybe)
-
 instance Morphable (Into Binary) (Construction (Maybe <:*:> Maybe)) where
 	type Morphing (Into Binary) (Construction (Maybe <:*:> Maybe)) = Binary
 	morphing = lift . premorph

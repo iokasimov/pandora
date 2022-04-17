@@ -132,8 +132,6 @@ linearize = TT . extract . (run @(->) @(State (Maybe :. Nonempty List >>> a)) % 
 
 ----------------------------------------- Non-empty list -------------------------------------------
 
-type instance Nonempty List = Construction Maybe
-
 instance {-# OVERLAPS #-} Semigroup (Construction Maybe a) where
 	Construct x Nothing + ys = Construct x <-- Just ys
 	Construct x (Just xs) + ys = Construct x . Just <-- xs + ys

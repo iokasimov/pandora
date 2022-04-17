@@ -35,19 +35,15 @@ import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Structure.Some.List (List)
 
-type Rose = Maybe <:.> Construction List
-
---------------------------------------- Non-empty rose tree ----------------------------------------
-
-type instance Nonempty Rose = Construction List
+type Rose = Maybe <::> Construction List
 
 --------------------------------------- Prefixed rose tree -----------------------------------------
 
 instance Setoid k => Morphable (Lookup Key) (Prefixed Rose k) where
 	type Morphing (Lookup Key) (Prefixed Rose k) = (->) (Nonempty List k) <:.> Maybe
 	morphing prefixed_rose_tree = case run <-- premorph prefixed_rose_tree of
-		TU Nothing -> TU <-- constant Nothing
-		TU (Just tree) -> TU <-- find_rose_sub_tree % tree
+		TT Nothing -> TU <-- constant Nothing
+		TT (Just tree) -> TU <-- find_rose_sub_tree % tree
 
 -- TODO: Ineffiecient - we iterate over all branches in subtree, but we need to short-circuit on the first matching part of
 --instance Setoid k => Morphable (Vary Element) (Prefixed Rose k) where

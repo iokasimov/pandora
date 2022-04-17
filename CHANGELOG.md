@@ -758,3 +758,4 @@
 * Move `Nonempty` from `Ability` to `Modification` module
 
 # 0.5.5
+* Change `Nonempty` type family: close it
