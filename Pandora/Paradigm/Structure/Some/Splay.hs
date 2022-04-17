@@ -2,25 +2,25 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module Pandora.Paradigm.Structure.Some.Splay where
 
-import Pandora.Core.Functor (type (~>), type (>), type (>>>), type (>>>>>>))
-import Pandora.Core.Interpreted (run)
+import Pandora.Core.Functor (type (~>), type (>), type (>>>))
+import Pandora.Core.Interpreted (run, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|---)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (===<<), (====<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (===<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Hoistable ((/|\))
 import Pandora.Paradigm.Algebraic.Functor ((<-*-), extract, point, void)
-import Pandora.Paradigm.Algebraic.Product (type (<:*:>), (<:*:>))
+import Pandora.Paradigm.Algebraic.Product (type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
-import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
+import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>))
 import Pandora.Paradigm.Inventory.Some.Optics (view, mutate)
 import Pandora.Paradigm.Inventory.Some.State (State, change, current)
-import Pandora.Paradigm.Inventory (zoom, overlook)
+import Pandora.Paradigm.Inventory (zoom)
 import Pandora.Paradigm.Schemes (TT (TT), type (<::>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morphed, Morph (Rotate), premorph, rotate)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
@@ -83,13 +83,12 @@ instance Morphable (Rotate > Right Zig) (Construction (Maybe <:*:> Maybe)) where
 				)
 			)
 
--- TODO: Slidable (Left Zig) (Construction (Maybe <:*:> Maybe))
+-- TODO: Slidable (Left > Zig) (Construction (Maybe <:*:> Maybe))
 -- TODO: Slidable (Left > Zig Zig) (Construction (Maybe <:*:> Maybe))
 -- TODO: Slidable (Right > Zig Zig) (Construction (Maybe <:*:> Maybe))
 -- TODO: Slidable (Left > Zig Zag) (Construction (Maybe <:*:> Maybe))
 -- TODO: Slidable (Right > Zig Zag) (Construction (Maybe <:*:> Maybe))
--- TODO: Slidable (Left Zig) Binary
--- TODO: Slidable (Right Zig) Binary
+-- TODO: Slidable (Left > Zig) Binary
 -- TODO: Slidable (Left > Zig Zig) Binary
 -- TODO: Slidable (Right > Zig Zig) Binary
 -- TODO: Slidable (Left > Zig Zag) Binary
@@ -107,6 +106,13 @@ instance Slidable (Right Zig) (Construction (Maybe <:*:> Maybe)) where
 		===<< adapt <--- zoom @(Nonempty Binary element)
 			<-- sub @(Left Branch)
 			<-- current @(Binary element)
+
+instance Slidable (Right > Zig) Binary where
+	type Sliding (Right Zig) Binary = Maybe
+	slide :: forall element . State > Binary element :> Maybe >>> ()
+	slide = void . change @(Binary element) . constant . lift . attached
+		==<< adapt . (slide @(Right > Zig) @(Nonempty Binary) <~)
+		==<< adapt . run ==<< current @(Binary element)
 
 -- TODO: Morphing ... = Conclussion Error <::> Nonempty Binary
 instance Morphable (Rotate > Left > Zig Zig) (Construction (Maybe <:*:> Maybe)) where
