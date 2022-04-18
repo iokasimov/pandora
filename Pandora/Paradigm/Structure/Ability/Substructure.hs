@@ -2,19 +2,21 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Structure.Ability.Substructure where
 
-import Pandora.Core.Interpreted (run, unite, (=#-))
+import Pandora.Core.Interpreted (run, unite, (<~), (=#-))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-|-)))
+import Pandora.Pattern.Kernel (constant)
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (type (@>>>), view, replace)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
-import Pandora.Paradigm.Algebraic ((>-||-), extract)
+import Pandora.Paradigm.Algebraic.Functor ((>-||-), extract, empty)
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Schemes.TU (type (<:.>))
@@ -69,3 +71,9 @@ instance (Covariant (->) (->) t, Substructure i t) => Substructure (i Branch) (C
 	substructure = P_Q_T <-- \source -> case lower source of
 		Construct x xs -> Store <--- unite (view <-- sub @i <-- xs) :*: \target ->
 			lift <---- Construct x <--- replace <-- run target <-- sub @i <-- xs
+
+instance (Covariant (->) (->) t, Substructured i t Maybe) => Substructure (i Branch) (Maybe <::> Construction t) where
+	type Substance (i Branch) (Maybe <::> Construction t) = Maybe <::> Construction t
+	substructure = P_Q_T <-- \struct -> case run . extract . run <-- struct of
+		Nothing -> Store <--- empty :*: lift . constant empty
+		Just tree -> lift . lift @(->) <-|- sub @(i Branch) <~ tree

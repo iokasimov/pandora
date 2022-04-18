@@ -57,18 +57,6 @@ type Binary = Maybe <::> Construction (Maybe <:*:> Maybe)
 				-- <--- step <-- sub @Right <-- binary
 				-- <--- f x <-- extract binary
 
-instance Substructure (Left Branch) Binary where
-	type Substance (Left Branch) Binary = Binary
-	substructure = P_Q_T <-- \struct -> case run <-- lower struct of
-		Nothing -> Store <--- empty :*: lift . constant empty
-		Just tree -> lift . lift @(->) <-|- sub @(Left Branch) <~ tree
-
-instance Substructure (Right Branch) Binary where
-	type Substance (Right Branch) Binary = Binary
-	substructure = P_Q_T <-- \struct -> case run . extract . run ---> struct of
-		Nothing -> Store <--- empty :*: lift . constant empty
-		Just tree -> lift . lift @(->) <-|- sub @(Right Branch) <~ tree
-
 -------------------------------------- Non-empty binary tree ---------------------------------------
 
 instance Morphable (Into Binary) (Construction (Maybe <:*:> Maybe)) where
@@ -84,22 +72,6 @@ instance Morphable (Into Binary) (Construction (Maybe <:*:> Maybe)) where
 			-- <---- step <--- sub @Left <--- struct
 			-- <---- step <--- sub @Right <--- struct
 			-- <---- f x <--- extract struct
-
--- instance Substructure Left (Construction (Maybe <:*:> Maybe)) where
--- 	type Substance Left (Construction (Maybe <:*:> Maybe)) = Binary
--- 	substructure = P_Q_T <-- \struct -> case extract ---> run struct of
--- 		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . left) (point x) . run
--- 		Construct x (T_U (Just lst :*: Nothing)) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve left end . run
--- 		Construct x (T_U (Nothing :*: Just rst)) -> Store <--- TT Nothing :*: lift . Construct x . resolve (both % rst) (right rst) . run
--- 		Construct x (T_U (Just lst :*: Just rst)) -> Store <--- TT (Just lst) :*: lift . Construct x . resolve (both % rst) (right rst) . run
---
--- instance Substructure Right (Construction (Maybe <:*:> Maybe)) where
--- 	type Substance Right (Construction (Maybe <:*:> Maybe)) = Binary
--- 	substructure = P_Q_T <-- \struct -> case extract <-- run struct of
--- 		Construct x (T_U (Nothing :*: Nothing)) -> Store <--- TT Nothing :*: lift . resolve (Construct x . right) (point x) . run
--- 		Construct x (T_U (Just lst :*: Nothing)) -> Store <--- TT Nothing :*: lift . Construct x . resolve (both lst) (left lst) . run
--- 		Construct x (T_U (Nothing :*: Just rst)) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve right end . run
--- 		Construct x (T_U (Just lst :*: Just rst)) -> Store <--- TT (Just rst) :*: lift . Construct x . resolve (both lst) (left lst) . run
 
 -------------------------------------- Prefixed binary tree ----------------------------------------
 
