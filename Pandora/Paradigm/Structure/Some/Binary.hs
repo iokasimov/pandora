@@ -103,8 +103,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed < Construction (Maybe <:*
 	morphing (run . premorph -> Construct x xs) = TT <-- \key ->
 		key <=> attached x & order
 			<---- Just <-- extract x
-			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @Left <-- xs
-			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @Left <-- xs
+			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @(Left Branch) <-- xs
+			<---- lookup @Key key . TT @Covariant @Covariant ==<< get @(Obscure Lens) <-- sub @(Left Branch) <-- xs
 
 -------------------------------------- Zipper of binary tree ---------------------------------------
 

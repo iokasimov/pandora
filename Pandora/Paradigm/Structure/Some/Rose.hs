@@ -28,7 +28,7 @@ import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (view)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Rotate, Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest, Forest), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest, Branch, Forest), sub)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -136,6 +136,6 @@ instance Morphable (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Ro
 			let right_children = run <--- view <-- sub @(Right Forest) <-- z in
 			view <-- sub @Root <-- parent
 				<:*:> unite <-- left_children + point (Construct child_node central_children) + right_children
-				<:*:> view <--- sub @Left <--- view <-- sub @Rest <-- parent
-				<:*:> view <--- sub @Right <--- view <-- sub @Rest <-- parent
+				<:*:> view <--- sub @(Left Branch) <--- view <-- sub @Rest <-- parent
+				<:*:> view <--- sub @(Right Branch) <--- view <-- sub @Rest <-- parent
 				<:*:> unite parents
