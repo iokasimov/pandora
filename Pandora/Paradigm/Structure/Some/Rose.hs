@@ -103,6 +103,7 @@ instance Substructure (Down Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*
 		Exactly x :*: T_U (down :*: rest) ->
 			Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> rest)
 
+-- TODO: Rename to Substructure (Left Siblings)
 -- TODO: Try to use substructure @Left . substructure @Right . substructure @Right here
 instance Substructure (Left Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance (Left Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Reverse Roses
@@ -110,6 +111,7 @@ instance Substructure (Left Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*
 		Exactly x :*: T_U (down :*: T_U (left :*: rest)) ->
 			Store <--- left :*: lift . (Exactly x <:*:>) . (down <:*:>) . (<:*:> rest)
 
+-- TODO: Rename to Substructure (Right Siblings)
 -- TODO: Try to use substructure  @Left . substructure @Right . substructure @Right . substructure @Right here
 instance Substructure (Right Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance (Right Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses

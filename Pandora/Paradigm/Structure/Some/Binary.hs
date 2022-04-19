@@ -1,20 +1,20 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (~>), type (>), type (>>>>>>), type (<), type (:=>))
+import Pandora.Core.Functor (type (~>), type (>), type (>>>), type (>>>>>>), type (<), type (:=>))
 import Pandora.Core.Interpreted (run, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (====<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%), (&), (.:..))
-import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (<-*-*-), extract, point, empty)
+import Pandora.Paradigm.Algebraic.Functor ((<-*-), (<-*--), (<-*-*-), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
@@ -22,21 +22,24 @@ import Pandora.Paradigm.Primary.Functor (Comparison)
 import Pandora.Paradigm.Primary.Functor.Convergence (Convergence (Convergence))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
-import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), reconstruct)
+import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
+import Pandora.Paradigm.Inventory.Some.State (State, change, current)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mutate)
+import Pandora.Paradigm.Inventory (zoom)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph, Morph (Rotate, Into, Insert, Lookup, Key), lookup)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Branch, Ancestors, Children), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Branch, Ancestors, Children, Medium), sub)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
-import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
+import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
 
 type Binary = Maybe <::> Construction (Maybe <:*:> Maybe)
 
@@ -122,3 +125,10 @@ instance Substructure Ancestors (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construc
 	type Substance Ancestors (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = List <::> Horizontal <::> (Exactly <:*:> Binary)
 	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
 		focus :*: children :*: ancestors -> Store <--- ancestors :*: lift . (focus <:*:>) . (children <:*:>)
+
+instance Substructure Medium (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
+	type Substance Medium (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Construction (Maybe <:*:> Maybe)
+	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
+		focus :*: children :*: ancestors -> Store
+			<--- (Construct <-- extract focus <-- run children)
+				:*: lift . T_U . ((<:*:> ancestors) <-|-) . run . reconstruct
