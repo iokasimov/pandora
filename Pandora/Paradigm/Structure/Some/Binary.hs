@@ -31,9 +31,8 @@ import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mutate)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph
-	, Morph (Rotate, Into, Insert, Lookup, Key), lookup)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Branch), sub)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph, Morph (Rotate, Into, Insert, Lookup, Key), lookup)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Branch, Ancestors, Children), sub)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
@@ -112,3 +111,13 @@ instance Chain key => Morphable (Lookup Key) (Prefixed < Construction (Maybe <:*
 instance Zippable Binary where
 	type Breadcrumbs Binary = List <::> Horizontal <::> (Exactly <:*:> Binary)
 		<:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)
+
+instance Substructure Children (Exactly <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary) <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)) where
+	type Substance Children (Exactly <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary) <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)) = (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)
+	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
+		focus :*: ancestors :*: children -> Store <--- children :*: lift . (focus <:*:>) . (ancestors <:*:>)
+
+instance Substructure Ancestors (Exactly <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary) <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)) where
+	type Substance Ancestors (Exactly <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary) <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)) = List <::> Horizontal <::> (Exactly <:*:> Binary)
+	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
+		focus :*: ancestors :*: children -> Store <--- ancestors :*: lift . (focus <:*:>) . (<:*:> children)
