@@ -1,7 +1,10 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
-import Pandora.Core.Functor (type (:.), type (>>>), type (:=>), type (~>))
+import Pandora.Core.Functor (type (:.), type (>>>), type (>>>>>>), type (:=>), type (~>))
+import Pandora.Core.Interpreted (run, (<~), (<~~~), (<~~~~))
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|----), (<-|-|-)))
@@ -18,13 +21,12 @@ import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Algebraic ((<-*----), extract)
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (empty, (<-||-))
-import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Core.Interpreted (run, (<~), (<~~~), (<~~~~))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
+import Pandora.Paradigm.Schemes (TT (TT), type (<::>))
 
 data Construction t a = Construct a (t :. Construction t >>> a)
 
@@ -76,6 +78,9 @@ instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) 
 
 deconstruct :: Construction t a -> t :. Construction t >>> a
 deconstruct ~(Construct _ xs) = xs
+
+reconstruct :: Construction t a -> Exactly <:*:> t <::> Construction t >>>>>> a
+reconstruct (Construct x xs) = Exactly x <:*:> TT xs
 
 -- Generate a construction from seed using effectful computation
 constitute :: Covariant (->) (->) t => (a -> t a) -> a -> Construction t a

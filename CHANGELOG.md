@@ -760,3 +760,4 @@
 # 0.5.5
 * Change `Nonempty` type family: close it
 * Change `Zipper` of `Binary` tree definition
+* Define `reconstruct` method of `Construction` for schemes
