@@ -764,3 +764,4 @@
 * Define `Trip` datatype as `Flip` extension
 * Define `<-|||-` length encoding operators in `Algebraic` module
 * Rename `<<-` method of `Traversable` to `<-/-`
+* Define experimental `<<-/-` method

@@ -1,17 +1,18 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Algebraic.Functor where
 
-import Pandora.Core.Interpreted (Interpreted ((<~), (<~~~), (-#=)))
+import Pandora.Core.Interpreted (Interpreted ((<~), (<~~~), (-#=), run))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Morphism.Flip (Flip)
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Trip (Trip)
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|---), (<-|-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---), (<-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (<--), (&))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
@@ -157,3 +158,10 @@ empty = unit @(-->) Proxy <~ Straight absurd
 
 void :: Covariant (->) (->) t => t a -> t ()
 void x = constant () <-|- x
+
+-- TODO: generalize (->), it's hard to do since we don't have such a method: run <-|-- f <-/- unite x
+(<<-/-) :: forall v u a b c .
+	( Covariant (->) (->) u, Monoidal (Straight (->)) (Straight (->)) (:*:) (:*:) u
+	, Interpreted (->) (Flip v c), Traversable (->) (->) (Flip v c))
+	=> (a -> u b) -> v a c -> u (v b c)
+(<<-/-) f = (<-|--) (run @(->)) . (<-/-) @(->) @(->) @(Flip v c) f . Flip
