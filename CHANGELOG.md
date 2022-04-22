@@ -761,3 +761,4 @@
 * Change `Nonempty` type family: close it
 * Change `Zipper` of `Binary` tree definition
 * Define `reconstruct` method of `Construction` for schemes
+* Define `Trip` datatype as `Flip` extension

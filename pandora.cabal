@@ -143,6 +143,7 @@ library
     Pandora.Pattern
     Pandora.Pattern.Betwixt
     -- Different morphisms
+    Pandora.Pattern.Morphism.Trip
     Pandora.Pattern.Morphism.Flip
     Pandora.Pattern.Morphism.Straight
     -- Algebra typeclasses
