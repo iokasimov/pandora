@@ -762,3 +762,4 @@
 * Change `Zipper` of `Binary` tree definition
 * Define `reconstruct` method of `Construction` for schemes
 * Define `Trip` datatype as `Flip` extension
+* Define `<-|||-` length encoding operators in `Algebraic` module

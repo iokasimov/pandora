@@ -3,6 +3,7 @@ module Pandora.Core.Interpreted where
 import Pandora.Core.Functor (type (<), type (>))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Trip (Trip (Trip))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -68,12 +69,17 @@ class Interpreted m t where
 	=> m < t u a < t v b -> m < u a < Primary (t v) b
 (-=:) f = run . f . lift
 
+instance Interpreted (->) (Straight v e) where
+	type Primary (Straight v e) a = v e a
+	run ~(Straight x) = x
+	unite = Straight
+
 instance Interpreted (->) (Flip v a) where
 	type Primary (Flip v a) e = v e a
 	run ~(Flip x) = x
 	unite = Flip
 
-instance Interpreted (->) (Straight v e) where
-	type Primary (Straight v e) a = v e a
-	run ~(Straight x) = x
-	unite = Straight
+instance Interpreted (->) (Trip v a b) where
+	type Primary (Trip v a b) e = v e b a
+	run ~(Trip x) = x
+	unite = Trip

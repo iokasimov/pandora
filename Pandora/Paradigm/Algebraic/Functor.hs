@@ -6,6 +6,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Morphism.Flip (Flip)
+import Pandora.Pattern.Morphism.Trip (Trip)
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|---), (<-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
@@ -105,6 +106,19 @@ empty = unit @(-->) Proxy <~ Straight absurd
 (<-||---) f = (-#=) @m @(Flip p c) ((<-|-) f)
 (<-||--) f = (-#=) @m @(Flip p c) ((<-|-) f)
 (<-||-) f = (-#=) @m @(Flip p c) ((<-|-) f)
+
+
+(<-|||-), (<-|||--), (<-|||---), (<-|||----), (<-|||-----), (<-|||------), (<-|||-------), (<-|||--------)
+	:: forall (m :: * -> * -> *) (v :: * -> * -> * -> *) a b c d .
+	(Covariant m m (Trip v d c), Interpreted m (Trip v d c)) => m a b -> m (v a c d) (v b c d)
+(<-|||--------) f = (-#=) @m @(Trip v d c) ((<-|-) f)
+(<-|||-------) f = (-#=) @m @(Trip v d c) ((<-|-) f)
+(<-|||------) f = (-#=) @m @(Trip v d c) ((<-|-) f)
+(<-|||-----) f = (-#=) @m @(Trip v d c) ((<-|-) f)
+(<-|||----) f = (-#=) @m @(Trip v d c) ((<-|-) f)
+(<-|||---) f = (-#=) @m @(Trip v d c) ((<-|-) f)
+(<-|||--) f = (-#=) @m @(Trip v d c) ((<-|-) f)
+(<-|||-) f = (-#=) @m @(Trip v d c) ((<-|-) f)
 
 (>-||-), (>-||--), (>-||---), (>-||----), (>-||-----), (>-||------), (>-||-------), (>-||--------)
 	:: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .

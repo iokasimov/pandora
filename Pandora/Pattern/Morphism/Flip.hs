@@ -19,5 +19,5 @@ instance (Category m, Covariant m m t) => Contravariant (Flip m) m t where
 instance (Category m, Covariant m m t) => Contravariant m (Flip m) t where
 	(>-|-) f = Flip ((<-|-) f)
 
-instance (Category m, Covariant m m t) => Covariant  (Flip m) (Flip m) t where
+instance (Category m, Covariant m m t) => Covariant (Flip m) (Flip m) t where
 	(<-|-) (Flip f) = Flip ((<-|-) f)
