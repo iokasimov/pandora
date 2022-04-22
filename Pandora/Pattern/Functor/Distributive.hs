@@ -19,6 +19,7 @@ infixl 6 --<<
 infixl 7 -<<
 
 class Covariant source target t => Distributive source target t where
+	-- TODO: rename to <-\-
 	(-<<) :: Covariant source target u => source a (t b) -> target (u a) (t (u b))
 
 	(--<<), (---<<), (----<<), (-----<<), (------<<), (-------<<) :: Covariant source target u => source a (t b) -> target (u a) (t (u b))

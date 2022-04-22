@@ -54,6 +54,7 @@ f <-*--- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 f <-*-- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 f <-*- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 
+-- TODO: Rename .-*- to -*-
 (.-*--------), (.-*-------), (.-*------), (.-*-----), (.-*----), (.-*---), (.-*--), (.-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
 y .-*-------- x = (\_ y' -> y') <-|- x <-*- y
 y .-*------- x = (\_ y' -> y') <-|- x <-*- y
@@ -67,6 +68,7 @@ y .-*- x = (\_ y' -> y') <-|- x <-*- y
 (<-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u (a -> b)) -> t (u a) -> t (u b)
 f <-*-*- x = (<-*-) <-|- f <-*- x
 
+-- TODO: Rename .-*-*- to -*-*-
 (.-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u b) -> t (u a) -> t (u b)
 y .-*-*- x = (\_ y' -> y') <-|-|- x <-*-*- y
 
@@ -95,6 +97,7 @@ pass = point ()
 empty :: Emptiable t => t a
 empty = unit @(-->) Proxy <~ Straight absurd
 
+-- TODO: Rename <-||- to <<-|-
 (<-||-), (<-||--), (<-||---), (<-||----), (<-||-----), (<-||------), (<-||-------), (<-||--------)
 	:: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .
 	(Covariant m m (Flip p c), Interpreted m (Flip p c)) => m a b -> m (p a c) (p b c)
@@ -107,7 +110,7 @@ empty = unit @(-->) Proxy <~ Straight absurd
 (<-||--) f = (-#=) @m @(Flip p c) ((<-|-) f)
 (<-||-) f = (-#=) @m @(Flip p c) ((<-|-) f)
 
-
+-- TODO: Rename <-|||- to <<<-|-
 (<-|||-), (<-|||--), (<-|||---), (<-|||----), (<-|||-----), (<-|||------), (<-|||-------), (<-|||--------)
 	:: forall (m :: * -> * -> *) (v :: * -> * -> * -> *) a b c d .
 	(Covariant m m (Trip v d c), Interpreted m (Trip v d c)) => m a b -> m (v a c d) (v b c d)
