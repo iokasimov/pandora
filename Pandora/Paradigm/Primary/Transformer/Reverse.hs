@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-), (<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-), (<-/--)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (--<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -46,7 +46,7 @@ instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal
 	unit _ = Straight <-- \_ -> Reverse empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Reverse t) where
-	f <<- Reverse x = Reverse <-|- run (Backwards . f <<-- x)
+	f <-/- Reverse x = Reverse <-|- run (Backwards . f <-/-- x)
 
 instance Distributive (->) (->) t => Distributive (->) (->) (Reverse t) where
 	f -<< x = Reverse <--- run . f -<< x

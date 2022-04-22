@@ -18,7 +18,7 @@ import Pandora.Paradigm.Algebraic.Product ((:*:))
 -}
 
 --infixl 1 >>=-, ->>=
---infixr 1 -=<<, =<<-
+--infixr 1 -=<<, =<-/-
 
 class (Covariant category category t, Monoidal (Straight category) (Straight category) (:*:) (:*:) t, Bindable category t) => Monad category t where
 	--(>>=-) :: t a -> t b -> t a
@@ -27,5 +27,5 @@ class (Covariant category category t, Monoidal (Straight category) (Straight cat
 	--(->>=) x y = x >>= \_ -> y >>= \r -> point r
 	--(-=<<) :: t a -> t b -> t b
 	--(-=<<) x y = x >>= \_ -> y >>= \r -> point r
-	--(=<<-) :: t a -> t b -> t a
-	--(=<<-) x y = x >>= \r -> y >>= \_ -> point r
+	--(=<-/-) :: t a -> t b -> t a
+	--(=<-/-) x y = x >>= \r -> y >>= \_ -> point r

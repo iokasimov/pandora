@@ -3,9 +3,9 @@ module Pandora.Paradigm.Primary.Transformer.Jack where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), identity)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)), (<-|--))
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -25,8 +25,8 @@ instance Covariant (->) (->) t => Covariant (->) (->) (Jack t) where
 	f <-|- Other y = Other <---- f <-|- y
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Jack t) where
-	f <<- It x = It <-|- f x
-	f <<- Other y = Other <-|- f <<- y
+	f <-/- It x = It <-|- f x
+	f <-/- Other y = Other <-|-- f <-/- y
 
 instance (Monoidal (-->) (-->) (:*:) (:*:) t, Bindable (->) t) => Bindable (->) (Jack t) where
 	f =<< It x = f x

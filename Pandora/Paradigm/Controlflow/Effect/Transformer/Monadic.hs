@@ -6,11 +6,11 @@ import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~~~)))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Monad (Monad)
@@ -47,7 +47,7 @@ instance Semimonoidal (-->) (:*:) (:+:) (Schematic Monad t u) => Semimonoidal (-
 			<~~~ f :*: x
 
 instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
-	f <<- TM x = TM <-|- f <<- x
+	f <-/- TM x = TM <-|-- f <-/- x
 
 instance Distributive (->) (->) (Schematic Monad t u) => Distributive (->) (->) (t :> u) where
 	f -<< x = TM <--- tm . f -<< x

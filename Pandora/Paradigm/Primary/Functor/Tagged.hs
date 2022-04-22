@@ -9,7 +9,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -53,7 +53,7 @@ instance Monoidal (<--) (-->) (:*:) (:*:) (Tagged tag) where
 	unit _ = Flip <-- \(Tag x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) (Tagged tag) where
-	f <<- Tag x = Tag <-|- f x
+	f <-/- Tag x = Tag <-|- f x
 
 instance Distributive (->) (->) (Tagged tag) where
 	f -<< x = Tag <---- extract . f <-|- x

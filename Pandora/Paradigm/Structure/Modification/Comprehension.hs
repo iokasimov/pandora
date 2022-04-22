@@ -7,10 +7,10 @@ import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -37,7 +37,7 @@ instance Covariant (->) (->) (t <::> Construction t) => Covariant (->) (->) (Com
 	f <-|- Comprehension x = Comprehension <---- f <-|- x
 
 instance Traversable (->) (->) (t <::> Construction t) => Traversable (->) (->) (Comprehension t) where
-	f <<- Comprehension x = Comprehension <-|- f <<- x
+	f <-/- Comprehension x = Comprehension <-|-- f <-/- x
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) right t, Semimonoidal (-->) (:*:) right (t <::> Construction t)) => Semimonoidal (-->) (:*:) right (Comprehension t) where
 	mult = Straight <-- Comprehension . (mult @(-->) @(:*:) @right <~) . ((run :*: run) <-|-<-|-)

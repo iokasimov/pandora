@@ -9,7 +9,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -61,8 +61,8 @@ instance Semimonoidal (<--) (:*:) (:*:) Maybe where
 		Nothing -> Nothing :*: Nothing
 
 instance Traversable (->) (->) Maybe where
-	_ <<- Nothing = point Nothing
-	f <<- Just x = Just <-|- f x
+	_ <-/- Nothing = point Nothing
+	f <-/- Just x = Just <-|- f x
 
 instance Bindable (->) Maybe where
 	f =<< Just x = f x

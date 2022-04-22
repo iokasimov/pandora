@@ -2,11 +2,11 @@ module Pandora.Paradigm.Primary.Transformer.Backwards where
 
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<), (--<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -39,7 +39,7 @@ instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal
 	unit _ = Flip <-- \(Backwards x) -> Straight (\_ -> extract x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Backwards t) where
-	f <<- Backwards x = Backwards <-|- f <<- x
+	f <-/- Backwards x = Backwards <-|-- f <-/- x
 
 instance Distributive (->) (->) t => Distributive (->) (->) (Backwards t) where
 	f -<< x = Backwards <--- run . f -<< x

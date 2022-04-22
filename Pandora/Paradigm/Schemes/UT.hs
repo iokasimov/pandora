@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/--)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
@@ -52,7 +52,7 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:)
 	unit _ = Straight <-- UT . point . point . (<~ One)
 
 instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Bindable (->) (t <.:> u) where
-	f =<< UT x = UT <---- ((identity =<<) <-|-) . (run . f <<--) ==<< x
+	f =<< UT x = UT <---- ((identity =<<) <-|-) . (run . f <-/--) ==<< x
 
 instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <.:> u) where
 	mult = Flip <-- \(UT xys) -> UT <-||--- UT <-|--- mult @(<--) <~~~~ (mult @(<--) <~) <-|- xys

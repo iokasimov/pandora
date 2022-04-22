@@ -4,15 +4,15 @@ module Pandora.Paradigm.Primary.Transformer.Tap where
 import Pandora.Core.Functor (type (>>>>>>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<------))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Core.Interpreted ((<~), (<~~~))
-import Pandora.Paradigm.Algebraic ((<-*-), (<-||--), extract)
+import Pandora.Paradigm.Algebraic ((<-*--), (<-||--), extract)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), (<:*:>))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -34,7 +34,7 @@ instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (T
 	unit _ = Flip <-- \(Tap x _) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Tap t) where
-	f <<- Tap x xs = Tap <-|- f x <-*- f <<- xs
+	f <-/- Tap x xs = Tap <-|-- f x <-*-- f <-/- xs
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Extendable (->) t, Covariant (->) (->) t) => Extendable (->) (Tap t) where
 	f <<= x = Tap <--- f x <--- f . Tap (extract x) <<= lower x

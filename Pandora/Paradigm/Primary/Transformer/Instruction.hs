@@ -8,7 +8,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---), (<-|-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)), (<-/-<-/-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -43,8 +43,8 @@ instance Covariant (->) (->) t => Bindable (->) (Instruction t) where
 instance Monad (->) t => Monad (->) (Instruction t) where
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Instruction t) where
-	f <<- Enter x = Enter <-|- f x
-	f <<- Instruct xs = Instruct <-|- (f <<-<<- xs)
+	f <-/- Enter x = Enter <-|- f x
+	f <-/- Instruct xs = Instruct <-|- (f <-/-<-/- xs)
 
 instance Liftable (->) Instruction where
 	lift x = Instruct <---- Enter <-|- x

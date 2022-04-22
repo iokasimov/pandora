@@ -6,9 +6,9 @@ import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant ((<-|-))
+import Pandora.Pattern.Functor.Covariant ((<-|--))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
-import Pandora.Pattern.Functor.Traversable ((<<-))
+import Pandora.Pattern.Functor.Traversable ((<-/-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
@@ -128,7 +128,7 @@ instance Morphable (Into (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:
 instance Morphable (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Morphing (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) =
 		Maybe <::> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))
-	morphing (premorph -> z) = TT <---- restruct <-|- identity @(->) <<- pop @List <~ run (view <-- sub @(Up Forest) <-- z) where
+	morphing (premorph -> z) = TT <----- restruct <-|-- identity @(->) <-/- pop @List <~ run (view <-- sub @(Up Forest) <-- z) where
 
 		-- TODO: Add type declaration
 		restruct (parents :*: parent) =

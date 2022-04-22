@@ -29,5 +29,5 @@ Contravariant source target t
 Due to generalized definition, many operators consuming arguments from right to left:
 
 ```
-<-|-, <-*-, =<<, <<-, -+-
+<-|-, <-*-, =<<, <-/-, -+-
 ```

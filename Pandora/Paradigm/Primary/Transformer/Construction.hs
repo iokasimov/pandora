@@ -7,10 +7,10 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|----), (<-|-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|------), (<-|-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)), (<-/-<-/-))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
@@ -19,7 +19,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Algebraic ((<-*----), extract)
+import Pandora.Paradigm.Algebraic ((<-*------), extract)
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
@@ -48,7 +48,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->
 	unit _ = Straight <-- \f -> Construct <-- run f One <-- empty
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
-	f <<- ~(Construct x xs) = Construct <-|---- f x <-*---- f <<-<<- xs
+	f <-/- ~(Construct x xs) = Construct <-|------ f x <-*------ f <-/-<-/- xs
 
 instance Covariant (->) (->) t => Extendable (->) (Construction t) where
 	f <<= x = Construct <---- f x <---- (f <<=) <-|- deconstruct x

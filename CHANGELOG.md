@@ -763,3 +763,4 @@
 * Define `reconstruct` method of `Construction` for schemes
 * Define `Trip` datatype as `Flip` extension
 * Define `<-|||-` length encoding operators in `Algebraic` module
+* Rename `<<-` method of `Traversable` to `<-/-`

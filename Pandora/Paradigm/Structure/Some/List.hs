@@ -8,7 +8,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), (-->), (--->), (---->), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|--), (<-|-|-)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (===<<), (====<<)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-)))
@@ -161,7 +161,7 @@ instance Stack (Construction Maybe) where
 	type Topping (Construction Maybe) = Exactly
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
-	pop = (\(Construct x xs) -> constant <-- Exactly x <-|- change @(Nonempty List _) . constant <<- xs) =<< current @(Nonempty List _)
+	pop = (\(Construct x xs) -> constant <-- Exactly x <-|-- change @(Nonempty List _) . constant <-/- xs) =<< current @(Nonempty List _)
 	push x = point x .-*- (modify @State <-- Construct x . Just)
 
 ---------------------------------------- Combinative list ------------------------------------------
@@ -175,9 +175,9 @@ instance Zippable List where
 
 -- TODO: No overlapping, let's use wrappers instead
 instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
-	f <<- T_U (Exactly x :*: T_U (left :*: right)) =
+	f <-/- T_U (Exactly x :*: T_U (left :*: right)) =
 		(\past' x' left' -> Exactly x' <:*:> left' <:*:> run past')
-			<-|- f <<- Reverse right <-*- f x <-*- f <<- left
+			<-|-- f <-/- Reverse right <-*-- f x <-*-- f <-/- left
 
 -- TODO: Try to generalize to Extendable (Tape structure)
 -- instance {-# OVERLAPS #-} Extendable (->) (Tape List) where
@@ -197,7 +197,7 @@ instance Morphable (Rotate Left) (Turnover < Tape List) where
 		rotate_left focused rs (Construct lx lxs) = imply @(Tape List _) <-- lx <-- TT lxs <-- item @Push focused rs
 
 		rotate_over :: a -> Nonempty List a -> Tape List a
-		rotate_over focused rs = let new_left = attached <--- (put_over <<- rs <~~~ point focused) in
+		rotate_over focused rs = let new_left = attached <--- (put_over <-/- rs <~~~ point focused) in
 			imply @(Tape List _) <--- extract new_left <--- TT <-- deconstruct new_left <--- empty
 
 		put_over :: a -> State < Nonempty List a < ()
@@ -213,7 +213,7 @@ instance Morphable (Rotate Right) (Turnover < Tape List) where
 		rotate_right focused ls (Construct rx rxs) = imply @(Tape List _) <-- rx <-- item @Push focused ls <-- TT rxs
 
 		rotate_over :: a -> Nonempty List a -> Tape List a
-		rotate_over focused ls = let new_right = attached (put_over <<- ls <~~~ point focused) in
+		rotate_over focused ls = let new_right = attached (put_over <-/- ls <~~~ point focused) in
 			imply @(Tape List _) <--- extract new_right <--- empty <--- TT <-- deconstruct new_right
 
 		put_over :: a -> State (Nonempty List a) ()
@@ -225,15 +225,15 @@ instance Morphable (Into > Tape List) List where
 
 instance Morphable (Into List) (Tape List) where
 	type Morphing (Into List) (Tape List) = List
-	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
-		<--- modify @State . item @Push @List <<- right
-		<--- item @Push x left
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <----- run @(->) @(State _)
+		<---- modify @State . item @Push @List <-/- right
+		<---- item @Push x left
 
 instance Morphable (Into > Comprehension Maybe) (Tape List) where
 	type Morphing (Into > Comprehension Maybe) (Tape List) = Comprehension Maybe
-	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
-		<--- modify @State . item @Push @(Comprehension Maybe) <<- right
-		<--- item @Push x <-- Comprehension left
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <----- run @(->) @(State _)
+		<---- modify @State . item @Push @(Comprehension Maybe) <-/- right
+		<---- item @Push x <-- Comprehension left
 
 ------------------------------------- Zipper of non-empty list -------------------------------------
 
@@ -272,15 +272,15 @@ instance Morphable (Into > Tape List) (Construction Maybe) where
 
 instance Morphable (Into > Construction Maybe) (Tape > Construction Maybe) where
 	type Morphing (Into > Construction Maybe) (Tape > Construction Maybe) = Construction Maybe
-	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
-		<--- modify @State . item @Push @(Nonempty List) <<- right
-		<--- item @Push x left
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <----- run @(->) @(State _)
+		<---- modify @State . item @Push @(Nonempty List) <-/- right
+		<---- item @Push x left
 
 instance Morphable (Into List) (Tape > Construction Maybe) where
 	type Morphing (Into List) (Tape > Construction Maybe) = List
-	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <---- run @(->) @(State _)
-		<--- modify @State . item @Push @List <<- right
-		<--- item @Push x <-- lift left
+	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) = attached <----- run @(->) @(State _)
+		<---- modify @State . item @Push @List <-/- right
+		<---- item @Push x <-- lift left
 
 ------------------------------------ Zipper of combinative list ------------------------------------
 

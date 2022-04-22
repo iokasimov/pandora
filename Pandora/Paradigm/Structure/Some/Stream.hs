@@ -6,8 +6,8 @@ import Pandora.Core.Interpreted (run)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (-->))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>))
@@ -39,7 +39,7 @@ instance {-# OVERLAPS #-} Extendable (->) (Tape Stream) where
 instance Stack (Construction Exactly) where
 	type Topping (Construction Exactly) = Exactly
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
-	pop = (\(Construct x xs) -> constant <-- Exactly x <-|- change @(Stream _) . constant <<- xs) =<< current
+	pop = (\(Construct x xs) -> constant <-- Exactly x <-|-- change @(Stream _) . constant <-/- xs) =<< current
 	push x = point x .-*- (change <-- Construct x . Exactly)
 
 instance Morphable (Rotate Left) (Tape Stream) where

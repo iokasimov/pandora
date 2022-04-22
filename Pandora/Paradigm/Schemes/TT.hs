@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---), 
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)), (<<-<<-))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)), (<-/-<-/-))
 import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
@@ -64,7 +64,7 @@ instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<
 	unit _ = Flip <-- \(TT x) -> Straight <---- constant <--- extract <-- extract x
 
 instance (Traversable (->) (->) t, Traversable (->) (->) t') => Traversable (->) (->) (t <::> t') where
-	f <<- x = TT <-|-- (f <<-<<- run x)
+	f <-/- x = TT <-|-- (f <-/-<-/- run x)
 
 instance (Bindable (->) t, Distributive (->) (->) t, Covariant (->) (->) t', Bindable (->) t') => Bindable (->) (t <::> t') where
 	f =<< TT x = TT <--- (\i -> (identity =<<) <-|- run . f -<< i) =<< x

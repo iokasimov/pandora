@@ -6,7 +6,7 @@ import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -47,7 +47,7 @@ instance Monoidal (<--) (-->) (:*:) (:*:) Exactly where
 	unit _ = Flip <-- \(Exactly x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) Exactly where
-	f <<- Exactly x = Exactly <-|- f x
+	f <-/- Exactly x = Exactly <-|- f x
 
 instance Bindable (->) Exactly where
 	f =<< Exactly x = f x

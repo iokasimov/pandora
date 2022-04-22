@@ -8,7 +8,7 @@ import Pandora.Pattern.Category (identity, (<--), (<---), (<----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
-import Pandora.Pattern.Functor.Traversable (Traversable ((<<-)))
+import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
@@ -47,10 +47,10 @@ instance Semigroup e => Semimonoidal (-->) (:*:) (:+:) (Conclusion e) where
 		Success x :*: _ -> Option <-|- Success x
 
 instance Traversable (->) (->) (Conclusion e) where
-	(<<-) :: (Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) u)
+	(<-/-) :: (Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) u)
 		 => (a -> u b) -> Conclusion e a -> u (Conclusion e b)
-	_ <<- Failure y = point <-- Failure y
-	f <<- Success x = Success <-|- f x
+	_ <-/- Failure y = point <-- Failure y
+	f <-/- Success x = Success <-|- f x
 
 instance Bindable (->) (Conclusion e) where
 	f =<< Success x = f x
