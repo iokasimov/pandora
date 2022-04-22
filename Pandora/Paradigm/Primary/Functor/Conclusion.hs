@@ -121,3 +121,9 @@ instance Semimonoidal (-->) (:*:) (:*:) (Flip Conclusion a) where
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Flip Conclusion a) where
 	unit _ = Straight <--- Flip . Failure . (<~ One)
+
+instance Traversable (->) (->) (Flip Conclusion a) where
+	(<-/-) :: (Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:*:) u, Semimonoidal (-->) (:*:) (:*:) u)
+		 => (e -> u e') -> Flip Conclusion a e -> u (Flip Conclusion a e')
+	_ <-/- Flip (Success y) = point <--- Flip <-- Success y
+	f <-/- Flip (Failure x) = Flip . Failure <-|- f x
