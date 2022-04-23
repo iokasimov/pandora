@@ -2,13 +2,13 @@
 module Pandora.Paradigm.Structure.Some.Binary where
 
 import Pandora.Core.Functor (type (~>), type (>), type (>>>), type (>>>>>>), type (<), type (:=>))
-import Pandora.Core.Interpreted (run, (<~))
+import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (====<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (====<<), (======<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
@@ -29,12 +29,12 @@ import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.State (State, change, current)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mutate)
+import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mutate, primary)
 import Pandora.Paradigm.Inventory (zoom)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph, Morph (Rotate, Into, Insert, Lookup, Key), lookup)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Branch, Ancestors, Children, Medium), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Tree, Root, Branch, Ancestors, Children, Medium), sub)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -120,6 +120,18 @@ instance Substructure Children (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construct
 	type Substance Children (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)
 	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
 		focus :*: children :*: ancestors -> Store <--- children :*: lift . (focus <:*:>) . (<:*:> ancestors)
+
+instance Substructure (Left Tree) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
+	type Substance (Left Tree) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
+		focus :*: TT (T_U (left :*: right)) :*: ancestors ->
+			Store <--- unite left :*: lift . (focus <:*:>) . (<:*:> ancestors) . TT . (<:*:> right) . run
+
+instance Substructure (Right Tree) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
+	type Substance (Right Tree) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe <::> Construction (Maybe <:*:> Maybe)
+	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
+		focus :*: TT (T_U (left :*: right)) :*: ancestors ->
+			Store <--- unite right :*: lift . (focus <:*:>) . (<:*:> ancestors) . TT . (left <:*:>) . run
 
 instance Substructure Ancestors (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Substance Ancestors (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = List <::> Horizontal <::> (Exactly <:*:> Binary)
