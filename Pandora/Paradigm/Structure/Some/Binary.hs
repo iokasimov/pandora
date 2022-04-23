@@ -6,15 +6,15 @@ import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---), (<-|-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (====<<), (======<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (====<<), (=====<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%), (&), (.:..))
-import Pandora.Paradigm.Algebraic.Functor ((<-*-), (<-*--), (<-*-*-), extract, point, empty, void)
+import Pandora.Paradigm.Algebraic.Functor ((<-*-), (<-*--), (<-*---), (<-*-*-), (.-*-----), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
@@ -30,12 +30,13 @@ import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.State (State, change, current)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mutate, primary)
-import Pandora.Paradigm.Inventory (zoom)
+import Pandora.Paradigm.Inventory (zoom, overlook)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph, Morph (Rotate, Into, Insert, Lookup, Key), lookup)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Tree, Root, Branch, Ancestors, Children, Medium), sub)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
+import Pandora.Paradigm.Structure.Interface.Stack (push)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
@@ -144,3 +145,27 @@ instance Substructure Medium (Exactly <:*:> (Maybe <:*:> Maybe) <::> Constructio
 		focus :*: children :*: ancestors -> Store
 			<--- (Construct <-- extract focus <-- run children)
 				:*: lift . T_U . ((<:*:> ancestors) <-|-) . run . reconstruct
+
+instance Slidable (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
+	type Sliding (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
+	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
+	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . constant
+			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Left Tree) <-- current @(Binary e)
+		.-*----- wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
+			-- TODO: Try to use Semimonoidal instance for lenses
+			=====<< TT . Right .:.. (<:*:>)
+				<-|--- wrap <--- zoom <-- sub @Root <-- current
+				<-*--- wrap <--- zoom <-- sub @(Right Tree) <-- current
+
+instance Slidable (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
+	type Sliding (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
+	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
+	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . constant
+			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Right Tree) <-- current @(Binary e)
+		.-*----- wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
+			-- TODO: Try to use Semimonoidal instance for lenses
+			=====<< TT . Left .:.. (<:*:>)
+				<-|--- wrap <--- zoom <-- sub @Root <-- current
+				<-*--- wrap <--- zoom <-- sub @(Left Tree) <-- current
+
+-- TODO: Define Slidable Up (Zipper Binary)
