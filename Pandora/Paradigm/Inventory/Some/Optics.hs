@@ -4,7 +4,7 @@ module Pandora.Paradigm.Inventory.Some.Optics where
 
 import Pandora.Core.Functor (type (<))
 import Pandora.Core.Impliable (Impliable (Arguments, imply))
-import Pandora.Core.Interpreted (Interpreted (run, (<~)))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity, (<--), (<---), (<----), (<-----), (<-------)))
 import Pandora.Pattern.Kernel (Kernel (constant))
@@ -140,3 +140,6 @@ mutate mut lens source = extract . retrofit mut <-- lens <~ source
 
 transwrap :: (Covariant (->) (->) u, Liftable (->) t, Lowerable (->) t) => Lens u < t u e < e
 transwrap = P_Q_T <-- \origin -> Store <--- lower origin :*: lift
+
+primary :: Interpreted (->) t => Lens Exactly < t a < Primary t a
+primary = P_Q_T <-- \origin -> Store <--- (Exactly <-- run origin) :*: unite . extract

@@ -765,3 +765,4 @@
 * Define `<-|||-` length encoding operators in `Algebraic` module
 * Rename `<<-` method of `Traversable` to `<-/-`
 * Define experimental `<<-/-` method
+* Define `primary` lens for `Interpreted` values
