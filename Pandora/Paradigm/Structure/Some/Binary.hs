@@ -14,7 +14,7 @@ import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%), (&), (.:..))
-import Pandora.Paradigm.Algebraic.Functor ((<-*-), (<-*--), (<-*---), (<-*-*-), (.-*-----), extract, point, empty, void)
+import Pandora.Paradigm.Algebraic.Functor ((<-*-), (<-*--), (<-*---), (<-*-*-), (-*------), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
@@ -151,7 +151,7 @@ instance Slidable (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Constructi
 	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
 	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . constant
 			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Left Tree) <-- current @(Binary e)
-		.-*----- wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
+		-*------ wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
 			-- TODO: Try to use Semimonoidal instance for lenses
 			=====<< TT . Right .:.. (<:*:>)
 				<-|--- wrap <--- zoom <-- sub @Root <-- current
@@ -162,7 +162,7 @@ instance Slidable (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construct
 	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
 	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . constant
 			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Right Tree) <-- current @(Binary e)
-		.-*----- wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
+		-*------ wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
 			-- TODO: Try to use Semimonoidal instance for lenses
 			=====<< TT . Left .:.. (<:*:>)
 				<-|--- wrap <--- zoom <-- sub @Root <-- current

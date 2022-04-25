@@ -17,7 +17,7 @@ import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (?=)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (.-*-), (-+-), (.:..), extract, point, empty, void)
+import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (-*-), (-+-), (.:..), extract, point, empty, void)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic ((<-|-<-|-))
@@ -112,7 +112,7 @@ instance Stack List where
 			Nothing -> TT <-- deconstruct xs
 			Just x -> TT <---- Construct x . Just <-|- deconstruct xs
 	pop = resolve @(Nonempty List _) (\(Construct x xs) -> constant (Just x) <-|- set @State (TT xs)) (point Nothing) . run ==<< get @State
-	push x = point x .-*- modify @State (item @Push x)
+	push x = point x -*- modify @State (item @Push x)
 
 instance Substructure Root List where
 	type Substance Root List = Maybe
@@ -162,7 +162,7 @@ instance Stack (Construction Maybe) where
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
 	pop = (\(Construct x xs) -> constant <-- Exactly x <-|-- change @(Nonempty List _) . constant <-/- xs) =<< current @(Nonempty List _)
-	push x = point x .-*- (modify @State <-- Construct x . Just)
+	push x = point x -*- (modify @State <-- Construct x . Just)
 
 ---------------------------------------- Combinative list ------------------------------------------
 
@@ -187,6 +187,7 @@ instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
 -- 			<---- f <-|-- move <-- rotate @Left
 -- 			<---- f <-|-- move <-- rotate @Right
 
+-- TODO: Define Stack structure => Slidable Left (Turnover < Tape structure)
 instance Morphable (Rotate Left) (Turnover < Tape List) where
 	type Morphing (Rotate Left) (Turnover < Tape List) = Turnover < Tape List
 	morphing s@(run . premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
@@ -203,6 +204,7 @@ instance Morphable (Rotate Left) (Turnover < Tape List) where
 		put_over :: a -> State < Nonempty List a < ()
 		put_over = void . modify @State . item @Push
 
+-- TODO: Define Stack structure => Slidable Right (Turnover < Tape structure)
 instance Morphable (Rotate Right) (Turnover < Tape List) where
 	type Morphing (Rotate Right) (Turnover < Tape List) = Turnover < Tape List
 	morphing s@(run . premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =

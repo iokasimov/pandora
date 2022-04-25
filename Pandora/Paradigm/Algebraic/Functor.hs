@@ -21,13 +21,13 @@ import Pandora.Paradigm.Algebraic.Zero (Zero, absurd)
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
 
-infixl 1 <-*------, .-*------, <-||-----, >-||-----
-infixl 2 <-*-----, .-*-----, <-||----, >-||----
-infixl 3 <-*----, .-*----, <-||---, >-||---
-infixl 4 <-*---, .-*---, <-*-*-, <-||--, >-||--
-infixl 5 <-*--, .-*--, .-*-*-, <-||-, >-||-
-infixl 6 <-*-, .-*-, <-+-
-infixl 7 -+-
+infixl 1 <-*------, -*-------, <-||-----, >-||-----
+infixl 2 <-*-----, -*------, <-||----, >-||----
+infixl 3 <-*----, -*-----, <-||---, >-||---
+infixl 4 <-*---, -*----, <-*-*-, <-||--, >-||--
+infixl 5 <-*--, -*---, -*-*-, <-||-, >-||-
+infixl 6 <-*-, -*--, <-+-
+infixl 7 -+-, -*-
 
 infixl 6 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
@@ -55,23 +55,23 @@ f <-*--- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 f <-*-- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 f <-*- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 
--- TODO: Rename .-*- to -*-
-(.-*--------), (.-*-------), (.-*------), (.-*-----), (.-*----), (.-*---), (.-*--), (.-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
-y .-*-------- x = (\_ y' -> y') <-|- x <-*- y
-y .-*------- x = (\_ y' -> y') <-|- x <-*- y
-y .-*------ x = (\_ y' -> y') <-|- x <-*- y
-y .-*----- x = (\_ y' -> y') <-|- x <-*- y
-y .-*---- x = (\_ y' -> y') <-|- x <-*- y
-y .-*--- x = (\_ y' -> y') <-|- x <-*- y
-y .-*-- x = (\_ y' -> y') <-|- x <-*- y
-y .-*- x = (\_ y' -> y') <-|- x <-*- y
+-- TODO: Rename -*- to -*-
+(-*--------), (-*-------), (-*------), (-*-----), (-*----), (-*---), (-*--), (-*-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t b -> t a -> t b
+y -*-------- x = (\_ y' -> y') <-|- x <-*- y
+y -*------- x = (\_ y' -> y') <-|- x <-*- y
+y -*------ x = (\_ y' -> y') <-|- x <-*- y
+y -*----- x = (\_ y' -> y') <-|- x <-*- y
+y -*---- x = (\_ y' -> y') <-|- x <-*- y
+y -*--- x = (\_ y' -> y') <-|- x <-*- y
+y -*-- x = (\_ y' -> y') <-|- x <-*- y
+y -*- x = (\_ y' -> y') <-|- x <-*- y
 
 (<-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u (a -> b)) -> t (u a) -> t (u b)
 f <-*-*- x = (<-*-) <-|- f <-*- x
 
--- TODO: Rename .-*-*- to -*-*-
-(.-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u b) -> t (u a) -> t (u b)
-y .-*-*- x = (\_ y' -> y') <-|-|- x <-*-*- y
+-- TODO: Rename -*-*- to -*-*-
+(-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u b) -> t (u a) -> t (u b)
+y -*-*- x = (\_ y' -> y') <-|-|- x <-*-*- y
 
 (<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
 y <-+- x = \f -> f <-|--- mult @(-->) <~~~ x :*: y
@@ -80,7 +80,7 @@ y <-+- x = \f -> f <-|--- mult @(-->) <~~~ x :*: y
 y -+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
 
 loop :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
-loop x = let r = r .-*- x in r
+loop x = let r = r -*- x in r
 
 type Extractable t = Monoidal (<--) (-->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t

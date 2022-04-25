@@ -13,7 +13,7 @@ import Pandora.Paradigm.Algebraic.Product ((:*:))
 > * Numeratority of traversing: g . (f <-/--) ≡ (g . f <-/--)
 > * Numeratority of sequencing: f . (identity <-/--)= (identity <-/--) . (f <-|-)
 > * Preserving point: p (point x) ≡ point x
-> * Preserving apply: f (x <.-*- y) ≡ f x <.-*- f y
+> * Preserving apply: f (x <-*- y) ≡ f x <-*- f y
 -}
 
 infixl 2 <-/-<-/-
