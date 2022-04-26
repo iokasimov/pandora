@@ -173,7 +173,7 @@ instance Slidable Up (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe
 	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
 	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . branching
 		=====<< lift . extract =====<< wrap <----- zoom @(Zipper Binary e) <---- sub @Ancestors
-				<---- zoom <--- primary <--- overlook <-- pop @List where
+			<---- zoom <--- primary <--- overlook <-- pop @List where
 
 		branching :: Horizontal <::> (Exactly <:*:> Binary) >>>>> e
 			-> Nonempty Binary e -> Nonempty Binary e
