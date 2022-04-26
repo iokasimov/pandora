@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Binary where
 
-import Pandora.Core.Functor (type (~>), type (>), type (>>>), type (>>>>>>), type (<), type (:=>))
+import Pandora.Core.Functor (type (~>), type (>), type (>>>), type (>>>>>), type (>>>>>>), type (<), type (:=>))
 import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->))
@@ -36,7 +36,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph, Morph (Rotate, Into, Insert, Lookup, Key), lookup)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Tree, Root, Branch, Ancestors, Children, Medium), sub)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
-import Pandora.Paradigm.Structure.Interface.Stack (push)
+import Pandora.Paradigm.Structure.Interface.Stack (push, pop)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
@@ -168,4 +168,16 @@ instance Slidable (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construct
 				<-|--- wrap <--- zoom <-- sub @Root <-- current
 				<-*--- wrap <--- zoom <-- sub @(Left Tree) <-- current
 
--- TODO: Define Slidable Up (Zipper Binary)
+instance Slidable Up (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
+	type Sliding Up (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
+	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
+	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . branching
+		=====<< lift . extract =====<< wrap <----- zoom @(Zipper Binary e) <---- sub @Ancestors
+				<---- zoom <--- primary <--- overlook <-- pop @List where
+
+		branching :: Horizontal <::> (Exactly <:*:> Binary) >>>>> e
+			-> Nonempty Binary e -> Nonempty Binary e
+		branching (TT (Left (T_U (Exactly root :*: left)))) right =
+			Construct <----- root <----- run left <:*:> Just right
+		branching (TT (Right (T_U (Exactly root :*: right)))) left =
+			Construct <----- root <----- Just left <:*:> run right
