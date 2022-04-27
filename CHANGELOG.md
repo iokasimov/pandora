@@ -767,3 +767,4 @@
 * Define experimental `<<-/-` method
 * Define `primary` lens for `Interpreted` values
 * Rename `.-*-` length encoding operators to `-*-`
+* Define `Location` datatype

@@ -29,7 +29,7 @@ import Pandora.Paradigm.Inventory.Some.Optics (view)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Rotate, Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
-	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Medium), sub)
+	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Tree), Location (Focused), sub)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -104,8 +104,8 @@ instance Substructure Children (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Ro
 		Exactly x :*: T_U (down :*: rest) ->
 			Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> rest)
 
-instance Substructure Medium (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
-	type Substance Medium (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Construction List
+instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Focused Tree) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Construction List
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (children :*: rest) ->
 			Store <--- Construct x (run children) :*: lift . T_U . ((<:*:> rest) <-|-) . run . reconstruct

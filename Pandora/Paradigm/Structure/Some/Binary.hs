@@ -33,8 +33,10 @@ import Pandora.Paradigm.Inventory.Some.Optics (Lens, Obscure, view, replace, mut
 import Pandora.Paradigm.Inventory (zoom, overlook)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (resolve))
-import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), morph, premorph, Morph (Rotate, Into, Insert, Lookup, Key), lookup)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Tree, Root, Branch, Ancestors, Children, Medium), sub)
+import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
+	, morph, premorph, Morph (Rotate, Into, Insert, Lookup, Key), lookup)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
+	, Segment (Tree, Root, Branch, Ancestors, Children), Location (Focused), sub)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Interface.Stack (push, pop)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
@@ -139,8 +141,8 @@ instance Substructure Ancestors (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construc
 	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
 		focus :*: children :*: ancestors -> Store <--- ancestors :*: lift . (focus <:*:>) . (children <:*:>)
 
-instance Substructure Medium (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
-	type Substance Medium (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Construction (Maybe <:*:> Maybe)
+instance Substructure (Focused Tree) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
+	type Substance (Focused Tree) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Construction (Maybe <:*:> Maybe)
 	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
 		focus :*: children :*: ancestors -> Store
 			<--- (Construct <-- extract focus <-- run children)
@@ -149,7 +151,7 @@ instance Substructure Medium (Exactly <:*:> (Maybe <:*:> Maybe) <::> Constructio
 instance Slidable (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Sliding (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
 	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
-	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . constant
+	slide = void . wrap . zoom @(Zipper Binary e) (sub @(Focused Tree)) . change . constant
 			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Left Tree) <-- current @(Binary e)
 		-*------ wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
 			-- TODO: Try to use Semimonoidal instance for lenses
@@ -160,7 +162,7 @@ instance Slidable (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Constructi
 instance Slidable (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Sliding (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
 	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
-	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . constant
+	slide = void . wrap . zoom @(Zipper Binary e) (sub @(Focused Tree)) . change . constant
 			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Right Tree) <-- current @(Binary e)
 		-*------ wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
 			-- TODO: Try to use Semimonoidal instance for lenses
@@ -171,7 +173,7 @@ instance Slidable (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construct
 instance Slidable Up (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Sliding Up (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
 	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
-	slide = void . wrap . zoom @(Zipper Binary e) (sub @Medium) . change . branching
+	slide = void . wrap . zoom @(Zipper Binary e) (sub @(Focused Tree)) . change . branching
 		=====<< lift . extract =====<< wrap <----- zoom @(Zipper Binary e) <---- sub @Ancestors
 			<---- zoom <--- primary <--- overlook <-- pop @List where
 

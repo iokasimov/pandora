@@ -48,6 +48,8 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure (Right B
 
 data Segment a = Tree a | Root a | Rest a | Branch a | Ancestors a | Children a | Siblings a | Forest a | Medium a
 
+data Location a = Focused a
+
 instance Covariant (->) (->) t => Substructure Root (Exactly <:*:> t) where
 	type Substance Root (Exactly <:*:> t) = Exactly
 	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @(Left Branch)
