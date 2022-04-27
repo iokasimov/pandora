@@ -6,7 +6,7 @@ import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant ((<-|--))
+import Pandora.Pattern.Functor.Covariant ((<-|-), (<-|--))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
 import Pandora.Pattern.Functor.Traversable ((<-/-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -17,18 +17,19 @@ import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Functor (extract, point, empty)
-import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
+import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, reconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
 import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (view)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Rotate, Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
-import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure), Segment (Root, Rest, Branch, Ancestors, Siblings, Children), sub)
+import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
+	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Medium), sub)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -102,6 +103,12 @@ instance Substructure Children (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Ro
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (down :*: rest) ->
 			Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> rest)
+
+instance Substructure Medium (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance Medium (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Construction List
+	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
+		Exactly x :*: T_U (children :*: rest) ->
+			Store <--- Construct x (run children) :*: lift . T_U . ((<:*:> rest) <-|-) . run . reconstruct
 
 -- TODO: Rename to Substructure (Left Siblings)
 -- TODO: Try to use substructure @Left . substructure @Right . substructure @Right here
