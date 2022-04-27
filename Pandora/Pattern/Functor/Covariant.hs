@@ -44,6 +44,8 @@ class (Semigroupoid source, Semigroupoid target) => Covariant source target t wh
 		=> source a b -> target (t (u (v a))) (t (u (v b)))
 	(<-|-|-|-) s = ((<-|-) @(Betwixt (Betwixt source target) target) @target ((<-|-) @(Betwixt source (Betwixt source target)) @(Betwixt (Betwixt source target) target) @_ ((<-|-) @source @(Betwixt source (Betwixt source target)) @_ s)))
 
+	-- TODO: create <-|-|-|-|-
+
 (<$>) :: Covariant source target t => source a b -> target (t a) (t b)
 (<$>) = (<-|-)
 

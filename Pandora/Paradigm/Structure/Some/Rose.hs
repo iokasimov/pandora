@@ -6,7 +6,7 @@ import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant ((<-|-), (<-|--))
+import Pandora.Pattern.Functor.Covariant ((<-|-), (<-|--), (<-|-|-), (<-|-|-|-))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
 import Pandora.Pattern.Functor.Traversable ((<-/-))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
@@ -93,15 +93,15 @@ instance Zippable (Construction List) where
 -- TODO: Try to use substructure @Right . substructure @Right . substructure @Right . substructure @Right here
 instance Substructure Ancestors (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance Ancestors (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = List <::> Tape Roses
-	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
-		Exactly x :*: T_U (down :*: T_U (left :*: T_U (right :*: up))) ->
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|-|- run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
+		Exactly x :*: down :*: left :*: right :*: up ->
 			Store <--- up :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (right <:*:>)
 
 -- TODO: Try to use substructure @Left . substructure @Right here
 instance Substructure Children (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance Children (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
-	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
-		Exactly x :*: T_U (down :*: rest) ->
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
+		Exactly x :*: down :*: rest ->
 			Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> rest)
 
 instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
@@ -114,16 +114,15 @@ instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> Reverse Roses <:
 -- TODO: Try to use substructure @Left . substructure @Right . substructure @Right here
 instance Substructure (Left Siblings) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance (Left Siblings) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Reverse Roses
-	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
-		Exactly x :*: T_U (down :*: T_U (left :*: rest)) ->
-			Store <--- left :*: lift . (Exactly x <:*:>) . (down <:*:>) . (<:*:> rest)
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
+		Exactly x :*: down :*: left :*: rest -> Store <--- left :*: lift . (Exactly x <:*:>) . (down <:*:>) . (<:*:> rest)
 
 -- TODO: Rename to Substructure (Right Siblings)
 -- TODO: Try to use substructure  @Left . substructure @Right . substructure @Right . substructure @Right here
 instance Substructure (Right Siblings) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
 	type Substance (Right Siblings) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Roses
-	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
-		Exactly x :*: T_U (down :*: T_U (left :*: T_U (right :*: rest))) ->
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|-|- run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
+		Exactly x :*: down :*: left :*: right :*: rest ->
 			Store <--- right :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (<:*:> rest)
 
 instance Morphable (Into (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses))) (Construction List) where
