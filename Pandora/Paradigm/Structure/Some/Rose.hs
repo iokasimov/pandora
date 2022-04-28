@@ -22,14 +22,14 @@ import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, reconstruct)
-import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse)
+import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (view)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Rotate, Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
-	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Tree), Location (Focused), sub)
+	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Tree, Forest), Location (Focused), sub)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -109,6 +109,17 @@ instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> Reverse Roses <:
 	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
 		Exactly x :*: T_U (children :*: rest) ->
 			Store <--- Construct x (run children) :*: lift . T_U . ((<:*:> rest) <-|-) . run . reconstruct
+
+-- TODO: Refactor this instance, looks too complicated
+instance Substructure (Focused Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) where
+	type Substance (Focused Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> (List <::> Tape Roses)) = Tape List <::> Nonempty Rose
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|-|- run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
+		Exactly root :*: down :*: left :*: right :*: up -> Store <--- focused :*: lift . updated where
+
+				focused = TT <----- (Exactly <--- Construct root <-- run down) <:*:> Reverse <--- run <-- lower left <:*:> run right
+
+				updated (TT (T_U (Exactly (Construct root_ down_) :*: T_U (Reverse left_ :*: right_)))) =
+					Exactly root_ <:*:> unite down_ <:*:> Reverse <-- TT left_ <:*:> TT right_ <:*:> up
 
 -- TODO: Rename to Substructure (Left Siblings)
 -- TODO: Try to use substructure @Left . substructure @Right . substructure @Right here
