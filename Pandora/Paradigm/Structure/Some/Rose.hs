@@ -1,22 +1,22 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Rose where
 
-import Pandora.Core.Functor (type (:.), type (>>>))
+import Pandora.Core.Functor (type (:.), type (>), type (>>>))
 import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant ((<-|-), (<-|--), (<-|-|-), (<-|-|-|-))
+import Pandora.Pattern.Functor.Covariant ((<-|-), (<-|--), (<-|----), (<-|-|-), (<-|-|-|-))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
 import Pandora.Pattern.Functor.Traversable ((<-/-))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (====<<), (======<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((?=)))
 import Pandora.Pattern.Object.Semigroup ((+))
-import Pandora.Paradigm.Algebraic.Exponential ((%))
+import Pandora.Paradigm.Algebraic.Exponential ((%), (.:..))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
-import Pandora.Paradigm.Algebraic.Functor (extract, point, empty)
+import Pandora.Paradigm.Algebraic.Functor ((<-*----), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -24,13 +24,17 @@ import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, reconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
+import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
+import Pandora.Paradigm.Inventory.Some.State (State, change, current)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (view)
+import Pandora.Paradigm.Inventory.Some.Optics (view, primary)
+import Pandora.Paradigm.Inventory (zoom, overlook)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Rotate, Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
+import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
 	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Tree, Forest), Location (Focused), sub)
-import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
@@ -87,8 +91,8 @@ find_rose_sub_tree (Construct k ks) tree = k ?= attached (extract tree)
 
 type Roses = List <::> Construction List
 
-instance Zippable (Construction List) where
-	type Breadcrumbs (Construction List) = Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses
+instance Zippable Rose where
+	type Breadcrumbs Rose = Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses
 
 -- TODO: Try to use substructure @Right . substructure @Right . substructure @Right . substructure @Right here
 instance Substructure Ancestors (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
@@ -155,3 +159,19 @@ instance Morphable (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Ro
 				<:*:> view <--- sub @(Left Branch) <--- view <-- sub @Rest <-- parent
 				<:*:> view <--- sub @(Right Branch) <--- view <-- sub @Rest <-- parent
 				<:*:> unite parents
+
+instance Slidable Up (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Sliding Up (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
+	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
+	slide = void . wrap . zoom @(Zipper Rose e) (sub @(Focused Tree)) . change . constant ======<< merging
+		<-|---- wrap <--- zoom @(Zipper Rose e) <-- sub @(Focused Tree) <-- current
+		<-*---- lift . extract ====<< wrap .:.. zoom @(Zipper Rose e) <--- sub @Ancestors
+			<--- zoom <-- primary <-- overlook (pop @List) where
+
+		merging :: Nonempty Rose e -> Tape (List <::> Nonempty Rose) e -> Nonempty Rose e
+		merging x (T_U (Exactly p :*: T_U (Reverse ls :*: rs))) =
+			Construct p <-- run ls + point x + run rs
+
+-- TODO: Slidable Left (Zipper Rose)
+-- TODO: Slidable Right (Zipper Rose)
+-- TODO: Slidable Down (Zipper Rose)
