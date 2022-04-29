@@ -172,6 +172,22 @@ instance Slidable Up (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> 
 		merging x (T_U (Exactly p :*: T_U (Reverse ls :*: rs))) =
 			Construct p <-- run ls + point x + run rs
 
--- TODO: Slidable Left (Zipper Rose)
--- TODO: Slidable Right (Zipper Rose)
+instance Slidable Left (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Sliding Left (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
+	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
+	slide = void . wrap . zoom @(Zipper Rose e) (sub @(Focused Forest))
+		. change @((Tape List <::> Nonempty Rose) e) . constant . TT . attached
+			====<< lift . (slide @Left <~) . extract
+			====<< wrap <---- zoom @(Zipper Rose e) <--- sub @(Focused Forest)
+				<--- zoom <-- primary <-- overlook current
+
+instance Slidable Right (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Sliding Right (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
+	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
+	slide = void . wrap . zoom @(Zipper Rose e) (sub @(Focused Forest))
+		. change @((Tape List <::> Nonempty Rose) e) . constant . TT . attached
+			====<< lift . (slide @Right <~) . extract
+			====<< wrap <---- zoom @(Zipper Rose e) <--- sub @(Focused Forest)
+				<--- zoom <-- primary <-- overlook current
+
 -- TODO: Slidable Down (Zipper Rose)
