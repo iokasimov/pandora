@@ -43,7 +43,3 @@ instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t
 
 instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Exactly <:*:> t) where
 	unit _ = Flip <-- \(T_U (Exactly x :*: _)) -> Straight (\_ -> x)
-
-type family Fastenable structure rs where
-	Fastenable structure (r ::: rs) = (Morphable < Rotate r < structure, Fastenable structure rs)
-	Fastenable structure r = Morphable < Rotate r < structure
