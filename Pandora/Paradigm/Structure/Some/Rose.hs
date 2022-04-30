@@ -17,7 +17,7 @@ import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Algebraic.Exponential ((%), (.:..))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Functor ((<-*----), extract, point, empty, void)
-import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up), Horizontal (Left, Right))
+import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
@@ -35,7 +35,7 @@ import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
 	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Tree, Forest), Location (Focused), sub)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
-import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop))
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Structure.Some.List (List)
@@ -172,6 +172,7 @@ instance Slidable Up (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> 
 		merging x (T_U (Exactly p :*: T_U (Reverse ls :*: rs))) =
 			Construct p <-- run ls + point x + run rs
 
+-- TODO: Think about how to use effects insize `zoom` block
 instance Slidable Left (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Sliding Left (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
@@ -181,6 +182,7 @@ instance Slidable Left (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:
 			====<< wrap <---- zoom @(Zipper Rose e) <--- sub @(Focused Forest)
 				<--- zoom <-- primary <-- overlook current
 
+-- TODO: Think about how to use effects insize `zoom` block
 instance Slidable Right (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Sliding Right (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
@@ -190,4 +192,13 @@ instance Slidable Right (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*
 			====<< wrap <---- zoom @(Zipper Rose e) <--- sub @(Focused Forest)
 				<--- zoom <-- primary <-- overlook current
 
--- TODO: Slidable Down (Zipper Rose)
+instance Slidable Down (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Sliding Down (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
+	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
+	slide = void . wrap . zoom @(Zipper Rose e) (sub @Ancestors) . zoom primary . overlook . push @List . ancestor
+		====<< wrap . zoom @(Zipper Rose e) (sub @(Focused Tree)) . change . constant
+		====<< lift . extract ====<< wrap .:.. zoom @(Zipper Rose e) <---- sub @(Focused Tree)
+			<---- zoom <--- sub @Rest <--- zoom <-- primary <-- overlook (pop @List) where
+
+		ancestor :: Construction List e -> Tape Roses e
+		ancestor (Construct x xs) = Exactly x <:*:> Reverse <-- unite empty <:*:> unite xs
