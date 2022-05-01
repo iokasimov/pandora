@@ -34,7 +34,7 @@ import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
 	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Tree, Forest), Location (Focused), sub)
-import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs, fasten))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
@@ -93,6 +93,8 @@ type Roses = List <::> Construction List
 
 instance Zippable Rose where
 	type Breadcrumbs Rose = Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses
+	fasten (TT (Just (Construct x xs))) = Just <----- Exactly x <:*:> TT xs <:*:> Reverse <-- TT empty <:*:> TT empty <:*:> TT empty
+	fasten (TT Nothing) = Nothing
 
 -- TODO: Try to use substructure @Right . substructure @Right . substructure @Right . substructure @Right here
 instance Substructure Ancestors (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where

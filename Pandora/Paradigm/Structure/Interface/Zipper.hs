@@ -21,6 +21,7 @@ import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->), (%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (<-*---), (-*-), extract, point)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Schemes.TU (TU (TU), type (<:.>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
@@ -32,6 +33,7 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance,
 -- TODO: Use Slidable superclass with Slides associated type family
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *
+	fasten :: structure e -> Maybe > Zipper structure e
 
 type Zipper (structure :: * -> *) = Exactly <:*:> Breadcrumbs structure
 

@@ -769,3 +769,4 @@
 * Rename `.-*-` length encoding operators to `-*-`
 * Define `Location` datatype
 * Remove `Fastenable` type family
+* Define `fasten` method in `Zippable` typeclass

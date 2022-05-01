@@ -39,7 +39,7 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance,
 	, Segment (Tree, Root, Branch, Ancestors, Children), Location (Focused), sub)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Interface.Stack (push, pop)
-import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs, fasten))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
@@ -118,6 +118,8 @@ instance Chain key => Morphable (Lookup Key) (Prefixed < Construction (Maybe <:*
 instance Zippable Binary where
 	type Breadcrumbs Binary = (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)
 		<:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)
+	fasten (TT (Just (Construct x xs))) = Just <----- Exactly x <:*:> TT xs <:*:> TT empty
+	fasten (TT Nothing) = Nothing
 
 instance Substructure Children (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Substance Children (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)

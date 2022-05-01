@@ -51,7 +51,7 @@ import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphi
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Rest))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (Topping, push, pop, top))
-import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs), Zipper)
+import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs, fasten), Zipper)
 import Pandora.Paradigm.Structure.Modification.Combinative (Combinative)
 import Pandora.Paradigm.Structure.Modification.Comprehension (Comprehension (Comprehension))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
@@ -172,6 +172,7 @@ type instance Combinative List = Comprehension Maybe
 
 instance Zippable List where
 	type Breadcrumbs List = Reverse List <:*:> List
+	fasten (TT (Just (Construct x xs))) = Just <----- Exactly x <:*:> Reverse <-- TT empty <:*:> TT xs
 
 -- TODO: No overlapping, let's use wrappers instead
 instance {-# OVERLAPS #-} Traversable (->) (->) (Tape List) where
