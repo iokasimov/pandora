@@ -16,7 +16,7 @@ import Pandora.Pattern.Object.Setoid (Setoid ((?=)))
 import Pandora.Pattern.Object.Semigroup ((+))
 import Pandora.Paradigm.Algebraic.Exponential ((%), (.:..))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
-import Pandora.Paradigm.Algebraic.Functor ((<-*----), extract, point, empty, void)
+import Pandora.Paradigm.Algebraic.Functor ((<-*-), (<-*----), extract, point, empty, void)
 import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
@@ -108,6 +108,13 @@ instance Substructure Children (Exactly <:*:> Roses <:*:> List <::> Tape Roses) 
 	type Substance Children (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Roses
 	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
 		Exactly x :*: down :*: up -> Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> up)
+
+instance Substructure Siblings (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Substance Siblings (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe <::> (Reverse Roses <:*:> Roses)
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
+		Exactly x :*: down :*: up -> Store
+			<--- (TT <---- view (sub @Rest) <-|- view <-- top @List <-- run up) 
+				:*: (\siblings -> lift <----- Exactly x <:*:> down <:*:> TT <--- mutate (\first -> replace <-|- run siblings <-*- Just <-- sub @Rest <-*- first) <-- top @List <-- run up)
 
 instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Substance (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Construction List
