@@ -770,3 +770,4 @@
 * Define `Location` datatype
 * Remove `Fastenable` type family
 * Define `fasten` method in `Zippable` typeclass
+* Change `Zipper` of `Rose` tree definition

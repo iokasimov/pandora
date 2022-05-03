@@ -6,10 +6,10 @@ import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant ((<-|-), (<-|--), (<-|----), (<-|-|-), (<-|-|-|-))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|----), (<-|-|-), (<-|-|-|-)))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
-import Pandora.Pattern.Functor.Traversable ((<-/-))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (====<<), (======<<)))
+import Pandora.Pattern.Functor.Traversable ((<-/-), (<-/--))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (====<<), (======<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((?=)))
@@ -21,13 +21,14 @@ import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
+import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, reconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
 import Pandora.Paradigm.Inventory.Some.State (State, change, current)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (view, primary)
+import Pandora.Paradigm.Inventory.Some.Optics (Lens, view, mutate, replace, primary)
 import Pandora.Paradigm.Inventory (zoom, overlook)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Into, Rotate, Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
@@ -35,7 +36,7 @@ import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
 	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Tree, Forest), Location (Focused), sub)
 import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs, fasten))
-import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push))
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (top, pop, push))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Structure.Some.List (List)
@@ -92,78 +93,90 @@ find_rose_sub_tree (Construct k ks) tree = k ?= attached (extract tree)
 type Roses = List <::> Construction List
 
 instance Zippable Rose where
-	type Breadcrumbs Rose = Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses
-	fasten (TT (Just (Construct x xs))) = Just <----- Exactly x <:*:> TT xs <:*:> Reverse <-- TT empty <:*:> TT empty <:*:> TT empty
+	type Breadcrumbs Rose = Roses <:*:> List <::> Tape Roses
+	fasten (TT (Just (Construct x xs))) = Just <----- Exactly x <:*:> TT xs <:*:> TT empty
 	fasten (TT Nothing) = Nothing
 
 -- TODO: Try to use substructure @Right . substructure @Right . substructure @Right . substructure @Right here
-instance Substructure Ancestors (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Substance Ancestors (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = List <::> Tape Roses
-	substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|-|- run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
-		Exactly x :*: down :*: left :*: right :*: up ->
-			Store <--- up :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (right <:*:>)
+instance Substructure Ancestors (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Substance Ancestors (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = List <::> Tape Roses
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
+		Exactly x :*: down :*: up -> Store <--- up :*: lift . (Exactly x <:*:>) . (down <:*:>)
 
 -- TODO: Try to use substructure @Left . substructure @Right here
-instance Substructure Children (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Substance Children (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Roses
+instance Substructure Children (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Substance Children (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Roses
 	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
-		Exactly x :*: down :*: rest ->
-			Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> rest)
+		Exactly x :*: down :*: up -> Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> up)
 
-instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Substance (Focused Tree) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Construction List
-	substructure = P_Q_T <-- \zipper -> case run <-- lower zipper of
-		Exactly x :*: T_U (children :*: rest) ->
-			Store <--- Construct x (run children) :*: lift . T_U . ((<:*:> rest) <-|-) . run . reconstruct
+instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Substance (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Construction List
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
+		Exactly x :*: children :*: up -> Store <--- Construct x (run children) :*: lift . T_U . ((<:*:> up) <-|-) . run . reconstruct
 
 -- TODO: Refactor this instance, looks too complicated
-instance Substructure (Focused Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Substance (Focused Forest) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Tape List <::> Nonempty Rose
-	substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|-|- run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
-		Exactly root :*: down :*: left :*: right :*: up -> Store <--- focused :*: lift . updated where
+instance Substructure (Focused Forest) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Substance (Focused Forest) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Tape List <::> Nonempty Rose
+	substructure :: forall e . Lens (Tape List <::> Nonempty Rose)
+		((Tagged (Focused Forest) <:.> (Exactly <:*:> Roses <:*:> List <::> Tape Roses)) > e) e
+	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run @(->) <-- lower zipper of
+		Exactly root :*: down :*: up -> Store <--- TT focused :*: lift . updated where
 
-				focused = TT <----- (Exactly <--- Construct root <-- run down) <:*:> Reverse <--- run <-- lower left <:*:> run right
+			focused :: Tape List > Nonempty Rose e
+			focused = case run <--- view <-- top @List <-- run up of
+				Nothing -> Exactly tree <:*:> Reverse empty <:*:> empty
+				Just (T_U (Exactly _ :*: T_U (Reverse left :*: right)))
+					-> Exactly tree <:*:> Reverse (run left) <:*:> run right
 
-				updated (TT (T_U (Exactly (Construct root_ down_) :*: T_U (Reverse left_ :*: right_)))) =
-					Exactly root_ <:*:> unite down_ <:*:> Reverse <-- TT left_ <:*:> TT right_ <:*:> up
+			tree :: Nonempty Rose e
+			tree = Construct root <-- run down
+
+			updated :: (Tape List <::> Nonempty Rose) e -> (Exactly <:*:> Roses <:*:> List <::> Tape Roses) e
+			updated (TT (T_U (Exactly (Construct root_ down_) :*: T_U (Reverse left_ :*: right_)))) =
+				Exactly root_ <:*:> unite down_ <:*:> TT
+					<--- mutate <-- (update_sides (Reverse (TT left_) <:*:> TT right_) <-|-) <-- top @List <-- run up
+
+			update_sides :: (Reverse Roses <:*:> Roses) e -> Tape Roses e -> Tape Roses e
+			update_sides sides tape = replace <-- sides <-- sub @Rest <-- tape
 
 -- TODO: Try to use substructure @Left . substructure @Right . substructure @Right here
-instance Substructure (Left Siblings) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Substance (Left Siblings) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Reverse Roses
-	substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
-		Exactly x :*: down :*: left :*: rest -> Store <--- left :*: lift . (Exactly x <:*:>) . (down <:*:>) . (<:*:> rest)
+-- instance Substructure (Left Siblings) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+-- 	type Substance (Left Siblings) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Reverse Roses
+-- 	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
+-- 		Exactly x :*: down :*: up -> Store
+-- 			<--- (view (sub @Left) . view (sub @Rest) <-- up)
+-- 				:*: \left' -> lift (Exactly x <:*:> down <:*:> mutate (mutate (constant left') (sub @Left)) (sub @Rest) up)
 
 -- TODO: Try to use substructure  @Left . substructure @Right . substructure @Right . substructure @Right here
-instance Substructure (Right Siblings) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Substance (Right Siblings) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Roses
-	substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|-|- run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
-		Exactly x :*: down :*: left :*: right :*: rest -> Store <--- right :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (<:*:> rest)
+-- instance Substructure (Right Siblings) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+-- 	type Substance (Right Siblings) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Roses
+	--substructure = P_Q_T <-- \zipper -> case run @(->) <-|-|-|- run @(->) <-|-|- run @(->) <-|- run <-- lower zipper of
+	--	Exactly x :*: down :*: left :*: right :*: rest -> Store <--- right :*: lift . (Exactly x <:*:>) . (down <:*:>) . (left <:*:>) . (<:*:> rest)
 
-instance Morphable (Into (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses)) (Construction List) where
-	type Morphing (Into (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses)) (Construction List) =
-		Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses
-	morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
-		Construct x xs -> Exactly x <:*:> unite xs <:*:> empty <:*:> empty <:*:> empty
+--instance Morphable (Into (Exactly <:*:> Roses <:*:> List <::> Tape Roses)) (Construction List) where
+	--type Morphing (Into (Exactly <:*:> Roses <:*:> List <::> Tape Roses)) (Construction List) = Exactly <:*:> Roses <:*:> List <::> Tape Roses
+	--morphing nonempty_rose_tree = case premorph nonempty_rose_tree of
+		--Construct x xs -> Exactly x <:*:> unite xs <:*:> empty <:*:> empty <:*:> empty
 
-instance Morphable (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Morphing (Rotate Up) (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) =
-		Maybe <::> (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses)
-	morphing (premorph -> z) = TT <----- restruct <-|-- identity @(->) <-/- pop @List <~ run (view <-- sub @Ancestors <-- z) where
+--instance Morphable (Rotate Up) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	--type Morphing (Rotate Up) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) =
+		--Maybe <::> (Exactly <:*:> Roses <:*:> List <::> Tape Roses)
+	--morphing (premorph -> z) = TT <----- restruct <-|-- identity @(->) <-/- pop @List <~ run (view <-- sub @Ancestors <-- z) where
+--
+		---- TODO: Add type declaration
+		--restruct (parents :*: parent) =
+			--let child_node = extract <--- view <-- sub @Root <-- z in
+			--let central_children = run <--- view <-- sub @Children <-- z in
+			----let left_children = run @(->) <---- run <--- view <-- sub @(Left Siblings) <-- z in
+			--let right_children = run <--- view <-- sub @(Right Siblings) <-- z in
+			--view <-- sub @Root <-- parent
+				-- <:*:> unite <-- left_children + point (Construct child_node central_children) + right_children
+				-- <:*:> view <--- sub @(Left Branch) <--- view <-- sub @Rest <-- parent
+				-- <:*:> view <--- sub @(Right Branch) <--- view <-- sub @Rest <-- parent
+				-- <:*:> unite parents
 
-		-- TODO: Add type declaration
-		restruct (parents :*: parent) =
-			let child_node = extract <--- view <-- sub @Root <-- z in
-			let central_children = run <--- view <-- sub @Children <-- z in
-			let left_children = run @(->) <---- run <--- view <-- sub @(Left Siblings) <-- z in
-			let right_children = run <--- view <-- sub @(Right Siblings) <-- z in
-			view <-- sub @Root <-- parent
-				<:*:> unite <-- left_children + point (Construct child_node central_children) + right_children
-				<:*:> view <--- sub @(Left Branch) <--- view <-- sub @Rest <-- parent
-				<:*:> view <--- sub @(Right Branch) <--- view <-- sub @Rest <-- parent
-				<:*:> unite parents
-
-instance Slidable Up (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Sliding Up (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
+instance Slidable Up (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Sliding Up (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
 	slide = void . wrap . zoom @(Zipper Rose e) (sub @(Focused Tree)) . change . constant ======<< merging
 		<-|---- wrap <--- zoom @(Zipper Rose e) <-- sub @(Focused Tree) <-- current
@@ -172,11 +185,12 @@ instance Slidable Up (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> 
 
 		merging :: Nonempty Rose e -> Tape (List <::> Nonempty Rose) e -> Nonempty Rose e
 		merging x (T_U (Exactly p :*: T_U (Reverse ls :*: rs))) =
+			-- TODO: This is wrong, we should add left part in reverse order
 			Construct p <-- run ls + point x + run rs
 
 -- TODO: Think about how to use effects insize `zoom` block
-instance Slidable Left (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Sliding Left (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
+instance Slidable Left (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Sliding Left (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
 	slide = void . wrap . zoom @(Zipper Rose e) (sub @(Focused Forest))
 		. change @((Tape List <::> Nonempty Rose) e) . constant . TT . attached
@@ -185,8 +199,8 @@ instance Slidable Left (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:
 				<--- zoom <-- primary <-- overlook current
 
 -- TODO: Think about how to use effects insize `zoom` block
-instance Slidable Right (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Sliding Right (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
+instance Slidable Right (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Sliding Right (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
 	slide = void . wrap . zoom @(Zipper Rose e) (sub @(Focused Forest))
 		. change @((Tape List <::> Nonempty Rose) e) . constant . TT . attached
@@ -194,8 +208,8 @@ instance Slidable Right (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*
 			====<< wrap <---- zoom @(Zipper Rose e) <--- sub @(Focused Forest)
 				<--- zoom <-- primary <-- overlook current
 
-instance Slidable Down (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) where
-	type Sliding Down (Exactly <:*:> Roses <:*:> Reverse Roses <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
+instance Slidable Down (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
+	type Sliding Down (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
 	slide = void . wrap . zoom @(Zipper Rose e) (sub @Ancestors) . zoom primary . overlook . push @List . ancestor
 		====<< wrap . zoom @(Zipper Rose e) (sub @(Focused Tree)) . change . constant
