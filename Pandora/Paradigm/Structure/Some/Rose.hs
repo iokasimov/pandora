@@ -109,12 +109,15 @@ instance Substructure Children (Exactly <:*:> Roses <:*:> List <::> Tape Roses) 
 	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
 		Exactly x :*: down :*: up -> Store <--- down :*: lift . (Exactly x <:*:>) . (<:*:> up)
 
+-- Think about lens methods/operators that could make this code easier
 instance Substructure Siblings (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Substance Siblings (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe <::> (Reverse Roses <:*:> Roses)
 	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
 		Exactly x :*: down :*: up -> Store
-			<--- (TT <---- view (sub @Rest) <-|- view <-- top @List <-- run up) 
-				:*: (\siblings -> lift <----- Exactly x <:*:> down <:*:> TT <--- mutate (\first -> replace <-|- run siblings <-*- Just <-- sub @Rest <-*- first) <-- top @List <-- run up)
+			<--- (TT <---- view <-- sub @Rest <-|- view <-- top @List <-- run up)
+				:*: \siblings -> lift <----- Exactly x <:*:> down
+					<:*:> TT <--- mutate (replace <-|- run siblings <-*- Just <-- sub @Rest <-*-)
+						<-- top @List <-- run up
 
 instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Substance (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Construction List
