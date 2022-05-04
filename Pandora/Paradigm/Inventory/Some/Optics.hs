@@ -29,7 +29,8 @@ import Pandora.Paradigm.Inventory.Some.Store (Store (Store), position, look, ret
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 
-infixl 2 #=@
+infixr 6 @>>>
+infixl 7 #=@
 
 type Lens = P_Q_T (->) Store
 

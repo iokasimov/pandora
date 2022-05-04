@@ -33,8 +33,7 @@ class Substructure segment (structure :: * -> *) where
 	sub = (lift >-||-) . (lower @(->) <-|-|-) =#- substructure @segment @structure
 
 tagstruct :: Covariant (->) (->) structure => (Tagged segment <:.> structure) @>>> structure
-tagstruct = P_Q_T <-- \ts -> case lower ts of
-	struct -> Store <--- struct :*: lift
+tagstruct = P_Q_T <-- Store . (:*: lift) . lower
 
 instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Left (t <:*:> u) where
 	type Substance Left (t <:*:> u) = t
