@@ -36,13 +36,13 @@ tagstruct :: Covariant (->) (->) structure => (Tagged segment <:.> structure) @>
 tagstruct = P_Q_T <-- \ts -> case lower ts of
 	struct -> Store <--- struct :*: lift
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure (Left Branch) (t <:*:> u) where
-	type Substance (Left Branch) (t <:*:> u) = t
+instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Left (t <:*:> u) where
+	type Substance Left (t <:*:> u) = t
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- ls :*: lift . (<:*:> rs)
 
-instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure (Right Branch) (t <:*:> u) where
-	type Substance (Right Branch) (t <:*:> u) = u
+instance (Covariant (->) (->) t, Covariant (->) (->) u) => Substructure Right (t <:*:> u) where
+	type Substance Right (t <:*:> u) = u
 	substructure = P_Q_T <-- \x -> case run <-- lower x of
 		ls :*: rs -> Store <--- rs :*: lift . (ls <:*:>)
 
@@ -52,11 +52,11 @@ data Location a = Focused a
 
 instance Covariant (->) (->) t => Substructure Root (Exactly <:*:> t) where
 	type Substance Root (Exactly <:*:> t) = Exactly
-	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @(Left Branch)
+	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @Left
 
 instance Covariant (->) (->) t => Substructure Rest (Exactly <:*:> t) where
 	type Substance Rest (Exactly <:*:> t) = t
-	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @(Right Branch)
+	substructure = (lower >-||-) . (lift @(->) <-|-|-) =#- sub @Right
 
 instance Covariant (->) (->) t => Substructure Root (Construction t) where
 	type Substance Root (Construction t) = Exactly
@@ -68,13 +68,13 @@ instance Covariant (->) (->) t => Substructure Rest (Construction t) where
 	substructure = P_Q_T <-- \source -> case lower source of
 		Construct x xs -> Store <--- unite xs :*: lift . Construct x . run
 
-instance (Covariant (->) (->) t, Substructure (i Branch) t) => Substructure (i Branch) (Construction t) where
-	type Substance (i Branch) (Construction t) = Substance (i Branch) t <::> Construction t
+instance (Covariant (->) (->) t, Substructure i t) => Substructure (i Branch) (Construction t) where
+	type Substance (i Branch) (Construction t) = Substance i t <::> Construction t
 	substructure = P_Q_T <-- \source -> case lower source of
-		Construct x xs -> Store <--- unite (view <-- sub @(i Branch) <-- xs) :*: \target ->
-			lift <---- Construct x <--- replace <-- run target <-- sub @(i Branch) <-- xs
+		Construct x xs -> Store <--- unite (view <-- sub @i <-- xs) :*: \target ->
+			lift <---- Construct x <--- replace <-- run target <-- sub @i <-- xs
 
-instance (Covariant (->) (->) t, Substructured (i Branch) t Maybe) => Substructure (i Branch) (Maybe <::> Construction t) where
+instance (Covariant (->) (->) t, Substructured i t Maybe) => Substructure (i Branch) (Maybe <::> Construction t) where
 	type Substance (i Branch) (Maybe <::> Construction t) = Maybe <::> Construction t
 	substructure = P_Q_T <-- \struct -> case run . extract . run <-- struct of
 		Nothing -> Store <--- empty :*: lift . constant empty

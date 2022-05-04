@@ -70,6 +70,7 @@ instance Impliable (P_Q_T (->) Store Maybe source target) where
 		(source -> Maybe target) -> (source -> Maybe target -> source) -> Lens Maybe source target
 	imply getter setter = P_Q_T <-- \source -> Store <--- getter source :*: setter source
 
+-- This type of lens leave whole structure untouched if we set target = Nothing
 instance Semigroupoid (Lens Maybe) where
 	(.) :: Obscure Lens between target -> Obscure Lens source between -> Obscure Lens source target
 	P_Q_T to . P_Q_T from = P_Q_T <-- \source -> case run <-- from source of
