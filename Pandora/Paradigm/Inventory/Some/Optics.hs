@@ -7,7 +7,7 @@ import Pandora.Core.Impliable (Impliable (Arguments, imply))
 import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (Category (identity, (<--), (<---), (<----), (<-----), (<-------)))
-import Pandora.Pattern.Kernel (Kernel (constant))
+import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -61,7 +61,7 @@ instance Semimonoidal (-->) (:*:) (:*:) (Lens Exactly source) where
 instance Impliable (P_Q_T (->) Store Exactly source target) where
 	type Arguments (P_Q_T (->) Store Exactly source target) =
 		(source -> target) -> (source -> target -> source) -> Lens Exactly source target
-	imply getter setter = P_Q_T <-- \source -> Store <--- (Exactly <-- getter source) :*: setter source . extract
+	imply getter setter = P_Q_T <-- \source -> Store <--- Exactly (getter source) :*: setter source . extract
 
 type family Obscure lens where
 	Obscure Lens = Lens Maybe
@@ -75,9 +75,9 @@ instance Impliable (P_Q_T (->) Store Maybe source target) where
 instance Semigroupoid (Lens Maybe) where
 	(.) :: Obscure Lens between target -> Obscure Lens source between -> Obscure Lens source target
 	P_Q_T to . P_Q_T from = P_Q_T <-- \source -> case run <-- from source of
-		Nothing :*: _ -> Store <--- Nothing :*: \_ -> source
+		Nothing :*: _ -> Store <--- Nothing :*: constant source
 		Just between :*: mbs -> case run <-- to between of
-			Nothing :*: _ -> Store <--- Nothing :*: \_ -> source
+			Nothing :*: _ -> Store <--- Nothing :*: constant source
 			Just target :*: mtb -> Store <--- Just target :*: mbs . Just . mtb
 
 instance Category (Lens Maybe) where
@@ -144,4 +144,4 @@ transwrap :: (Covariant (->) (->) u, Liftable (->) t, Lowerable (->) t) => Lens 
 transwrap = P_Q_T <-- \origin -> Store <--- lower origin :*: lift
 
 primary :: Interpreted (->) t => Lens Exactly < t a < Primary t a
-primary = P_Q_T <-- \origin -> Store <--- (Exactly <-- run origin) :*: unite . extract
+primary = P_Q_T <-- \origin -> Store <--- Exactly (run origin) :*: unite . extract
