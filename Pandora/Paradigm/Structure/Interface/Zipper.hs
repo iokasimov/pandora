@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
 module Pandora.Paradigm.Structure.Interface.Zipper where
 
 import Pandora.Core.Functor (type (>), type (<), type (:.), type (:::))
@@ -28,12 +28,14 @@ import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable, Morph (Rotate))
+import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Rest))
 
 -- TODO: Use Slidable superclass with Slides associated type family
 class Zippable (structure :: * -> *) where
 	type Breadcrumbs structure :: * -> *
 	fasten :: structure e -> Maybe > Zipper structure e
+	unfasten :: Zipper structure e -> Nonempty structure e
 
 type Zipper (structure :: * -> *) = Exactly <:*:> Breadcrumbs structure
 

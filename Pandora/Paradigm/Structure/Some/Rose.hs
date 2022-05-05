@@ -1,10 +1,10 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.Rose where
 
-import Pandora.Core.Functor (type (:.), type (>), type (>>>))
+import Pandora.Core.Functor (type (:.), type (>), type (<), type (<<), type (>>>))
 import Pandora.Core.Interpreted (run, unite, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), (<-------), identity)
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|----), (<-|-|-), (<-|-|-|-)))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
@@ -35,8 +35,8 @@ import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure)
 	, Segment (Root, Rest, Branch, Ancestors, Siblings, Children, Tree, Forest), Location (Focused), sub)
-import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs, fasten))
-import Pandora.Paradigm.Structure.Interface.Stack (Stack (top, pop, push))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs, fasten, unfasten))
+import Pandora.Paradigm.Structure.Interface.Stack (Stack (pop, push, top))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Modification.Tape (Tape)
 import Pandora.Paradigm.Structure.Some.List (List)
@@ -96,6 +96,16 @@ instance Zippable Rose where
 	type Breadcrumbs Rose = Roses <:*:> List <::> Tape Roses
 	fasten (TT (Just (Construct x xs))) = Just <----- Exactly x <:*:> TT xs <:*:> TT empty
 	fasten (TT Nothing) = Nothing
+	unfasten :: forall e . Zipper Rose e -> Nonempty Rose e
+	unfasten (T_U (Exactly focus :*: T_U (TT children :*: TT ancestors))) =
+		attached <-- (cover <-/- ancestors) <~ Construct focus children where
+
+		cover :: Tape Roses e -> State << Nonempty Rose e << ()
+		cover (T_U (Exactly x :*: T_U (Reverse (TT lf) :*: TT rf))) =
+
+			void <--- change @(Nonempty Rose e) <-- \nrt ->
+				Construct <------- x <------- lift <------ unfasten @List
+					<----- Exactly nrt <:*:> Reverse lf <:*:> rf
 
 -- TODO: Try to use substructure @Right . substructure @Right . substructure @Right . substructure @Right here
 instance Substructure Ancestors (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
@@ -198,7 +208,7 @@ instance Slidable Up (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 			-- TODO: This is wrong, we should add left part in reverse order
 			Construct p <-- run ls + point x + run rs
 
--- TODO: Think about how to use effects insize `zoom` block
+-- TODO: Think about how to use effects inside `zoom` block
 instance Slidable Left (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Sliding Left (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
@@ -208,7 +218,7 @@ instance Slidable Left (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 			====<< wrap <---- zoom @(Zipper Rose e) <--- sub @(Focused Forest)
 				<--- zoom <-- primary <-- overlook current
 
--- TODO: Think about how to use effects insize `zoom` block
+-- TODO: Think about how to use effects inside `zoom` block
 instance Slidable Right (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Sliding Right (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()

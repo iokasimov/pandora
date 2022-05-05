@@ -39,7 +39,7 @@ import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance,
 	, Segment (Tree, Root, Branch, Ancestors, Children), Location (Focused), sub)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
 import Pandora.Paradigm.Structure.Interface.Stack (push, pop)
-import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs, fasten))
+import Pandora.Paradigm.Structure.Interface.Zipper (Zipper, Zippable (Breadcrumbs, fasten, unfasten))
 import Pandora.Paradigm.Structure.Modification.Prefixed (Prefixed)
 import Pandora.Paradigm.Structure.Some.List (List)
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), P_Q_T (P_Q_T), type (<::>), type (<:.:>))
@@ -120,6 +120,13 @@ instance Zippable Binary where
 		<:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)
 	fasten (TT (Just (Construct x xs))) = Just <----- Exactly x <:*:> TT xs <:*:> TT empty
 	fasten (TT Nothing) = Nothing
+	unfasten :: forall e . Zipper Binary e -> Nonempty Binary e
+	unfasten (T_U (Exactly focus :*: T_U (TT children :*: TT ancestors))) =
+		attached <-- (cover <-/- ancestors) <~ Construct focus children where
+
+		cover :: (Horizontal <::> (Exactly <:*:> Binary)) e -> State (Nonempty Binary e) ()
+		cover (TT (Left (T_U (Exactly x :*: TT right)))) = void <-- change @(Nonempty Binary e) (\nbt -> Construct x <----- Just nbt <:*:> right)
+		cover (TT (Right (T_U (Exactly x :*: TT left)))) = void <-- change @(Nonempty Binary e) (\nbt -> Construct x <----- left <:*:> Just nbt)
 
 instance Substructure Children (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Substance Children (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe)

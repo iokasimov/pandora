@@ -772,3 +772,4 @@
 * Define `fasten` method in `Zippable` typeclass
 * Change `Zipper` of `Rose` tree definition
 * Define precedence and fixity for `@>>>` operator
+* Define `unfasten` method in Zippable` typeclass
