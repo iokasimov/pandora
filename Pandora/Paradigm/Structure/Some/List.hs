@@ -3,37 +3,30 @@ module Pandora.Paradigm.Structure.Some.List where
 
 import Pandora.Core.Functor (type (:.), type (<), type (>), type (>>>), type (>>>>>>))
 import Pandora.Core.Impliable (imply)
-import Pandora.Core.Interpreted (run, unite, (<~), (<~~~), (=#-))
+import Pandora.Core.Interpreted (run, (<~), (<~~~), (=#-))
 import Pandora.Pattern.Semigroupoid ((.))
-import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (<------), (-->), (--->), (---->), identity)
+import Pandora.Pattern.Category ((<--), (<---), (<----), (<-----), (-->), (--->), identity)
 import Pandora.Pattern.Kernel (constant)
-import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|--), (<-|-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|--)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
-import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (===<<), (====<<)))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<), (===<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (?=)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (-*-), (-+-), (.:..), extract, point, empty, void)
+import Pandora.Paradigm.Algebraic ((<-*--), (-*-), (-+-), (.:..), extract, point, empty, void)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
-import Pandora.Paradigm.Algebraic ((<-|-<-|-))
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Predicate (Predicate (Predicate))
-import Pandora.Paradigm.Primary.Functor.Tagged (Tagged (Tag))
 import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Primary ()
-import Pandora.Paradigm.Controlflow.Effect.Adaptable (adapt)
-import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>))
 import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
-import Pandora.Paradigm.Schemes.TU (TU (TU))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
@@ -41,14 +34,11 @@ import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
 import Pandora.Paradigm.Inventory.Some.State (State, fold, current, change)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
-import Pandora.Paradigm.Inventory.Some.Optics (Convex, Obscure, Lens, transwrap)
-import Pandora.Paradigm.Inventory (zoom, overlook)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing)
 	, Morph (Rotate, Into, Push, Pop, Delete, Find, Lookup, Element, Key)
-	, Occurrence (All, First), premorph, rotate, item, filter, find, lookup, into)
-import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
+	, Occurrence (All, First), premorph, item, filter, find, lookup, into)
 import Pandora.Paradigm.Structure.Ability.Substructure (Substructure (Substance, substructure, sub), Segment (Root, Rest))
 import Pandora.Paradigm.Structure.Interface.Stack (Stack (Topping, push, pop, top))
 import Pandora.Paradigm.Structure.Interface.Zipper (Zippable (Breadcrumbs, fasten, unfasten), Zipper)
@@ -244,6 +234,7 @@ instance Morphable (Into > Comprehension Maybe) (Tape List) where
 
 ------------------------------------- Zipper of non-empty list -------------------------------------
 
+-- TODO: add `fasten` and `unfasten` implementations
 instance Zippable (Construction Maybe) where
 	type Breadcrumbs (Construction Maybe) = Reverse > Construction Maybe <:*:> Construction Maybe
 
@@ -291,6 +282,7 @@ instance Morphable (Into List) (Tape > Construction Maybe) where
 
 ------------------------------------ Zipper of combinative list ------------------------------------
 
+-- TODO: add `fasten` and `unfasten` implementations
 instance Zippable (Comprehension Maybe) where
 	type Breadcrumbs (Comprehension Maybe) = Comprehension Maybe <:*:> Comprehension Maybe
 
