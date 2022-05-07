@@ -9,7 +9,7 @@ import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|----)))
 import Pandora.Pattern.Functor.Contravariant ((>-|-))
 import Pandora.Pattern.Functor.Traversable ((<-/-))
-import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (====<<), (======<<)))
+import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (====<<), (=====<<), (======<<)))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((?=)))
@@ -29,7 +29,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
 import Pandora.Paradigm.Inventory.Some.State (State, change, current)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Inventory.Some.Optics (Lens, view, mutate, replace, primary)
-import Pandora.Paradigm.Inventory (zoom, overlook)
+import Pandora.Paradigm.Inventory (zoom, overlook, probably)
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Lookup, Element, Key), premorph, find)
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Slidable (Slidable (Sliding, slide))
@@ -208,26 +208,23 @@ instance Slidable Up (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 			-- TODO: This is wrong, we should add left part in reverse order
 			Construct p <-- run ls + point x + run rs
 
--- TODO: Think about how to use effects inside `zoom` block
---- FIXME: wrong implementagion, when you move lest, ancestor disappears
 instance Slidable Left (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Sliding Left (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
-	slide = void . wrap . zoom @(Zipper Rose e) (sub @(Focused Forest))
-		. change @((Tape List <::> Nonempty Rose) e) . constant . TT . attached
-			====<< lift . (slide @Left <~) . extract
-			====<< wrap <---- zoom @(Zipper Rose e) <--- sub @(Focused Forest)
-				<--- zoom <-- primary <-- overlook current
+	slide = void <------- lift . extract
+		=====<< wrap .:.. zoom @(Zipper Rose e)
+			<----- sub @(Focused Forest)
+			<----- zoom <---- primary <---- overlook
+				<--- probably <-- slide @Left
 
--- TODO: Think about how to use effects inside `zoom` block
 instance Slidable Right (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Sliding Right (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
 	slide :: forall e . State > Zipper Rose e :> Maybe >>> ()
-	slide = void . wrap . zoom @(Zipper Rose e) (sub @(Focused Forest))
-		. change @((Tape List <::> Nonempty Rose) e) . constant . TT . attached
-			====<< lift . (slide @Right <~) . extract
-			====<< wrap <---- zoom @(Zipper Rose e) <--- sub @(Focused Forest)
-				<--- zoom <-- primary <-- overlook current
+	slide = void <------- lift . extract
+		=====<< wrap .:.. zoom @(Zipper Rose e)
+			<----- sub @(Focused Forest)
+			<----- zoom <---- primary <---- overlook
+				<--- probably <-- slide @Right
 
 instance Slidable Down (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Sliding Down (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Maybe
