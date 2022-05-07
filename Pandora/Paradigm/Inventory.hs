@@ -1,26 +1,26 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, (=<>), (~<>)) where
+module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, probably, (=<>), (~<>)) where
 
 import Pandora.Paradigm.Inventory.Ability as Exports
 import Pandora.Paradigm.Inventory.Some as Exports
 
-import Pandora.Core.Functor (type (~>))
+import Pandora.Core.Functor (type (>>>))
 import Pandora.Core.Interpreted (run, (<~))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (--|), (|-), (|--)))
-import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
-import Pandora.Paradigm.Primary.Functor.Maybe (Maybe)
+import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Exponential ((%), type (<--))
 import Pandora.Paradigm.Algebraic (Pointable, extract)
-import Pandora.Paradigm.Primary (Simplification)
+import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
+import Pandora.Paradigm.Schemes.TUT (TUT (TUT))
 
 instance Adjoint (->) (->) (Store s) (State s) where
 	(-|) :: (Store s a -> b) -> a -> State s b
@@ -40,10 +40,17 @@ zoom :: forall bg ls u result . Lens u bg ls -> State (u ls) result -> State bg 
 zoom lens less = State <-- \source -> restruct |- run (lens <~ source) where
 
 	restruct :: (u ls -> bg) -> u ls -> bg :*: result
-	restruct to target = run @(->) <---- to <-|- Flip (less <~ target)
+	restruct to target = run @(->) <---- to <-|- Flip <-- less <~ target
 
 overlook :: (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => State s result -> State (t s) (t result)
 overlook (State state) = State <-- \ts -> mult @(<--) @(:*:) @(:*:) <~ (state <-|- ts)
+
+-- TODO: it's better to rename it to `perhaps` but this name is already taken
+-- `Perhaps` and `Accessibe` typeclasses should be generalized to only one
+probably :: State s :> Maybe >>> result -> State s (Maybe result)
+probably (TM (TUT state)) = State <-- \old -> case state old of
+	Just (new :*: r) -> new :*: Just r
+	Nothing -> old :*: Nothing
 
 (=<>) :: (Pointable available, Stateful src t)
 	=> Lens available src tgt -> tgt -> t src
