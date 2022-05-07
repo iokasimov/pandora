@@ -74,8 +74,8 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Substructu
 		let updated new = (\trg src -> mutate (replace <-- trg <-- sub @Right) <-- sub @Rest <-- src) <-|-- new <-*-- run <-- lower source in
 		Store <--- target :*: lift . (updated =#-)
 
-instance (Covariant (->) (->) structure, Bindable (->) (Topping structure), Monoidal (-->) (-->) (:*:) (:*:) (Topping structure), Stack structure) => Slidable Left (Tape structure) where
-	type Sliding Left (Tape structure) = Topping structure
+instance (Covariant (->) (->) structure, Bindable (->) (Topping structure), Monoidal (-->) (-->) (:*:) (:*:) (Topping structure), Stack structure) => Slidable Right (Tape structure) where
+	type Sliding Right (Tape structure) = Topping structure
 	slide :: forall e . State > Tape structure e :> Topping structure >>> ()
 	slide = void . wrap . zoom @(Tape structure e) (sub @Rest)
 		. zoom (sub @Left) . zoom transwrap . push @structure . extract
@@ -83,8 +83,8 @@ instance (Covariant (->) (->) structure, Bindable (->) (Topping structure), Mono
 				====<< lift ====<< wrap <---- zoom @(Tape structure e) <--- sub @Rest
 					<--- zoom <-- sub @Right <-- pop @structure
 
-instance (Covariant (->) (->) structure, Stack structure, Bindable (->) (Topping structure), Monoidal (-->) (-->) (:*:) (:*:) (Topping structure)) => Slidable Right (Tape structure) where
-	type Sliding Right (Tape structure) = Topping structure
+instance (Covariant (->) (->) structure, Stack structure, Bindable (->) (Topping structure), Monoidal (-->) (-->) (:*:) (:*:) (Topping structure)) => Slidable Left (Tape structure) where
+	type Sliding Left (Tape structure) = Topping structure
 	slide :: forall e . State > Tape structure e :> Topping structure >>> ()
 	slide = void . wrap . zoom @(Tape structure e) (sub @Rest)
 		. zoom (sub @Right) . push . extract

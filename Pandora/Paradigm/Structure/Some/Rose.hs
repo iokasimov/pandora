@@ -135,6 +135,7 @@ instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape R
 		Exactly x :*: children :*: up -> Store <--- Construct x (run children) :*: lift . T_U . ((<:*:> up) <-|-) . run . reconstruct
 
 -- TODO: Refactor this instance, looks too complicated
+-- TODO: it seem like this instance is wrong, when I try to update the focus, I lost andestors
 instance Substructure (Focused Forest) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Substance (Focused Forest) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Tape List <::> Nonempty Rose
 	substructure :: forall e . Lens (Tape List <::> Nonempty Rose)
@@ -152,8 +153,8 @@ instance Substructure (Focused Forest) (Exactly <:*:> Roses <:*:> List <::> Tape
 			tree = Construct root <-- run down
 
 			updated :: (Tape List <::> Nonempty Rose) e -> (Exactly <:*:> Roses <:*:> List <::> Tape Roses) e
-			updated (TT (T_U (Exactly (Construct root_ down_) :*: T_U (Reverse left_ :*: right_)))) =
-				Exactly root_ <:*:> unite down_ <:*:> TT
+			updated (TT (T_U (Exactly (Construct new_root new_down) :*: T_U (Reverse left_ :*: right_)))) =
+				Exactly new_root <:*:> unite new_down <:*:> TT
 					<--- mutate <-- (update_sides (Reverse (TT left_) <:*:> TT right_) <-|-) <-- top @List <-- run up
 
 			update_sides :: (Reverse Roses <:*:> Roses) e -> Tape Roses e -> Tape Roses e
