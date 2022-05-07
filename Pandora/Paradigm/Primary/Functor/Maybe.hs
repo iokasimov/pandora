@@ -30,6 +30,7 @@ import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
 import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 
+-- TODO: better to rename it to Option a = Some a | None?
 data Maybe a = Nothing | Just a
 
 instance Covariant (->) (->) Maybe where

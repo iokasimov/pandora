@@ -38,7 +38,7 @@ class Covariant source target t => Traversable source target t where
 	(<-/---) = (<-/-)
 	(<-/--) = (<-/-)
 
-(<-/-<-/-) :: forall t u v category a b .
+(<-/-/-) :: forall t u v category a b .
 	(Traversable category category t, Covariant category category u, Monoidal (Straight category) (Straight category) (:*:) (:*:) u, Traversable category category v)
 	=> category a (u b) -> category (v (t a)) (u (v (t b)))
-(<-/-<-/-) f = ((<-/-) ((<-/-) @category @category @t f))
+(<-/-/-) f = ((<-/-) ((<-/-) @category @category @t f))
