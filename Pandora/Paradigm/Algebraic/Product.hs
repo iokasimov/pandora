@@ -15,9 +15,10 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>), type (>:.:>), type (<:.:<), type (>:.:<))
 
--- TODO: Change precedence to 7
-infixr 8 :*:
+infixr 7 :*:
 infixr 5 <:*:>
+
+-- TODO Define :*:*:, :*:*:*:, ...
 
 data (:*:) s a = s :*: a
 

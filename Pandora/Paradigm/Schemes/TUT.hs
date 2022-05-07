@@ -62,7 +62,7 @@ instance {-# OVERLAPS #-} (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:+:)
 			<-|-- mult @(-->) @(:*:) @(:*:)
 				<~~~ x :*: y
 
-product_over_sum :: s :*: a :+: s :*: b -> s :*: (a :+: b)
+product_over_sum :: (s :*: a) :+: (s :*: b) -> s :*: (a :+: b)
 product_over_sum (Option (s :*: x)) = s :*: Option x
 product_over_sum (Adoption (s :*: y)) = s :*: Adoption y
 
