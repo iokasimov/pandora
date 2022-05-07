@@ -16,12 +16,10 @@ import Pandora.Paradigm.Algebraic.Product ((:*:))
 > * Preserving apply: f (x <-*- y) ≡ f x <-*- f y
 -}
 
-infixl 2 <-/-<-/-
-
 infixl 1 <-/------
 infixl 2 <-/-----
 infixl 3 <-/----
-infixl 4 <-/---
+infixl 4 <-/---, <-/-/-
 infixl 5 <-/--
 infixl 6 <-/-
 
