@@ -25,7 +25,7 @@ infixl 1 <-*------, <-||-----, >-||-----
 infixl 2 <-*-----, <-||----, >-||----
 infixl 3 <-*----, <-||---, >-||---
 infixl 4 <-*---, <-*-*-, <-||--, >-||--
-infixl 5 <-*--, -*-*-, <-||-, >-||-
+infixl 5 <-*--, <-||-, >-||-
 infixl 6 <-*-, <-+-
 infixl 7 -+-
 
@@ -33,7 +33,7 @@ infixr 1 --------*
 infixr 2 -------*
 infixr 3 ------*
 infixr 4 -----*
-infixr 5 ----*
+infixr 5 ----*, -*-*-
 infixr 6 ---*
 infixr 7 --*
 infixr 8 -*
@@ -78,12 +78,13 @@ x -* y = (\_ y' -> y') <-|- x <-*- y
 (<-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u (a -> b)) -> t (u a) -> t (u b)
 f <-*-*- x = (<-*-) <-|- f <-*- x
 
-(-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u b) -> t (u a) -> t (u b)
-y -*-*- x = (\_ y' -> y') <-|-|- x <-*-*- y
+(-*-*-) :: (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => t (u a) -> t (u b) -> t (u b)
+x -*-*- y = (\_ y' -> y') <-|-|- x <-*-*- y
 
 (<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
-y <-+- x = \f -> f <-|--- mult @(-->) <~~~ x :*: y
+y <-+- x = \f -> f <-|-- mult @(-->) <~~~ x :*: y
 
+-- TODO: change arguments order
 (-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
 y -+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
 
