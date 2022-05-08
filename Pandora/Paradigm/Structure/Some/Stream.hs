@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
-import Pandora.Paradigm.Algebraic.Functor (extract, empty, (--*))
+import Pandora.Paradigm.Algebraic.Functor (extract, empty, (-*))
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just))
@@ -44,7 +44,7 @@ instance Stack (Construction Exactly) where
 	type Topping (Construction Exactly) = Exactly
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	pop = (\(Construct x xs) -> constant <-- Exactly x <-|-- change @(Stream _) . constant <-/- xs) =<< current
-	push x = (change <-- Construct x . Exactly) --* point x
+	push x = (change <-- Construct x . Exactly) -* point x
 
 instance Morphable (Rotate Left) (Tape Stream) where
 	type Morphing (Rotate Left) (Tape Stream) = Tape Stream

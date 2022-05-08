@@ -777,3 +777,4 @@
 * Rename `<-/-<-/-` `Traversable` method to `<-/-/-`
 * Decrease precedence for `:*:` infix operator
 * Rename `-*-` length encoding operators to `--*`
+* Define another `-*` length encoding operator

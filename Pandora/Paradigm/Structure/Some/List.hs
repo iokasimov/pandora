@@ -15,7 +15,7 @@ import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (?=)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Algebraic ((<-*--), (--*), (-+-), (.:..), extract, point, empty, void)
+import Pandora.Paradigm.Algebraic ((<-*--), (-*), (-+-), (.:..), extract, point, empty, void)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
@@ -102,7 +102,7 @@ instance Stack List where
 			Nothing -> TT <-- deconstruct xs
 			Just x -> TT <---- Construct x . Just <-|- deconstruct xs
 	pop = resolve @(Nonempty List _) (\(Construct x xs) -> constant (Just x) <-|- set @State (TT xs)) (point Nothing) . run ==<< get @State
-	push x = modify @State (item @Push x) --* point x
+	push x = modify @State (item @Push x) -* point x
 
 instance Substructure Root List where
 	type Substance Root List = Maybe
@@ -152,7 +152,7 @@ instance Stack (Construction Maybe) where
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
 	pop = (\(Construct x xs) -> constant <-- Exactly x <-|-- change @(Nonempty List _) . constant <-/- xs) =<< current @(Nonempty List _)
-	push x = (modify @State <-- Construct x . Just) --* point x
+	push x = (modify @State <-- Construct x . Just) -* point x
 
 ---------------------------------------- Combinative list ------------------------------------------
 
