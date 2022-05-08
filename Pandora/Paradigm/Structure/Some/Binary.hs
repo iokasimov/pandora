@@ -14,7 +14,7 @@ import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((&), (.:..))
-import Pandora.Paradigm.Algebraic.Functor ((<-*---), (-*------), extract, empty, void)
+import Pandora.Paradigm.Algebraic.Functor ((<-*---), (-------*), extract, empty, void)
 import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left, Right))
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
@@ -152,24 +152,24 @@ instance Substructure (Focused Tree) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Con
 instance Slidable (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Sliding (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
 	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
-	slide = void . wrap . zoom @(Zipper Binary e) (sub @(Focused Tree)) . change . constant
-			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Left Tree) <-- current @(Binary e)
-		-*------ wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
+	slide = wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
 			-- TODO: Try to use Semimonoidal instance for lenses
 			=====<< TT . Right .:.. (<:*:>)
 				<-|--- wrap <--- zoom <-- sub @Root <-- current
 				<-*--- wrap <--- zoom <-- sub @(Right Tree) <-- current
+		-------* void . wrap . zoom @(Zipper Binary e) (sub @(Focused Tree)) . change . constant
+			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Left Tree) <-- current @(Binary e)
 
 instance Slidable (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Sliding (Down Right) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
 	slide :: forall e . State > Zipper Binary e :> Maybe >>> ()
-	slide = void . wrap . zoom @(Zipper Binary e) (sub @(Focused Tree)) . change . constant
-			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Right Tree) <-- current @(Binary e)
-		-*------ wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
+	slide = wrap . zoom (sub @Ancestors) . zoom primary . overlook . push @List
 			-- TODO: Try to use Semimonoidal instance for lenses
 			=====<< TT . Left .:.. (<:*:>)
 				<-|--- wrap <--- zoom <-- sub @Root <-- current
 				<-*--- wrap <--- zoom <-- sub @(Left Tree) <-- current
+		-------* void . wrap . zoom @(Zipper Binary e) (sub @(Focused Tree)) . change . constant
+			=====<< lift . run =====<< wrap <--- zoom <-- sub @(Right Tree) <-- current @(Binary e)
 
 instance Slidable Up (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Sliding Up (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe

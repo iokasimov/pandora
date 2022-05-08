@@ -15,7 +15,7 @@ import Pandora.Pattern.Transformer.Lowerable (lower)
 import Pandora.Pattern.Object.Setoid (Setoid ((==), (?=)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Algebraic ((<-*--), (-*-), (-+-), (.:..), extract, point, empty, void)
+import Pandora.Paradigm.Algebraic ((<-*--), (--*), (-+-), (.:..), extract, point, empty, void)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>), attached)
 import Pandora.Paradigm.Algebraic.Exponential ((%))
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
@@ -32,7 +32,7 @@ import Pandora.Paradigm.Schemes.P_Q_T (P_Q_T (P_Q_T))
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Ability.Settable (set)
 import Pandora.Paradigm.Inventory.Ability.Modifiable (modify)
-import Pandora.Paradigm.Inventory.Some.State (State, fold, current, change)
+import Pandora.Paradigm.Inventory.Some.State (State, current, change)
 import Pandora.Paradigm.Inventory.Some.Store (Store (Store))
 import Pandora.Paradigm.Structure.Modification.Nonempty (Nonempty)
 import Pandora.Paradigm.Structure.Ability.Monotonic (resolve)
@@ -102,7 +102,7 @@ instance Stack List where
 			Nothing -> TT <-- deconstruct xs
 			Just x -> TT <---- Construct x . Just <-|- deconstruct xs
 	pop = resolve @(Nonempty List _) (\(Construct x xs) -> constant (Just x) <-|- set @State (TT xs)) (point Nothing) . run ==<< get @State
-	push x = point x -*- modify @State (item @Push x)
+	push x = modify @State (item @Push x) --* point x
 
 instance Substructure Root List where
 	type Substance Root List = Maybe
@@ -117,8 +117,8 @@ instance Substructure Rest List where
 		Nothing -> Store <--- zero :*: lift . identity
 
 -- | Transform any traversable structure into a list
-linearize :: forall t a . Traversable (->) (->) t => t a -> List a
-linearize = TT . extract . (run @(->) @(State (Maybe :. Nonempty List >>> a)) % Nothing) . fold (Just .:.. Construct)
+-- linearize :: forall t a . Traversable (->) (->) t => t a -> List a
+-- linearize = TT . extract . (run @(->) @(State (Maybe :. Nonempty List >>> a)) % Nothing) . fold (Just .:.. Construct)
 
 ----------------------------------------- Non-empty list -------------------------------------------
 
@@ -152,7 +152,7 @@ instance Stack (Construction Maybe) where
 	top = P_Q_T <-- \xs -> Store <--- Exactly (extract xs) :*: \(Exactly new) -> Construct new <--- deconstruct xs
 	-- It will never return you the last element
 	pop = (\(Construct x xs) -> constant <-- Exactly x <-|-- change @(Nonempty List _) . constant <-/- xs) =<< current @(Nonempty List _)
-	push x = point x -*- (modify @State <-- Construct x . Just)
+	push x = (modify @State <-- Construct x . Just) --* point x
 
 ---------------------------------------- Combinative list ------------------------------------------
 

@@ -21,7 +21,7 @@ import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
-import Pandora.Paradigm.Algebraic ((:*:) ((:*:)), (-*-), delta)
+import Pandora.Paradigm.Algebraic ((:*:) ((:*:)), delta)
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (Pointable, point, (<-||-), (>-||-))
 import Pandora.Paradigm.Schemes (Schematic, TUT (TUT), type (<:<.>:>))
@@ -73,8 +73,8 @@ reconcile f = adapt . set @State ==<< adapt . f ==<< adapt <-- get @State
 
 type Memorable s t = (Covariant (->) (->) t, Pointable t, Stateful s t)
 
-fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
-fold op struct = adapt <-- get @State -*- (adapt . modify @State . op <-/- struct)
+-- fold :: (Traversable (->) (->) t, Memorable s u) => (a -> s -> s) -> t a -> u s
+-- fold op struct = adapt <-- get @State -*- (adapt . modify @State . op <-/- struct)
 
 instance Gettable State where
 	type Getting State state ouput = State state state

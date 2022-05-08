@@ -776,3 +776,4 @@
 * Define `probably` method of `State` effect
 * Rename `<-/-<-/-` `Traversable` method to `<-/-/-`
 * Decrease precedence for `:*:` infix operator
+* Rename `-*-` length encoding operators to `--*`
