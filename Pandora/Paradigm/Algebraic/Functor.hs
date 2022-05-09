@@ -27,7 +27,6 @@ infixl 3 <-*----, <-||---, >-||---
 infixl 4 <-*---, <-*-*-, <-||--, >-||--
 infixl 5 <-*--, <-||-, >-||-
 infixl 6 <-*-, <-+-
-infixl 7 -+-
 
 infixr 1 --------*
 infixr 2 -------*
@@ -36,7 +35,7 @@ infixr 4 -----*
 infixr 5 ----*, -*-*-
 infixr 6 ---*
 infixr 7 --*
-infixr 8 -*
+infixr 8 -*, -+
 
 infixl 6 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
 
@@ -85,8 +84,8 @@ x -*-*- y = (\_ y' -> y') <-|-|- x <-*-*- y
 y <-+- x = \f -> f <-|-- mult @(-->) <~~~ x :*: y
 
 -- TODO: change arguments order
-(-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
-y -+- x = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
+(-+) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
+x -+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
 
 loop :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
 loop x = let r = x -* r in r
