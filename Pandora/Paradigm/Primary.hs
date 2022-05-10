@@ -13,6 +13,9 @@ import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category ((<---))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Paradigm.Algebraic.Sum ((:+:))
+import Pandora.Paradigm.Algebraic.One (One)
+import Pandora.Paradigm.Algebraic.Zero (Zero)
 import Pandora.Paradigm.Schemes (TU, T_U, UT, TUT)
 
 instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where
@@ -26,3 +29,7 @@ type family Simplification (t :: * -> *) (a :: *) where
 	Simplification (TUT _ _ _ t t' u) a = t :. u :. t' >>> a
 	Simplification (T_U _ _ p t u) a = p (t a) (u a)
 	Simplification t a = t a
+
+type family Cardinality (t :: * -> *) where
+	Cardinality Exactly = One
+	Cardinality Maybe = Zero :+: One
