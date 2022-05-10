@@ -1,8 +1,8 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Pandora.Paradigm.Primary.Transformer.Construction where
 
-import Pandora.Core.Functor (type (:.), type (>>>), type (>>>>>>), type (:=>), type (~>))
-import Pandora.Core.Interpreted (run, (<~), (<~~~), (<~~~~))
+import Pandora.Core.Functor (type (:.), type (>>>), type (:=>), type (~>))
+import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~), (<~~~~)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Semigroupoid ((.))
@@ -26,7 +26,7 @@ import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (empty, (<-||-))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
-import Pandora.Paradigm.Schemes (TT (TT), type (<::>))
+import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), type (<::>))
 
 data Construction t a = Construct a (t :. Construction t >>> a)
 
@@ -70,6 +70,11 @@ instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant (->)
 instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoid (Construction t a) where
 	zero = Construct zero zero
 
+instance Interpreted (->) (Construction t) where
+	type Primary (Construction t) a = (Exactly <:*:> t <::> Construction t) a
+	run (Construct x xs) = Exactly x <:*:> unite xs
+	unite (T_U (Exactly x :*: TT xs)) = Construct x xs
+
 -- instance Monotonic a (t :. Construction t > a) => Monotonic a (Construction t a) where
 -- 	reduce f r ~(Construct x xs) = f x <-- reduce f r xs
 --
@@ -78,9 +83,6 @@ instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) 
 
 deconstruct :: Construction t a -> t :. Construction t >>> a
 deconstruct ~(Construct _ xs) = xs
-
-reconstruct :: Construction t a -> Exactly <:*:> t <::> Construction t >>>>>> a
-reconstruct (Construct x xs) = Exactly x <:*:> TT xs
 
 -- Generate a construction from seed using effectful computation
 constitute :: Covariant (->) (->) t => (a -> t a) -> a -> Construction t a

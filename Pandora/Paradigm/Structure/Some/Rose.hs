@@ -22,7 +22,7 @@ import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Predicate (equate)
 import Pandora.Paradigm.Primary.Functor.Tagged (Tagged)
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct, reconstruct)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), deconstruct)
 import Pandora.Paradigm.Primary.Transformer.Reverse (Reverse (Reverse))
 import Pandora.Paradigm.Schemes (TU (TU), TT (TT), T_U (T_U), P_Q_T (P_Q_T),  type (<::>), type (<:.>))
 import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
@@ -132,7 +132,7 @@ instance Substructure Siblings (Exactly <:*:> Roses <:*:> List <::> Tape Roses) 
 instance Substructure (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) where
 	type Substance (Focused Tree) (Exactly <:*:> Roses <:*:> List <::> Tape Roses) = Construction List
 	substructure = P_Q_T <-- \zipper -> case run @(->) <-|- run <-- lower zipper of
-		Exactly x :*: children :*: up -> Store <--- Construct x (run children) :*: lift . T_U . ((<:*:> up) <-|-) . run . reconstruct
+		Exactly x :*: children :*: up -> Store <--- Construct x (run children) :*: lift . T_U . ((<:*:> up) <-|-) . run . run
 
 -- TODO: Refactor this instance, looks too complicated
 -- TODO: it seem like this instance is wrong, when I try to update the focus, I lost andestors

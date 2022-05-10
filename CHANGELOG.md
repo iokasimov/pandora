@@ -783,3 +783,4 @@
 * Change definition of `-+-` operator: arguments order
 * Rename `-+-` operator to `-+`
 * Define  `-+` length encoding operators
+* Remeove `reconstruct` method of `Construction`

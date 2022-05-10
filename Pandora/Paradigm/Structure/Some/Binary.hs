@@ -19,7 +19,7 @@ import Pandora.Paradigm.Primary.Auxiliary (Vertical (Up, Down), Horizontal (Left
 import Pandora.Paradigm.Primary.Object.Ordering (order)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
-import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct), reconstruct)
+import Pandora.Paradigm.Primary.Transformer.Construction (Construction (Construct))
 import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>), wrap)
 import Pandora.Paradigm.Inventory.Ability.Gettable (get)
 import Pandora.Paradigm.Inventory.Some.State (State, change, current)
@@ -147,7 +147,7 @@ instance Substructure (Focused Tree) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Con
 	substructure = P_Q_T <-- \source -> case run @(->) <-|- run <-- lower source of
 		focus :*: children :*: ancestors -> Store
 			<--- (Construct <-- extract focus <-- run children)
-				:*: lift . T_U . ((<:*:> ancestors) <-|-) . run . reconstruct
+				:*: lift . T_U . ((<:*:> ancestors) <-|-) . run . run
 
 instance Slidable (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) where
 	type Sliding (Down Left) (Exactly <:*:> (Maybe <:*:> Maybe) <::> Construction (Maybe <:*:> Maybe) <:*:> List <::> Horizontal <::> (Exactly <:*:> Binary)) = Maybe
