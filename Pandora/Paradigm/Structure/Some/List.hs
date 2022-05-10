@@ -234,10 +234,6 @@ instance Morphable (Into > Comprehension Maybe) (Tape List) where
 
 ------------------------------------- Zipper of non-empty list -------------------------------------
 
--- TODO: add `fasten` and `unfasten` implementations
-instance Zippable (Construction Maybe) where
-	type Breadcrumbs (Construction Maybe) = Reverse > Construction Maybe <:*:> Construction Maybe
-
 instance Morphable (Rotate Left) (Tape > Construction Maybe) where
 	type Morphing (Rotate Left) (Tape > Construction Maybe) = Maybe <::> (Tape > Construction Maybe)
 	morphing (premorph -> T_U (Exactly x :*: T_U (Reverse left :*: right))) =
