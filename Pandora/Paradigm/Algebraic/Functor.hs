@@ -63,8 +63,7 @@ f <-*--- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 f <-*-- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 f <-*- x = (|-) @(->) @(->) (&) <-|--- mult @(-->) @_ @(:*:) <~~~ f :*: x
 
-(---------*), (--------*), (-------*), (------*), (-----*), (----*), (---*), (--*), (-*)  :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b -> t b
-x ---------* y = (\_ y' -> y') <-|- x <-*- y
+(--------*), (-------*), (------*), (-----*), (----*), (---*), (--*), (-*)  :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b -> t b
 x --------* y = (\_ y' -> y') <-|- x <-*- y
 x -------* y = (\_ y' -> y') <-|- x <-*- y
 x ------* y = (\_ y' -> y') <-|- x <-*- y
@@ -83,8 +82,14 @@ x -*-*- y = (\_ y' -> y') <-|-|- x <-*-*- y
 (<-+-) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t b -> t a -> (a :+: b -> r) -> t r
 y <-+- x = \f -> f <-|-- mult @(-->) <~~~ x :*: y
 
--- TODO: change arguments order
-(-+) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
+(--------+), (-------+), (------+), (-----+), (----+), (---+), (--+), (-+) :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t) => t a -> t a -> t a
+x --------+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
+x -------+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
+x ------+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
+x -----+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
+x ----+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
+x ---+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
+x --+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
 x -+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
 
 loop :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b

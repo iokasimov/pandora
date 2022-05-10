@@ -782,3 +782,4 @@
 * Change definition of `-*-*-` operator: arguments order
 * Change definition of `-+-` operator: arguments order
 * Rename `-+-` operator to `-+`
+* Define  `-+` length encoding operators
