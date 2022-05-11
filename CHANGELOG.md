@@ -785,3 +785,5 @@
 * Define  `-+` length encoding operators
 * Remove `reconstruct` method of `Construction`
 * Define `Cardinality` type family
+* Define `:+*+:` type operator
+* Define `:*+*:` type operator

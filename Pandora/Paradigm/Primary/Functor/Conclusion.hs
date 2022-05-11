@@ -26,6 +26,8 @@ import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
 import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 
+-- TODO: rename it to Progress = Stop e | Continue a
+-- it would be a more generalized and semantic-based name
 data Conclusion e a = Failure e | Success a
 
 instance Covariant (->) (->) (Conclusion e) where
