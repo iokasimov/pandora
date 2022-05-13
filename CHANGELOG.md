@@ -787,3 +787,5 @@
 * Define `Cardinality` type family
 * Define `:+*+:` type operator
 * Define `:*+*:` type operator
+
+# 0.5.6
