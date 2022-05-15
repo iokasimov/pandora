@@ -790,3 +790,4 @@
 
 # 0.5.6
 * Define `until` method for repeating actons until failure
+* Define `definitely` method to simplify `State` transformer

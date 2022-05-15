@@ -1,6 +1,6 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, probably, (=<>), (~<>)) where
+module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, probably, definitely, (=<>), (~<>)) where
 
 import Pandora.Paradigm.Inventory.Ability as Exports
 import Pandora.Paradigm.Inventory.Some as Exports
@@ -15,6 +15,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (--|), (|-), (|--)))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
+import Pandora.Paradigm.Primary.Functor.Exactly (Exactly)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Exponential ((%), type (<--))
 import Pandora.Paradigm.Algebraic (Pointable, extract)
@@ -51,6 +52,9 @@ probably :: State s :> Maybe >>> result -> State s (Maybe result)
 probably (TM (TUT state)) = State <-- \old -> case state old of
 	Just (new :*: r) -> new :*: Just r
 	Nothing -> old :*: Nothing
+
+definitely :: State s :> Exactly >>> result -> State s result
+definitely (TM (TUT state)) = State <-- extract . state
 
 (=<>) :: (Pointable available, Stateful src t)
 	=> Lens available src tgt -> tgt -> t src
