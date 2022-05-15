@@ -789,3 +789,4 @@
 * Define `:*+*:` type operator
 
 # 0.5.6
+* Define `until` method for repeating actons until failure

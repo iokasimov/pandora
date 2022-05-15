@@ -94,8 +94,11 @@ x ---+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(--
 x --+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
 x -+ y = (\r -> case r of Option rx -> rx; Adoption ry -> ry) <-|--- mult @(-->) <~~~ x :*: y
 
-loop :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t b
-loop x = let r = x -* r in r
+loop :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => t a -> t a
+loop x = x -* loop x
+
+until :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:+:) t) => t a -> t ()
+until x = x -* until x --+ pass
 
 type Extractable t = Monoidal (<--) (-->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t
