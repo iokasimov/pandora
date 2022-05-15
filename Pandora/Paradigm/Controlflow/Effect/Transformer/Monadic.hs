@@ -20,7 +20,7 @@ import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (Pointable, point)
+import Pandora.Paradigm.Algebraic (Pointable, point, empty)
 import Pandora.Paradigm.Schemes (Schematic)
 
 class Interpreted m t => Monadic m t where
@@ -45,6 +45,9 @@ instance Semimonoidal (-->) (:*:) (:+:) (Schematic Monad t u) => Semimonoidal (-
 	mult = Straight <-- \(TM f :*: TM x) -> TM
 		<---- mult @(-->) @(:*:) @(:+:)
 			<~~~ f :*: x
+
+instance Monoidal (-->) (-->) (:*:) (:+:) (Schematic Monad t u) => Monoidal (-->) (-->) (:*:) (:+:) (t :> u) where
+	unit _ = Straight <-- \_ -> TM empty
 
 instance Traversable (->) (->) (Schematic Monad t u) => Traversable (->) (->) (t :> u) where
 	f <-/- TM x = TM <-|-- f <-/- x

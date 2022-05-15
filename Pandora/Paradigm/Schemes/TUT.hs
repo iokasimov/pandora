@@ -6,6 +6,7 @@ import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~),
 import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<----), (<------))
+import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Covariant (Covariant, Covariant ((<-|-), (<-|--), (<-|---), (<-|-|-), (<-|-|---), (<-|-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant)
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -20,7 +21,7 @@ import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (point, extract, (<-||-))
+import Pandora.Paradigm.Algebraic (point, extract, empty, (<-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
@@ -55,12 +56,17 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (<--) (:*:)
 	unit _ = Flip <-- \(TUT xys) -> Straight (\_ -> (extract |-) xys)
 
 -- TODO: generalize on (->) and (:*:)
-instance {-# OVERLAPS #-} (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:+:) u) => Semimonoidal (-->) (:*:) (:+:) ((->) s <:<.>:> (:*:) s >>>>>>>> u) where
- mult = Straight <-- \(TUT x :*: TUT y) -> TUT
-	<------ product_over_sum
-		<-|-|- mult @(-->) @(:*:) @(:+:)
-			<-|-- mult @(-->) @(:*:) @(:*:)
-				<~~~ x :*: y
+instance {-# OVERLAPS #-} (Covariant (->) (->) u, Semimonoidal (-->) (:*:) (:+:) u) 
+	=> Semimonoidal (-->) (:*:) (:+:) ((->) s <:<.>:> (:*:) s >>>>>>>> u) where
+	mult = Straight <-- \(TUT x :*: TUT y) -> TUT
+		<------ product_over_sum
+			<-|-|- mult @(-->) @(:*:) @(:+:)
+				<-|-- mult @(-->) @(:*:) @(:*:)
+					<~~~ x :*: y
+
+instance {-# OVERLAPS #-} (Covariant (->) (->) u, Monoidal (-->) (-->) (:*:) (:+:) u) 
+	=> Monoidal (-->) (-->) (:*:) (:+:) ((->) s <:<.>:> (:*:) s >>>>>>>> u) where
+	unit _ = Straight <-- \_ -> empty
 
 product_over_sum :: (s :*: a) :+: (s :*: b) -> s :*: (a :+: b)
 product_over_sum (Option (s :*: x)) = s :*: Option x
