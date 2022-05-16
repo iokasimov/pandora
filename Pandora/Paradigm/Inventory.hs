@@ -1,6 +1,6 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Inventory (module Exports, zoom, overlook, probably, definitely, (=<>), (~<>)) where
+module Pandora.Paradigm.Inventory (module Exports, zoom, magnify, overlook, probably, definitely, (=<>), (~<>)) where
 
 import Pandora.Paradigm.Inventory.Ability as Exports
 import Pandora.Paradigm.Inventory.Some as Exports
@@ -11,9 +11,9 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
+import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-), (<-|----)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
-import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (--|), (|-), (|--)))
+import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (--|), (|-), (|--), (|---)))
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
@@ -37,11 +37,20 @@ instance Adjoint (->) (->) (Equipment e) (Provision e) where
 	f -| x = Provision <--- f . Equipment --| x
 	g |- x = run . g |-- run x
 
+-- TODO: Use <<-|- instead of run ... Flip <-- ..
 zoom :: forall bg ls u result . Lens u bg ls -> State (u ls) result -> State bg result
-zoom lens less = State <-- \source -> restruct |- run (lens <~ source) where
+zoom lens less = State <-- \source -> restruct |--- run <-- lens <~ source where
 
 	restruct :: (u ls -> bg) -> u ls -> bg :*: result
 	restruct to target = run @(->) <---- to <-|- Flip <-- less <~ target
+
+-- TODO: Use <<-|-|- instead of run <-|- ... Flip <-|- ..
+magnify :: forall bg ls t u result . Covariant (->) (->) t
+	=> Lens u bg ls -> State (u ls) :> t >>> result -> State bg :> t >>> result 
+magnify lens less = TM . TUT <-- \source -> restruct |--- run <-- lens <~ source where
+
+	restruct :: (u ls -> bg) -> u ls -> t (bg :*: result)
+	restruct to target = run @(->) <-|---- to <-|-|- Flip <-|- less <~ target
 
 overlook :: (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => State s result -> State (t s) (t result)
 overlook (State state) = State <-- \ts -> mult @(<--) @(:*:) @(:*:) <~ (state <-|- ts)
