@@ -27,7 +27,7 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (extract, (<-||-))
+import Pandora.Paradigm.Algebraic (extract, (<<-|-))
 
 newtype Exactly a = Exactly a
 
@@ -35,7 +35,7 @@ instance Covariant (->) (->) Exactly where
 	f <-|- Exactly x = Exactly <-- f x
 
 instance Semimonoidal (-->) (:*:) (:*:) Exactly where
-	mult = Straight <-- Exactly . (extract <-||-) .  (extract <-|-)
+	mult = Straight <-- Exactly . (extract <<-|-) .  (extract <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) Exactly where
 	unit _ = Straight <-- Exactly . (<~ One)

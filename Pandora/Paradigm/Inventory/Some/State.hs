@@ -23,7 +23,7 @@ import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, 
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic ((:*:) ((:*:)), delta)
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (Pointable, point, (<-||-), (>-||-))
+import Pandora.Paradigm.Algebraic (Pointable, point, (<<-|-), (>-||-))
 import Pandora.Paradigm.Schemes (Schematic, TUT (TUT), type (<:<.>:>))
 
 -- | Effectful computation with a variable
@@ -47,7 +47,7 @@ instance Bindable (->) (State s) where
 instance Monad (->) (State s) where
 
 instance Invariant (Flip State r) where
-	f <!< g = (((g >-||-) . ((f <-||-) <-|-) =#-) =#-)
+	f <!< g = (((g >-||-) . ((f <<-|-) <-|-) =#-) =#-)
 
 instance Interpreted (->) (State s) where
 	type Primary (State s) a = (->) s :. (:*:) s >>> a

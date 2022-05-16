@@ -15,7 +15,7 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->), (%), (.:..))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
-import Pandora.Paradigm.Algebraic (extract, (<-||-), (>-||-))
+import Pandora.Paradigm.Algebraic (extract, (<<-|-), (>-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
@@ -44,7 +44,7 @@ instance Extendable (->) (Store s) where
 instance Comonad (->) (Store s) where
 
 instance Invariant (Flip Store r) where
-	f <!< g = (((f <-||-) . ((g >-||-) <-|-) =#-) =#-)
+	f <!< g = (((f <<-|-) . ((g >-||-) <-|-) =#-) =#-)
 
 instance Interpreted (->) (Store s) where
 	type Primary (Store s) a = (:*:) s :. (->) s >>> a

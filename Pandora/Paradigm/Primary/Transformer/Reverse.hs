@@ -17,7 +17,7 @@ import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (point, extract, empty, (<-||-))
+import Pandora.Paradigm.Algebraic (point, extract, empty, (<<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~), (<~~~)))
@@ -34,7 +34,7 @@ instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal
 	unit _ = Straight <-- Reverse . point . (<~ One)
 
 instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Reverse t) where
-	mult = Flip <-- (Reverse <-||-) . (Reverse <-|-) . (mult @(<--) <~) . run
+	mult = Flip <-- (Reverse <<-|-) . (Reverse <-|-) . (mult @(<--) <~) . run
 
 instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Reverse t) where
 	unit _ = Flip <-- \(Reverse x) -> Straight (\_ -> extract x)

@@ -27,7 +27,7 @@ import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (extract, (<-||-))
+import Pandora.Paradigm.Algebraic (extract, (<<-|-))
 
 newtype Tagged tag a = Tag a
 
@@ -41,7 +41,7 @@ instance Covariant (->) (->) (Flip Tagged a) where
 	_ <-|- Flip (Tag x) = Flip <-- Tag x
 
 instance Semimonoidal (-->) (:*:) (:*:) (Tagged tag) where
-	mult = Straight <-- Tag . (extract <-||-) . (extract <-|-)
+	mult = Straight <-- Tag . (extract <<-|-) . (extract <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Tagged tag) where
 	unit _ = Straight <-- Tag . (<~ One)

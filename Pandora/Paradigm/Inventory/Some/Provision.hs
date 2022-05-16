@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Distributive (Distributive ((-<<)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Paradigm.Algebraic.Exponential (type (-->), (%))
-import Pandora.Paradigm.Algebraic ((<-||-))
+import Pandora.Paradigm.Algebraic ((<<-|-))
 import Pandora.Paradigm.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
@@ -32,7 +32,7 @@ instance Contravariant (->) (->) (Flip Provision a) where
 	f >-|- Flip (Provision g) = Flip . Provision <-- g . f
 
 instance Semimonoidal (-->) (:*:) (:*:) (Provision e) where
-	mult = Straight <-- Provision . (mult @(-->) <~) . (run <-||-) . (run @(->) <-|-)
+	mult = Straight <-- Provision . (mult @(-->) <~) . (run <<-|-) . (run @(->) <-|-)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) (Provision e) where
 	unit _ = Straight <-- \f -> Provision <-- \_ -> run f One

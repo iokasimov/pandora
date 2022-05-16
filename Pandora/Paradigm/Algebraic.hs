@@ -24,7 +24,7 @@ import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
 instance (Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <:*:> u) where
 	mult = Flip <-- \(T_U lrxys) ->
 		-- TODO: I need matrix transposing here
-		let ((lxs :*: lys) :*: (rxs :*: rys)) = (mult @(<--) <~) <-||-- (mult @(<--) <~) <-|- lrxys in
+		let ((lxs :*: lys) :*: (rxs :*: rys)) = (mult @(<--) <~) <<-|-- (mult @(<--) <~) <-|- lrxys in
 		T_U (lxs :*: rxs) :*: T_U (lys :*: rys)
 
 instance (Semimonoidal (-->) (:*:) (:*:) t, Semimonoidal (-->) (:*:) (:*:) u) => Semimonoidal (-->) (:*:) (:*:) (t <:*:> u) where

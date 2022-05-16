@@ -12,7 +12,7 @@ import Pandora.Pattern.Functor.Extendable (Extendable ((<<=), (<<==)))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Core.Interpreted ((<~), (<~~~))
-import Pandora.Paradigm.Algebraic ((<-*--), (<-||--), extract)
+import Pandora.Paradigm.Algebraic ((<-*--), (<<-|--), extract)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), (<:*:>))
 import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -28,7 +28,7 @@ instance Semimonoidal (-->) (:*:) (:*:) t => Semimonoidal (-->) (:*:) (:*:) (Tap
 	mult = Straight <-- \(Tap x xs :*: Tap y ys) -> Tap <---- x :*: y <---- mult @(-->) <~~~ xs :*: ys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Semimonoidal (<--) (:*:) (:*:) (Tap t) where
-	mult = Flip <-- \(Tap (x :*: y) xys) -> Tap x <-||-- Tap y <-|- mult @(<--) <~ xys
+	mult = Flip <-- \(Tap (x :*: y) xys) -> Tap x <<-|-- Tap y <-|- mult @(<--) <~ xys
 
 instance Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Tap t) where
 	unit _ = Flip <-- \(Tap x _) -> Straight (\_ -> x)

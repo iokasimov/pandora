@@ -24,7 +24,7 @@ import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
-import Pandora.Paradigm.Algebraic (empty, (<-||-))
+import Pandora.Paradigm.Algebraic (empty, (<<-|-))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
 import Pandora.Paradigm.Schemes (TT (TT), T_U (T_U), type (<::>))
 
@@ -38,7 +38,7 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoid
 		<----- (mult @(-->) <~) <-|-- mult @(-->) <~~~ xs :*: ys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
-	mult = Flip <-- \(Construct (x :*: y) xys) -> (Construct x <-||-) . (Construct y <-|-)
+	mult = Flip <-- \(Construct (x :*: y) xys) -> (Construct x <<-|-) . (Construct y <-|-)
 		<----- mult @(<--) <~~~~ (mult @(<--) <~) <-|- xys
 
 instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Construction t) where
