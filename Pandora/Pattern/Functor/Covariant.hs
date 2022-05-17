@@ -20,6 +20,7 @@ infixl 6 <-|-
 class (Semigroupoid source, Semigroupoid target) => Covariant source target t where
 	(<-|-) :: source a b -> target (t a) (t b)
 
+	-- TODO: remove those operators that are longer than 9 symbols
 	(<-|--), (<-|---), (<-|----), (<-|-----), (<-|------),
 		(<-|-------), (<-|--------) :: source a b -> target (t a) (t b)
 	(<-|--) = (<-|-)
@@ -30,6 +31,7 @@ class (Semigroupoid source, Semigroupoid target) => Covariant source target t wh
 	(<-|-------) = (<-|-)
 	(<-|--------) = (<-|-)
 
+	-- TODO: remove those operators that are longer than 9 symbols
 	(<-|-|-), (<-|-|--), (<-|-|---), (<-|-|----), (<-|-|-----), (<-|-|------), (<-|-|-------) :: (Covariant source (Betwixt source target) u, Covariant (Betwixt source target) target t)
 		=> source a b -> target (t (u a)) (t (u b))
 	(<-|-|-------) s = ((<-|-) ((<-|-) @source @(Betwixt source target) @_ s))

@@ -2,6 +2,7 @@
 module Pandora.Paradigm.Algebraic.Functor where
 
 import Pandora.Core.Interpreted (Interpreted ((<~), (<~~~), (-#=), run))
+import Pandora.Pattern.Betwixt (Betwixt)
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Kernel (constant)
@@ -21,9 +22,9 @@ import Pandora.Paradigm.Algebraic.Zero (Zero, absurd)
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
 
-infixl 1 <-*------, <<-|-----, >-||-----
-infixl 2 <-*-----, <<-|----, >-||----
-infixl 3 <-*----, <<-|---, >-||---
+infixl 1 <-*------, <<-|-----, <<-|-|---, >-||-----
+infixl 2 <-*-----, <<-|----, <<-|-|--, >-||----
+infixl 3 <-*----, <<-|---, <<-|-|-, >-||---
 infixl 4 <-*---, <-*-*-, <<-|--, >-||--
 infixl 5 <-*--, <<-|-, >-||-
 infixl 6 <-*-, <-+-
@@ -116,7 +117,7 @@ pass = point ()
 empty :: Emptiable t => t a
 empty = unit @(-->) Proxy <~ Straight absurd
 
--- TODO: Rename <<-|- to <<-|-
+-- TODO: define priority, remove those operators that are longer than 9 symbols
 (<<-|-), (<<-|--), (<<-|---), (<<-|----), (<<-|-----), (<<-|------), (<<-|-------), (<<-|--------)
 	:: forall (m :: * -> * -> *) (p :: * -> * -> *) a b c .
 	(Covariant m m (Flip p c), Interpreted m (Flip p c)) => m a b -> m (p a c) (p b c)
@@ -128,6 +129,12 @@ empty = unit @(-->) Proxy <~ Straight absurd
 (<<-|---) f = (-#=) @m @(Flip p c) ((<-|-) f)
 (<<-|--) f = (-#=) @m @(Flip p c) ((<-|-) f)
 (<<-|-) f = (-#=) @m @(Flip p c) ((<-|-) f)
+
+(<<-|-|-), (<<-|-|--), (<<-|-|---) :: forall (m :: * -> * -> *) (p :: * -> * -> *) (t :: * -> *) a b c .
+	(Covariant m m (Flip p c), Covariant m (Betwixt m m) t, Covariant m (Betwixt m m) (Flip p c), Covariant (Betwixt m m) m (Flip p c), Interpreted m (Flip p c)) => m a b -> m (p (t a) c) (p (t b) c)
+(<<-|-|---) f = (-#=) @m @(Flip p c) ((<-|-|-) f)
+(<<-|-|--) f = (-#=) @m @(Flip p c) ((<-|-|-) f)
+(<<-|-|-) f = (-#=) @m @(Flip p c) ((<-|-|-) f)
 
 -- TODO: Rename <-|||- to <<<-|-
 (<-|||-), (<-|||--), (<-|||---), (<-|||----), (<-|||-----), (<-|||------), (<-|||-------), (<-|||--------)
