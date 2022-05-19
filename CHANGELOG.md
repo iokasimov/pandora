@@ -795,3 +795,4 @@
 * Rename `<-||-` length encoding operators to `<<-|-`
 * Define  priority and fixity for `-+` length encoding operators
 * Define `<<-|-|-` length encoding operators
+* Define `:++*:` type operator

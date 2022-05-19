@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Algebraic (module Exports, type (:+*+:), type (:*+*:)) where
+module Pandora.Paradigm.Algebraic (module Exports, type (:+*+:), type (:*+*:), type (:++*:)) where
 
 import Pandora.Paradigm.Algebraic.Functor as Exports
 import Pandora.Paradigm.Algebraic.Exponential as Exports
@@ -88,3 +88,5 @@ instance Monoidal (<--) (-->) (:*:) (:*:) (Flip (:*:) a) where
 type (:+*+:) l r = (l :+: r) :*: (r :+: l)
 
 type (:*+*:) l r = (l :*: r) :+: (r :*: l)
+
+type (:++*:) l r = (l :+: r) :+: (l :*: r)
