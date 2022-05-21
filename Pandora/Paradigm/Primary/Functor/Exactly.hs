@@ -15,6 +15,7 @@ import Pandora.Pattern.Functor.Representable (Representable (Representation, (<#
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Functor (Functor ((-|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -30,6 +31,10 @@ import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (extract, (<<-|-))
 
 newtype Exactly a = Exactly a
+
+instance Functor (-->) (-->) Exactly where
+	(-|-) (Straight f) = Straight <-- \case
+		Exactly x -> Exactly <-- f x
 
 instance Covariant (->) (->) Exactly where
 	f <-|- Exactly x = Exactly <-- f x

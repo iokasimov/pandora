@@ -15,6 +15,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
+import Pandora.Pattern.Functor (Functor ((-|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -30,6 +31,10 @@ import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (extract, (<<-|-))
 
 newtype Tagged tag a = Tag a
+
+instance Functor (-->) (-->) (Tagged tag) where
+	(-|-) (Straight f) = Straight <-- \case
+		Tag x -> Tag <-- f x
 
 infixr 0 :#
 type (:#) tag = Tagged tag
