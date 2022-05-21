@@ -24,7 +24,7 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (extract, (<<-|-))
@@ -46,10 +46,10 @@ instance Semimonoidal (-->) (:*:) (:*:) (Tagged tag) where
 instance Monoidal (-->) (-->) (:*:) (:*:) (Tagged tag) where
 	unit _ = Straight <-- Tag . (<~ One)
 
-instance Semimonoidal (<--) (:*:) (:*:) (Tagged tag) where
+instance Semimonoidal (--<) (:*:) (:*:) (Tagged tag) where
 	mult = Flip <-- \(Tag (x :*: y)) -> Tag x :*: Tag y
 
-instance Monoidal (<--) (-->) (:*:) (:*:) (Tagged tag) where
+instance Monoidal (--<) (-->) (:*:) (:*:) (Tagged tag) where
 	unit _ = Flip <-- \(Tag x) -> Straight (\_ -> x)
 
 instance Traversable (->) (->) (Tagged tag) where

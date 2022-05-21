@@ -3,7 +3,7 @@ module Pandora.Pattern.Functor.Comonad where
 import Pandora.Pattern.Morphism.Straight (Straight)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Extendable (Extendable)
-import Pandora.Paradigm.Algebraic.Exponential (type (<--))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<))
 import Pandora.Paradigm.Algebraic.Product ((:*:))
 
 {- |
@@ -16,4 +16,4 @@ import Pandora.Paradigm.Algebraic.Product ((:*:))
 > * Associativity: extend f . extend g ≡ extend (f . extend g)
 -}
 
-class (Monoidal (<--) (Straight source) (:*:) (:*:) t, Extendable source t) => Comonad source t
+class (Monoidal (--<) (Straight source) (:*:) (:*:) t, Extendable source t) => Comonad source t

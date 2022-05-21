@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (<--))
+import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (--<))
 import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic ()
 
@@ -19,5 +19,5 @@ instance Contravariant (->) (->) (Convergence r) where
 instance Semigroup r => Semimonoidal (-->) (:*:) (:*:) (Convergence r) where
 	mult = Straight <-- \(Convergence f :*: Convergence g) -> Convergence <-- \(a :*: b) (a' :*: b') -> f a a' + g b b'
 
-instance Monoid r => Monoidal (-->) (<--) (:*:) (:*:) (Convergence r) where
+instance Monoid r => Monoidal (-->) (--<) (:*:) (:*:) (Convergence r) where
 	unit _ = Straight <-- \_ -> Convergence <-- \_ _ -> zero

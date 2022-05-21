@@ -15,7 +15,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
-import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (<--), (&))
+import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (--<), (&))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Algebraic.Zero (Zero, absurd)
@@ -45,8 +45,8 @@ type instance Unit (:+:) = Zero
 
 type Applicative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) t)
 type Alternative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:+:) t)
-type Divisible t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Monoidal (-->) (<--) (:*:) (:*:) t)
-type Decidable t = (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:+:) t, Monoidal (-->) (<--) (:*:) (:+:) t)
+type Divisible t = (Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:*:) t, Monoidal (-->) (--<) (:*:) (:*:) t)
+type Decidable t = (Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:+:) t, Monoidal (-->) (--<) (:*:) (:+:) t)
 
 instance Adjoint (->) (->) ((:*:) s) ((->) s) where
 	(-|) :: ((s :*: a) -> b) -> a -> (s -> b)
@@ -101,12 +101,12 @@ loop x = x -* loop x
 until :: (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:+:) t) => t a -> t ()
 until x = x -* until x --+ pass
 
-type Extractable t = Monoidal (<--) (-->) (:*:) (:*:) t
+type Extractable t = Monoidal (--<) (-->) (:*:) (:*:) t
 type Pointable t = Monoidal (-->) (-->) (:*:) (:*:) t
 type Emptiable t = Monoidal (-->) (-->) (:*:) (:+:) t
 
 extract :: Extractable t => t a -> a
-extract j = unit @(<--) @(-->) Proxy <~ j <~ One
+extract j = unit @(--<) @(-->) Proxy <~ j <~ One
 
 point :: Pointable t => a -> t a
 point x = unit @(-->) Proxy <~~~ Straight <-- \One -> x

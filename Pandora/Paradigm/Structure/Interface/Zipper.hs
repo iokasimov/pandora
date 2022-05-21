@@ -17,7 +17,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Transformer.Liftable (lift)
 import Pandora.Pattern.Transformer.Lowerable (lower)
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->), (%))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->), (%))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic ((<-*-), (<-*--), (<-*---), extract, point)
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly (Exactly))
@@ -39,11 +39,11 @@ class Zippable (structure :: * -> *) where
 
 type Zipper (structure :: * -> *) = Exactly <:*:> Breadcrumbs structure
 
-instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t
-	=> Semimonoidal (<--) (:*:) (:*:) (Exactly <:*:> t) where
+instance {-# OVERLAPS #-} Semimonoidal (--<) (:*:) (:*:) t
+	=> Semimonoidal (--<) (:*:) (:*:) (Exactly <:*:> t) where
 	mult = Flip <-- \(T_U (Exactly (x :*: y) :*: xys)) ->
-		let xs :*: ys = mult @(<--) <~ xys in
+		let xs :*: ys = mult @(--<) <~ xys in
 			(Exactly x <:*:> xs) :*: (Exactly y <:*:> ys)
 
-instance {-# OVERLAPS #-} Semimonoidal (<--) (:*:) (:*:) t => Monoidal (<--) (-->) (:*:) (:*:) (Exactly <:*:> t) where
+instance {-# OVERLAPS #-} Semimonoidal (--<) (:*:) (:*:) t => Monoidal (--<) (-->) (:*:) (:*:) (Exactly <:*:> t) where
 	unit _ = Flip <-- \(T_U (Exactly x :*: _)) -> Straight (\_ -> x)

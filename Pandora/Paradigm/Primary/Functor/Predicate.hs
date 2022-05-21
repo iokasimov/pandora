@@ -13,7 +13,7 @@ import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool)
 import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:)(Option, Adoption))
-import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (<--))
+import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (--<))
 
 newtype Predicate a = Predicate (a -> Boolean)
 
@@ -28,7 +28,7 @@ instance Contravariant (->) (->) Predicate where
 instance Semimonoidal (-->) (:*:) (:*:) Predicate where
 	mult = Straight <-- \(Predicate f :*: Predicate g) -> Predicate <-- \(x :*: y) -> f x * g y
 
-instance Monoidal (-->) (<--) (:*:) (:*:) Predicate where
+instance Monoidal (-->) (--<) (:*:) (:*:) Predicate where
 	unit _ = Straight <-- \_ -> Predicate <-- \_ -> True
 
 instance Semimonoidal (-->) (:*:) (:+:) Predicate where

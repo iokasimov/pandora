@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint ((-|), (|-))
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->), (%), (.:..))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->), (%), (.:..))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), attached)
 import Pandora.Paradigm.Algebraic (extract, (<<-|-), (>-||-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -29,12 +29,12 @@ newtype Store s a = Store ((:*:) s :. (->) s >>> a)
 instance Covariant (->) (->) (Store s) where
 	(<-|-) f = (=#-) (f <-|-|-)
 
-instance Semimonoidal (<--) (:*:) (:*:) (Store s) where
+instance Semimonoidal (--<) (:*:) (:*:) (Store s) where
 	mult = Flip <-- \(Store (s :*: f)) ->
 		let (x :*: y) = f s in
 		Store (s :*: constant x) :*: Store (s :*: constant y)
 
-instance Monoidal (<--) (-->) (:*:) (:*:) (Store s) where
+instance Monoidal (--<) (-->) (:*:) (:*:) (Store s) where
 	unit _ = Flip <-- Straight . constant . ((<--) |-) . run
 
 -- TODO: Try to generalize (->) here

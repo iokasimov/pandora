@@ -44,9 +44,9 @@ instance Semigroup r => Semigroup (e -> r) where
 instance Ringoid r => Ringoid (e -> r) where
 	f * g = \e -> f e * g e
 
-type (<--) = Flip (->)
+type (--<) = Flip (->)
 
-instance Contravariant (->) (->) ((<--) a) where
+instance Contravariant (->) (->) ((--<) a) where
 	f >-|- Flip g = Flip <-- g . f
 
 type (-->) = Straight (->)

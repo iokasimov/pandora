@@ -13,7 +13,7 @@ import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Algebraic ((<-*-))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->), (%))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->), (%))
 import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Algebraic (point, extract, (<<-|-))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -32,10 +32,10 @@ instance (Semimonoidal (-->) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoid
 instance (Covariant (->) (->) t, Monoidal (-->) (-->) (:*:) (:*:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Backwards t) where
 	unit _ = Straight <-- Backwards . point . (<~ One)
 
-instance (Semimonoidal (<--) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (<--) (:*:) (:*:) (Backwards t) where
-	mult = Flip <-- (Backwards <<-|-) . (Backwards <-|-) . (mult @(<--) <~) . run
+instance (Semimonoidal (--<) (:*:) (:*:) t, Covariant (->) (->) t) => Semimonoidal (--<) (:*:) (:*:) (Backwards t) where
+	mult = Flip <-- (Backwards <<-|-) . (Backwards <-|-) . (mult @(--<) <~) . run
 
-instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Backwards t) where
+instance (Covariant (->) (->) t, Monoidal (--<) (-->) (:*:) (:*:) t) => Monoidal (--<) (-->) (:*:) (:*:) (Backwards t) where
 	unit _ = Flip <-- \(Backwards x) -> Straight (\_ -> extract x)
 
 instance Traversable (->) (->) t => Traversable (->) (->) (Backwards t) where

@@ -3,12 +3,8 @@ module Pandora.Paradigm.Primary.Functor.Wye where
 import Pandora.Core.Functor (type (~>))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Algebraic.Exponential (type (<--))
--- import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
 data Wye a = End | Left_ a | Right_ a | Both a a

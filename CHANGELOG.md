@@ -796,3 +796,4 @@
 * Define  priority and fixity for `-+` length encoding operators
 * Define `<<-|-|-` length encoding operators
 * Define `:++*:` type operator
+* Rename `<--` type synonymous of `Flip (->)` to `--<`

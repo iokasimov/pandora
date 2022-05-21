@@ -23,7 +23,7 @@ import Pandora.Paradigm.Primary.Object.Ordering (Ordering (Less, Equal, Greater)
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Algebraic.One (One (One))
@@ -56,7 +56,7 @@ instance Monoidal (-->) (-->) (:*:) (:+:) Maybe where
 	unit _ = Straight <-- \_ -> Nothing
 
 -- TODO: Check laws
-instance Semimonoidal (<--) (:*:) (:*:) Maybe where
+instance Semimonoidal (--<) (:*:) (:*:) Maybe where
 	mult = Flip <-- \case
 		Just (x :*: y) -> Just x :*: Just y
 		Nothing -> Nothing :*: Nothing

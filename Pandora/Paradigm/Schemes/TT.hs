@@ -17,7 +17,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:), bitraverse_sum)
 import Pandora.Paradigm.Algebraic.One (One (One))
@@ -57,10 +57,10 @@ instance (Covariant (->) (->) t, Covariant (->) (->) t', Semimonoidal (-->) (:*:
 instance (Covariant (->) (->) t, Covariant (->) (->) t', Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:+:) (t <::> t') where
 	unit _ = Straight <-- \_ -> TT empty
 
-instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) t') => Semimonoidal (<--) (:*:) (:*:) (t <::> t') where
-	mult = Flip <-- \(TT xys) -> TT <<-|--- TT <-|--- mult @(<--) <~~~~ (mult @(<--) <~) <-|- xys
+instance (Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:*:) t, Semimonoidal (--<) (:*:) (:*:) t') => Semimonoidal (--<) (:*:) (:*:) (t <::> t') where
+	mult = Flip <-- \(TT xys) -> TT <<-|--- TT <-|--- mult @(--<) <~~~~ (mult @(--<) <~) <-|- xys
 
-instance (Covariant (->) (->) t, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<--) (-->) (:*:) (:*:) t') => Monoidal (<--) (-->) (:*:) (:*:) (t <::> t') where
+instance (Covariant (->) (->) t, Monoidal (--<) (-->) (:*:) (:*:) t, Monoidal (--<) (-->) (:*:) (:*:) t') => Monoidal (--<) (-->) (:*:) (:*:) (t <::> t') where
 	unit _ = Flip <-- \(TT x) -> Straight <---- constant <--- extract <-- extract x
 
 instance (Traversable (->) (->) t, Traversable (->) (->) t') => Traversable (->) (->) (t <::> t') where
@@ -73,7 +73,7 @@ instance Monoidal (-->) (-->) (:*:) (:*:) t => Liftable (->) (TT Covariant Covar
 	lift :: Covariant (->) (->) t' => t' ~> t <::> t'
 	lift = TT . point
 
-instance Monoidal (<--) (-->) (:*:) (:*:) t => Lowerable (->) (TT Covariant Covariant t) where
+instance Monoidal (--<) (-->) (:*:) (:*:) t => Lowerable (->) (TT Covariant Covariant t) where
 	lower :: t <::> t' ~> t'
 	lower (TT x) = extract x
 

@@ -15,7 +15,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<), (==<<)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/--)))
 import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
 import Pandora.Pattern.Transformer.Lowerable (Lowerable (lower))
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
@@ -54,16 +54,16 @@ instance (Covariant (->) (->) t, Covariant (->) (->) u, Semimonoidal (-->) (:*:)
 instance (Traversable (->) (->) t, Bindable (->) t, Semimonoidal (-->) (:*:) (:*:) u, Monoidal (-->) (-->) (:*:) (:*:) u, Bindable (->) u) => Bindable (->) (t <.:> u) where
 	f =<< UT x = UT <---- ((identity =<<) <-|-) . (run . f <-/--) ==<< x
 
-instance (Covariant (->) (->) u, Semimonoidal (<--) (:*:) (:*:) t, Semimonoidal (<--) (:*:) (:*:) u) => Semimonoidal (<--) (:*:) (:*:) (t <.:> u) where
-	mult = Flip <-- \(UT xys) -> UT <<-|--- UT <-|--- mult @(<--) <~~~~ (mult @(<--) <~) <-|- xys
+instance (Covariant (->) (->) u, Semimonoidal (--<) (:*:) (:*:) t, Semimonoidal (--<) (:*:) (:*:) u) => Semimonoidal (--<) (:*:) (:*:) (t <.:> u) where
+	mult = Flip <-- \(UT xys) -> UT <<-|--- UT <-|--- mult @(--<) <~~~~ (mult @(--<) <~) <-|- xys
 
-instance (Covariant (->) (->) u, Monoidal (<--) (-->) (:*:) (:*:) t, Monoidal (<--) (-->) (:*:) (:*:) u) => Monoidal (<--) (-->) (:*:) (:*:) (t <.:> u) where
+instance (Covariant (->) (->) u, Monoidal (--<) (-->) (:*:) (:*:) t, Monoidal (--<) (-->) (:*:) (:*:) u) => Monoidal (--<) (-->) (:*:) (:*:) (t <.:> u) where
 	unit _ = Flip <-- \(UT x) -> Straight (\_ -> extract <-- extract x)
 
 instance Monoidal (-->) (-->) (:*:) (:*:) t => Liftable (->) (UT Covariant Covariant t) where
 	lift :: Covariant (->) (->) u => u ~> t <.:> u
 	lift x = UT <---- point <-|- x
 
-instance Monoidal (<--) (-->) (:*:) (:*:) t => Lowerable (->) (UT Covariant Covariant t) where
+instance Monoidal (--<) (-->) (:*:) (:*:) t => Lowerable (->) (UT Covariant Covariant t) where
 	lower :: Covariant (->) (->) u => t <.:> u ~> u
 	lower (UT x) = extract <-|- x

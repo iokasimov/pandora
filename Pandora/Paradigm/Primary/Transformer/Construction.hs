@@ -20,7 +20,7 @@ import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Ringoid ((*))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Paradigm.Algebraic ((<-*------), extract)
-import Pandora.Paradigm.Algebraic.Exponential (type (<--), type (-->))
+import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)), type (<:*:>), (<:*:>))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic.One (One (One))
@@ -37,11 +37,11 @@ instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t) => Semimonoid
 	mult = Straight <-- \(Construct x xs :*: Construct y ys) -> Construct <----- x :*: y
 		<----- (mult @(-->) <~) <-|-- mult @(-->) <~~~ xs :*: ys
 
-instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semimonoidal (<--) (:*:) (:*:) (Construction t) where
+instance (Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:*:) t) => Semimonoidal (--<) (:*:) (:*:) (Construction t) where
 	mult = Flip <-- \(Construct (x :*: y) xys) -> (Construct x <<-|-) . (Construct y <-|-)
-		<----- mult @(<--) <~~~~ (mult @(<--) <~) <-|- xys
+		<----- mult @(--<) <~~~~ (mult @(--<) <~) <-|- xys
 
-instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoidal (<--) (-->) (:*:) (:*:) (Construction t) where
+instance (Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:*:) t) => Monoidal (--<) (-->) (:*:) (:*:) (Construction t) where
 	unit _ = Flip <-- \(Construct x _) -> Straight (\_ -> x)
 
 instance (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:+:) t) => Monoidal (-->) (-->) (:*:) (:*:) (Construction t) where
@@ -53,21 +53,21 @@ instance Traversable (->) (->) t => Traversable (->) (->) (Construction t) where
 instance Covariant (->) (->) t => Extendable (->) (Construction t) where
 	f <<= x = Construct <---- f x <---- (f <<=) <-|- deconstruct x
 
-instance (Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Comonad (->) (Construction t) where
+instance (Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:*:) t) => Comonad (->) (Construction t) where
 
-instance (forall u . Semimonoidal (<--) (:*:) (:*:) u) => Lowerable (->) Construction where
+instance (forall u . Semimonoidal (--<) (:*:) (:*:) u) => Lowerable (->) Construction where
 	lower x = extract <-|- deconstruct x
 
-instance (forall u . Semimonoidal (<--) (:*:) (:*:) u, forall u . Covariant (->) (->) u) => Hoistable (->) Construction where
+instance (forall u . Semimonoidal (--<) (:*:) (:*:) u, forall u . Covariant (->) (->) u) => Hoistable (->) Construction where
 	f /|\ x = Construct <---- extract x <---- (/|\) @(->) f <-|- f (deconstruct x)
 
-instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Setoid (Construction t a) where
+instance (Setoid a, forall b . Setoid b => Setoid (t b), Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:*:) t) => Setoid (Construction t a) where
 	x == y = (extract x == extract y) * (deconstruct x == deconstruct y)
 
-instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Semigroup (Construction t a) where
+instance (Semigroup a, forall b . Semigroup b => Semigroup (t b), Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:*:) t) => Semigroup (Construction t a) where
 	x + y = Construct <-- extract x + extract y <-- deconstruct x + deconstruct y
 
-instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) t, Semimonoidal (<--) (:*:) (:*:) t) => Monoid (Construction t a) where
+instance (Monoid a, forall b . Semigroup b => Monoid (t b), Covariant (->) (->) t, Semimonoidal (--<) (:*:) (:*:) t) => Monoid (Construction t a) where
 	zero = Construct zero zero
 
 instance Interpreted (->) (Construction t) where
@@ -88,5 +88,5 @@ deconstruct ~(Construct _ xs) = xs
 constitute :: Covariant (->) (->) t => (a -> t a) -> a -> Construction t a
 constitute f x = Construct x <---- constitute f <-|- f x
 
-section :: (Comonad (->) t, Monoidal (<--) (-->) (:*:) (:*:) t) => t ~> Construction t
+section :: (Comonad (->) t, Monoidal (--<) (-->) (:*:) (:*:) t) => t ~> Construction t
 section xs = Construct <--- extract xs <--- section <<= xs
