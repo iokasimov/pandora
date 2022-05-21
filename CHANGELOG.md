@@ -800,3 +800,4 @@
 * Define generalised `Functor` typeclass
 * Define `Covariant_` type synonymous for `Functor` typeclass
 * Define `Contravariant` type synonymous for `Functor` typeclass
+* Define `Kleisli` morphism
