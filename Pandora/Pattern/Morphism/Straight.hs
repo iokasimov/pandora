@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 newtype Straight (v :: * -> * -> *) a e = Straight (v a e)
 
 instance Semigroupoid m => Semigroupoid (Straight m) where
-  Straight g . Straight f = Straight (g . f)
+	Straight g . Straight f = Straight (g . f)
 
 instance Category m => Category (Straight m) where
 	identity = Straight identity
