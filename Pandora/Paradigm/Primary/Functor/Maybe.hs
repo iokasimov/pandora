@@ -12,6 +12,7 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor (Functor ((-|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -32,6 +33,11 @@ import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 
 -- TODO: better to rename it to Option a = Some a | None?
 data Maybe a = Nothing | Just a
+
+instance Functor (-->) (-->) Maybe where
+	(-|-) (Straight f) = Straight <-- \case
+		Just x -> Just <-- f x
+		Nothing -> Nothing
 
 instance Covariant (->) (->) Maybe where
 	f <-|- Just x = Just <-- f x

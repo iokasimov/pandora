@@ -11,6 +11,7 @@ import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
+import Pandora.Pattern.Functor (Functor ((-|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -29,6 +30,11 @@ import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 -- TODO: rename it to Progress = Stop e | Continue a
 -- it would be a more generalized and semantic-based name
 data Conclusion e a = Failure e | Success a
+
+instance Functor (-->) (-->) (Conclusion e) where
+	(-|-) (Straight f) = Straight <-- \case
+		Success x -> Success <-- f x
+		Failure y -> Failure y
 
 instance Covariant (->) (->) (Conclusion e) where
 	f <-|- Success x = Success <-- f x
