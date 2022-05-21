@@ -1,4 +1,4 @@
-module Pandora.Pattern.Functor (module Exports) where
+module Pandora.Pattern.Functor (module Exports, Functor (..)) where
 
 import Pandora.Pattern.Functor.Comonad as Exports
 import Pandora.Pattern.Functor.Monad as Exports
@@ -14,8 +14,9 @@ import Pandora.Pattern.Functor.Invariant as Exports
 import Pandora.Pattern.Functor.Contravariant as Exports
 import Pandora.Pattern.Functor.Covariant as Exports
 
---type family Endofunctor constraint functor category where
-	--Endofunctor Covariant t category = Covariant category category t
-	--Endofunctor Contravariant t category = Contravariant t category category
-	--Endofunctor Traversable t category = Traversable t category category
-	--Endofunctor Distributive t category = Distributive t category category
+import Pandora.Pattern.Category (Category)
+import Pandora.Pattern.Morphism.Flip (Flip (Flip))
+import Pandora.Pattern.Morphism.Straight (Straight (Straight))
+
+class (Category source, Category target) => Functor source target t where
+	(-|-) :: source a b -> target (t a) (t b)
