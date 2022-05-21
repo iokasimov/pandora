@@ -799,5 +799,6 @@
 * Rename `<--` type synonymous of `Flip (->)` to `--<`
 * Define generalised `Functor` typeclass
 * Define `Covariant_` type synonymous for `Functor` typeclass
-* Define `Contravariant` type synonymous for `Functor` typeclass
+* Define `Contravariant_` type synonymous for `Functor` typeclass
 * Define `Kleisli` morphism
+* Define `Bindable_` type synonymous for `Functor` typeclass
