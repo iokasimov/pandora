@@ -20,3 +20,6 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 
 class (Category source, Category target) => Functor source target t where
 	(-|-) :: source a b -> target (t a) (t b)
+
+type Covariant_ source target = Functor (Straight source) (Straight target)
+type Contravariant_ source target = Functor (Straight source) (Flip target)

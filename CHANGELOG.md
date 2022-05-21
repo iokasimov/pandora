@@ -797,3 +797,6 @@
 * Define `<<-|-|-` length encoding operators
 * Define `:++*:` type operator
 * Rename `<--` type synonymous of `Flip (->)` to `--<`
+* Define generalised `Functor` typeclass
+* Define `Covariant_` type synonymous for `Functor` typeclass
+* Define `Contravariant` type synonymous for `Functor` typeclass
