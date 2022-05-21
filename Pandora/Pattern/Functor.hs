@@ -14,12 +14,13 @@ import Pandora.Pattern.Functor.Invariant as Exports
 import Pandora.Pattern.Functor.Contravariant as Exports
 import Pandora.Pattern.Functor.Covariant as Exports
 
-import Pandora.Pattern.Category (Category)
-import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Pattern.Morphism.Straight (Straight (Straight))
-import Pandora.Pattern.Morphism.Kleisli (Kleisli (Kleisli))
+import Pandora.Pattern.Morphism.Flip (Flip)
+import Pandora.Pattern.Morphism.Straight (Straight)
+import Pandora.Pattern.Morphism.Kleisli (Kleisli)
 
-class (Category source, Category target) => Functor source target t where
+-- TODO: think about prerequisites on morphisms
+-- Semifunctors from Semigroupoids and Functors from Categories?
+class Functor source target t where
 	(-|-) :: source a b -> target (t a) (t b)
 
 type Covariant_ source target = Functor (Straight source) (Straight target)

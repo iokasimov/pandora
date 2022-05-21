@@ -6,6 +6,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, (<--), (<---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
+import Pandora.Pattern.Morphism.Kleisli (Kleisli (Kleisli))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -37,6 +38,11 @@ data Maybe a = Nothing | Just a
 instance Functor (-->) (-->) Maybe where
 	(-|-) (Straight f) = Straight <-- \case
 		Just x -> Just <-- f x
+		Nothing -> Nothing
+
+instance Functor (Kleisli Maybe (->)) (-->) Maybe where
+	(-|-) (Kleisli f) = Straight <-- \case
+		Just x -> f x
 		Nothing -> Nothing
 
 instance Covariant (->) (->) Maybe where
