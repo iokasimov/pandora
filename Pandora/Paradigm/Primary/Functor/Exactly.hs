@@ -5,6 +5,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
+import Pandora.Pattern.Morphism.Kleisli (Kleisli (Kleisli))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -35,6 +36,10 @@ newtype Exactly a = Exactly a
 instance Functor (-->) (-->) Exactly where
 	(-|-) (Straight f) = Straight <-- \case
 		Exactly x -> Exactly <-- f x
+
+instance Functor (Kleisli Exactly (->)) (-->) Exactly where
+	(-|-) (Kleisli f) = Straight <-- \case
+		Exactly x -> f x
 
 instance Covariant (->) (->) Exactly where
 	f <-|- Exactly x = Exactly <-- f x

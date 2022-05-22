@@ -4,6 +4,7 @@ import Pandora.Core.Functor (type (~>))
 import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
+import Pandora.Pattern.Morphism.Kleisli (Kleisli (Kleisli))
 import Pandora.Pattern.Category (identity, (<--), (<---), (<----))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -35,6 +36,11 @@ instance Functor (-->) (-->) (Conclusion e) where
 	(-|-) (Straight f) = Straight <-- \case
 		Success x -> Success <-- f x
 		Failure y -> Failure y
+
+instance Functor (Kleisli (Conclusion e) (->)) (-->) (Conclusion e) where
+	(-|-) (Kleisli f) = Straight <-- \case
+		Failure e -> Failure e
+		Success x -> f x
 
 instance Covariant (->) (->) (Conclusion e) where
 	f <-|- Success x = Success <-- f x

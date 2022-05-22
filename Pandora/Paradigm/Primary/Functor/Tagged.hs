@@ -6,6 +6,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
+import Pandora.Pattern.Morphism.Kleisli (Kleisli (Kleisli))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
@@ -35,6 +36,10 @@ newtype Tagged tag a = Tag a
 instance Functor (-->) (-->) (Tagged tag) where
 	(-|-) (Straight f) = Straight <-- \case
 		Tag x -> Tag <-- f x
+
+instance Functor (Kleisli (Tagged tag) (->)) (-->) (Tagged tag) where
+	(-|-) (Kleisli f) = Straight <-- \case
+		Tag x -> f x
 
 infixr 0 :#
 type (:#) tag = Tagged tag
