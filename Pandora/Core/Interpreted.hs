@@ -6,7 +6,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Trip (Trip (Trip))
 import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
+import Pandora.Pattern.Transformation.Liftable (Liftable (lift))
 
 infixr 2 =#-, -#=
 

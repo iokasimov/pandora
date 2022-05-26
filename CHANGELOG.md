@@ -802,3 +802,4 @@
 * Define `Contravariant_` type synonymous for `Functor` typeclass
 * Define `Kleisli` morphism
 * Define `Bindable_` type synonymous for `Functor` typeclass
+* Rename `Pattern.Transformer` module to `Pattern.Transformation`

@@ -4,8 +4,8 @@ module Pandora.Paradigm.Primary.Transformer.Outline where
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category (identity, (<--), (<----), (<------))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Pattern.Transformer.Liftable (Liftable (lift))
-import Pandora.Pattern.Transformer.Hoistable (Hoistable ((/|\)))
+import Pandora.Pattern.Transformation.Liftable (Liftable (lift))
+import Pandora.Pattern.Transformation.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Algebraic.Exponential ()
 
 data Outline t a where

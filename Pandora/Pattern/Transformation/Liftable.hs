@@ -1,4 +1,4 @@
-module Pandora.Pattern.Transformer.Liftable (Liftable (..)) where
+module Pandora.Pattern.Transformation.Liftable (Liftable (..)) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
 

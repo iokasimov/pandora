@@ -1,4 +1,4 @@
-module Pandora.Pattern.Transformer.Hoistable (Hoistable (..)) where
+module Pandora.Pattern.Transformation.Hoistable (Hoistable (..)) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
 

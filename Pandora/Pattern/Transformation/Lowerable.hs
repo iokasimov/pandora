@@ -1,4 +1,4 @@
-module Pandora.Pattern.Transformer.Lowerable (Lowerable (..)) where
+module Pandora.Pattern.Transformation.Lowerable (Lowerable (..)) where
 
 import Pandora.Pattern.Functor.Covariant (Covariant)
 

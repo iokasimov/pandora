@@ -23,6 +23,8 @@ import Pandora.Pattern.Morphism.Kleisli (Kleisli)
 class Functor source target t where
 	(-|-) :: source a b -> target (t a) (t b)
 
+-- (t a :*: t b) -> t (a :*: b)
+
 type Covariant_ source target = Functor (Straight source) (Straight target)
 type Contravariant_ source target = Functor (Straight source) (Flip target)
 type Bindable_ source t = Functor (Kleisli t source) (Straight source) t

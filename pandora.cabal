@@ -183,10 +183,10 @@ library
     Pandora.Pattern.Object.Semilattice
     Pandora.Pattern.Object.Semiring
     -- Typeclassess about object composition of functors
-    Pandora.Pattern.Transformer
-    Pandora.Pattern.Transformer.Hoistable
-    Pandora.Pattern.Transformer.Liftable
-    Pandora.Pattern.Transformer.Lowerable
+    Pandora.Pattern.Transformation
+    Pandora.Pattern.Transformation.Hoistable
+    Pandora.Pattern.Transformation.Liftable
+    Pandora.Pattern.Transformation.Lowerable
   default-extensions:
     DataKinds, ConstraintKinds, ExistentialQuantification, GADTs, QuantifiedConstraints, InstanceSigs, StandaloneKindSignatures
     FlexibleContexts, FlexibleInstances, KindSignatures, StandaloneKindSignatures, LiberalTypeSynonyms, LambdaCase, FunctionalDependencies
