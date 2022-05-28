@@ -11,7 +11,7 @@ import Pandora.Pattern.Functor (Functor)
 class Component category t u where
 	component :: category (t a) (u a)
 
-type Semimonoidal_ category p q t = Component (Tensor p q category) t t
+type Semimonoidal_ category p q t = Component (Tensor p category q) t t
 type Liftable_ category u t = Component category u (t u)
 type Lowerable_ category t u = Component category (t u) u
 

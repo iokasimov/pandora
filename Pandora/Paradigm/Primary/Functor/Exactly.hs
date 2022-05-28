@@ -43,8 +43,11 @@ instance Functor (Kleisli Exactly (->)) (-->) Exactly where
 	(-|-) (Kleisli f) = Straight <-- \case
 		Exactly x -> f x
 
-instance Component (Tensor (:*:) (:*:) (->)) Exactly Exactly where
-	component = Tensor <-- \(Exactly l :*: Exactly r) -> Exactly (l :*: r)
+instance Component (Tensor (:*:) (-->) (:*:)) Exactly Exactly where
+	component = Tensor . Straight <-- \(Exactly l :*: Exactly r) -> Exactly (l :*: r)
+
+instance Component (Tensor (:*:) (--<) (:*:)) Exactly Exactly where
+	component = Tensor . Flip <-- \(Exactly (l :*: r)) -> Exactly l :*: Exactly r
 
 instance Covariant (->) (->) Exactly where
 	f <-|- Exactly x = Exactly <-- f x
