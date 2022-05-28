@@ -4,12 +4,14 @@ import Pandora.Pattern.Transformation.Lowerable as Exports
 import Pandora.Pattern.Transformation.Liftable as Exports
 import Pandora.Pattern.Transformation.Hoistable as Exports
 
+import Pandora.Pattern.Morphism.Tensor (Tensor)
 import Pandora.Pattern.Functor (Functor)
 
 -- TODO: Category/Semigroupoid and Functor constrants
 class Component category t u where
 	component :: category (t a) (u a)
 
+type Semimonoidal_ category p q t = Component (Tensor p q category) t t
 type Liftable_ category u t = Component category u (t u)
 type Lowerable_ category t u = Component category (t u) u
 

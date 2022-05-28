@@ -1,11 +1,12 @@
 module Pandora.Paradigm.Primary.Functor.Exactly where
 
 import Pandora.Core.Interpreted ((<~))
-import Pandora.Pattern.Semigroupoid ((.))
+import Pandora.Pattern.Semigroupoid (Semigroupoid ((.)))
 import Pandora.Pattern.Category ((<--), (<---), (<----))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Morphism.Kleisli (Kleisli (Kleisli))
+import Pandora.Pattern.Morphism.Tensor (Tensor (Tensor))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
@@ -17,6 +18,7 @@ import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Functor (Functor ((-|-)))
+import Pandora.Pattern.Transformation (Component (component))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Chain (Chain ((<=>)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
@@ -40,6 +42,9 @@ instance Functor (-->) (-->) Exactly where
 instance Functor (Kleisli Exactly (->)) (-->) Exactly where
 	(-|-) (Kleisli f) = Straight <-- \case
 		Exactly x -> f x
+
+instance Component (Tensor (:*:) (:*:) (->)) Exactly Exactly where
+	component = Tensor <-- \(Exactly l :*: Exactly r) -> Exactly (l :*: r)
 
 instance Covariant (->) (->) Exactly where
 	f <-|- Exactly x = Exactly <-- f x
