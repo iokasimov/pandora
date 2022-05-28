@@ -805,3 +805,7 @@
 * Rename `Pattern.Transformer` module to `Pattern.Transformation`
 * Define `Component` experimental typeclass
 * Define `Transformation` experimental typeclass
+* Define experimental `Liftable_` type alias
+* Define experimental `lift_` method
+* Define experimental `Lowerable_` type alias
+* Define experimental `lower_` method
