@@ -803,3 +803,5 @@
 * Define `Kleisli` morphism
 * Define `Bindable_` type synonymous for `Functor` typeclass
 * Rename `Pattern.Transformer` module to `Pattern.Transformation`
+* Define `Component` experimental typeclass
+* Define `Transformation` experimental typeclass
