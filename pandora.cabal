@@ -145,6 +145,7 @@ library
     -- Different morphisms
     Pandora.Pattern.Morphism.Trip
     Pandora.Pattern.Morphism.Flip
+    Pandora.Pattern.Morphism.Tensor
     Pandora.Pattern.Morphism.Kleisli
     Pandora.Pattern.Morphism.Straight
     -- Algebra typeclasses

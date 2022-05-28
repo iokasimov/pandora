@@ -809,3 +809,4 @@
 * Define experimental `lift_` method
 * Define experimental `Lowerable_` type alias
 * Define experimental `lower_` method
+* Define `Tensor` product in `Morphism` module
