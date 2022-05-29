@@ -816,3 +816,4 @@
 * Move `Zero` module from `Algebraic` to `Operation`
 * Move `Exponential` module from `Algebraic` to `Operation`
 * Move `<:*:>`, `<:*:<`, `>:*:>`, `>:*:<` to `Algebraic` module
+* Move `Product` module from `Algebraic` to `Operation`

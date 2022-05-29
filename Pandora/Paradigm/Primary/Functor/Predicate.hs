@@ -13,7 +13,7 @@ import Pandora.Pattern.Functor (Functor ((-|-)))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
 import Pandora.Pattern.Object.Ringoid (Ringoid ((*)))
 import Pandora.Paradigm.Primary.Object.Boolean (Boolean (True, False), bool)
-import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Pattern.Operation.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:)(Option, Adoption))
 import Pandora.Pattern.Operation.Exponential (type (-->), type (--<))
 

@@ -7,7 +7,7 @@ import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Operation.Exponential ()
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Pattern.Operation.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic ((>-|-<-|-))
 
 newtype Endo a = Endo { endo :: a -> a }

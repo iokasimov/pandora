@@ -1,6 +1,6 @@
 module Pandora.Paradigm.Structure.Modification.Prefixed where
 
 import Pandora.Paradigm.Schemes (type (<::>))
-import Pandora.Paradigm.Algebraic.Product ((:*:))
+import Pandora.Pattern.Operation.Product ((:*:))
 
 type Prefixed t k = t <::> (:*:) k

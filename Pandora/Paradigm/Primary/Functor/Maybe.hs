@@ -26,7 +26,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Pattern.Operation.Exponential (type (--<), type (-->))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Pattern.Operation.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
 import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (point)

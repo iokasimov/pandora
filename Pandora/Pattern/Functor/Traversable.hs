@@ -3,7 +3,7 @@ module Pandora.Pattern.Functor.Traversable where
 import Pandora.Pattern.Functor.Covariant (Covariant)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Morphism.Straight (Straight)
-import Pandora.Paradigm.Algebraic.Product ((:*:))
+import Pandora.Pattern.Operation.Product ((:*:))
 
 {- |
 > Let f :: (Applicative t, Applicative g) => t a -> u a

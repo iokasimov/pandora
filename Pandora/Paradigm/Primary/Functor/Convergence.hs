@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor (Functor ((-|-)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Operation.Exponential (type (-->), type (--<))
-import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
+import Pandora.Pattern.Operation.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic ()
 
 data Convergence r a = Convergence (a -> a -> r)

@@ -7,7 +7,7 @@ import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Operation.Exponential (type (-->))
-import Pandora.Paradigm.Algebraic.Product ((:*:))
+import Pandora.Pattern.Operation.Product ((:*:))
 import Pandora.Paradigm.Algebraic (point)
 import Pandora.Paradigm.Primary.Transformer.Continuation (Continuation (Continuation))
 

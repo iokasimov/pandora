@@ -29,7 +29,7 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Operation.Exponential (type (--<), type (-->))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Pattern.Operation.Product ((:*:) ((:*:)))
 import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (extract, (<<-|-))
 

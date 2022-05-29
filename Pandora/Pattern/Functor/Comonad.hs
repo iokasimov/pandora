@@ -4,7 +4,7 @@ import Pandora.Pattern.Morphism.Straight (Straight)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Extendable (Extendable)
 import Pandora.Pattern.Operation.Exponential (type (--<))
-import Pandora.Paradigm.Algebraic.Product ((:*:))
+import Pandora.Pattern.Operation.Product ((:*:))
 
 {- |
 > Let f :: (Extendable t, Extractable t) => t a -> b

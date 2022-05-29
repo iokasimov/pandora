@@ -22,7 +22,7 @@ import Pandora.Paradigm.Schemes.TT (TT (TT), type (<::>))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>))
 import Pandora.Paradigm.Structure.Ability.Morphable (Morphable (Morphing, morphing), Morph (Push), premorph)
 import Pandora.Pattern.Operation.Exponential (type (-->))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Pattern.Operation.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
 import Pandora.Paradigm.Algebraic (empty, (<-|-<-|-))
 

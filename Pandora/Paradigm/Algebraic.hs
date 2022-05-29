@@ -2,7 +2,7 @@
 module Pandora.Paradigm.Algebraic (module Exports, type (<:*:>), type (<:*:<), type (>:*:>), type (>:*:<), type (:+*+:), type (:*+*:), type (:++*:), (<:*:>)) where
 
 import Pandora.Paradigm.Algebraic.Functor as Exports
-import Pandora.Paradigm.Algebraic.Product as Exports
+import Pandora.Pattern.Operation.Product as Exports
 import Pandora.Paradigm.Algebraic.Sum as Exports
 
 import Pandora.Core.Functor (type (>>>>>>))

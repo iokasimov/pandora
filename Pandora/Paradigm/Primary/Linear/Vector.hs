@@ -8,7 +8,7 @@ import Pandora.Pattern.Object.Monoid (Monoid (zero))
 import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Object.Setoid (Setoid ((==)))
-import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
+import Pandora.Pattern.Operation.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 
 data Vector r a where
