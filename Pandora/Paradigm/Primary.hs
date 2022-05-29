@@ -14,8 +14,8 @@ import Pandora.Pattern.Category ((<---))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((|-), (-|)))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
-import Pandora.Paradigm.Algebraic.One (One)
-import Pandora.Paradigm.Algebraic.Zero (Zero)
+import Pandora.Pattern.Operation.One (One)
+import Pandora.Pattern.Operation.Zero (Zero)
 import Pandora.Paradigm.Schemes (TU, T_U, UT, TUT)
 
 instance Adjoint (->) (->) (Flip (:*:) s) ((->) s) where

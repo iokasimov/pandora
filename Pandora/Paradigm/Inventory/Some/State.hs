@@ -22,7 +22,7 @@ import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic ((:*:) ((:*:)), delta)
-import Pandora.Paradigm.Algebraic.One (One (One))
+import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (Pointable, point, (<<-|-), (>-||-))
 import Pandora.Paradigm.Schemes (Schematic, TUT (TUT), type (<:<.>:>))
 

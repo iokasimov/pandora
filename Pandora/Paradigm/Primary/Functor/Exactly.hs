@@ -30,7 +30,7 @@ import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Algebraic.One (One (One))
+import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (extract, (<<-|-))
 
 newtype Exactly a = Exactly a

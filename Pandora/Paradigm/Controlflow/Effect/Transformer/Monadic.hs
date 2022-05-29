@@ -19,7 +19,7 @@ import Pandora.Pattern.Transformation.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
-import Pandora.Paradigm.Algebraic.One (One (One))
+import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (Pointable, point, empty)
 import Pandora.Paradigm.Schemes (Schematic)
 

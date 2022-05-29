@@ -1,6 +1,5 @@
 {-# LANGUAGE EmptyCase #-}
-
-module Pandora.Paradigm.Algebraic.Zero where
+module Pandora.Pattern.Operation.Zero where
 
 data Zero
 

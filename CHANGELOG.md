@@ -811,3 +811,6 @@
 * Define experimental `lower_` method
 * Define `Tensor` product in `Morphism` module
 * Define experimental `Semimonoidal_` type alias
+* Define `Operation` umbrella module in `Pattern`
+* Move `One` module from `Algebraic` to `Operation`
+* Move `Zero` module from `Algebraic` to `Operation`

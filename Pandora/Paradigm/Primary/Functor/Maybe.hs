@@ -28,7 +28,7 @@ import Pandora.Paradigm.Structure.Ability.Monotonic (Monotonic (reduce))
 import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
-import Pandora.Paradigm.Algebraic.One (One (One))
+import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
 import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 

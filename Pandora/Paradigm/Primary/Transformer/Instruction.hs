@@ -16,7 +16,7 @@ import Pandora.Pattern.Transformation.Lowerable (Lowerable (lower))
 import Pandora.Pattern.Transformation.Hoistable (Hoistable ((/|\)))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:)((:*:)))
-import Pandora.Paradigm.Algebraic.One (One (One))
+import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
 import Pandora.Core.Interpreted ((<~), (<~~~))
 

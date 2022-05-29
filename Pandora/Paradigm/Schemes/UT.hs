@@ -18,7 +18,7 @@ import Pandora.Pattern.Transformation.Lowerable (Lowerable (lower))
 import Pandora.Paradigm.Algebraic.Exponential (type (--<), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:))
-import Pandora.Paradigm.Algebraic.One (One (One))
+import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (point, extract, (<<-|-), (<<-|---))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 

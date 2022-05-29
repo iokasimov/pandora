@@ -5,8 +5,6 @@ import Pandora.Paradigm.Algebraic.Functor as Exports
 import Pandora.Paradigm.Algebraic.Exponential as Exports
 import Pandora.Paradigm.Algebraic.Product as Exports
 import Pandora.Paradigm.Algebraic.Sum as Exports
-import Pandora.Paradigm.Algebraic.Zero as Exports
-import Pandora.Paradigm.Algebraic.One as Exports
 
 import Pandora.Core.Interpreted (Interpreted ((<~)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
@@ -19,6 +17,7 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
+import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
 
 instance (Semimonoidal (--<) (:*:) (:*:) t, Semimonoidal (--<) (:*:) (:*:) u) => Semimonoidal (--<) (:*:) (:*:) (t <:*:> u) where

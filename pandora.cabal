@@ -32,8 +32,6 @@ library
     Pandora.Paradigm.Algebraic.Exponential
     Pandora.Paradigm.Algebraic.Product
     Pandora.Paradigm.Algebraic.Sum
-    Pandora.Paradigm.Algebraic.Zero
-    Pandora.Paradigm.Algebraic.One
     Pandora.Paradigm.Primary
     Pandora.Paradigm.Primary.Auxiliary
     Pandora.Paradigm.Primary.Object
@@ -183,6 +181,10 @@ library
     Pandora.Pattern.Object.Ringoid
     Pandora.Pattern.Object.Semilattice
     Pandora.Pattern.Object.Semiring
+    -- Typeclassess about object ops
+    Pandora.Pattern.Operation
+    Pandora.Pattern.Operation.One
+    Pandora.Pattern.Operation.Zero
     -- Typeclassess about object composition of functors
     Pandora.Pattern.Transformation
     Pandora.Pattern.Transformation.Hoistable

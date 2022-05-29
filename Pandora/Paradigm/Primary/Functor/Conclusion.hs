@@ -24,7 +24,7 @@ import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), (:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))
 import Pandora.Paradigm.Algebraic.Exponential (type (-->))
-import Pandora.Paradigm.Algebraic.One (One (One))
+import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (point)
 import Pandora.Paradigm.Schemes (Schematic, UT (UT), type (<.:>))
 

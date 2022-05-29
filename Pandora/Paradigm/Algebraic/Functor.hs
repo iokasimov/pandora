@@ -15,11 +15,11 @@ import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
 import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
+import Pandora.Pattern.Operation.One (One (One))
+import Pandora.Pattern.Operation.Zero (Zero, absurd)
 import Pandora.Paradigm.Algebraic.Exponential (type (-->), type (--<), (&))
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
-import Pandora.Paradigm.Algebraic.Zero (Zero, absurd)
-import Pandora.Paradigm.Algebraic.One (One (One))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
 
 infixl 1 <-*------, <<-|-----, <<-|-|---, >-||-----
