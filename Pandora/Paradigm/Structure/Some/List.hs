@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Pandora.Paradigm.Structure.Some.List where
 
-import Pandora.Core.Functor (type (:.), type (<), type (>), type (>>>), type (>>>>>>))
+import Pandora.Core.Functor (type (<), type (>), type (>>>>>>))
 import Pandora.Core.Impliable (imply)
 import Pandora.Core.Interpreted (run, (<~), (<~~~), (=#-))
 import Pandora.Pattern.Semigroupoid ((.))

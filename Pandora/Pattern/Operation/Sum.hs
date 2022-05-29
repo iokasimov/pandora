@@ -1,6 +1,5 @@
 module Pandora.Pattern.Operation.Sum where
 
-import Pandora.Core.Functor (type (>>>>>>))
 import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))

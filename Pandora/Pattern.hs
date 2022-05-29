@@ -2,6 +2,7 @@
 module Pandora.Pattern (module Exports) where
 
 import Pandora.Pattern.Betwixt as Exports
+import Pandora.Pattern.Operation as Exports
 import Pandora.Pattern.Object as Exports
 import Pandora.Pattern.Transformation as Exports
 import Pandora.Pattern.Functor as Exports

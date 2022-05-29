@@ -18,8 +18,8 @@ instance Monotonic a a where
 
 instance Monotonic a (o :+: a) where
 	reduce fun def (Adoption x) = fun x def
-	reduce _ def (Option x) = def
+	reduce _ def (Option _) = def
 
 instance Monotonic o (o :+: a) where
 	reduce fun def (Option x) = fun x def
-	reduce _ def (Adoption x) = def
+	reduce _ def (Adoption _) = def
