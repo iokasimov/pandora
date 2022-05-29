@@ -141,6 +141,7 @@ library
     Pandora.Pattern.Morphism.Trip
     Pandora.Pattern.Morphism.Flip
     Pandora.Pattern.Morphism.Tensor
+    Pandora.Pattern.Morphism.Lifted
     Pandora.Pattern.Morphism.Kleisli
     Pandora.Pattern.Morphism.Straight
     -- Algebra typeclasses
@@ -180,6 +181,7 @@ library
     Pandora.Pattern.Object.Semiring
     -- Typeclassess about object ops
     Pandora.Pattern.Operation
+    Pandora.Pattern.Operation.Unit
     Pandora.Pattern.Operation.One
     Pandora.Pattern.Operation.Zero
     Pandora.Pattern.Operation.Exponential

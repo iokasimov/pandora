@@ -820,3 +820,4 @@
 * Move `Unit` type family to `Unit` module
 
 # 0.5.7
+* Define `Liftable` morphism in `Morphism` module
