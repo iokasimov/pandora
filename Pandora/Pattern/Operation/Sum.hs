@@ -4,11 +4,15 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Operation.Exponential ()
+import Pandora.Pattern.Operation.Unit (Unit)
+import Pandora.Pattern.Operation.Zero (Zero)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 infixr 7 :+:
 
 data (:+:) o a = Option o | Adoption a
+
+type instance Unit (:+:) = Zero
 
 instance Covariant (->) (->) ((:+:) o) where
 	_ <-|- Option s = Option s

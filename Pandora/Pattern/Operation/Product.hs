@@ -12,6 +12,8 @@ import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
 import Pandora.Pattern.Operation.Exponential ()
+import Pandora.Pattern.Operation.Unit (Unit)
+import Pandora.Pattern.Operation.One (One)
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 
 infixr 7 :*:
@@ -19,6 +21,8 @@ infixr 7 :*:
 -- TODO Define :*:*:, :*:*:*:, ...
 
 data (:*:) s a = s :*: a
+
+type instance Unit (:*:) = One
 
 instance Covariant (->) (->) ((:*:) s) where
 	f <-|- ~(s :*: x) = s :*: f x

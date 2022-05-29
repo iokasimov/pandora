@@ -817,3 +817,4 @@
 * Move `Exponential` module from `Algebraic` to `Operation`
 * Move `<:*:>`, `<:*:<`, `>:*:>`, `>:*:<` to `Algebraic` module
 * Move `Product` module from `Algebraic` to `Operation`
+* Move `Unit` type family to `Unit` module

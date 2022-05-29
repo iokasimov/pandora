@@ -12,7 +12,7 @@ import Pandora.Pattern.Morphism.Straight (Straight (Straight))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|--), (<-|---), (<-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Semimonoidal (Semimonoidal (mult))
-import Pandora.Pattern.Functor.Monoidal (Monoidal (unit), Unit)
+import Pandora.Pattern.Functor.Monoidal (Monoidal (unit))
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (|-)))
 import Pandora.Pattern.Operation.One (One (One))
@@ -39,9 +39,6 @@ infixr 7 --*, --+
 infixr 8 -*, -+
 
 infixl 6 <-|-<-|-, <-|->-|-, >-|-<-|-, >-|->-|-
-
-type instance Unit (:*:) = One
-type instance Unit (:+:) = Zero
 
 type Applicative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:*:) t, Monoidal (-->) (-->) (:*:) (:*:) t)
 type Alternative t = (Covariant (->) (->) t, Semimonoidal (-->) (:*:) (:+:) t, Monoidal (-->) (-->) (:*:) (:+:) t)
