@@ -818,3 +818,5 @@
 * Move `<:*:>`, `<:*:<`, `>:*:>`, `>:*:<` to `Algebraic` module
 * Move `Product` module from `Algebraic` to `Operation`
 * Move `Unit` type family to `Unit` module
+
+# 0.5.7
