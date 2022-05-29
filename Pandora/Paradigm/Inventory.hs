@@ -16,7 +16,7 @@ import Pandora.Pattern.Functor.Adjoint (Adjoint ((-|), (--|), (|-), (|--), (|---
 import Pandora.Paradigm.Primary.Functor.Maybe (Maybe (Just, Nothing))
 import Pandora.Paradigm.Primary.Functor.Exactly (Exactly)
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Algebraic.Exponential ((%), type (--<))
+import Pandora.Pattern.Operation.Exponential ((%), type (--<))
 import Pandora.Paradigm.Algebraic.Functor (Pointable, extract, (<<-|-))
 import Pandora.Paradigm.Controlflow.Effect.Transformer ((:>) (TM))
 import Pandora.Paradigm.Controlflow.Effect.Adaptable (Adaptable (adapt))

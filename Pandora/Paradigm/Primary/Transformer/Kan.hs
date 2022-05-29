@@ -6,7 +6,7 @@ import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-)))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Paradigm.Primary.Auxiliary (Horizontal (Left, Right))
-import Pandora.Paradigm.Algebraic.Exponential ()
+import Pandora.Pattern.Operation.Exponential ()
 
 data family Kan (v :: * -> k) (t :: * -> *) (u :: * -> *) b a
 

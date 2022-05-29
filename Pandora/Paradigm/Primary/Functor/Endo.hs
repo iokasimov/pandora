@@ -6,7 +6,7 @@ import Pandora.Pattern.Category (identity, (<--))
 import Pandora.Pattern.Functor.Invariant (Invariant ((<!<)))
 import Pandora.Pattern.Object.Semigroup (Semigroup ((+)))
 import Pandora.Pattern.Object.Monoid (Monoid (zero))
-import Pandora.Paradigm.Algebraic.Exponential ()
+import Pandora.Pattern.Operation.Exponential ()
 import Pandora.Paradigm.Algebraic.Product ((:*:) ((:*:)))
 import Pandora.Paradigm.Algebraic ((>-|-<-|-))
 

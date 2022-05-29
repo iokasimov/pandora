@@ -2,7 +2,7 @@ module Pandora.Paradigm.Primary.Auxiliary where
 
 import Pandora.Pattern.Category ((<--))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
-import Pandora.Paradigm.Algebraic.Exponential ()
+import Pandora.Pattern.Operation.Exponential ()
 
 data Vertical a = Up a | Down a
 

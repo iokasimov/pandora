@@ -3,7 +3,7 @@ module Pandora.Pattern.Functor.Comonad where
 import Pandora.Pattern.Morphism.Straight (Straight)
 import Pandora.Pattern.Functor.Monoidal (Monoidal)
 import Pandora.Pattern.Functor.Extendable (Extendable)
-import Pandora.Paradigm.Algebraic.Exponential (type (--<))
+import Pandora.Pattern.Operation.Exponential (type (--<))
 import Pandora.Paradigm.Algebraic.Product ((:*:))
 
 {- |

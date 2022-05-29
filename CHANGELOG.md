@@ -814,3 +814,4 @@
 * Define `Operation` umbrella module in `Pattern`
 * Move `One` module from `Algebraic` to `Operation`
 * Move `Zero` module from `Algebraic` to `Operation`
+* Move `Exponential` module from `Algebraic` to `Operation`

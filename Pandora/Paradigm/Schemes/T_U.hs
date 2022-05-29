@@ -7,7 +7,7 @@ import Pandora.Pattern.Semigroupoid ((.))
 import Pandora.Pattern.Morphism.Flip (Flip)
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-), (<-|-|-)))
 import Pandora.Pattern.Functor.Contravariant (Contravariant ((>-|-|-)))
-import Pandora.Paradigm.Algebraic.Exponential ()
+import Pandora.Pattern.Operation.Exponential ()
 
 newtype T_U ct cu p t u a = T_U (p (t a) (u a))
 

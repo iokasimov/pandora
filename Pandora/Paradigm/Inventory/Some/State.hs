@@ -20,7 +20,7 @@ import Pandora.Paradigm.Controlflow.Effect.Transformer.Monadic (Monadic (wrap), 
 import Pandora.Paradigm.Inventory.Ability.Gettable (Gettable (Getting, get))
 import Pandora.Paradigm.Inventory.Ability.Settable (Settable (Setting, set))
 import Pandora.Paradigm.Inventory.Ability.Modifiable (Modifiable (Modification, modify))
-import Pandora.Paradigm.Algebraic.Exponential (type (-->))
+import Pandora.Pattern.Operation.Exponential (type (-->))
 import Pandora.Paradigm.Algebraic ((:*:) ((:*:)), delta)
 import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Paradigm.Algebraic (Pointable, point, (<<-|-), (>-||-))

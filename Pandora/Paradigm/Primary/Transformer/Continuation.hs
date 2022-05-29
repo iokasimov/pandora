@@ -10,7 +10,7 @@ import Pandora.Pattern.Functor.Bindable (Bindable ((=<<)))
 import Pandora.Pattern.Functor.Monad (Monad)
 import Pandora.Pattern.Transformation.Liftable (Liftable (lift))
 import Pandora.Core.Interpreted (Interpreted (Primary, run, unite, (<~)))
-import Pandora.Paradigm.Algebraic.Exponential ((%), type (-->))
+import Pandora.Pattern.Operation.Exponential ((%), type (-->))
 import Pandora.Paradigm.Algebraic.Product ((:*:))
 import Pandora.Paradigm.Algebraic (point)
 
