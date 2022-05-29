@@ -26,3 +26,4 @@ class Functor source target t where
 type Covariant_ source target = Functor (Straight source) (Straight target)
 type Contravariant_ source target = Functor (Straight source) (Flip target)
 type Bindable_ source t = Functor (Kleisli t source) (Straight source) t
+type Traversable_ source target = forall u . Functor (Kleisli u source) (Kleisli u target)

@@ -45,6 +45,12 @@ instance Functor (Kleisli Maybe (->)) (-->) Maybe where
 		Just x -> f x
 		Nothing -> Nothing
 
+instance (Functor (->) (->) u, Monoidal (-->) (-->) (:*:) (:*:) u) 
+	=> Functor (Kleisli u (->)) (Kleisli u (->)) Maybe where
+	(-|-) (Kleisli f) = Kleisli <-- \case
+		Just x -> Just -|- f x
+		Nothing -> point Nothing
+
 instance Covariant (->) (->) Maybe where
 	f <-|- Just x = Just <-- f x
 	_ <-|- Nothing = Nothing

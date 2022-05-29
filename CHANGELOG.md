@@ -821,3 +821,4 @@
 
 # 0.5.7
 * Define `Liftable` morphism in `Morphism` module
+* Define `Traversable_` type synonymous for `Functor` typeclass
