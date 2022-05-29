@@ -3,7 +3,7 @@ module Pandora.Paradigm.Structure.Ability.Monotonic where
 import Pandora.Pattern.Category ((<----))
 import Pandora.Pattern.Kernel (constant)
 import Pandora.Pattern.Operation.Exponential ((.:..))
-import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
+import Pandora.Pattern.Operation.Sum ((:+:) (Option, Adoption))
 
 class Monotonic a e where
 	{-# MINIMAL reduce #-}

@@ -29,7 +29,6 @@ library
     -- Basic constructions
     Pandora.Paradigm.Algebraic
     Pandora.Paradigm.Algebraic.Functor
-    Pandora.Paradigm.Algebraic.Sum
     Pandora.Paradigm.Primary
     Pandora.Paradigm.Primary.Auxiliary
     Pandora.Paradigm.Primary.Object
@@ -185,6 +184,7 @@ library
     Pandora.Pattern.Operation.Zero
     Pandora.Pattern.Operation.Exponential
     Pandora.Pattern.Operation.Product
+    Pandora.Pattern.Operation.Sum
     -- Typeclassess about object composition of functors
     Pandora.Pattern.Transformation
     Pandora.Pattern.Transformation.Hoistable

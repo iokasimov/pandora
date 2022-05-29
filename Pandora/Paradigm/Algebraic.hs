@@ -3,7 +3,7 @@ module Pandora.Paradigm.Algebraic (module Exports, type (<:*:>), type (<:*:<), t
 
 import Pandora.Paradigm.Algebraic.Functor as Exports
 import Pandora.Pattern.Operation.Product as Exports
-import Pandora.Paradigm.Algebraic.Sum as Exports
+import Pandora.Pattern.Operation.Sum as Exports
 
 import Pandora.Core.Functor (type (>>>>>>))
 import Pandora.Core.Interpreted (Interpreted ((<~)))
@@ -27,6 +27,11 @@ type (<:*:>) t u = t <:.:> u >>>>>> (:*:)
 type (>:*:>) t u = t >:.:> u >>>>>> (:*:)
 type (<:*:<) t u = t <:.:< u >>>>>> (:*:)
 type (>:*:<) t u = t >:.:< u >>>>>> (:*:)
+
+type (<:+:>) t u = t <:.:> u >>>>>> (:+:)
+type (>:+:>) t u = t >:.:> u >>>>>> (:+:)
+type (<:+:<) t u = t <:.:< u >>>>>> (:+:)
+type (>:+:<) t u = t >:.:< u >>>>>> (:+:)
 
 (<:*:>) :: t a -> u a -> t <:*:> u >>>>>> a
 (<:*:>) xs ys = T_U <--- xs :*: ys

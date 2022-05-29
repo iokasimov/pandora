@@ -19,7 +19,7 @@ import Pandora.Pattern.Operation.One (One (One))
 import Pandora.Pattern.Operation.Zero (Zero, absurd)
 import Pandora.Pattern.Operation.Exponential (type (-->), type (--<), (&))
 import Pandora.Pattern.Operation.Product ((:*:) ((:*:)))
-import Pandora.Paradigm.Algebraic.Sum ((:+:) (Option, Adoption))
+import Pandora.Pattern.Operation.Sum ((:+:) (Option, Adoption))
 import Pandora.Paradigm.Primary.Functor.Proxy (Proxy (Proxy))
 
 infixl 1 <-*------, <<-|-----, <<-|-|---, >-||-----
