@@ -1,6 +1,5 @@
 module Pandora.Paradigm.Algebraic.Product where
 
-import Pandora.Core.Functor (type (>>>>>>))
 import Pandora.Pattern.Category ((<---))
 import Pandora.Pattern.Functor.Covariant (Covariant ((<-|-)))
 import Pandora.Pattern.Functor.Extendable (Extendable ((<<=)))
@@ -12,11 +11,10 @@ import Pandora.Pattern.Object.Quasiring (Quasiring (one))
 import Pandora.Pattern.Object.Semilattice (Infimum ((/\)), Supremum ((\/)))
 import Pandora.Pattern.Object.Lattice (Lattice)
 import Pandora.Pattern.Object.Group (Group (invert))
+import Pandora.Pattern.Operation.Exponential ()
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
-import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>), type (>:.:>), type (<:.:<), type (>:.:<))
 
 infixr 7 :*:
-infixr 5 <:*:>
 
 -- TODO Define :*:*:, :*:*:*:, ...
 
@@ -65,11 +63,3 @@ swap ~(x :*: y) = y :*: x
 
 attached :: a :*: b -> a
 attached ~(x :*: _) = x
-
-type (<:*:>) t u = t <:.:> u >>>>>> (:*:)
-type (>:*:>) t u = t >:.:> u >>>>>> (:*:)
-type (<:*:<) t u = t <:.:< u >>>>>> (:*:)
-type (>:*:<) t u = t >:.:< u >>>>>> (:*:)
-
-(<:*:>) :: t a -> u a -> t <:*:> u >>>>>> a
-(<:*:>) xs ys = T_U <--- xs :*: ys

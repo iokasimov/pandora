@@ -1,10 +1,11 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Pandora.Paradigm.Algebraic (module Exports, type (:+*+:), type (:*+*:), type (:++*:)) where
+module Pandora.Paradigm.Algebraic (module Exports, type (<:*:>), type (<:*:<), type (>:*:>), type (>:*:<), type (:+*+:), type (:*+*:), type (:++*:), (<:*:>)) where
 
 import Pandora.Paradigm.Algebraic.Functor as Exports
 import Pandora.Paradigm.Algebraic.Product as Exports
 import Pandora.Paradigm.Algebraic.Sum as Exports
 
+import Pandora.Core.Functor (type (>>>>>>))
 import Pandora.Core.Interpreted (Interpreted ((<~)))
 import Pandora.Pattern.Morphism.Flip (Flip (Flip))
 import Pandora.Pattern.Morphism.Straight (Straight (Straight))
@@ -18,7 +19,17 @@ import Pandora.Pattern.Functor.Comonad (Comonad)
 import Pandora.Pattern.Functor.Traversable (Traversable ((<-/-)))
 import Pandora.Pattern.Operation.Exponential (type (-->), type (--<))
 import Pandora.Pattern.Operation.One (One (One))
-import Pandora.Paradigm.Schemes.T_U (T_U (T_U))
+import Pandora.Paradigm.Schemes.T_U (T_U (T_U), type (<:.:>), type (>:.:>), type (<:.:<), type (>:.:<))
+
+infixr 5 <:*:>
+
+type (<:*:>) t u = t <:.:> u >>>>>> (:*:)
+type (>:*:>) t u = t >:.:> u >>>>>> (:*:)
+type (<:*:<) t u = t <:.:< u >>>>>> (:*:)
+type (>:*:<) t u = t >:.:< u >>>>>> (:*:)
+
+(<:*:>) :: t a -> u a -> t <:*:> u >>>>>> a
+(<:*:>) xs ys = T_U <--- xs :*: ys
 
 instance (Semimonoidal (--<) (:*:) (:*:) t, Semimonoidal (--<) (:*:) (:*:) u) => Semimonoidal (--<) (:*:) (:*:) (t <:*:> u) where
 	mult = Flip <-- \(T_U lrxys) ->
